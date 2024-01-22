@@ -53,7 +53,7 @@ export default function Home() {
               sowohl mit Smartphones als auch mit PCs.
             </span>
             <span>
-              Zusatzfunktion "Würfeln": Bedarf an einer Funktion für zufällige
+              Zusatzfunktion Würfeln: Bedarf an einer Funktion für zufällige
               Textauswahl zur besseren Textverinnerlichung.
             </span>
           </Text>
@@ -133,7 +133,7 @@ export default function Home() {
         <Description>
           Bei der Entwicklung dieser App habe ich intensiv mit Sprechern
           zusammengearbeitet und basierend auf ihren Feedbacks eine
-          'Würfelfunktion' integriert. Diese ermöglicht es den Sprechern,
+          Würfelfunktion integriert. Diese ermöglicht es den Sprechern,
           zufällige Textstellen auszuwählen, um ein besseres Gefühl für den Text
           zu bekommen.{' '}
         </Description>
