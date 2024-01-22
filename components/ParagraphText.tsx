@@ -15,7 +15,7 @@ export const Paragraph = styled.div`
   color: white;
 `;
 
-export const ColorP = styled.p`
+const ColorP = styled.p`
   display: inline;
   font-weight: 700;
 

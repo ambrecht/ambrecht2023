@@ -248,7 +248,7 @@ const Text = styled.p`
   }
 `;
 
-export const MainBild = styled.div`
+const MainBild = styled.div`
   position: relative;
   width: 100vw;
   overflow: hidden;
@@ -262,7 +262,7 @@ export const MainBild = styled.div`
   margin-left: -7rem;
 `;
 
-export const Bild = styled.div`
+const Bild = styled.div`
   position: relative;
   overflow: hidden;
 
