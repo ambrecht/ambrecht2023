@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import React from 'react';
 import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
-
+import Link from 'next/link';
 // MARKUP
 export function Footer() {
   return (
@@ -14,7 +14,9 @@ export function Footer() {
         fill={true}
       ></StyledImage>
       <Footerbox>
-        <Bild src="/3DDREIECK.svg" alt="Logo" width={250} height={250}></Bild>
+        <Link href="/tools/wordprocess">
+          <Bild src="/3DDREIECK.svg" alt="Logo" width={250} height={250}></Bild>
+        </Link>
         <Para>
           Tino Ambrecht <br />
           Schleifmühlweg. 9 <br />

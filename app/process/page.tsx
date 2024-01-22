@@ -15,7 +15,7 @@ export default function MARKUP() {
         zu werden
       </Quote>
       <Headline1>Der Weg zum positiven Mehrwerterlebnis:</Headline1>
-      <GridContainer direction={true}>
+      <GridContainer $direction={true}>
         <Bild
           src={'/Flow/Problem.svg'}
           alt="Desktop"
@@ -36,7 +36,7 @@ export default function MARKUP() {
           Produktentwicklung zu schaffen.
         </Paragraph>
       </GridContainer>
-      <GridContainer direction={false}>
+      <GridContainer $direction={false}>
         <Bild
           src={'/Flow/Vision.svg'}
           alt="Desktop"
@@ -55,7 +55,7 @@ export default function MARKUP() {
           und inspiriert.
         </Paragraph>
       </GridContainer>
-      <GridContainer direction={true}>
+      <GridContainer $direction={true}>
         <Bild
           src={'/Flow/Ideen.svg'}
           alt="Desktop"
@@ -76,7 +76,7 @@ export default function MARKUP() {
           Potenzial haben, mein Leitbild zu verwirklichen.
         </Paragraph>
       </GridContainer>
-      <GridContainer direction={false}>
+      <GridContainer $direction={false}>
         <Bild
           src={'/Flow/Implementieren.svg'}
           alt="Desktop"
@@ -108,7 +108,7 @@ const Wrapper = styled.div`
 `;
 
 interface GridContainerProps {
-  direction: boolean;
+  $direction: boolean;
 }
 
 const GridContainer = styled.div<GridContainerProps>`
@@ -121,14 +121,21 @@ const GridContainer = styled.div<GridContainerProps>`
   width: 100%;
   height: auto;
   flex-wrap: nowrap;
-  flex-direction: ${(props) => (props.direction ? 'row' : 'row-reverse')};
+  flex-direction: ${(props) => (props.$direction ? 'row' : 'row-reverse')};
   color: white;
 
   @media (max-width: 800px) {
-    display: block;
+    display: flex;
     flex-wrap: column;
-    p {
+    flex-direction: column;
+  }
+
+  @media (max-width: 500px) {
+    max-width: 90%;
+    margin: 0 auto;
+    div {
       font-size: 1rem;
-    
+      max-width: 90%;
+    }
   }
 `;
