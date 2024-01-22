@@ -6,7 +6,7 @@ export const Padding = styled.div`
   padding-right: 5.8rem;
 
   @media (max-width: 500px) {
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 `;

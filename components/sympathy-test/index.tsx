@@ -87,6 +87,16 @@ const Container = styled.div`
     clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
     z-index: 1;
     mix-blend-mode: color;
+    @media (max-width: 500px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    height: 50vh;
+    max-width: 100vw;
+    overflow: hidden;
   }
 `;
 

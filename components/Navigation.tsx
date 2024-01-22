@@ -73,6 +73,10 @@ const Grid = styled.div`
   margin-left: auto;
   margin-right: auto;
   align-items: center; // Vertikale Ausrichtung
+  @media (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const NavList = styled.ul`

@@ -43,6 +43,7 @@ const GlobalStyles = createGlobalStyle`
   body {
     background-color: #0f0f0f;
     font-family: var(--pop-Font);
+ 
     
    
    
