@@ -1,10 +1,11 @@
 'use client';
+import React from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import { imageClampBuilder, clampBuilder } from '@/lib/utils';
 import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
 
-export default function Home() {
+export default function Cafe() {
   return (
     <>
       <Header>

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import { imageClampBuilder, clampBuilder } from '@/lib/utils';
 import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
-
+import React from 'react';
 export default function Home() {
   return (
     <>
