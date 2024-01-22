@@ -187,6 +187,14 @@ const Grid = styled.div`
   border-color: hsla(0, 0%, 53%, 0.2);
   height: 100%;
   color: white;
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
 `;
 
 const Categorie = styled.div`
@@ -198,6 +206,11 @@ const Categorie = styled.div`
 
   @media (min-width: 1024px) {
     border-right-width: 1px;
+  }
+
+  @media (max-width: 500px) {
+    width: 80vw;
+    font-size: 3rem;
   }
 `;
 
@@ -270,6 +283,10 @@ const Bild = styled.div`
   float: left;
   z-index: -1;
   object-fit: cover;
+
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
 
 const Header = styled.header`

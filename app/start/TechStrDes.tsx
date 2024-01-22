@@ -117,6 +117,7 @@ const Circle = styled.div.attrs((props) => ({
 
     ${TextInsideCircle} {
       color: white;
+      font-size: 3rem;
       border-bottom: solid white;
     }
   }
