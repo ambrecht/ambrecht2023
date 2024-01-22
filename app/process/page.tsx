@@ -122,9 +122,13 @@ const GridContainer = styled.div<GridContainerProps>`
   height: auto;
   flex-wrap: nowrap;
   flex-direction: ${(props) => (props.direction ? 'row' : 'row-reverse')};
+  color: white;
 
   @media (max-width: 800px) {
     display: block;
     flex-wrap: column;
+    p {
+      font-size: 1rem;
+    
   }
 `;

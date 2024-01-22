@@ -119,6 +119,12 @@ const Circle = styled.div.attrs((props) => ({
       color: white;
       font-size: 3rem;
       border-bottom: solid white;
+
+      @media (max-width: 500px) {
+        font-size: 1rem;
+
+        padding: 0rem;
+      }
     }
   }
 `;

@@ -74,6 +74,12 @@ export const Headline1 = styled.h1`
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  @media (max-width: 500px) {
+    font-size: 2rem;
+    max-width: 95vw;
+    padding: 0rem;
+  }
 `;
 
 export const Headline2 = styled.h4`
