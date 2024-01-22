@@ -69,10 +69,7 @@ export default function MARKUP() {
           onChange={(event) => setInputValue(event.target.value)}
           placeholder="Geben Sie Ihren Text ein."
           required
-        >
-          <p>Textinput:</p>
-          {inputValue}
-        </TextInput>
+        ></TextInput>
         <CounterBox>
           <p>Wörter:</p>
           <WordCounter>{count}</WordCounter>
