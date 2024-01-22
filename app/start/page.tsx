@@ -49,6 +49,11 @@ const Grid = styled.div`
   width: 100%;
   max-width: 100vw;
   height: 100vh;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    height: 50vh;
+  }
 `;
 
 const Section1 = styled.div`
@@ -63,6 +68,12 @@ const Section1 = styled.div`
   place-self: center start;
   margin-bottom: 5em;
   line-height: 125%;
+
+  @media (max-width: 500px) {
+    grid-column: 1;
+    margin-top: -7rem;
+    margin-bottom: 0;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -79,6 +90,11 @@ const ImageContainer = styled.div`
   background: transparent;
 
   z-index: 1;
+
+  @media (max-width: 500px) {
+    grid-column: 1;
+    display: none;
+  }
 
   // Pseudo-Elemente für den Hintergrund
 

@@ -42,7 +42,8 @@ const ScaleLabel = styled.label`
   border-radius: 50%;
   margin: auto;
   background-image: linear-gradient(72.61deg, #969696 22.63%, #ffffff 84.67%);
-  transition: 0.3s; // Animate the background-image property over 1 second
+  transition: 0.3s;
+  order: 1; // Animate the background-image property over 1 second
 
   &:hover {
     transform: scale(1.1);
@@ -51,6 +52,13 @@ const ScaleLabel = styled.label`
       rgba(0, 130, 255, 1) 22.63%,
       rgba(79, 5, 245, 1) 84.67%
     );
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+
+    width: 5rem;
+    height: 5rem;
   }
 `;
 
@@ -66,6 +74,12 @@ const ScaleOptionsContainer = styled.div`
   align-items: center;
   margin-top: 10px;
   flex-direction: row;
+  flex-wrap: wrap;
+
+  @media (max-width: 500px) {
+    // Ändern der Anordnung in eine Spalte
+    align-items: flex-start; // Ausrichtung der Elemente
+  }
 `;
 
 const QuestionText = styled.p`
@@ -87,6 +101,14 @@ const ScaleLabels = styled.p`
   text-align: center;
 
   margin-bottom: 10px;
+
+  @media (max-width: 500px) {
+    width: 40%; // Größere Breite für Touch-Zugänglichkeit
+    height: 3rem; // Größere Höhe für Touch-Zugänglichkeit
+    font-size: 1.2rem; // Größere Schriftgröße
+    order: 2;
+    align-self: auto;
+  }
 `;
 
 const LikertScale: React.FC<LikertScaleProps> = ({

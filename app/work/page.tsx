@@ -50,6 +50,10 @@ const Grid = styled.div`
   row-gap: 2rem; // Abstand zwischen den Grid-Elementen
   justify-items: center;
   align-items: stretch;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Intro = styled(Headline2)`

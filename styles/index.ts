@@ -136,6 +136,12 @@ export const Quote = styled.h1`
   &:after {
     content: '»';
   }
+
+  @media (max-width: 500px) {
+    font-size: 2rem;
+    width: 100vw;
+    padding: 0rem;
+  }
 `;
 
 export const BlockText = styled.text`

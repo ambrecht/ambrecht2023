@@ -32,6 +32,9 @@ const GridContainer = styled.div`
   position: relative;
 
   font-weight: 100;
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const CentralTextContainer = styled.div`
@@ -51,6 +54,10 @@ const CentralTextContainer = styled.div`
 
   @media (max-width: 960px) {
     width: 100%;
+  }
+
+  @media (max-width: 500px) {
+    gap: 0px;
   }
 `;
 const CircleContainer = styled.div`
@@ -139,7 +146,8 @@ const MyGridComponent: React.FC = () => {
       {content.map((item, index) => (
         <CircleContainer
           key={item.tag}
-          onMouseEnter={() => setCurrentContent(index)} // Aktualisiere den State beim Hovern
+          onMouseEnter={() => setCurrentContent(index)}
+          onTouchStart={() => setCurrentContent(index)}
           aria-label={`Wechsle zu ${item.tag.trim()} Inhalt`}
         >
           <Circle

@@ -95,4 +95,9 @@ const Box = styled.div`
     opacity: 80%;
     transition: 0.3s;
   }
+
+  @media (max-width: 500px) {
+    width: 50vw;
+    height: 50vw;
+  }
 `;

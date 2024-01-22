@@ -28,4 +28,7 @@ const StyledContainer = styled.div`
   height: 100%;
   z-index: 1;
   margin-left: -7rem;
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
