@@ -17,12 +17,12 @@ export const useScoreUpdater = (
       const question = questions.find((q) => q.id === questionId);
       if (!question) return;
 
-      const value = indexvalue; // Für Likert-Skala
+      const value = indexvalue; // For Likert-Scale
       const influences = question.influenceMapping[value];
 
       if (influences) {
         setScores((prevScores) => {
-          let newScores = { ...prevScores };
+          let newScores: DimensionScores = { ...prevScores };
 
           Object.entries(influences).forEach(([dimension, changeBy]) => {
             newScores[dimension] = (newScores[dimension] || 0) + changeBy;

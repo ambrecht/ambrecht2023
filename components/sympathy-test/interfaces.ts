@@ -13,7 +13,8 @@ export interface Question {
   influenceMapping: { [key: number]: { [dimension: string]: number } };
 }
 
-export interface DimensionScores {
+export type DimensionScores = {
+  [key: string]: number;
   Innovativ: number;
   Traditionell: number;
   Projektorientiert: number;
@@ -22,4 +23,4 @@ export interface DimensionScores {
   Strukturiert: number;
   Bottom_up: number;
   Top_down: number;
-}
+};

@@ -1,13 +1,4 @@
-export interface DimensionScores {
-  Innovativ: number;
-  Traditionell: number;
-  Projektorientiert: number;
-  Prozessorientiert: number;
-  Agil: number;
-  Strukturiert: number;
-  Bottom_up: number;
-  Top_down: number;
-}
+import { DimensionScores } from '@/components/sympathy-test/interfaces';
 
 export interface LikertLabel {
   text: string;
