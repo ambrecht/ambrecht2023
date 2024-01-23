@@ -14,7 +14,6 @@ import GridItem from './GridItem';
 const MyGridComponent = () => {
   return (
     <>
-      <Headline>Mein Technologiestack</Headline>
       <GridContainer>
         {/* Repeat the GridItem for each element you want to display in the grid */}
         <GridItem text="Bitcoin" link="https://bitcoin.org/de/" SvgSrc={btc} />
@@ -51,14 +50,6 @@ const breakpoints = {
   sm: '640px',
   md: '768px',
 };
-
-const Headline = styled.div`
-  font-size: 3em;
-  font-weight: 100;
-  color: white;
-  text-align: center;
-  margin-bottom: 1em;
-`;
 
 // Create a styled div for the grid container with responsive columns and gaps
 const GridContainer = styled.div`

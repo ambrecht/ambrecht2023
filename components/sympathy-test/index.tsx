@@ -36,9 +36,9 @@ const Survey: React.FC = () => {
       {!startSurvey && (
         <Index>
           <Paragraph>
-            Sie sind auf der Suche nach der idealen Ergänzung für Ihr Team?
-            Dieser Test hilft Ihnen schnell und effizient zu erkennen, ob
-            Synergie zwischen uns bestehen!
+            Sind Sie auf der Suche nach der idealen Ergänzung für Ihr Team?
+            Dieser Test hilft Ihnen, schnell und effizient zu erkennen, ob eine
+            Synergie zwischen uns besteht!
           </Paragraph>
           <ContactButton onClick={() => setStartSurvey(!startSurvey)}>
             TeamFit-Test starten!
@@ -94,7 +94,7 @@ const Container = styled.div`
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
-    height: 50vh;
+    height: 100%;
     max-width: 100vw;
     overflow: hidden;
   }

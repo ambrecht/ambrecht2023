@@ -15,14 +15,32 @@ export function Footer() {
       ></StyledImage>
       <Footerbox>
         <Link href="/tools/wordprocess">
+          <Label>Tools:</Label>
           <Bild src="/3DDREIECK.svg" alt="Logo" width={250} height={250}></Bild>
         </Link>
         <Para>
+          <Label>Impressum:</Label>
+          <br />
           Tino Ambrecht <br />
           Schleifmühlweg. 9 <br />
           95119 Naila <br />
         </Para>
-        <Para>tino@ambrecht.de</Para>
+        <Para>
+          <Label>Kontakt:</Label>
+          <br />
+          tino@ambrecht.de
+        </Para>
+        <Container>
+          <Label>Github:</Label>
+          <Link href="https://github.com/ambrecht">
+            <Bild
+              src="/github-mark-white.svg"
+              alt="Logo"
+              width={100}
+              height={100}
+            ></Bild>
+          </Link>
+        </Container>
       </Footerbox>
       <Copy>
         COPYRIGHT ©1990-2024. Alle Rechte vorbehalten. Nicht autorisierte, ganze
@@ -39,14 +57,19 @@ const Wrapper = styled.div`
   font-size: 1em;
   position: relative;
   overflow: hidden;
-
+  background: linear-gradient(
+    72.61deg,
+    rgba(0, 130, 255, 1) 22.63%,
+    rgba(79, 5, 245, 1) 84.67%
+  );
+  mix-blend-mode: lighten;
+  clip-path: polygon(0 0, 100% 50%, 100% 100%, 0% 100%);
   height: 100vh; // Stellen Sie sicher, dass der Wrapper mindestens so hoch wie der Viewport ist
 `;
 
 // Convert the styled component to a regular component
 const Bild = styled(Image)`
   opacity: 200%;
-  mix-blend-mode: lighten;
   objectfit: contain;
   padding: 0;
   margin-right: 10rem; // Überschreibt das Padding
@@ -78,7 +101,7 @@ const Footerbox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   align-content: space-between;
   flex-wrap: wrap;
   color: white;
@@ -101,5 +124,15 @@ const StyledImage = styled(Image)`
 
 const Para = styled(Paragraph)`
   font-family: var(--Pop-Font);
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+`;
+
+const Label = styled.span`
+  font-size: 1rem;
+  font-weight: 100;
+`;
+
+const Container = styled.div`
+  margin-left: 5rem;
 `;
