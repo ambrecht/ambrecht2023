@@ -95,23 +95,24 @@ export default function Home() {
           <Title>Leitbilder und Visionen</Title>
           <Text>
             <span>
-              MONOkultur - Ein Hauch von Frische, der die Routine durchbricht.
+              MONOkultur – ist wie ein erfrischender Wind, der durch das Fenster
+              weht und dabei die Vorhänge aufbläht.
             </span>
             <span>
-              MONOkultur - Der Puls der Großstadt, mit einem Echo der
-              Unendlichkeit.
+              MONOkultur – ist das laute Treiben der Großstadt und ganz weit
+              draußen irgendwo die Unendlichkeit.
             </span>
             <span>
-              MONOkultur - Die Poesie des Alltäglichen, eingefangen in
-              Momentaufnahmen.
+              MONOkultur – ist das Leben aus Fragmenten, nur ein diffuses
+              Gefühl, vielleicht die Sehnsucht nach Glückseligkeit.
             </span>
             <span>
-              MONOkultur - Die tragische Ironie des Seins, die den Alltag
-              überstrahlt.
+              MONOkultur – ist die tragische Ironie der Existenz, ein Motiv, das
+              alles andere in den Schatten stellt.
             </span>
             <span>
-              MONOkultur - Die Konzentration auf das Hier und Jetzt, eine
-              Hommage an die kleinen Dinge des Lebens.
+              MONOkultur – ist die Konzentration auf den Moment, eine
+              Makroaufnahme des Alltags.
             </span>
           </Text>
         </Categorie>
