@@ -117,8 +117,8 @@ const Circle = styled.div.attrs((props) => ({
 
     ${TextInsideCircle} {
       color: white;
-      font-size: 2rem;
-      font-weight: 400;
+      font-size: 1.3rem;
+      font-weight: 200;
       border-bottom: solid white;
 
       @media (max-width: 500px) {
