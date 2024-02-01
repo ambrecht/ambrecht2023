@@ -1,6 +1,5 @@
 'use client';
 import Image from 'next/image';
-import styled from 'styled-components';
 import {
   Grid,
   Categorie,
@@ -43,8 +42,8 @@ export default function Home() {
         <Headline></Headline>
         <MainBild>
           <Image
-            src="/teleprompter/Screenshot 2024-01-20 at 12-58-26 Screenshot.png"
-            alt="Picture of the author"
+            src="/real/33b81ba7-3f6b-46b5-ad28-a0f4b1010f26.webp"
+            alt="Picture of the Cafe"
             fill={true}
             style={{
               objectFit: 'cover',
@@ -102,9 +101,9 @@ export default function Home() {
         </Categorie>
         <Bild>
           <Image
-            src="/teleprompter/Screenshot 2024-01-20 at 12-56-10 Screenshot.png"
+            src="/real/5f5cd54b-569a-4cfd-ae2a-57deb82660b0.webp"
             fill={true}
-            alt="Picture of the author"
+            alt="Picture of the cafe"
             style={{
               objectFit: 'cover',
             }}
@@ -112,9 +111,9 @@ export default function Home() {
         </Bild>
         <Bild>
           <Image
-            src="/teleprompter/Screenshot 2024-01-20 at 12-57-37 Screenshot.png"
+            src="/real/39ba8bee-ad3a-4870-bc56-80f1f5ba8486.webp"
             fill={true}
-            alt="Picture of the author"
+            alt="Picture of the cafe"
             style={{
               objectFit: 'cover',
             }}
@@ -122,9 +121,9 @@ export default function Home() {
         </Bild>
         <Bild>
           <Image
-            src="/teleprompter/Screenshot 2024-01-20 at 12-56-36 Screenshot.png"
+            src="/real/8c4d84ef-2979-4052-ae70-0d68ab74e57f.webp"
             fill={true}
-            alt="Picture of the author"
+            alt="Picture of the cafe"
             style={{
               objectFit: 'cover',
             }}
@@ -134,10 +133,13 @@ export default function Home() {
 
         <ChapterLabel>Projektidee</ChapterLabel>
         <Description>
-          Die Idee der Realen Virtualität steht noch am Anfang. Sie trägt das
-          Potenzial in sich, die Art und Weise, wie wir uns vernetzen und
-          zusammenarbeiten, zu revolutionieren und echte Gemeinschaften im
-          digitalen Zeitalter zu fördern.
+          Die Reale Virtualität ist ein innovativer Ort, der die Vorteile einer
+          virtuellen Plattform, wie zum Beispiel eines sozialen Netzwerks, mit
+          einem realen Standort, wie zum Beispiel einem Café, verbindet. Hier
+          können sich Nutzer treffen, austauschen und zusammenarbeiten. Ziel ist
+          es, Menschen in der Realität zusammenzubringen, wo Wissenschaftler,
+          Unternehmer und Kreative ungezwungen zusammenkommen und gemeinsame
+          Projekte starten können.
         </Description>
         <ChapterLabel>Umsetzung</ChapterLabel>
         <Description>
@@ -147,9 +149,14 @@ export default function Home() {
         </Description>
         <ChapterLabel>Zukunftsvision</ChapterLabel>
         <Description>
-          Wenn die Reale Virtualität Wirklichkeit wird, könnte sie zu einem
-          neuen Standard werden, an dem sich Cafés und andere Gemeinschaftsräume
-          messen lassen müssen.
+          Verbindung von virtuellen und realen Welten: Schaffung einer modernen
+          Form der Wiener Kaffeehauskultur. Software als Herzstück: Nutzer
+          können über eine App oder Website ein Konto anlegen, ein Pseudonym
+          vergeben und ihren Tisch auswählen. Verbesserung des Bestellprozesses
+          durch Online- oder Kreditkartenzahlung. Individualisierung des
+          Benutzerkontos: Einstellungen wie Status (z. B. gesprächsbereit,
+          beschäftigt) und Interessen (z. B. Schriftsteller, Physiker) können
+          angepasst werden.
         </Description>
       </Grid>
     </>
