@@ -15,7 +15,6 @@ export function Footer() {
       ></StyledImage>
       <Footerbox>
         <Link href="/tools/wordprocess">
-          <Label>Tools:</Label>
           <Bild src="/3DDREIECK.svg" alt="Logo" width={250} height={250}></Bild>
         </Link>
         <Para>
@@ -31,7 +30,6 @@ export function Footer() {
           tino@ambrecht.de
         </Para>
         <Container>
-          <Label>Github:</Label>
           <Link href="https://github.com/ambrecht">
             <Bild
               src="/github-mark-white.svg"
@@ -101,7 +99,7 @@ const Footerbox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   align-content: space-between;
   flex-wrap: wrap;
   color: white;
@@ -129,6 +127,7 @@ const Para = styled(Paragraph)`
 `;
 
 const Label = styled.span`
+  font-family: var(--Pop-Font);
   font-size: 1rem;
   font-weight: 100;
 `;
