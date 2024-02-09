@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/work/cafe/page.tsx"
+    "app/work/cafe/page.tsx",
+    "components/Universe/Universe.js"
   ],
   "exclude": ["node_modules"]
 }

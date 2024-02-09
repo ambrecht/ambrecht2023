@@ -13,7 +13,6 @@ export const useScoreUpdater = (
 
   const updateScores = useCallback(
     (questionId: number, indexvalue: number) => {
-      console.log(questionId, indexvalue);
       const question = questions.find((q) => q.id === questionId);
       if (!question) return;
 

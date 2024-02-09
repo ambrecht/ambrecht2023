@@ -29,7 +29,6 @@ const Survey: React.FC = () => {
   };
 
   const currentQuestion = Questions[currentQuestionIndex];
-  console.log(scores);
 
   return (
     <Container>

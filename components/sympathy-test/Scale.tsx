@@ -121,7 +121,6 @@ const LikertScale: React.FC<LikertScaleProps> = ({
   const [selectedValue, setSelectedValue] = useState<number | null>(null);
 
   const handleChange = (value: number) => {
-    console.log('value', value);
     setSelectedValue(value);
     onValueChange(question.id, value);
   };

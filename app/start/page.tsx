@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import styled from 'styled-components';
+import Background from '@/components/Background';
 
 import MyGridComponent from '@/app/start/StackGrid';
 import profilePic from '@/public/ickewa.png';
@@ -22,7 +23,9 @@ export default function Home() {
             Werte für Menschen zu schaffen.
           </PreText>
         </Section1>
+
         <ImageContainer>
+          <Background></Background>
           <HeroImage src={profilePic} alt="Picture of Tino Ambrecht" />
         </ImageContainer>
       </Grid>
@@ -83,77 +86,24 @@ const ImageContainer = styled.div`
   align-items: center;
   width: 100%;
   border-bottom-right-radius: 40%;
-  transform: scale(0.8);
+
   grid-row: 1;
   grid-column: 2 / 4; // ImageContainer nimmt die zweite Spalte ein
   justify-self: start;
-  background: transparent;
-
   z-index: 1;
 
   @media (max-width: 500px) {
     grid-column: 1;
     display: none;
   }
-
-  // Pseudo-Elemente für den Hintergrund
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -10%; // Versetzt nach oben
-    right: 18vw; // Versetzt nach links
-    width: ${clampBuilder({
-      minWidthPx: 600,
-      maxWidthPx: 1920,
-      minValue: 200,
-      maxValue: 500,
-      units: 'px',
-    })};
-    height: 200vh; // Höhe des Rechtecks
-    background: rgb(0, 130, 255);
-    background: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(79, 5, 245, 1) 25%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    clip-path: polygon(100% 0%, 75% 50%, 100% 100%, 33% 100%, 0% 50%, 25% 0%);
-    z-index: 2;
-    mix-blend-mode: color;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0%; // Versetzt nach unten
-    left: 18vw; // Versetzt nach rechts
-    width: ${clampBuilder({
-      minWidthPx: 600,
-      maxWidthPx: 1920,
-      minValue: 200,
-      maxValue: 500,
-      units: 'px',
-    })};
-    height: 200vh; // Höhe des zweiten Rechtecks
-    background: rgb(0, 130, 255);
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(0, 130, 255, 1) 24%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
-    mix-blend-mode: color;
-    z-index: 1;
-  }
 `;
 const HeroImage = styled(Image)`
   object-fit: contain; // Stellt sicher, dass das Bild den Container vollständig abdeckt
   object-position: center; // Zentriert den Fokus des Bildes
-  filter: grayscale(100%);
+
   border-bottom-left-radius: 80%;
   width: ${imageClampBuilder(600, 1920, 250, 350)};
+  mix-blend-mode: overlay;
 `;
 
 const PreText = styled.div`

@@ -6,6 +6,7 @@ export const Frame = styled.div`
   box-sizing: border-box;
   max-width: 100vw;
   z-index: 999; // Volle Bildschirmbreite
+  background-color: black;
 
   border-width: 0.4rem;
   border-style: solid;
