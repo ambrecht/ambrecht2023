@@ -9,6 +9,8 @@ import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
 export default function Home() {
   return (
     <>
+      <Intro>Sehen Sie sich in meiner Werkstatt um:</Intro>
+      <Work></Work>
       <Intro>Schauen Sie sich meine bisherigen Projekte an:</Intro>
       <Grid>
         <BoxItem
@@ -34,8 +36,6 @@ export default function Home() {
           link={'/cafe'}
         ></BoxItem>
       </Grid>
-      <Intro>Sehen Sie sich in meiner Werkstatt um:</Intro>
-      <Work></Work>
     </>
   );
 }
