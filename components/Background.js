@@ -7,9 +7,9 @@ const Universe = dynamic(() => import('@/components/Universe/Universe.js'), {
 });
 
 //MARKUP
-export default function BackgroundUniverse() {
+export default function BackgroundUniverse({ opacityValue }) {
   return (
-    <Background>
+    <Background opacity={opacityValue}>
       <Universe></Universe>
     </Background>
   );
@@ -19,10 +19,16 @@ export default function BackgroundUniverse() {
 
 const Background = styled.div`
   position: absolute;
-  width: 33vw;
-  height: 33vw;
+  width: 100%;
+  height: 100vh;
+  left: 0;
+  right: 0;
+  top: 0;
   overflow: hidden;
-  display: block;
-  clip-path: circle(50% at 50% 50%);
-  z-index: -10;
+  //a handcourser
+  cursor: grab;
+  z-index: 0;
+  clip-path: polygon(100% 0, 100% 60%, 0 100%, 0 0%);
+  opacity: ${(props) => props.opacity};
+  transition: opacity 0.5s ease;
 `;

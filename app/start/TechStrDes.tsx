@@ -21,7 +21,6 @@ const content = [
 // Grid container
 
 const GridContainer = styled.div`
-  z-index: 4;
   display: grid;
   grid-template-columns: repeat(3, 1fr); // 3 Spalten
   grid-template-rows: auto;
@@ -49,7 +48,7 @@ const CentralTextContainer = styled.div`
   min-height: 50vh;
   margin-top: 5rem;
   margin-bottom: 2rem;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   line-height: 200%;
 
   @media (max-width: 960px) {
@@ -62,10 +61,6 @@ const CentralTextContainer = styled.div`
 `;
 const CircleContainer = styled.div`
   text-align: center;
-
-  .selected {
-    background-color: red;
-  }
 `;
 
 // Text innerhalb des Kreises

@@ -120,37 +120,20 @@ const STYLE2 = styled.div`
   top: 10%;
   right: 0;
   left: 49%;
-  opacity: 90% ;
+  opacity: 90%;
   z-index: 100;
-   mix-blend-mode: none;
-   pointer-events: ${(props) =>
-     props.Number === 8 || props.Number === 6 ? 'all' : 'none'};
-
+  mix-blend-mode: none;
+  pointer-events: ${(props) =>
+    props.Number === 8 || props.Number === 6 ? 'all' : 'none'};
 
   img {
-   animation: ${Fade} 1s linear 1;
+    animation: ${Fade} 1s linear 1;
   }
 
- 
-
-
-  
-
-
-
- 
-
-
-
- 
-  
-
-
   span {
- 
-  padding-right: ${({ theme }) => theme.padding.main};
+    padding-right: 1rem;
     top: 100px;
-   color: white;
-   text-align: right;
-   
+    color: white;
+    text-align: right;
+  }
 `;

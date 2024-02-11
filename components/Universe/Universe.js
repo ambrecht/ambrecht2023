@@ -1,67 +1,38 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Canvas, extend, useThree, useFrame } from '@react-three/fiber';
-import { CubeTextureLoader } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import { Canvas } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
+import styled from 'styled-components';
 
-extend({ OrbitControls });
-
-const CameraControls = () => {
-  const {
-    camera,
-    gl: { domElement },
-  } = useThree();
-  const controls = useRef();
-  useFrame(() => controls.current.update());
-
-  return (
-    <orbitControls
-      ref={controls}
-      args={[camera, domElement]}
-      autoRotate={true}
-      enableZoom={true}
-      autoRotateSpeed={0.5}
-    />
-  );
-};
-
-const SkyBox = () => {
-  const { scene } = useThree();
-  const loader = new CubeTextureLoader();
-  const texture = loader.load([
-    '/cubemap/px.jpg',
-    '/cubemap/nx.jpg',
-    '/cubemap/py.jpg',
-    '/cubemap/ny.jpg',
-    '/cubemap/pz.jpg',
-    '/cubemap/nz.jpg',
-  ]);
-  scene.background = texture;
-  return null;
-};
+// Dynamically import CameraControls and SkyBox to enable code splitting
+const CameraControls = dynamic(() => import('./CameraControls'), {
+  ssr: false,
+});
+const SkyBox = dynamic(() => import('./SkyBox'), { ssr: false });
 
 const UniverseContainer = styled.div`
+  width: 100%;
+  height: 100vh; // or set to the desired size
   canvas {
-    width: 100vw;
-    height: 120vh;
-    z-index: 10;
-    will-change: transform;
+    width: 100%;
+    height: 100%;
   }
 `;
 
-const App = () => {
+const Universe = () => {
+  const [isActive, setIsActive] = useState(true);
+
+  const toggleScene = () => {
+    setIsActive(!isActive);
+  };
   return (
     <UniverseContainer>
       <Canvas camera={{ position: [1, 1, 1] }}>
         <SkyBox />
         <CameraControls />
+        {/* Add other 3D components here as needed */}
       </Canvas>
     </UniverseContainer>
   );
 };
 
-export default dynamic(() => Promise.resolve(App), {
-  loading: () => <div>Loading Universe...</div>,
-  ssr: false,
-});
+export default Universe;

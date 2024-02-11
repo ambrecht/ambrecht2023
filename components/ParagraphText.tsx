@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const Paragraph = styled.div`
   display: inline;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   font-size: ${clampBuilder({
     minWidthPx: 600,
     maxWidthPx: 1920,

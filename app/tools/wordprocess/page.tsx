@@ -168,7 +168,7 @@ const Output = styled.p<OutputProps>`
   margin-right: auto;
   margin-left: auto;
   column-span: all;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   font-style: italic;
   letter-spacing: 0.1rem;
   font-weight: 800;

@@ -2,8 +2,9 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 import React from 'react';
-import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
+import { Paragraph } from '@/styles/index';
 import Link from 'next/link';
+
 // MARKUP
 export function Footer() {
   return (
@@ -14,9 +15,16 @@ export function Footer() {
         fill={true}
       ></StyledImage>
       <Footerbox>
-        <Link href="/tools/wordprocess">
-          <Bild src="/3DDREIECK.svg" alt="Logo" width={250} height={250}></Bild>
-        </Link>
+        <Container>
+          <Link href="/tools/wordprocess">
+            <Bild
+              src="/3DDREIECK.svg"
+              alt="Logo"
+              width={250}
+              height={250}
+            ></Bild>
+          </Link>
+        </Container>
         <Para>
           <Label>Impressum:</Label>
           <br />
@@ -29,6 +37,7 @@ export function Footer() {
           <br />
           tino@ambrecht.de
         </Para>
+
         <Container>
           <Link href="https://github.com/ambrecht">
             <Bild
@@ -50,9 +59,7 @@ export function Footer() {
 
 // STYLE
 
-const Wrapper = styled.div`
-  font-weight: 300;
-  font-size: 1em;
+const Wrapper = styled.footer`
   position: relative;
   overflow: hidden;
   background: linear-gradient(
@@ -62,7 +69,14 @@ const Wrapper = styled.div`
   );
   mix-blend-mode: lighten;
   clip-path: polygon(0 0, 100% 50%, 100% 100%, 0% 100%);
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  align-items: center;
+  padding-left: 5.8rem;
+  padding-right: 5.8rem;
   height: 100vh; // Stellen Sie sicher, dass der Wrapper mindestens so hoch wie der Viewport ist
+  z-index: 100;
 `;
 
 // Convert the styled component to a regular component
@@ -71,6 +85,9 @@ const Bild = styled(Image)`
   objectfit: contain;
   padding: 0;
   margin-right: 10rem; // Überschreibt das Padding
+  @media (max-width: 1300px) {
+    width: 10vw;
+  }
 `;
 
 const Copy = styled.span`
@@ -85,28 +102,25 @@ const Copy = styled.span`
   right: 0;
   text-align: center;
   bottom: 0;
+
+  @media (max-width: 1300px) {
+    font-size: 0.3em;
+  }
 `;
 
 const Footerbox = styled.div`
-  position: absolute;
+  margin-top: 33vh;
+  display: flex; // Ordnet die Elemente in einer Spalte an
+  align-items: center; // Zentriert die Elemente innerhalb der Footerbox horizontal
+  justify-content: start; // Zentriert die Elemente innerhalb der Footerbox vertikal
+  width: 100%;
+  text-align: center; // Zentriert den Text innerhalb jedes Elements
 
-  right: 0;
-  bottom: 0;
-  width: 100vw; // Setzt die Breite auf die volle Breite des Viewports
-  height: auto;
-  padding-left: 5.8rem;
-  padding-right: 5.8rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  align-content: space-between;
-  flex-wrap: wrap;
-  color: white;
-  text-shadow: 0em 2em 2em rgba(0, 0, 0, 0.9);
-  padding-bottom: 20vh;
-
-  // Stellen Sie einen Abstand zum unteren Rand sicher
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: end; // Zentriert die Elemente innerhalb der Footerbox horizontal
+    justify-content: start;
+  }
 `;
 
 const StyledImage = styled(Image)`
@@ -133,5 +147,7 @@ const Label = styled.span`
 `;
 
 const Container = styled.div`
-  margin-left: 5rem;
+  max-width: 10vw;
+  max-height: 10vw;
+  align-self: center;
 `;

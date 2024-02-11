@@ -39,7 +39,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   font-size: ${clampBuilder({
     minWidthPx: 600,
     maxWidthPx: 1920,

@@ -10,7 +10,7 @@ export const Paragraph = styled.div`
   margin-right: auto;
   margin-left: auto;
   column-span: all;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   font-size: ${clampBuilder({
     minWidthPx: 600,
     maxWidthPx: 1800,
@@ -115,7 +115,7 @@ export const Quote = styled.h1`
   margin-right: auto;
   margin-left: auto;
   column-span: all;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   font-style: italic;
   letter-spacing: 0.1rem;
   font-size: ${clampBuilder({
@@ -152,7 +152,7 @@ export const Quote = styled.h1`
 
 export const BlockText = styled.text`
   column-span: all;
-  font-family: var(--gara-Font);
+  font-family: var(--pop-Font);
   font-size: ${clampBuilder({
     minWidthPx: 600,
     maxWidthPx: 1920,
