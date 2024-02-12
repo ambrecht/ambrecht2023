@@ -1,6 +1,6 @@
 'use client';
 
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Frame = styled.div`
   box-sizing: border-box;
