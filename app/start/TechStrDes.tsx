@@ -110,6 +110,7 @@ const Circle = styled.div.attrs((props) => ({
       font-size: 1.3rem;
       font-weight: 200;
       border-bottom: solid white;
+      color: white;
     }
   }
 `;

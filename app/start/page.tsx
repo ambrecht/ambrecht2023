@@ -41,7 +41,7 @@ export default function Home() {
       {showBackground && <Background opacityValue={opacity} />}
       <Grid>
         <Section1>
-          <PreText>Mein Name ist Tino Ambrecht, ich bin ein &nbsp; </PreText>
+          <PreText>Mein Name ist Tino Ambrecht, ich bin ein </PreText>
           <ColorP>digitaler Ikonoklast. </ColorP>
 
           <PreText>
@@ -86,8 +86,8 @@ const Grid = styled.div`
 
 const Section1 = styled.div`
   hyphens: auto;
-  text-align: block;
-  width: 100%;
+  text-align: justify-all;
+  min-width: 50vw;
 
   grid-column: 1/ 2;
 
@@ -95,7 +95,7 @@ const Section1 = styled.div`
   z-index: 2; // Höherer z-index, um über dem Bild zu sein
   place-self: center start;
   margin-bottom: 5em;
-  line-height: 125%;
+  line-height: 150%;
 
   @media (max-width: 500px) {
     grid-column: 1;
