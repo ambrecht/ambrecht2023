@@ -98,7 +98,7 @@ const Circle = styled.div.attrs((props) => ({
 
   &:hover,
   &.selected {
-    transform: scale(1.1);
+    transform: scale(1.2);
     background-image: linear-gradient(
       72.61deg,
       rgba(0, 130, 255, 1) 22.63%,
@@ -106,11 +106,12 @@ const Circle = styled.div.attrs((props) => ({
     );
 
     ${TextInsideCircle} {
-      color: white;
-      font-size: 1.3rem;
-      font-weight: 200;
-      border-bottom: solid white;
-      color: white;
+      color: white !important;
+      font-size: 1.3rem !important;
+      font-weight: 200 !important;
+      border-bottom: solid white !important;
+      background: none !important;
+      -webkit-background-clip: initial !important;
     }
   }
 `;
