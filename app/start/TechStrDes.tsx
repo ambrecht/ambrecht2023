@@ -61,6 +61,11 @@ const CentralTextContainer = styled.div`
 `;
 const CircleContainer = styled.div`
   text-align: center;
+
+  .selected {
+    background-color: white;
+    color: white;
+  }
 `;
 
 // Text innerhalb des Kreises
@@ -116,10 +121,10 @@ const Circle = styled.div.attrs((props) => ({
       font-weight: 200;
       border-bottom: solid white;
 
-      @media (max-width: 500px) {
-        font-size: 1rem;
-
-        padding: 0rem;
+      .selected {
+        background-color: white;
+        color: white;
+        border-bottom: solid white;
       }
     }
   }
@@ -153,9 +158,7 @@ const MyGridComponent: React.FC = () => {
           onTouchStart={() => setCurrentContent(index)}
           aria-label={`Wechsle zu ${item.tag.trim()} Inhalt`}
         >
-          <Circle
-            className={currentContent === index ? 'selected' : ''} // Füge die 'selected' Klasse hinzu, wenn der Index dem aktuellen Inhalt entspricht
-          >
+          <Circle className={currentContent === index ? 'selected' : ''}>
             <TextInsideCircle>{item.tag}</TextInsideCircle>
           </Circle>
         </CircleContainer>
