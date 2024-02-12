@@ -41,9 +41,8 @@ const CentralTextContainer = styled.div`
   font-size: 1.5rem;
   text-align: justify;
   color: #ffffff;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
   width: 50%;
-  transition: 3s;
   height: 100%;
   min-height: 50vh;
   margin-top: 5rem;
@@ -106,12 +105,11 @@ const Circle = styled.div.attrs((props) => ({
     );
 
     ${TextInsideCircle} {
-      color: white !important;
       font-size: 1.3rem !important;
       font-weight: 200 !important;
       border-bottom: solid white !important;
-      background: none !important;
-      -webkit-background-clip: initial !important;
+      background: white !important;
+      -webkit-background-clip: text !important;
     }
   }
 `;
