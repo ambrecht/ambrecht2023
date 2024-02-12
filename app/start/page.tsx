@@ -86,7 +86,7 @@ const Grid = styled.div`
 
 const Section1 = styled.div`
   hyphens: auto;
-  text-align: justify;
+  text-align: block;
   width: 100%;
 
   grid-column: 1/ 2;

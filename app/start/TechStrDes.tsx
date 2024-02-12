@@ -61,18 +61,12 @@ const CentralTextContainer = styled.div`
 `;
 const CircleContainer = styled.div`
   text-align: center;
-
-  .selected {
-    background-color: white;
-    color: white;
-  }
 `;
 
 // Text innerhalb des Kreises
 const TextInsideCircle = styled.span`
   text-align: center;
   font-size: 1.5rem; // Angepasste Schriftgröße
-  color: white;
   padding: 10px; // Padding hinzufügen, falls nötig
 
   border-bottom: none;
@@ -83,10 +77,6 @@ const TextInsideCircle = styled.span`
   );
   -webkit-background-clip: text;
   color: transparent;
-`;
-
-const InfoText = styled.div`
-  line-height: 150%;
 `;
 
 // Circle item
@@ -120,12 +110,6 @@ const Circle = styled.div.attrs((props) => ({
       font-size: 1.3rem;
       font-weight: 200;
       border-bottom: solid white;
-
-      .selected {
-        background-color: white;
-        color: white;
-        border-bottom: solid white;
-      }
     }
   }
 `;
