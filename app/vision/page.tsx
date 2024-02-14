@@ -34,8 +34,8 @@ export default function Home() {
           Manager im Hintergrund zu agieren. Außerdem musste ich nach Berlin,
           stark beeinflusst von den romantischen Erzählungen von Seven Regner
           über das Abenteuerland Kreuzberg 61 und Alfred Döblins Berlin
-          Alexanderplatz, sah ich in dieser Stadt des Hedonismus den idealen
-          Ort, mich auszuleben und auszuprobieren.
+          Alexanderplatz, sah ich in dieser Stadt den idealen Ort, mich
+          auszuleben und auszuprobieren.
         </Paragraph>
         <Quote>Wat kost Berlin!</Quote>
         <Headline2>2. Phase: Abenteuerspielplatz Berlin</Headline2>
