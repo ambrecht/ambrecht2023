@@ -96,6 +96,8 @@ const Section1 = styled.div`
   place-self: center start;
   margin-bottom: 5em;
   line-height: 150%;
+  word-break: keep-all;
+  hyphens: none;
 
   @media (max-width: 500px) {
     grid-column: 1;
@@ -140,6 +142,8 @@ const PreText = styled.div`
   background: linear-gradient(72.61deg, #ffffff 22.63%, #ffffff 84.67%);
   -webkit-background-clip: text;
   color: transparent;
+  word-break: keep-all;
+  hyphens: none;
 `;
 
 const ColorP = styled.p`
@@ -152,4 +156,6 @@ const ColorP = styled.p`
   );
   -webkit-background-clip: text;
   color: transparent;
+  word-break: keep-all;
+  hyphens: none;
 `;
