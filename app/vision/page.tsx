@@ -1,132 +1,65 @@
 'use client';
 import styled from 'styled-components';
-import { Quote, Headline1, Headline2, Paragraph, Bild } from '@/styles/index';
+import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
 
-import LikertSurvey from '@/components/sympathy-test';
-
-export default function Home() {
+export default function Vision() {
   return (
     <>
-      {' '}
       <Container>
-        <Quote>
-          Heute betrachte ich mich als ganzheitlichen digitalen
-          Produktentwickler, als Visionär und Stratege, der das große Ganze im
-          Blick hat, aber trotzdem in jeder Phase des Projekts hinzugezogen und
-          eingesetzt werden kann. Das Leben ist für mich ein ewiger Lernprozess,
-          und es gibt immer etwas Neues zu entdecken. Am meisten Spaß habe ich,
-          wenn ich mit meinem Wissen anderen Menschen helfen kann.
-        </Quote>
-        <Headline1>Die Vier großen Relasiationsphasen</Headline1>
+        <Headline1>Meine Vision</Headline1>
 
-        <Headline2>1. Phase: Von der Musik zur Technik</Headline2>
         <Paragraph>
-          <Quote>Tach ooch!</Quote> Die ersten drei Jahrzehnte meiner Existenz
-          war ich auf der Suche nach meinem Weg, nach meiner Berufung oder noch
-          pathetischer nach meiner Bestimmung. Als Teenager wollte ich Rockstar
-          werden, aber es dauerte nicht lange, bis ich erkannte, dass ich nicht
-          das einzigste Kind mit diesem Ziel war und mir außerdem das gewisse
-          Maß an Exzentrik dazu fehlte.
+          In einer Ära, in der digitale Technologie jeden Aspekt unseres Lebens
+          beeinflusst, ist es mein Ziel, Menschen und Unternehmen zu befähigen,
+          diese Technologien nicht nur zu nutzen, sondern sie zu beherrschen.
+          Mein Motto lautet: "Es gilt, die Maschine zu beherrschen, um nicht
+          eines Tages von der Maschine beherrscht zu werden."
         </Paragraph>
-        <Paragraph>
-          In dieser ersten Realisationsphase entschied ich mich also dazu,
-          Audiotechnik und Musikproduktion zu studieren, um als Produzent und
-          Manager im Hintergrund zu agieren. Außerdem musste ich nach Berlin,
-          stark beeinflusst von den romantischen Erzählungen von Seven Regner
-          über das Abenteuerland Kreuzberg 61 und Alfred Döblins Berlin
-          Alexanderplatz, sah ich in dieser Stadt den idealen Ort, mich
-          auszuleben und auszuprobieren.
-        </Paragraph>
-        <Quote>Wat kost Berlin!</Quote>
-        <Headline2>2. Phase: Abenteuerspielplatz Berlin</Headline2>
-        <Paragraph>
-          <Bild
-            src="/derschwarzeTurm.jpg"
-            width={500}
-            height={500}
-            alt="City of Berlin"
-          ></Bild>
-          Es folgte die zweite Realisationsphase: Niemand wartete in Berlin auf
-          mich. Ruhm und Annerkunng ließen sich nicht auf der Straße finden. Ich
-          musste also lernen die Komfortzone meiner Introvertiertheit zu
-          verlassen und beginnen, aktiv auf die Menschen zuzugehen. Ich
-          durchsuchte das Internet nach Bands, in denen ich mich engagieren
-          könnte, und wurde fündig. Bei diesen Kollaborationen habe ich zum
-          ersten Mal meine Stärke für die ganzheitliche Positionierung und die
-          Bildung authentischer Künstleridentitäten (Branding) kennengelernt.
-        </Paragraph>
-        <Paragraph>
-          Die Erkenntnis aus dieser Zeit war, dass viele Musiker den Fehler
-          machen, sich auf ihr technisches Know-how zu konzentrieren und viel zu
-          wenig auf die Atmosphäre und Gefühlswelt, die sie mit ihrer Musik
-          erzeugen; das ist aber das Einzige, woran der Musikfan interessiert
-          ist. Ihm ist völlig egal, wie viele Tonleitern ein Gitarrist in einer
-          Sekunde runterspielen kann. Der Musikhörer will Teil von etwas Großem
-          sein, er will in der Musik wie in einem Ozean versinken und das Gefühl
-          haben das die Songs nur für ihn geschrieben sind.
-        </Paragraph>
-        <Headline2>3. Phase: Der Weg zum interdisziplinären Experten</Headline2>
-        <Paragraph>
-          <Bild
-            src="/badehaus.png"
-            width={500}
-            height={500}
-            alt="Monokultur"
-          ></Bild>
-          Es folgte die dritte Realisationsphase: Ja, zusammen im Team an einem
-          gemeinsamen Ziel zu arbeiten, motiviert mich zu Höchstleistungen, und
-          es macht mir verdammten Spaß, mit meiner Arbeit Emotionen auszulösen.{' '}
-          ABER ich muss versuchen, diese Fähigkeiten in einer anderen Branche
-          einzusetzen, einer nüchteren rationaleren Branche, die Musik soll
-          Hobby bleiben.
-        </Paragraph>
-        <Paragraph>
-          Ich stellte mir also die Frage, wie kann ich mein technisches
-          Know-how, meine Managementfähigkeiten und meine Kreativität
-          wirtschaftlich effektiver einsetzen?
-        </Paragraph>
-        <Paragraph>
-          Diese Frage führte mich zur Ausbildung zum Fachinformatiker für
-          Anwendungsentwicklung bei der DIXENO GmbH. Hier lernte ich alles über
-          das Thema Webentwicklung, Projektmanagement und UX-Design.
-        </Paragraph>
+
         <Headline2>
-          4. Phase: Generalist im digitalen Zeitalter: Vielseitigkeit als Stärke
+          Ganzheitliche Produktentwicklung mit Sinn und Zweck
         </Headline2>
         <Paragraph>
-          Nach der Ausbildung folgte die vierte Realisationsphase: Ich bin kein
-          Spezialist, ich bin ein Generalist. Es macht mir zwar Spaß, mich für
-          zwei Wochen hinter dem Bildschirm zu verschanzen und den Backendcode
-          für eine API zu schreiben, aber ich will das nicht für immer machen.
-          Ich will an Meetings teilnehmen, mit Kunden Workshops durchführen und,
-          wenn ich eine Idee für ein Design habe, mit dem UX-Team zusammenar
-          beiten. Ich möchte an allen Phasen der digitalen Produktentwicklung
-          beteiligt sein. Mein Ziel ist es, mit verschiedenen Menschen an
-          unterschiedlichen Projekten zu arbeiten und diese zum Erfolg zu
-          führen.
+          Kundenerfahrungen sind für mich mehr als nur nüchterne Transaktionen.
+          Sie sind wie eine Geschichte – eine epische Reise oder ein
+          mitreißender Thriller. In meiner Arbeit verbinde ich Strategie, Design
+          und Technologie zu Lösungen, die nicht nur funktionieren, sondern
+          echten Mehrwert bieten. Ich hinterfrage bestehende Strukturen radikal
+          und entwickle neue Ansätze, die nicht nur technisch überzeugend,
+          sondern auch menschlich und ethisch fundiert sind.
         </Paragraph>
+
+        <Quote>
+          "Kundenerfahrungen können romantische Liebesgeschichten oder epische
+          Heldensagen sein."
+        </Quote>
+
+        <Headline2>
+          Meine Arbeitsweise: Kreativ, kritisch, kollaborativ
+        </Headline2>
         <Paragraph>
-          Das, was die Bereiche Produktmanagement, UX-Design, Marketing, Design
-          Thinking und Webentwicklung verbindet, ist das gemeinsame Ziel, bei
-          einem Endnutzer ein Gefühl auszulösen. Diese Erkenntnis führte mich zu
-          einer Rolle, in der ich meine vielfältigen Fähigkeiten und Interessen
-          vollständig einbringen konnte. Ich begann, Projekte zu leiten, bei
-          denen ich sowohl technische als auch kreative Aspekte berücksichtigen
-          konnte.
+          Meine Arbeit basiert auf den Prinzipien des ganzheitlichen Denkens:
+          Technologie soll den Menschen dienen, nicht umgekehrt. Als
+          unabhängiger Stratege und kreativer Generalist unterstütze ich
+          Unternehmen, die bereit sind, über den Tellerrand hinaus zu denken und
+          sich für langfristige, sinnvolle Lösungen zu entscheiden. Ich arbeite
+          nur an Projekten, die ethisch und sozial verantwortlich sind und einen
+          echten positiven Beitrag leisten.
         </Paragraph>
+
+        <Headline2>Mein Versprechen</Headline2>
         <Paragraph>
-          Diese Rolle erlaubte es mir, mein tiefgreifendes technisches
-          Verständnis mit meinem Gespür für Design und Benutzererfahrung zu
-          verbinden. Ich fand großen Gefallen daran, Teams zu leiten und
-          Projekte von der Idee bis zur erfolgreichen Umsetzung zu begleiten.
+          Ich stehe für Integrität, Qualität und Innovation. Jedes Projekt, das
+          ich begleite, zielt darauf ab, echte Werte zu schaffen – sowohl für
+          die Kunden als auch für die Gesellschaft. Dabei kombiniere ich
+          praxeologische Grundsätze mit modernen Technologien, um langfristige,
+          nachhaltige Lösungen zu schaffen.
         </Paragraph>
+
         <Paragraph>
-          Heute betrachte ich mich also als ganzheitlichen digitalen
-          Produktentwickler, als Visionär und Strategen, der das große Ganze im
-          Blick hat, aber trotzdem in jeder Phase des Projekts hinzugezogen und
-          eingesetzt werden kann. Das Leben ist für mich ein ewiger Lernprozess,
-          und es gibt immer etwas Neues zu entdecken. Meine größte Motivation
-          ist es, wenn ich mit meinem Wissen anderen Menschen helfen kann.
+          Sind Sie bereit, gemeinsam die digitale Zukunft zu gestalten? Lassen
+          Sie uns zusammenarbeiten, um das Internet und die digitale Welt zu
+          einem besseren Ort zu machen.
         </Paragraph>
       </Container>
     </>
@@ -137,8 +70,6 @@ const Container = styled.div`
   max-width: 66vw;
   margin-right: auto;
   margin-left: auto;
-
   margin-top: 4rem;
-
   text-align: left;
 `;
