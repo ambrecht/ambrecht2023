@@ -5,16 +5,16 @@ import { Quote, Headline1, Headline2, Paragraph, Bild } from '@/styles/';
 
 const content = [
   {
-    tag: 'technologie',
-    content: `Als ganzheitlicher digitaler Produktentwickler liegt mein Fokus nicht nur auf der technischen Umsetzung, sondern auch darauf, wie Technologie genutzt werden kann, um innovative Lösungen zu schaffen. Ich beherrsche die Kunst der Web- und App-Entwicklung, wobei ich stets darauf achte, die neuesten technologischen Trends und Möglichkeiten zu integrieren. Meine Arbeit in der Technologie geht über das Programmieren hinaus – es geht darum, digitale Produkte zu entwickeln, die funktional, effizient und zukunftssicher sind.`,
+    tag: 'Technologie',
+    content: `Technologie ist das moderne Werkzeug, das die digitale Welt formt – doch sie muss dem Menschen dienen, nicht umgekehrt. In meiner Arbeit sorge ich dafür, dass Technologie zur Entfaltung von Freiheit und Kreativität beiträgt. Es geht nicht nur um effiziente Systeme, sondern um Lösungen, die den Nutzern Kontrolle und Eigenständigkeit verleihen.`,
   },
   {
-    tag: 'strategie ',
-    content: `In meiner Rolle als strategischer Berater tauche ich tief in die Geschäftsziele und Herausforderungen meiner Kunden ein. Ich entwickle individuelle Strategien, die auf aktuelle und zukünftige Markttrends reagieren, um nachhaltiges Wachstum und langfristigen Erfolg zu sichern. Meine strategische Arbeit umfasst die Analyse von Markttrends, das Verständnis für Kundenbedürfnisse und das Entwerfen von Geschäftsmodellen, die digitale Innovationen effektiv nutzen.`,
+    tag: 'Strategie',
+    content: `Eine Strategie ist mehr als ein Plan – sie ist das Zusammenspiel von Theorie und Praxis, die Verbindung von langfristiger Voraussicht und aktueller Markterkenntnis. In meiner strategischen Beratung geht es nicht nur darum, den nächsten Schritt zu kennen, sondern die gesamte Reise zu planen. So wie ein Schachspieler den gesamten Verlauf des Spiels vor Augen hat, gestalte ich digitale Strategien, die nachhaltigen Erfolg sichern.`,
   },
   {
-    tag: 'design ',
-    content: `Design ist ein integraler Bestandteil meiner Arbeit als digitaler Produktentwickler. Ich gestalte nicht nur visuell ansprechende Websites und Anwendungen, sondern schaffe auch einprägsame Benutzererlebnisse. Mein Designansatz konzentriert sich darauf, die Markenidentität meiner Kunden durch kreatives und benutzerzentriertes Design zum Leben zu erwecken. Ich kombiniere ästhetische Elemente mit funktionaler Einfachheit, um sicherzustellen, dass jede digitale Lösung nicht nur gut aussieht, sondern auch intuitiv und benutzerfreundlich ist.`,
+    tag: 'Design',
+    content: `Design ist die Brücke zwischen Idee und Wirklichkeit, zwischen Vision und Nutzererfahrung. Es geht nicht nur darum, schön auszusehen – gutes Design erzählt eine Geschichte, schafft eine Verbindung und lässt den Benutzer Teil einer größeren Erzählung werden. Mein Designansatz vereint Ästhetik mit intuitiver Funktionalität, um Erlebnisse zu schaffen, die sowohl fesseln als auch leiten.`,
   },
 ];
 
