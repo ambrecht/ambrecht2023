@@ -12,8 +12,8 @@ export default function Vision() {
           In einer Ära, in der digitale Technologie jeden Aspekt unseres Lebens
           beeinflusst, ist es mein Ziel, Menschen und Unternehmen zu befähigen,
           diese Technologien nicht nur zu nutzen, sondern sie zu beherrschen.
-          Mein Motto lautet: "Es gilt, die Maschine zu beherrschen, um nicht
-          eines Tages von der Maschine beherrscht zu werden."
+          Mein Motto lautet: &quot;Es gilt, die Maschine zu beherrschen, um
+          nicht eines Tages von der Maschine beherrscht zu werden.&quot;
         </Paragraph>
 
         <Headline2>
@@ -30,8 +30,8 @@ export default function Vision() {
         </Paragraph>
 
         <Quote>
-          "Kundenerfahrungen können romantische Liebesgeschichten oder epische
-          Heldensagen sein."
+          &quot;Kundenerfahrungen können romantische Liebesgeschichten oder
+          epische Heldensagen sein.&quot;
         </Quote>
 
         <Headline2>
