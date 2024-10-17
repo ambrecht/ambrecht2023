@@ -30,6 +30,7 @@ const Navigation: React.FC = () => {
           <NavItem href="/vision" label="Vision" />
           <NavItem href="/process" label="Prozess" />
           <NavItem href="/work" label="Werkstatt" />
+          <NavItem href="/blog" label="Blog" />
         </NavList>
         <Gridelement>
           <ContactButton onClick={handleEmailClick}>kontakt</ContactButton>

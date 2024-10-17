@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/work/cafe/page.tsx",
-    "components/Universe/Universe.js"
+    "components/Universe/Universe.js",
+    "app/heizlast/FullHeizlastChart.tsx"
   ],
   "exclude": ["node_modules"]
 }

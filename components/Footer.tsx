@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react';
 import { Paragraph } from '@/styles/index';
 import Link from 'next/link';
-
+import SecondFooter from '@/components/secondFooter';
 // MARKUP
 export function Footer() {
   return (
@@ -49,9 +49,9 @@ export function Footer() {
           </Link>
         </Container>
       </Footerbox>
+
       <Copy>
-        COPYRIGHT ©1990-2024. Alle Rechte vorbehalten. Nicht autorisierte, ganze
-        oder teilweise Reproduktion ist strengstens untersagt.
+        <SecondFooter></SecondFooter>
       </Copy>
     </Wrapper>
   );
@@ -91,16 +91,12 @@ const Bild = styled(Image)`
 `;
 
 const Copy = styled.span`
-  text-align: center;
   font-size: 0.5em;
   position: absolute;
   color: white;
-  opacity: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  opacity: 100%;
   left: 0;
   right: 0;
-  text-align: center;
   bottom: 0;
 
   @media (max-width: 1300px) {

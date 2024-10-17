@@ -2,19 +2,18 @@ import { createGlobalStyle, css } from 'styled-components';
 import { Poppins } from 'next/font/google';
 import { Cormorant_Garamond } from 'next/font/google';
 
-// Ihre vorhandene Browser-Erkennungslogik
+// Browser detection
 const isChrome =
   typeof navigator !== 'undefined'
     ? /Chrome/.test(navigator.userAgent) &&
       /Google Inc/.test(navigator.vendorSub)
     : false;
 
-// Ihre Chrome-spezifischen Stile
+// Chrome-specific styles
 const ChromeStyles = css`
   --chromeXXX: 10vw;
 `;
 
-// Ihre Font-Definitionen
 const gara = Cormorant_Garamond({
   weight: ['300', '400', '700', '500', '600'],
   subsets: ['latin'],
@@ -25,13 +24,16 @@ const popp = Poppins({
   subsets: ['latin'],
   weight: ['200', '400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
+  display: 'swap',
 });
 
-// Ihre globalen Stile mit Chrome-Anpassungen
+console.log(popp.style.fontFamily);
+
+// Global Styles including Chrome-specific adjustments
 const GlobalStyles = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
-  };
+  }
   
   :root {
     --measure: 60ch;
@@ -45,8 +47,9 @@ const GlobalStyles = createGlobalStyle`
     font-size: clamp(12px, 1vw, 24px);
     text-wrap: balance;
     box-sizing: border-box;
+    font-family: var(--pop-Font); 
 
-    ${isChrome && ChromeStyles} // Chrome-spezifische Stile hier integrieren
+    ${isChrome && ChromeStyles} // Chrome-specific adjustments
   }
 
   body {
@@ -58,6 +61,10 @@ const GlobalStyles = createGlobalStyle`
   html:focus-within {
     scroll-behavior: smooth;
   }
+  .gradientText {
+  background: linear-gradient(72.61deg, rgb(0, 130, 255) 22.63%, rgb(79, 5, 245) 84.67%) padding-box text;
+  color: transparent;
+}
 `;
 
 export default GlobalStyles;
