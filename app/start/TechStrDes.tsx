@@ -3,18 +3,23 @@ import styled from 'styled-components';
 import React, { useState, useEffect } from 'react';
 import { Quote, Headline1, Headline2, Paragraph, Bild } from '@/styles/';
 
+interface StyledParaProps {
+  position: 'left' | 'center' | 'right';
+}
+
 const content = [
   {
     tag: 'Technologie',
-    content: `Technologie ist das moderne Werkzeug, das die digitale Welt formt – doch sie muss dem Menschen dienen, nicht umgekehrt. In meiner Arbeit sorge ich dafür, dass Technologie zur Entfaltung von Freiheit und Kreativität beiträgt. Es geht nicht nur um effiziente Systeme, sondern um Lösungen, die den Nutzern Kontrolle und Eigenständigkeit verleihen.`,
+    content: `Technologie ist mehr als ein Werkzeug – sie ist ein Mittel zur Schaffung echter, nachhaltiger Werte. In meiner Arbeit setze ich bewusst auf Lösungen, die Freiheit und Kontrolle zurück in die Hände der Nutzer legen. Keine kurzlebigen Trends, keine Massenware – ich entwickle technologische Konzepte, die langfristig Bestand haben und Menschen befähigen, ihre Unabhängigkeit zu wahren.`,
   },
   {
     tag: 'Strategie',
-    content: `Eine Strategie ist mehr als ein Plan – sie ist das Zusammenspiel von Theorie und Praxis, die Verbindung von langfristiger Voraussicht und aktueller Markterkenntnis. In meiner strategischen Beratung geht es nicht nur darum, den nächsten Schritt zu kennen, sondern die gesamte Reise zu planen. So wie ein Schachspieler den gesamten Verlauf des Spiels vor Augen hat, gestalte ich digitale Strategien, die nachhaltigen Erfolg sichern.`,
+    content: `Strategie ist nicht nur ein Plan – sie ist der Kern jeder langfristigen Vision. In meiner strategischen Beratung geht es darum, das große Ganze zu sehen. Wie ein Schachspieler plane ich mehrere Züge voraus und entwickle Strategien, die auf Dauer Bestand haben. Kurzfristige Erfolge interessieren mich nicht – ich baue auf nachhaltige Strategien, die echte Werte schaffen und Ihr Unternehmen langfristig stark machen.`,
   },
+
   {
     tag: 'Design',
-    content: `Design ist die Brücke zwischen Idee und Wirklichkeit, zwischen Vision und Nutzererfahrung. Es geht nicht nur darum, schön auszusehen – gutes Design erzählt eine Geschichte, schafft eine Verbindung und lässt den Benutzer Teil einer größeren Erzählung werden. Mein Designansatz vereint Ästhetik mit intuitiver Funktionalität, um Erlebnisse zu schaffen, die sowohl fesseln als auch leiten.`,
+    content: `Design ist nicht nur eine Frage der Ästhetik – es ist eine tiefere Ausdrucksform von Werten und Identität. Gutes Design ist zeitlos, funktional und erzählt eine Geschichte, die verbindet. Mein Designansatz fokussiert sich darauf, visuelle Erlebnisse zu schaffen, die nicht nur beeindrucken, sondern die Essenz Ihrer Marke verkörpern. Weg von oberflächlicher Schönheit hin zu Designs, die Bestand haben und eine tiefe emotionale Bindung schaffen.`,
   },
 ];
 
@@ -29,6 +34,7 @@ const GridContainer = styled.div`
   height: auto;
   gap: 20px;
   position: relative;
+  max-height: 100vh;
 
   font-weight: 100;
   @media (max-width: 500px) {
@@ -36,13 +42,47 @@ const GridContainer = styled.div`
   }
 `;
 
+const StyledPara = styled(Paragraph)<StyledParaProps>`
+  position: absolute;
+  top: 0;
+  left: ${(props) => {
+    if (props.position === 'center') return '50%';
+    else if (props.position === 'left') return '10%';
+    else if (props.position === 'right') return '90%';
+  }};
+  transform: translateX(-50%)
+    scale(${(props) => (props.position === 'center' ? 1 : 0.9)});
+  z-index: ${(props) => (props.position === 'center' ? '2' : '1')};
+  font-size: ${(props) => (props.position === 'center' ? '1.7rem' : '1.2rem')};
+  transition: all 1s ease-in-out;
+  width: ${(props) => {
+    if (props.position === 'center') return '50%';
+    else if (props.position === 'left') return '30%';
+    else if (props.position === 'right') return '30%';
+  }};
+
+  // Überschreiben der Stile für inaktive Texte
+  ${(props) =>
+    props.position !== 'center' &&
+    `
+  
+    color: rgba(255, 255, 255, 0.466);
+    filter: blur(5px);
+
+   
+    
+
+
+  `}
+`;
+
 const CentralTextContainer = styled.div`
-  grid-column: 1 / 4; // Standardmäßig in der mittleren Spalte
+  position: relative;
+  grid-column: 1 / 4;
   font-size: 1.5rem;
   text-align: justify;
   color: #ffffff;
-  transition: opacity 0.5s ease-in-out;
-  width: 50%;
+  width: 100%;
   height: 100%;
   min-height: 50vh;
   margin-top: 5rem;
@@ -58,6 +98,7 @@ const CentralTextContainer = styled.div`
     gap: 0px;
   }
 `;
+
 const CircleContainer = styled.div`
   text-align: center;
 `;
@@ -114,12 +155,43 @@ const Circle = styled.div.attrs((props) => ({
   }
 `;
 
+// Neue Pfeilkomponenten
+const ArrowButton = styled.button`
+  background: linear-gradient(
+    72.61deg,
+    rgb(0, 130, 255) 22.63%,
+    rgb(79, 5, 245) 84.67%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  border: none;
+  background-color: transparent;
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const LeftArrow = styled(ArrowButton)`
+  left: 10px;
+  top: 50%;
+`;
+
+const RightArrow = styled(ArrowButton)`
+  right: 10px;
+  top: 50%;
+`;
+
 // Next.js Komponente
 const MyGridComponent: React.FC = () => {
-  // Initialen State auf 'Strategie' setzen (Index 1)
   const [currentContent, setCurrentContent] = useState<number>(1);
 
-  // SEO-Optimierung: Seite bei Initial Load für die Suchmaschine optimieren
   useEffect(() => {
     const script = document.createElement('script');
     script.textContent = `
@@ -148,14 +220,45 @@ const MyGridComponent: React.FC = () => {
         </CircleContainer>
       ))}
       <CentralTextContainer>
-        {content.map((item, index) => (
-          <Paragraph
-            key={item.tag}
-            style={{ display: currentContent === index ? 'block' : 'none' }}
-          >
-            {item.content}
-          </Paragraph>
-        ))}
+        <LeftArrow
+          onClick={() =>
+            setCurrentContent(
+              (currentContent + content.length - 1) % content.length,
+            )
+          }
+          aria-label="Vorheriges Element"
+        >
+          &#x25C0;
+        </LeftArrow>
+        <RightArrow
+          onClick={() =>
+            setCurrentContent((currentContent + 1) % content.length)
+          }
+          aria-label="Nächstes Element"
+        >
+          &#x25B6;
+        </RightArrow>
+        {content.map((item, index) => {
+          let position: 'left' | 'center' | 'right';
+          const contentLength = content.length;
+          if (index === currentContent) {
+            position = 'center';
+          } else if (index === (currentContent + 1) % contentLength) {
+            position = 'right';
+          } else if (
+            index ===
+            (currentContent + contentLength - 1) % contentLength
+          ) {
+            position = 'left';
+          } else {
+            position = 'right'; // Anpassung für zusätzliche Elemente
+          }
+          return (
+            <StyledPara key={item.tag} position={position}>
+              {item.content}
+            </StyledPara>
+          );
+        })}
       </CentralTextContainer>
     </GridContainer>
   );

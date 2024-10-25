@@ -36,7 +36,7 @@ export default function Home() {
   }, [showBackground]);
 
   return (
-    <>
+    <StartContainer>
       {' '}
       {showBackground && <Background opacityValue={opacity} />}
       <Grid>
@@ -59,9 +59,11 @@ export default function Home() {
       <Survey></Survey>
       <Headline1>Technologiestack</Headline1>
       <MyGridComponent></MyGridComponent>
-    </>
+    </StartContainer>
   );
 }
+
+const StartContainer = styled.div``;
 
 const Grid = styled.div`
   font-size: ${clampBuilder({
