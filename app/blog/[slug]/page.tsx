@@ -2,6 +2,7 @@ import { getPostData } from '@/lib/posts';
 import { remark } from 'remark';
 import html from 'remark-html';
 import Head from 'next/head';
+import Image from 'next/image';
 
 interface Props {
   params: {
@@ -22,18 +23,15 @@ export default async function Post({ params }: Props) {
 
   // Passe das HTML an, um Überschriften und Absätze visuell hervorzuheben
   contentHtml = contentHtml
-    .replace(
-      /<h2>/g,
-      '<h2 class="gradientText text-4xl font-bold mt-8 mb-4">', // H2 für visuelle Hervorhebung
-    )
+    .replace(/<h2>/g, '<h2 class="gradientText text-4xl font-bold mt-8 mb-4">')
     .replace(
       /<h3>/g,
       '<h3 class="gradientText text-3xl font-semibold mt-6 mb-3">',
-    ) // H3 für visuelle Hervorhebung
+    )
     .replace(
       /<h4>/g,
       '<h4 class="gradientText text-2xl font-medium mt-4 mb-2">',
-    ) // H4 für visuelle Hervorhebung
+    )
     .replace(
       /<p>/g,
       '<p class="text-lg leading-relaxed text-gray-300 tracking-wide mb-6">',
@@ -70,6 +68,18 @@ export default async function Post({ params }: Props) {
             <p className="text-sm text-gray-400 mb-12 text-center">
               {postData.date}
             </p>
+            {/* Bild anzeigen, wenn verfügbar */}
+            {postData.ogImage && (
+              <div className="my-8 text-center">
+                <Image
+                  src={postData.ogImage}
+                  alt={`Bild für ${postData.title}`}
+                  width={800}
+                  height={400}
+                  className="rounded-lg"
+                />
+              </div>
+            )}
           </header>
 
           {/* Hauptinhalt */}

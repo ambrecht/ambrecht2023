@@ -12,12 +12,12 @@ keywords:
   - Turing
   - Künstliche Intelligenz
   - Selbstbewusstsein
-author: 'Max Mustermann'
+author: 'Tino Ambrecht'
 og_title: 'Warum Maschinen niemals echtes Bewusstsein erlangen können'
 og_description:
   'Eine Analyse darüber, warum Maschinen niemals echtes Bewusstsein erlangen
   können, basierend auf den Erkenntnissen von Gödel, Turing und Häberlin.'
-og_image: '/images/maschinen-bewusstsein.jpg'
+og_image: '/blog/bewusstsein.jpg'
 ---
 
 # **Warum Maschinen niemals echtes Bewusstsein erlangen können: Eine philosophische Analyse basierend auf Gödel, Turing und Häberlin**

@@ -1,5 +1,5 @@
 ---
-title: ''
+title: 'Chaos und Komplexität in der Softwareentwicklung'
 date: '2024-10-16'
 description:
   'Ein detaillierter Einblick in die Auswirkungen von Chaos und Komplexität in
@@ -13,7 +13,7 @@ keywords:
     'Technische Schulden',
     'Agilität',
   ]
-author: 'Dein Name'
+author: 'Tino Ambrecht'
 axiom1:
   'Komplexe Systeme entwickeln immer emergente Eigenschaften, die über ihre
   Einzelteile hinausgehen.'
@@ -23,6 +23,7 @@ axiom2:
 axiom3:
   'Die Selbstorganisation von Teams ermöglicht es, Komplexität und Chaos zu
   steuern.'
+og_image: '/blog/complex.png'
 ---
 
 # Chaos und Komplexität in der Softwareentwicklung
