@@ -149,6 +149,15 @@ export default function TypewriterPage() {
     }
   }
 
+  // Funktion, um einen Archiv-Eintrag zu löschen
+  function deleteEntry(index: number) {
+    // Entfernt den Eintrag aus dem lokalen Zustand
+    setHistory((prevHistory) => prevHistory.filter((_, i) => i !== index));
+
+    // Optional: Hier kann ein API-Aufruf erfolgen, um den Eintrag auch serverseitig zu löschen.
+    // fetch('/api/delete-entry', { method: 'POST', body: JSON.stringify({ index }) });
+  }
+
   // Vollbild-Darstellung (Portal)
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
@@ -186,7 +195,6 @@ export default function TypewriterPage() {
             onClick={finalizeSession}
             className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200 flex items-center"
           >
-            {/* Disketten-Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 576 512"
@@ -239,11 +247,19 @@ export default function TypewriterPage() {
               }
               return (
                 <div key={idx} className="mb-4 px-4 py-3 shadow-sm">
-                  <h3 className="font-bold text-xl mb-1">
-                    Session #{idx + 1}{' '}
-                    {parsed.timestamp &&
-                      `(${new Date(parsed.timestamp).toLocaleString()})`}
-                  </h3>
+                  <div className="flex justify-between items-center mb-1">
+                    <h3 className="font-bold text-xl">
+                      Session #{idx + 1}{' '}
+                      {parsed.timestamp &&
+                        `(${new Date(parsed.timestamp).toLocaleString()})`}
+                    </h3>
+                    <button
+                      onClick={() => deleteEntry(idx)}
+                      className="px-3 py-1 text-sm bg-red-100 rounded hover:bg-red-200"
+                    >
+                      Löschen
+                    </button>
+                  </div>
                   <div className="whitespace-pre-wrap break-words text-lg leading-relaxed">
                     {parsed.text}
                   </div>
