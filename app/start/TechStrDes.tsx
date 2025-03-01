@@ -31,6 +31,7 @@ const GridContainer = styled.div`
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 `;
 
@@ -39,6 +40,11 @@ const TextGrid = styled.div`
   grid-template-columns: 100%;
   width: 100%;
   position: relative;
+  height: 60vh;
+
+  @media (max-width: 500px) {
+    height: auto;
+  }
 `;
 
 interface StyledParaProps {
@@ -51,38 +57,51 @@ const StyledPara = styled(Paragraph)<StyledParaProps>`
   transition: all 1s ease-in-out;
   width: 50%;
   margin: 0 auto;
+  cursor: ${(props) => (props.position === 'center' ? 'default' : 'pointer')};
 
-  ${(props) => {
-    switch (props.position) {
-      case 'center':
-        return `
-          transform: translateX(0) scale(1);
-          font-size: 1.7rem;
-          opacity: 1;
-          filter: blur(0px);
-          color: white;
-          z-index: 2;
-        `;
-      case 'left':
-        return `
-          transform: translateX(-80%) scale(0.9);
-          font-size: 1.2rem;
-          opacity: 0.466;
-          filter: blur(5px);
-          color: rgba(255, 255, 255, 0.466);
-          z-index: 1;
-        `;
-      case 'right':
-        return `
-          transform: translateX(80%) scale(0.9);
-          font-size: 1.2rem;
-          opacity: 0.466;
-          filter: blur(5px);
-          color: rgba(255, 255, 255, 0.466);
-          z-index: 1;
-        `;
-    }
-  }}
+  @media (max-width: 500px) {
+    width: 90%;
+    display: ${(props) => (props.position === 'center' ? 'block' : 'none')};
+    transform: none !important;
+    font-size: 1.2rem !important;
+    opacity: 1 !important;
+    filter: none !important;
+    color: white !important;
+  }
+
+  @media (min-width: 501px) {
+    ${(props) => {
+      switch (props.position) {
+        case 'center':
+          return `
+            transform: translateX(0) scale(1);
+            font-size: 1.7rem;
+            opacity: 1;
+            filter: blur(0px);
+            color: white;
+            z-index: 2;
+          `;
+        case 'left':
+          return `
+            transform: translateX(-80%) scale(0.9);
+            font-size: 1.2rem;
+            opacity: 0.466;
+            filter: blur(5px);
+            color: rgba(255, 255, 255, 0.466);
+            z-index: 1;
+          `;
+        case 'right':
+          return `
+            transform: translateX(80%) scale(0.9);
+            font-size: 1.2rem;
+            opacity: 0.466;
+            filter: blur(5px);
+            color: rgba(255, 255, 255, 0.466);
+            z-index: 1;
+          `;
+      }
+    }}
+  }
 `;
 
 const CentralTextContainer = styled.div`
@@ -99,17 +118,20 @@ const CentralTextContainer = styled.div`
   line-height: 200%;
   position: relative;
 
-  @media (max-width: 960px) {
-    width: 100%;
-  }
-
   @media (max-width: 500px) {
-    gap: 0px;
+    grid-column: 1;
+    margin-top: 2rem;
+    min-height: auto;
   }
 `;
 
 const CircleContainer = styled.div`
   text-align: center;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    max-width: 200px;
+  }
 `;
 
 const TextInsideCircle = styled.span`
@@ -124,6 +146,10 @@ const TextInsideCircle = styled.span`
   );
   -webkit-background-clip: text;
   color: transparent;
+
+  @media (max-width: 500px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const Circle = styled.div.attrs((props) => ({
@@ -140,6 +166,10 @@ const Circle = styled.div.attrs((props) => ({
   background-image: linear-gradient(72.61deg, #969696 22.63%, #ffffff 84.67%);
   transition: 0.3s;
 
+  @media (max-width: 500px) {
+    --circle-size: 80px;
+  }
+
   &:hover,
   &.selected {
     transform: scale(1.2);
@@ -155,6 +185,10 @@ const Circle = styled.div.attrs((props) => ({
       border-bottom: solid white !important;
       background: white !important;
       -webkit-background-clip: text !important;
+
+      @media (max-width: 500px) {
+        font-size: 1.1rem !important;
+      }
     }
   }
 `;
@@ -178,6 +212,11 @@ const ArrowButton = styled.button`
   z-index: 3;
   &:focus {
     outline: none;
+  }
+
+  @media (max-width: 500px) {
+    top: 0;
+    transform: none;
   }
 `;
 
@@ -252,7 +291,15 @@ const MyGridComponent: React.FC = () => {
         </RightArrow>
         <TextGrid>
           {content.map((item, index) => (
-            <StyledPara key={item.tag} position={getPosition(index)}>
+            <StyledPara
+              key={item.tag}
+              position={getPosition(index)}
+              onClick={() => {
+                if (getPosition(index) !== 'center') {
+                  setCurrentContent(index);
+                }
+              }}
+            >
               {item.content}
             </StyledPara>
           ))}

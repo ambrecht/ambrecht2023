@@ -15,6 +15,7 @@
     "@react-three/fiber": "^8.15.16",
     "@shadcn/ui": "^0.0.4",
     "@three-ts/orbit-controls": "^1.4.7",
+    "@upstash/redis": "^1.34.4",
     "chart.js": "^4.4.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -37,6 +38,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.161.0",
     "typewriter-effect": "^2.21.0",
+    "uuid": "^11.1.0",
     "web-api-hooks": "^3.0.2"
   },
   "devDependencies": {
