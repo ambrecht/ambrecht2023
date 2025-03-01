@@ -164,10 +164,14 @@ export default function TypewriterPage() {
     // fetch('/api/delete-entry', { method: 'POST', body: JSON.stringify({ index }) });
   }
 
+  // Typographiestil: serifenbetont und groß – sowohl in Vollbild als auch in Standard
+  const typewriterTextClasses =
+    'whitespace-pre-wrap break-words font-serif text-5xl md:text-6xl leading-relaxed';
+
   // Vollbild-Darstellung (Portal)
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
-      <div className="fixed inset-0 z-[9999] bg-white text-black font-typewriter flex flex-col overflow-auto">
+      <div className="fixed inset-0 z-[9999] bg-white text-black font-serif flex flex-col overflow-auto">
         <div className="p-4 flex justify-end space-x-2">
           <button
             onClick={deleteCurrentText}
@@ -184,7 +188,7 @@ export default function TypewriterPage() {
         </div>
         <div className="flex-grow flex flex-col items-center justify-start px-4 pb-4">
           <div className="w-full max-w-4xl min-h-[80vh] flex flex-col p-4 shadow-md">
-            <div className="flex-grow whitespace-pre-wrap break-words text-2xl leading-relaxed">
+            <div className={typewriterTextClasses}>
               {typedText}
               <span className="blinking-cursor">|</span>
             </div>
@@ -197,10 +201,12 @@ export default function TypewriterPage() {
 
   // Standarddarstellung
   return (
-    <main className="w-full min-h-screen bg-white text-black font-typewriter flex flex-col">
+    <main className="w-full min-h-screen bg-white text-black font-serif flex flex-col">
       {/* Kopfbereich */}
       <header className="p-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Meine Schreibmaschine</h1>
+        <h1 className="text-4xl md:text-5xl font-bold">
+          Meine Schreibmaschine
+        </h1>
         <div className="flex space-x-2">
           {/* Speichern-Knopf */}
           <button
@@ -238,7 +244,7 @@ export default function TypewriterPage() {
         {/* Eingabefeld */}
         <section className="mb-6 flex-grow flex flex-col">
           <div className="flex-grow w-full max-w-4xl mx-auto p-4 shadow-md overflow-auto">
-            <div className="whitespace-pre-wrap break-words text-2xl leading-relaxed">
+            <div className={typewriterTextClasses}>
               {typedText}
               <span className="blinking-cursor">|</span>
             </div>
@@ -251,7 +257,7 @@ export default function TypewriterPage() {
 
         {/* Archiv */}
         <section className="w-full max-w-4xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-2">Archiv</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold mb-2">Archiv</h2>
           {history.length === 0 ? (
             <p className="text-gray-700 text-lg">
               Keine früheren Einträge vorhanden.
@@ -267,7 +273,7 @@ export default function TypewriterPage() {
               return (
                 <div key={idx} className="mb-4 px-4 py-3 shadow-sm">
                   <div className="flex justify-between items-center mb-1">
-                    <h3 className="font-bold text-xl">
+                    <h3 className="font-bold text-2xl">
                       Session #{idx + 1}{' '}
                       {parsed.timestamp &&
                         `(${new Date(parsed.timestamp).toLocaleString()})`}
@@ -279,7 +285,7 @@ export default function TypewriterPage() {
                       Löschen
                     </button>
                   </div>
-                  <div className="whitespace-pre-wrap break-words text-lg leading-relaxed">
+                  <div className="whitespace-pre-wrap break-words font-serif text-xl md:text-2xl leading-relaxed">
                     {parsed.text}
                   </div>
                 </div>
