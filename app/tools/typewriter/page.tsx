@@ -1,74 +1,42 @@
 'use client';
 
-import React, { useEffect, useState, useRef, FormEvent } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
-// Generiert eine eindeutige Kennung für den aktuellen Client
-function generateWriterId(): string {
-  return 'writer-' + Math.random().toString(36).substring(2, 15);
-}
-
 export default function TypewriterPage() {
-  // Zustand für den aktuell angezeigten Text
+  // Aktuell eingegebener Text
   const [typedText, setTypedText] = useState('');
-  // Archiv der finalisierten Sessiontexte
+  // Archiv
   const [history, setHistory] = useState<string[]>([]);
-  // Status, ob die Seite im Vollbildmodus angezeigt wird
+  // Vollbildmodus an/aus
   const [isFullscreen, setIsFullscreen] = useState(false);
-  // Master-/Slave-Status (Master darf schreiben, Slave nur lesen)
-  const [isMaster, setIsMaster] = useState(false);
-  // Eindeutige Kennung des Clients (wird auch durch PIN überschrieben)
-  const [writerId, setWriterId] = useState<string>('');
-  // PIN-Eingabe (zur Master-Aktivierung)
-  const [pinInput, setPinInput] = useState('');
-  // Zustand für den Close-Button im Vollbildmodus (sichtbar bei Mausbewegung)
-  const [showClose, setShowClose] = useState(false);
-  // Referenz, um asynchrone Inkonsistenzen zu vermeiden
+
+  // Referenzen zur Vermeidung von asynchronen Inkonsistenzen
   const typedTextRef = useRef(typedText);
   const isFinalizedRef = useRef(false);
-  // Container für das Vollbild-Overlay (Portal)
+
+  // Separater Container für das Portal (Vollbild-Overlay)
   const [fullscreenContainer, setFullscreenContainer] =
     useState<HTMLElement | null>(null);
-  // Timeout für das automatische Ausblenden des Close-Buttons
-  const closeTimeoutRef = useRef<number>();
 
-  // Beim Mount: Writer-ID generieren oder aus localStorage abrufen
-  useEffect(() => {
-    let id = localStorage.getItem('writerId');
-    if (!id) {
-      id = generateWriterId();
-      localStorage.setItem('writerId', id);
-    }
-    setWriterId(id);
-  }, []);
-
-  // Falls der Benutzer die korrekte PIN eingibt, überschreiben wir die Writer-ID
-  function handlePinSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (pinInput === '4418') {
-      localStorage.setItem('writerId', '4418');
-      setWriterId('4418');
-    }
-    setPinInput('');
-  }
-
-  // Vollbild-Container anlegen
+  // Beim Mount: Portal-Container anlegen
   useEffect(() => {
     const container = document.createElement('div');
     container.id = 'typewriter-fullscreen-overlay';
     document.body.appendChild(container);
     setFullscreenContainer(container);
+
     return () => {
       document.body.removeChild(container);
     };
   }, []);
 
-  // Immer aktuelle Text-Referenz aktualisieren
+  // Aktuellen Text stets in der Ref aktualisieren
   useEffect(() => {
     typedTextRef.current = typedText;
   }, [typedText]);
 
-  // Historie der finalisierten Sessions laden
+  // Historie laden
   useEffect(() => {
     async function loadHistory() {
       try {
@@ -84,45 +52,10 @@ export default function TypewriterPage() {
     loadHistory();
   }, []);
 
-  // Master-/Slave-Status und aktueller Text abrufen
-  useEffect(() => {
-    if (!writerId) return; // Warten, bis writerId verfügbar ist
-    const fetchLockStatus = async () => {
-      try {
-        // POST-Aufruf an den /api/lock-Endpunkt mit writerId
-        const res = await fetch('/api/lock', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ writerId }),
-        });
-        const data = await res.json();
-        if (data.role === 'master') {
-          setIsMaster(true);
-        } else {
-          setIsMaster(false);
-          if (data.masterText !== undefined) {
-            setTypedText(data.masterText);
-          }
-        }
-      } catch (error) {
-        console.error('Fehler beim Abrufen des Lock-Status:', error);
-      }
-    };
-    // Initiale Abfrage und anschließendes Polling alle 3 Sekunden
-    fetchLockStatus();
-    const intervalId = setInterval(fetchLockStatus, 3000);
-    return () => clearInterval(intervalId);
-  }, [writerId]);
-
-  // Tastatureingaben erfassen (nur, wenn Master)
+  // Tastatureingaben erfassen
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isMaster) {
-        // Bei Slave-Clients unterdrücken wir jegliche Eingaben
-        e.preventDefault();
-        return;
-      }
-      // Blockieren von Enter, Backspace und Pfeiltasten
+      // Blockiert Enter, Backspace, Pfeiltasten
       if (
         e.key === 'Enter' ||
         e.key === 'Backspace' ||
@@ -134,29 +67,25 @@ export default function TypewriterPage() {
         e.preventDefault();
         return;
       }
-      // Nur druckbare Zeichen werden hinzugefügt
+      // Nur druckbare Zeichen einfügen
       if (e.key.length === 1) {
         e.preventDefault();
-        const newText = typedTextRef.current + e.key;
-        setTypedText(newText);
-        // Senden der aktualisierten Eingabe an den /api/typing-Endpunkt
-        fetch('/api/typing', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: newText, writerId }),
-        }).catch((err) => console.error('Fehler beim Senden des Textes:', err));
+        setTypedText((prev) => prev + e.key);
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMaster, writerId]);
+  }, []);
 
-  // Session finalisieren (nur einmal, wenn Text vorhanden)
+  // Speichern / Finalisieren
   async function finalizeSession() {
     if (isFinalizedRef.current) return;
     isFinalizedRef.current = true;
+
     const currentText = typedTextRef.current;
     if (!currentText.trim()) return;
+
     const payload = JSON.stringify({
       typedText: currentText,
       timestamp: new Date().toISOString(),
@@ -165,22 +94,24 @@ export default function TypewriterPage() {
     navigator.sendBeacon('/api/finalize', blob);
   }
 
-  // Aktuellen Text löschen und Finalisierungsflag zurücksetzen
+  // Funktion zum Löschen des aktuellen Texts der Session
   function deleteCurrentText() {
     setTypedText('');
     isFinalizedRef.current = false;
   }
 
-  // Finalisierung beim Schließen oder Neuladen der Seite
+  // Vor Schließen/Neuladen
   useEffect(() => {
     const handleBeforeUnload = () => {
       finalizeSession();
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
-  // Finalisierung bei Inaktivität (z. B. wenn die Seite in den Hintergrund wechselt)
+  // Finalisierung nach Inaktivität (Seite im Hintergrund)
   useEffect(() => {
     let timeoutId: number;
     const handleVisibilityChange = () => {
@@ -192,6 +123,7 @@ export default function TypewriterPage() {
         clearTimeout(timeoutId);
       }
     };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -199,7 +131,7 @@ export default function TypewriterPage() {
     };
   }, []);
 
-  // Umschalten des Vollbildmodus
+  // Vollbildmodus an/aus
   function toggleFullscreen() {
     if (!isFullscreen) {
       const elem = document.documentElement;
@@ -223,43 +155,38 @@ export default function TypewriterPage() {
     }
   }
 
-  // Mausbewegungen im Vollbildmodus: Close-Button einblenden
-  function handleFullscreenMouseMove() {
-    setShowClose(true);
-    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
-    closeTimeoutRef.current = window.setTimeout(() => {
-      setShowClose(false);
-    }, 2000);
-  }
-
-  // Löschen eines Archiv-Eintrags (lokal; API-Aufruf optional)
+  // Funktion, um einen Archiv-Eintrag zu löschen
   function deleteEntry(index: number) {
-    setHistory((prev) => prev.filter((_, i) => i !== index));
-    // Optional: API-Aufruf, um den Eintrag auch serverseitig zu löschen.
+    // Entfernt den Eintrag aus dem lokalen Zustand
+    setHistory((prevHistory) => prevHistory.filter((_, i) => i !== index));
+
+    // Optional: Hier kann ein API-Aufruf erfolgen, um den Eintrag auch serverseitig zu löschen.
     // fetch('/api/delete-entry', { method: 'POST', body: JSON.stringify({ index }) });
   }
 
-  // Typographiestil – serifenbetont und groß, sowohl im Standard- als auch im Vollbildmodus
+  // Typographiestil: serifenbetont und groß – sowohl in Vollbild als auch in Standard
   const typewriterTextClasses =
     'whitespace-pre-wrap break-words font-serif text-5xl md:text-6xl leading-relaxed';
 
-  // Vollbild-Darstellung via Portal: Hier werden sämtliche Options-Elemente ausgeblendet;
-  // einzig der Text wird angezeigt und ein Close-Button erscheint nur bei Mausbewegung.
+  // Vollbild-Darstellung (Portal)
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
-      <div
-        className="fixed inset-0 z-[9999] bg-white text-black font-serif flex flex-col overflow-auto"
-        onMouseMove={handleFullscreenMouseMove}
-      >
-        {showClose && (
+      <div className="fixed inset-0 z-[9999] bg-white text-black font-serif flex flex-col overflow-auto">
+        <div className="p-4 flex justify-end space-x-2">
+          <button
+            onClick={deleteCurrentText}
+            className="px-4 py-2 text-lg bg-red-100 rounded hover:bg-red-200"
+          >
+            Text löschen
+          </button>
           <button
             onClick={toggleFullscreen}
-            className="absolute top-4 right-4 px-4 py-2 text-lg bg-gray-100 rounded opacity-100 transition-opacity duration-300"
+            className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
           >
-            Schließen
+            Vollbild verlassen
           </button>
-        )}
-        <div className="flex-grow flex flex-col items-center justify-center px-4 pb-4">
+        </div>
+        <div className="flex-grow flex flex-col items-center justify-start px-4 pb-4">
           <div className="w-full max-w-4xl min-h-[80vh] flex flex-col p-4 shadow-md">
             <div className={typewriterTextClasses}>
               {typedText}
@@ -276,29 +203,12 @@ export default function TypewriterPage() {
   return (
     <main className="w-full min-h-screen bg-white text-black font-serif flex flex-col">
       {/* Kopfbereich */}
-      <header className="p-4 flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+      <header className="p-4 flex justify-between items-center">
         <h1 className="text-4xl md:text-5xl font-bold">
           Meine Schreibmaschine
         </h1>
-        <div className="flex items-center space-x-2">
-          {/* PIN-Eingabefeld zur Master-Aktivierung, falls noch nicht Master */}
-          {writerId !== '4418' && (
-            <form onSubmit={handlePinSubmit} className="flex space-x-1">
-              <input
-                type="password"
-                placeholder="PIN eingeben"
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                className="px-2 py-1 border rounded"
-              />
-              <button
-                type="submit"
-                className="px-3 py-1 bg-blue-100 rounded hover:bg-blue-200"
-              >
-                Aktivieren
-              </button>
-            </form>
-          )}
+        <div className="flex space-x-2">
+          {/* Speichern-Knopf */}
           <button
             onClick={finalizeSession}
             className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200 flex items-center"
@@ -312,12 +222,14 @@ export default function TypewriterPage() {
             </svg>
             Speichern
           </button>
+          {/* Vollbild-Knopf */}
           <button
             onClick={toggleFullscreen}
             className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
           >
             Vollbild
           </button>
+          {/* Löschen des aktuellen Texts */}
           <button
             onClick={deleteCurrentText}
             className="px-4 py-2 text-lg bg-red-100 rounded hover:bg-red-200"
@@ -326,9 +238,10 @@ export default function TypewriterPage() {
           </button>
         </div>
       </header>
-      {/* Hauptbereich */}
+
+      {/* Hauptbereich (Eingabefeld und Archiv) */}
       <div className="flex-grow flex flex-col px-4 pb-4">
-        {/* Eingabebereich */}
+        {/* Eingabefeld */}
         <section className="mb-6 flex-grow flex flex-col">
           <div className="flex-grow w-full max-w-4xl mx-auto p-4 shadow-md overflow-auto">
             <div className={typewriterTextClasses}>
@@ -340,13 +253,8 @@ export default function TypewriterPage() {
             Enter, Backspace und Pfeiltasten sind blockiert – wie bei einer
             echten Schreibmaschine.
           </p>
-          {!isMaster && (
-            <p className="mt-2 text-xl text-red-600 text-center">
-              Sie haben Schreibrechte nicht – im Slave-Modus sehen Sie nur den
-              Master-Text.
-            </p>
-          )}
         </section>
+
         {/* Archiv */}
         <section className="w-full max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-semibold mb-2">Archiv</h2>
