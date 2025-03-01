@@ -1,15 +1,25 @@
-// /api/lock/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
 
 const LOCK_KEY = 'typewriter_lock';
 const LOCK_EXPIRY = 300; // Timeout in Sekunden
 
-// POST-Endpunkt: Versucht, den Lock zu setzen und gibt an, ob der Client Master oder Slave ist.
 export async function POST(request: NextRequest) {
   try {
     const { writerId } = await request.json();
-    // Versuchen, den Lock zu setzen, falls noch keiner existiert.
+
+    // Falls die PIN "4418" eingegeben wurde, erzwinge den Master-Status.
+    if (writerId === '4418') {
+      // Überschreibe den Lock unabhängig vom aktuellen Status.
+      await redis.set(LOCK_KEY, writerId, { ex: LOCK_EXPIRY });
+      return NextResponse.json({
+        success: true,
+        role: 'master',
+        lockedBy: writerId,
+      });
+    }
+
+    // Andernfalls wird versucht, den Lock regulär zu setzen.
     const lockSet = await redis.set(LOCK_KEY, writerId, {
       nx: true,
       ex: LOCK_EXPIRY,
@@ -22,7 +32,6 @@ export async function POST(request: NextRequest) {
       });
     } else {
       const currentLock = await redis.get(LOCK_KEY);
-      // Den aktuellen Master-Text abrufen, damit Slave-Clients synchronisiert werden.
       const masterText = await redis.get('current_text');
       return NextResponse.json({
         success: false,
@@ -35,21 +44,6 @@ export async function POST(request: NextRequest) {
     console.error('Lock error:', err);
     return NextResponse.json(
       { error: 'Fehler beim Sperren.' },
-      { status: 500 },
-    );
-  }
-}
-
-// GET-Endpunkt: Gibt den aktuellen Lock-Status samt Master-Text zurück.
-export async function GET(request: NextRequest) {
-  try {
-    const currentLock = await redis.get(LOCK_KEY);
-    const masterText = await redis.get('current_text');
-    return NextResponse.json({ lockedBy: currentLock, masterText });
-  } catch (err) {
-    console.error('Lock GET error:', err);
-    return NextResponse.json(
-      { error: 'Lock-Status konnte nicht abgerufen werden.' },
       { status: 500 },
     );
   }

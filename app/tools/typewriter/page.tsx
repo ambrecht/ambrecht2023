@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, FormEvent } from 'react';
 import ReactDOM from 'react-dom';
 
 // Generiert eine eindeutige Kennung für den aktuellen Client
@@ -17,14 +17,20 @@ export default function TypewriterPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   // Master-/Slave-Status (Master darf schreiben, Slave nur lesen)
   const [isMaster, setIsMaster] = useState(false);
-  // Eindeutige Kennung des Clients
+  // Eindeutige Kennung des Clients (wird auch durch PIN überschrieben)
   const [writerId, setWriterId] = useState<string>('');
+  // PIN-Eingabe (zur Master-Aktivierung)
+  const [pinInput, setPinInput] = useState('');
+  // Zustand für den Close-Button im Vollbildmodus (sichtbar bei Mausbewegung)
+  const [showClose, setShowClose] = useState(false);
   // Referenz, um asynchrone Inkonsistenzen zu vermeiden
   const typedTextRef = useRef(typedText);
   const isFinalizedRef = useRef(false);
   // Container für das Vollbild-Overlay (Portal)
   const [fullscreenContainer, setFullscreenContainer] =
     useState<HTMLElement | null>(null);
+  // Timeout für das automatische Ausblenden des Close-Buttons
+  const closeTimeoutRef = useRef<number>();
 
   // Beim Mount: Writer-ID generieren oder aus localStorage abrufen
   useEffect(() => {
@@ -35,6 +41,16 @@ export default function TypewriterPage() {
     }
     setWriterId(id);
   }, []);
+
+  // Falls der Benutzer die korrekte PIN eingibt, überschreiben wir die Writer-ID
+  function handlePinSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (pinInput === '4418') {
+      localStorage.setItem('writerId', '4418');
+      setWriterId('4418');
+    }
+    setPinInput('');
+  }
 
   // Vollbild-Container anlegen
   useEffect(() => {
@@ -207,6 +223,15 @@ export default function TypewriterPage() {
     }
   }
 
+  // Mausbewegungen im Vollbildmodus: Close-Button einblenden
+  function handleFullscreenMouseMove() {
+    setShowClose(true);
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setShowClose(false);
+    }, 2000);
+  }
+
   // Löschen eines Archiv-Eintrags (lokal; API-Aufruf optional)
   function deleteEntry(index: number) {
     setHistory((prev) => prev.filter((_, i) => i !== index));
@@ -218,25 +243,23 @@ export default function TypewriterPage() {
   const typewriterTextClasses =
     'whitespace-pre-wrap break-words font-serif text-5xl md:text-6xl leading-relaxed';
 
-  // Vollbild-Darstellung via Portal
+  // Vollbild-Darstellung via Portal: Hier werden sämtliche Options-Elemente ausgeblendet;
+  // einzig der Text wird angezeigt und ein Close-Button erscheint nur bei Mausbewegung.
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
-      <div className="fixed inset-0 z-[9999] bg-white text-black font-serif flex flex-col overflow-auto">
-        <div className="p-4 flex justify-end space-x-2">
-          <button
-            onClick={deleteCurrentText}
-            className="px-4 py-2 text-lg bg-red-100 rounded hover:bg-red-200"
-          >
-            Text löschen
-          </button>
+      <div
+        className="fixed inset-0 z-[9999] bg-white text-black font-serif flex flex-col overflow-auto"
+        onMouseMove={handleFullscreenMouseMove}
+      >
+        {showClose && (
           <button
             onClick={toggleFullscreen}
-            className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
+            className="absolute top-4 right-4 px-4 py-2 text-lg bg-gray-100 rounded opacity-100 transition-opacity duration-300"
           >
-            Vollbild verlassen
+            Schließen
           </button>
-        </div>
-        <div className="flex-grow flex flex-col items-center justify-start px-4 pb-4">
+        )}
+        <div className="flex-grow flex flex-col items-center justify-center px-4 pb-4">
           <div className="w-full max-w-4xl min-h-[80vh] flex flex-col p-4 shadow-md">
             <div className={typewriterTextClasses}>
               {typedText}
@@ -253,11 +276,29 @@ export default function TypewriterPage() {
   return (
     <main className="w-full min-h-screen bg-white text-black font-serif flex flex-col">
       {/* Kopfbereich */}
-      <header className="p-4 flex justify-between items-center">
+      <header className="p-4 flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
         <h1 className="text-4xl md:text-5xl font-bold">
           Meine Schreibmaschine
         </h1>
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-2">
+          {/* PIN-Eingabefeld zur Master-Aktivierung, falls noch nicht Master */}
+          {writerId !== '4418' && (
+            <form onSubmit={handlePinSubmit} className="flex space-x-1">
+              <input
+                type="password"
+                placeholder="PIN eingeben"
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                className="px-2 py-1 border rounded"
+              />
+              <button
+                type="submit"
+                className="px-3 py-1 bg-blue-100 rounded hover:bg-blue-200"
+              >
+                Aktivieren
+              </button>
+            </form>
+          )}
           <button
             onClick={finalizeSession}
             className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200 flex items-center"
