@@ -94,6 +94,12 @@ export default function TypewriterPage() {
     navigator.sendBeacon('/api/finalize', blob);
   }
 
+  // Funktion zum Löschen des aktuellen Texts der Session
+  function deleteCurrentText() {
+    setTypedText('');
+    isFinalizedRef.current = false;
+  }
+
   // Vor Schließen/Neuladen
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -162,7 +168,13 @@ export default function TypewriterPage() {
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
       <div className="fixed inset-0 z-[9999] bg-white text-black font-typewriter flex flex-col overflow-auto">
-        <div className="p-4 flex justify-end">
+        <div className="p-4 flex justify-end space-x-2">
+          <button
+            onClick={deleteCurrentText}
+            className="px-4 py-2 text-lg bg-red-100 rounded hover:bg-red-200"
+          >
+            Text löschen
+          </button>
           <button
             onClick={toggleFullscreen}
             className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
@@ -210,6 +222,13 @@ export default function TypewriterPage() {
             className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
           >
             Vollbild
+          </button>
+          {/* Löschen des aktuellen Texts */}
+          <button
+            onClick={deleteCurrentText}
+            className="px-4 py-2 text-lg bg-red-100 rounded hover:bg-red-200"
+          >
+            Text löschen
           </button>
         </div>
       </header>
