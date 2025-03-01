@@ -54,3 +54,16 @@ export async function PATCH(request: NextRequest) {
     );
   }
 }
+
+export async function GET(request: NextRequest) {
+  try {
+    const currentLock = await redis.get(LOCK_KEY);
+    return NextResponse.json({ lockedBy: currentLock });
+  } catch (error) {
+    console.error('Lock GET Fehler:', error);
+    return NextResponse.json(
+      { error: 'Lock-Status konnte nicht abgerufen werden.' },
+      { status: 500 },
+    );
+  }
+}
