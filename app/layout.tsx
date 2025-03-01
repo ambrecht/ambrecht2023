@@ -27,7 +27,7 @@ export default function RootLayout({
               <Navigation />
               {children}
             </Padding>
-            <Footer></Footer>
+            <Footer />
           </Frame>
         </StyledComponentsRegistry>
       </body>

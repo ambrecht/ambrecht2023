@@ -4,36 +4,39 @@ import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 export default function TypewriterPage() {
-  // Zustand für den aktuell getippten Text ("Blatt")
+  // Aktuell eingegebener Text
   const [typedText, setTypedText] = useState('');
-  // Zustand für die archivierten Sessions (Historie)
+  // Archiv
   const [history, setHistory] = useState<string[]>([]);
-  // Zustand, ob der Vollbildmodus aktiviert ist
+  // Vollbildmodus an/aus
   const [isFullscreen, setIsFullscreen] = useState(false);
-  // Ref, um stets den aktuellen Text auch in asynchronen Aufrufen verfügbar zu haben
+
+  // Referenzen zur Vermeidung von asynchronen Inkonsistenzen
   const typedTextRef = useRef(typedText);
-  useEffect(() => {
-    typedTextRef.current = typedText;
-  }, [typedText]);
-  // Ref zur Vermeidung mehrfacher Finalisierungen derselben Session
   const isFinalizedRef = useRef(false);
-  // Zustand für den Container, in dem der Vollbild-Overlay via Portal gerendert wird
+
+  // Separater Container für das Portal (Vollbild-Overlay)
   const [fullscreenContainer, setFullscreenContainer] =
     useState<HTMLElement | null>(null);
 
-  // Beim Mounten: Erzeuge ein Container-Div im document.body für das Portal,
-  // sodass der Vollbildmodus sämtliche Layout-Komponenten überlagert.
+  // Beim Mount: Portal-Container anlegen
   useEffect(() => {
     const container = document.createElement('div');
-    container.id = 'fullscreen-overlay';
+    container.id = 'typewriter-fullscreen-overlay';
     document.body.appendChild(container);
     setFullscreenContainer(container);
+
     return () => {
       document.body.removeChild(container);
     };
   }, []);
 
-  // Laden der archivierten Sessions aus der API
+  // Aktuellen Text stets in der Ref aktualisieren
+  useEffect(() => {
+    typedTextRef.current = typedText;
+  }, [typedText]);
+
+  // Historie laden
   useEffect(() => {
     async function loadHistory() {
       try {
@@ -49,11 +52,10 @@ export default function TypewriterPage() {
     loadHistory();
   }, []);
 
-  // Erfassen von Tastatureingaben:
-  // Unterdrückt unerwünschte Tasten (Enter, Backspace, Pfeiltasten) und
-  // sammelt alle druckbaren Zeichen, um den aktuellen Text zu aktualisieren.
+  // Tastatureingaben erfassen
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Blockiert Enter, Backspace, Pfeiltasten
       if (
         e.key === 'Enter' ||
         e.key === 'Backspace' ||
@@ -65,24 +67,25 @@ export default function TypewriterPage() {
         e.preventDefault();
         return;
       }
+      // Nur druckbare Zeichen einfügen
       if (e.key.length === 1) {
         e.preventDefault();
         setTypedText((prev) => prev + e.key);
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Funktion zur Finalisierung der Session:
-  // Hier wird der aktuelle Text (samt Zeitstempel) mittels navigator.sendBeacon
-  // an den Server übermittelt. Durch den Lock (isFinalizedRef) wird ein doppeltes
-  // Speichern verhindert.
+  // Speichern / Finalisieren
   async function finalizeSession() {
-    if (isFinalizedRef.current) return; // Bereits finalisiert? → Beenden.
+    if (isFinalizedRef.current) return;
     isFinalizedRef.current = true;
+
     const currentText = typedTextRef.current;
     if (!currentText.trim()) return;
+
     const payload = JSON.stringify({
       typedText: currentText,
       timestamp: new Date().toISOString(),
@@ -91,17 +94,18 @@ export default function TypewriterPage() {
     navigator.sendBeacon('/api/finalize', blob);
   }
 
-  // Finalisierung beim Schließen oder Neuladen der Seite (beforeunload)
+  // Vor Schließen/Neuladen
   useEffect(() => {
     const handleBeforeUnload = () => {
       finalizeSession();
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
-  // Finalisierung, wenn die Seite für mehr als zwei Sekunden den Fokus verliert,
-  // etwa wenn ein neuer Tab geöffnet wird oder die Seite in den Hintergrund tritt.
+  // Finalisierung nach Inaktivität (Seite im Hintergrund)
   useEffect(() => {
     let timeoutId: number;
     const handleVisibilityChange = () => {
@@ -113,6 +117,7 @@ export default function TypewriterPage() {
         clearTimeout(timeoutId);
       }
     };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -120,10 +125,8 @@ export default function TypewriterPage() {
     };
   }, []);
 
-  // Umschalten des Vollbildmodus:
-  // Beim Aktivieren wird ein Request an das gesamte Dokument gestellt,
-  // beim Deaktivieren wird der Vollbildmodus wieder verlassen.
-  const toggleFullscreen = () => {
+  // Vollbildmodus an/aus
+  function toggleFullscreen() {
     if (!isFullscreen) {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
@@ -144,24 +147,25 @@ export default function TypewriterPage() {
       }
       setIsFullscreen(false);
     }
-  };
+  }
 
-  // Darstellung im Vollbildmodus:
-  // Wird ein Container für das Portal erzeugt, wird der gesamte Viewport überdeckt.
-  // Ein kleiner Button in der oberen rechten Ecke ermöglicht das Verlassen des Modus.
+  // Vollbild-Darstellung (Portal)
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
-      <div className="fixed top-0 left-0 w-full h-full bg-white z-50 flex flex-col">
-        <button
-          onClick={toggleFullscreen}
-          className="absolute top-4 right-4 p-2 border border-gray-400 rounded hover:bg-gray-200 text-sm"
-        >
-          Vollbild verlassen
-        </button>
-        <div className="flex-grow flex items-center justify-center">
-          <div className="w-full max-w-3xl p-4">
-            <div className="text-3xl whitespace-pre-wrap leading-loose">
+      <div className="fixed inset-0 z-[9999] bg-white text-black font-typewriter flex flex-col overflow-auto">
+        <div className="p-4 flex justify-end">
+          <button
+            onClick={toggleFullscreen}
+            className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
+          >
+            Vollbild verlassen
+          </button>
+        </div>
+        <div className="flex-grow flex flex-col items-center justify-start px-4 pb-4">
+          <div className="w-full max-w-4xl min-h-[80vh] flex flex-col p-4 shadow-md">
+            <div className="flex-grow whitespace-pre-wrap break-words text-2xl leading-relaxed">
               {typedText}
+              <span className="blinking-cursor">|</span>
             </div>
           </div>
         </div>
@@ -170,62 +174,85 @@ export default function TypewriterPage() {
     );
   }
 
-  // Darstellung im Normalmodus:
-  // Zeigt das aktuelle "Blatt" (den getippten Text) sowie das Archiv früherer Sessions.
+  // Standarddarstellung
   return (
-    <main className="flex flex-col items-center w-full min-h-screen bg-white text-black px-4 py-6 font-serif">
-      <div className="w-full max-w-3xl mb-4 flex justify-between items-center">
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Klassische Schreibmaschine
-        </h1>
-        <button
-          onClick={toggleFullscreen}
-          className="p-2 border border-gray-400 rounded hover:bg-gray-200"
-        >
-          Vollbild
-        </button>
-      </div>
-      <div className="w-full max-w-3xl mb-8 p-4 border border-gray-400">
-        <h2 className="text-xl md:text-2xl font-semibold mb-2">
-          Aktuelles Blatt
-        </h2>
-        <div className="text-2xl md:text-3xl whitespace-pre-wrap min-h-[150px] leading-loose">
-          {typedText}
+    <main className="w-full min-h-screen bg-white text-black font-typewriter flex flex-col">
+      {/* Kopfbereich */}
+      <header className="p-4 flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Meine Schreibmaschine</h1>
+        <div className="flex space-x-2">
+          {/* Speichern-Knopf */}
+          <button
+            onClick={finalizeSession}
+            className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200 flex items-center"
+          >
+            {/* Disketten-Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 576 512"
+              className="w-5 h-5 mr-2 fill-current"
+            >
+              <path d="M434.66 0H32A32 32 0 0 0 0 32v448a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32V90.51a32 32 0 0 0-9.38-22.62l-68.51-68.49A32 32 0 0 0 475.49 0H448v96a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V0h234.66zM384 0v96a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V0zm32 448H160V320h256z"></path>
+            </svg>
+            Speichern
+          </button>
+          {/* Vollbild-Knopf */}
+          <button
+            onClick={toggleFullscreen}
+            className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
+          >
+            Vollbild
+          </button>
         </div>
-        <p className="mt-2 text-gray-500 text-sm">
-          (Kein Löschen oder Enter möglich. Das Blatt bleibt bestehen, bis die
-          Seite geschlossen, neu geladen oder ein neuer Tab geöffnet wird.)
-        </p>
-      </div>
-      <section className="w-full max-w-3xl p-4 border border-gray-800 bg-gray-100">
-        <h2 className="text-xl md:text-2xl font-semibold mb-4">
-          Archiv früherer Sessions
-        </h2>
-        {history.length === 0 ? (
-          <p className="text-gray-600">Bisher keine Einträge.</p>
-        ) : (
-          history.map((entry, idx) => {
-            let parsed;
-            try {
-              parsed = JSON.parse(entry);
-            } catch {
-              parsed = { text: entry, timestamp: '' };
-            }
-            return (
-              <div key={idx} className="mb-6">
-                <h3 className="text-lg md:text-xl font-bold text-gray-700">
-                  Session #{idx + 1}{' '}
-                  {parsed.timestamp &&
-                    `(${new Date(parsed.timestamp).toLocaleString()})`}
-                </h3>
-                <div className="bg-white p-4 border border-gray-300 text-base md:text-lg whitespace-pre-wrap break-words mt-2">
-                  {parsed.text}
+      </header>
+
+      {/* Hauptbereich (Eingabefeld und Archiv) */}
+      <div className="flex-grow flex flex-col px-4 pb-4">
+        {/* Eingabefeld */}
+        <section className="mb-6 flex-grow flex flex-col">
+          <div className="flex-grow w-full max-w-4xl mx-auto p-4 shadow-md overflow-auto">
+            <div className="whitespace-pre-wrap break-words text-2xl leading-relaxed">
+              {typedText}
+              <span className="blinking-cursor">|</span>
+            </div>
+          </div>
+          <p className="mt-2 text-lg text-gray-700 text-center">
+            Enter, Backspace und Pfeiltasten sind blockiert – wie bei einer
+            echten Schreibmaschine.
+          </p>
+        </section>
+
+        {/* Archiv */}
+        <section className="w-full max-w-4xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-2">Archiv</h2>
+          {history.length === 0 ? (
+            <p className="text-gray-700 text-lg">
+              Keine früheren Einträge vorhanden.
+            </p>
+          ) : (
+            history.map((entry, idx) => {
+              let parsed;
+              try {
+                parsed = JSON.parse(entry);
+              } catch {
+                parsed = { text: entry, timestamp: '' };
+              }
+              return (
+                <div key={idx} className="mb-4 px-4 py-3 shadow-sm">
+                  <h3 className="font-bold text-xl mb-1">
+                    Session #{idx + 1}{' '}
+                    {parsed.timestamp &&
+                      `(${new Date(parsed.timestamp).toLocaleString()})`}
+                  </h3>
+                  <div className="whitespace-pre-wrap break-words text-lg leading-relaxed">
+                    {parsed.text}
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        )}
-      </section>
+              );
+            })
+          )}
+        </section>
+      </div>
     </main>
   );
 }
