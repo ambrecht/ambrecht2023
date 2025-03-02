@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const { writerId } = await request.json();
 
     // Falls die PIN "4418" eingegeben wurde, erzwinge den Master-Status.
-    if (writerId === '4418') {
+    if (writerId !== '4418') {
       // Überschreibe den Lock unabhängig vom aktuellen Status.
       await redis.set(LOCK_KEY, writerId, { ex: LOCK_EXPIRY });
       return NextResponse.json({
