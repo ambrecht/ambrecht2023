@@ -3,8 +3,8 @@ import { Server } from 'socket.io';
 
 export const runtime = 'nodejs';
 
-export default function handler(req: Request) {
-  // Prüfen, ob bereits ein Socket-Server existiert
+export function GET(req: Request) {
+  // Prüfen, ob bereits ein Socket.IO-Server existiert
   // @ts-ignore
   if ((global as any).socketServer) {
     console.log('Socket.IO läuft bereits');
@@ -13,11 +13,11 @@ export default function handler(req: Request) {
     // @ts-ignore
     const io = new Server((req as any).socket.server, {
       cors: {
-        origin: 'https://www.ambrecht.de', // Passen Sie dies an Ihre Domain an
+        origin: 'https://www.ambrecht.de', // Produktion: Ihre Domain
         methods: ['GET', 'POST'],
       },
     });
-    // Speichern Sie die Instanz global, damit nicht bei jedem Request ein neuer Socket-Server gestartet wird
+    // Speichern der Instanz in einer globalen Variable, damit nicht bei jedem Request ein neuer Socket-Server gestartet wird
     // @ts-ignore
     (global as any).socketServer = io;
 
@@ -27,7 +27,7 @@ export default function handler(req: Request) {
       // Beispiel: Empfang einer "typing"-Nachricht vom Client
       socket.on('typing', (data) => {
         console.log('Empfangen von', socket.id, ':', data.text);
-        // Hier können Sie den Text in Redis speichern oder weitere Prüfungen vornehmen
+        // Senden des Updates an alle anderen Clients
         socket.broadcast.emit('update', { text: data.text });
       });
     });
