@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Server } from 'socket.io';
 
-export const config = {
-  runtime: 'nodejs', // Sicherstellen, dass die Node.js-Laufzeit verwendet wird
-};
+export const runtime = 'nodejs';
 
 export default function handler(req: Request) {
   // Prüfen, ob bereits ein Socket-Server existiert
@@ -15,7 +13,7 @@ export default function handler(req: Request) {
     // @ts-ignore
     const io = new Server((req as any).socket.server, {
       cors: {
-        origin: '*', // Passen Sie dies ggf. an
+        origin: 'https://www.ambrecht.de', // Passen Sie dies an Ihre Domain an
         methods: ['GET', 'POST'],
       },
     });
