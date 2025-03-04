@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "env": {
+    "app_id": "1952140",
+    "key": "8d01f715e0301242a4c4",
+    "secret": "2b1b37831277491cb953",
+    "cluster": "eu"
+  }
+}
