@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import React, { useEffect, useRef, useState } from 'react';
 import Button from '@/components/Button';
 import { Quote, Headline1, Headline2, Paragraph } from '@/styles/index';
-import Typewriter from '@/components/Typewriter';
 
 interface OutputProps {
   size: number;
@@ -106,7 +105,6 @@ export default function MARKUP() {
           {edited}
         </Output>
       </OutputBox>
-      <Typewriter></Typewriter>
     </>
   );
 }
