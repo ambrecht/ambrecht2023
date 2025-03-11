@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useCallback, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import ReactDOM from 'react-dom';
 import { useSession } from '@/lib/context/SessionContext';
 import { validateSessionContent } from '@/lib/validation';
 
@@ -11,7 +12,17 @@ export default function Editor() {
   const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>(
     'medium',
   );
+  const [fullscreenContainer, setFullscreenContainer] =
+    useState<HTMLElement | null>(null);
 
+  // CSS-Klassen für Schriftgrößen
+  const fontSizeClasses = {
+    small: 'text-xl',
+    medium: 'text-2xl',
+    large: 'text-3xl',
+  };
+
+  // Tastatureingaben verarbeiten
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === 'Backspace') {
@@ -25,6 +36,7 @@ export default function Editor() {
     [dispatch],
   );
 
+  // Sitzung speichern
   const handleSaveSession = useCallback(async () => {
     if (!validateSessionContent(state.content)) {
       alert('Sessioninhalt zu kurz; wird nicht gespeichert.');
@@ -44,61 +56,79 @@ export default function Editor() {
     }
   }, [state.content]);
 
+  // Erstellen Sie einen Portal-Container für den Vollbildmodus
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
-    }
-  }, [state.content]);
-
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (state.content && validateSessionContent(state.content)) {
-        const url = '/api/session';
-        const data = JSON.stringify({ content: state.content });
-        if (navigator.sendBeacon) {
-          const blob = new Blob([data], { type: 'application/json' });
-          navigator.sendBeacon(url, blob);
-        }
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    const container = document.createElement('div');
+    container.id = 'editor-fullscreen-overlay';
+    document.body.appendChild(container);
+    setFullscreenContainer(container);
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.body.removeChild(container);
     };
-  }, [state.content]);
+  }, []);
 
+  // Vollbildmodus umschalten
   const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
+    if (!isFullscreen) {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if ((elem as any).webkitRequestFullscreen) {
+        (elem as any).webkitRequestFullscreen();
+      } else if ((elem as any).msRequestFullscreen) {
+        (elem as any).msRequestFullscreen();
+      }
+      setIsFullscreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) {
+        (document as any).msExitFullscreen();
+      }
+      setIsFullscreen(false);
+    }
   };
 
-  const fontSizeClasses = {
-    small: 'text-xl',
-    medium: 'text-2xl',
-    large: 'text-3xl',
-  };
+  // Vollbildmodus-Inhalt
+  if (isFullscreen && fullscreenContainer) {
+    return ReactDOM.createPortal(
+      <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
+        <div className="p-4 flex justify-end space-x-2">
+          <button
+            onClick={toggleFullscreen}
+            className="px-4 py-2 text-lg bg-gray-100 rounded hover:bg-gray-200"
+          >
+            Vollbild verlassen
+          </button>
+        </div>
+        <div className="flex-grow flex items-center justify-center p-4">
+          <textarea
+            ref={textareaRef}
+            value={state.content}
+            onKeyDown={handleKeyPress}
+            className={`w-full h-full p-6 ${fontSizeClasses[fontSize]} text-gray-800 bg-white border-none focus:outline-none resize-none`}
+            placeholder="Beginnen Sie zu schreiben..."
+            autoFocus
+          />
+        </div>
+      </div>,
+      fullscreenContainer,
+    );
+  }
 
+  // Standarddarstellung
   return (
-    <div
-      className={`${
-        isFullscreen ? 'fixed inset-0 bg-white z-50' : 'bg-gray-50 min-h-screen'
-      } flex flex-col items-center justify-center p-8 font-serif`}
-    >
+    <div className="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-8 font-serif">
       <div className="w-full max-w-4xl flex flex-col items-center">
         <div className="w-full flex justify-between items-center mb-4">
           <button
             onClick={toggleFullscreen}
             className="px-4 py-2 text-sm text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
           >
-            {isFullscreen ? 'Vollbild beenden' : 'Vollbild'}
+            Vollbild
           </button>
-          {isFullscreen && (
-            <button
-              onClick={toggleFullscreen}
-              className="px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
-            >
-              X
-            </button>
-          )}
           <div className="flex space-x-2">
             <button
               onClick={() => setFontSize('small')}

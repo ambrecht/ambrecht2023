@@ -25,6 +25,8 @@
     "marked": "^12.0.0",
     "next": "14.0.4",
     "node-html-parser": "^6.1.13",
+    "pg": "^8.14.0",
+    "pg-connection-string": "^2.7.0",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0",
     "react": "^18",
