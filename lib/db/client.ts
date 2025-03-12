@@ -1,6 +1,8 @@
 import { Pool, PoolConfig } from 'pg';
 import { parse } from 'pg-connection-string';
 
+console.log('DATABASE_URL in runtime:', process.env.DATABASE_URL);
+
 // Typisierte Konfiguration für die Datenbankverbindung
 interface DatabaseConfig extends PoolConfig {
   ssl?: boolean | { rejectUnauthorized: boolean };
