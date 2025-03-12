@@ -8,11 +8,13 @@
 import React from 'react';
 import Editor from '@/components/Editor';
 import { SessionProvider } from '@/lib/context/SessionContext';
+import SessionList from '@/components/typewriter/sessions';
 
 export default function EditorPage() {
   return (
     <SessionProvider>
       <Editor />
+      <SessionList />
     </SessionProvider>
   );
 }
