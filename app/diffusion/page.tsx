@@ -29,7 +29,7 @@ export default function PromptGenerator() {
     }
 
     if (availableArtists.length === 0) {
-      alert('Alle verfügbaren Künstler wurden bereits verwendet!');
+      console.log('Alle verfügbaren Künstler wurden bereits verwendet!');
       return;
     }
 

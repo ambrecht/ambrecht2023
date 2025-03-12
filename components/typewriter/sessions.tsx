@@ -72,7 +72,7 @@ export default function SessionList() {
       setSessions((prev) => prev.filter((session) => session.id !== id));
     } catch (err: any) {
       console.error(`Error deleting session with id ${id}:`, err.message);
-      alert(`Fehler beim Löschen der Session: ${err.message}`);
+      console.log(`Fehler beim Löschen der Session: ${err.message}`);
     }
   };
 

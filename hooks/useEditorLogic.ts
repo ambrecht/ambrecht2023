@@ -1,24 +1,31 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback, RefObject } from 'react';
 import { useSession } from '@/lib/context/SessionContext';
 import { validateSessionContent } from '@/lib/validation';
-import { createPortal } from 'react-dom';
 
-export default function Editor() {
+interface UseEditorLogicParams {
+  // Auch hier mit | null, um konsistent zu sein
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+  editorRef: RefObject<HTMLDivElement | null>;
+}
+
+export function useEditorLogic({
+  textareaRef,
+  editorRef,
+}: UseEditorLogicParams) {
   const { state, dispatch } = useSession();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [timer, setTimer] = useState(0);
   const [wordCount, setWordCount] = useState(0);
 
-  // Timer starten, der jede Sekunde aktualisiert wird.
+  // 1) Timer starten, jede Sekunde hochzählen
   useEffect(() => {
     const interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Automatische Speicherung beim Tab-Wechsel oder Schließen des Tabs.
+  // 2) Automatische Speicherung bei Tab-Wechsel oder Schließen
   useEffect(() => {
     const handleSave = async () => {
       if (validateSessionContent(state.content)) {
@@ -45,7 +52,7 @@ export default function Editor() {
     };
   }, [state.content]);
 
-  // Regelmäßige Speicherung im localStorage alle 5 Sekunden.
+  // 3) Regelmäßige Speicherung im localStorage (alle 5 Sekunden)
   useEffect(() => {
     const interval = setInterval(() => {
       localStorage.setItem('sessionContent', state.content);
@@ -53,13 +60,13 @@ export default function Editor() {
     return () => clearInterval(interval);
   }, [state.content]);
 
-  // Wortzähler aktualisieren.
+  // 4) Wortzähler aktualisieren
   useEffect(() => {
     const words = state.content.trim().split(/\s+/).filter(Boolean).length;
     setWordCount(words);
   }, [state.content]);
 
-  // Aktualisierung des Vollbildmodus-Zustandes, wenn der Nutzer den Modus verlässt oder betritt.
+  // 5) Vollbild-Status aktualisieren (z. B. wenn per ESC verlassen)
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -70,22 +77,24 @@ export default function Editor() {
     };
   }, []);
 
-  // Handler für Änderungen im Textfeld. Dieser verhindert, dass bereits getippte Inhalte gelöscht werden.
+  // 6) Änderungen im Textfeld behandeln (Typewriter-Effekt)
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newContent = e.target.value;
+      // Löschen verhindern
       if (newContent.length < state.content.length) {
         e.target.value = state.content;
         return;
       }
       dispatch({ type: 'SET_CONTENT', payload: newContent });
 
-      // Sicherstellen, dass der Cursor stets im sichtbaren Bereich verbleibt.
+      // Cursor stets im sichtbaren Bereich halten
       const textarea = textareaRef.current;
       if (textarea) {
         const cursorPosition = textarea.selectionStart;
         const textBeforeCursor = newContent.substring(0, cursorPosition);
         const currentLine = textBeforeCursor.split('\n').length;
+
         const computedStyle = window.getComputedStyle(textarea);
         const lineHeight = parseInt(computedStyle.lineHeight, 10) || 24;
         const cursorYPosition = (currentLine - 1) * lineHeight;
@@ -101,10 +110,10 @@ export default function Editor() {
         }
       }
     },
-    [state.content, dispatch],
+    [state.content, dispatch, textareaRef],
   );
 
-  // Speichern und Zurücksetzen der Session auf Knopfdruck.
+  // 7) Session speichern und beenden (inkl. Vollbild beenden)
   const handleSaveSession = useCallback(async () => {
     if (!validateSessionContent(state.content)) {
       console.log('Sessioninhalt zu kurz; wird nicht gespeichert.');
@@ -117,6 +126,12 @@ export default function Editor() {
         body: JSON.stringify({ content: state.content }),
       });
       dispatch({ type: 'SET_CONTENT', payload: '' });
+
+      // Vollbild beenden, falls aktiv
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+
       console.log('Session erfolgreich gespeichert.');
       setTimer(0);
     } catch (error) {
@@ -124,10 +139,10 @@ export default function Editor() {
     }
   }, [state.content, dispatch]);
 
-  // Umschalten des Vollbildmodus. Bei Aktivierung wird der gesamte Dokumentinhalt in den Vollbildmodus versetzt.
+  // 8) Vollbildmodus umschalten
   const toggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
+    if (!document.fullscreenElement && editorRef.current) {
+      editorRef.current.requestFullscreen().catch((err) => {
         console.error('Fehler beim Aktivieren des Vollbildmodus:', err);
       });
     } else {
@@ -135,49 +150,16 @@ export default function Editor() {
         console.error('Fehler beim Verlassen des Vollbildmodus:', err);
       });
     }
-    // Den Fokus auf das Textfeld setzen.
+    // Fokus auf das Textfeld
     textareaRef.current?.focus();
-  }, []);
+  }, [editorRef, textareaRef]);
 
-  // Formatierung des Timers im hh:mm:ss-Format.
-  const formattedTime = new Date(timer * 1000).toISOString().substr(11, 8);
-
-  // Definition des Editor-Inhalts mit Header, Hauptbereich und Footer.
-  const editorContent = (
-    <div className="flex flex-col h-screen bg-gray-50 font-serif p-6">
-      <header className="flex justify-between items-center mb-4">
-        <button
-          onClick={toggleFullscreen}
-          className="px-3 py-1 bg-indigo-600 text-white rounded"
-        >
-          {isFullscreen ? 'Vollbild verlassen' : 'Vollbild'}
-        </button>
-      </header>
-      <main className="flex-grow overflow-auto">
-        <textarea
-          ref={textareaRef}
-          value={state.content}
-          onChange={handleChange}
-          className="w-full h-full p-4 font-serif text-xl leading-relaxed border-none focus:outline-none resize-none"
-          placeholder="Beginnen Sie zu schreiben..."
-          autoFocus
-        />
-      </main>
-      <footer className="flex justify-between items-center p-4 bg-gray-100">
-        <span className="text-gray-600">Dauer: {formattedTime}</span>
-        <span className="text-gray-600">Wörter: {wordCount}</span>
-        <button
-          onClick={handleSaveSession}
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
-          Session beenden und speichern
-        </button>
-      </footer>
-    </div>
-  );
-
-  // Rückgabe des Editor-Inhalts. Im Vollbildmodus wird hierzu ein React-Portal verwendet.
-  return isFullscreen
-    ? createPortal(editorContent, document.body)
-    : editorContent;
+  return {
+    isFullscreen,
+    timer,
+    wordCount,
+    handleChange,
+    handleSaveSession,
+    toggleFullscreen,
+  };
 }
