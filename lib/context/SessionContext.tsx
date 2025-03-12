@@ -12,6 +12,7 @@ interface SessionState {
 
 type SessionAction =
   | { type: 'APPEND_CONTENT'; payload: string }
+  | { type: 'SET_CONTENT'; payload: string } // <--- NEU
   | { type: 'LOCK_SESSION' }
   | { type: 'UNLOCK_SESSION' }
   | { type: 'UPDATE_WORD_COUNT'; payload: number }
@@ -40,6 +41,11 @@ const sessionReducer = (
       return {
         ...state,
         content: state.content + action.payload,
+      };
+    case 'SET_CONTENT':
+      return {
+        ...state,
+        content: action.payload, // <-- Handhabung der neuen Action
       };
     case 'LOCK_SESSION':
       return {

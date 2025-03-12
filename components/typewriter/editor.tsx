@@ -15,25 +15,64 @@ export default function Editor() {
   const [fullscreenContainer, setFullscreenContainer] =
     useState<HTMLElement | null>(null);
 
-  // CSS-Klassen für Schriftgrößen
+  // Schriftgrößen-Klassen
   const fontSizeClasses = {
     small: 'text-xl',
     medium: 'text-2xl',
     large: 'text-3xl',
   };
 
-  // Tastatureingaben verarbeiten
-  const handleKeyPress = useCallback(
+  /**
+   * Verhindert bekannte Tasten wie Backspace oder Enter.
+   * Auf manchen Android-Geräten greift das nicht zu 100 %;
+   * dort fängt handleChange (s.u.) den Rest ab.
+   */
+  const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Backspace') {
+      // Hier können ggf. weitere Tasten blockiert werden, z. B. Pfeiltasten.
+      if (e.key === 'Backspace' || e.key === 'Enter') {
         e.preventDefault();
-        return;
-      }
-      if (e.key.length === 1) {
-        dispatch({ type: 'APPEND_CONTENT', payload: e.key });
       }
     },
-    [dispatch],
+    [],
+  );
+
+  /**
+   * Ermittelt den Text, der ins <textarea> geschrieben wurde.
+   * Prüft, ob nur ein einzelnes Zeichen angehängt wurde. Ist das nicht der Fall
+   * oder war das Zeichen ein Zeilenumbruch, wird die Änderung verworfen
+   * (Revert auf alten Zustand).
+   */
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const oldContent = state.content;
+      const newContent = e.target.value;
+
+      // Falls gar keine Änderung erfolgte, nichts tun.
+      if (newContent === oldContent) return;
+
+      // Prüfen, ob GENAU EIN Zeichen angehängt wurde.
+      // Bedingung: newContent fängt mit oldContent an, plus 1 Zeichen.
+      if (
+        newContent.length === oldContent.length + 1 &&
+        newContent.startsWith(oldContent)
+      ) {
+        const appendedChar = newContent[newContent.length - 1];
+        // Keine Zeilenumbrüche erlauben
+        if (appendedChar === '\n' || appendedChar === '\r') {
+          // Rückgängig machen
+          e.target.value = oldContent;
+          return;
+        }
+        // Falls alles in Ordnung ist, übernehmen wir den neuen Wert
+        dispatch({ type: 'SET_CONTENT', payload: newContent });
+      } else {
+        // Wenn mehr als ein Zeichen eingefügt wurde, Backspace gedrückt
+        // oder irgendwo im Text geändert wurde, verwerfen wir.
+        e.target.value = oldContent;
+      }
+    },
+    [dispatch, state.content],
   );
 
   // Sitzung speichern
@@ -48,7 +87,7 @@ export default function Editor() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: state.content }),
       });
-      const data = await response.json();
+      await response.json();
       alert('Session erfolgreich gespeichert.');
     } catch (error) {
       console.error('Fehler beim Speichern der Session:', error);
@@ -56,19 +95,20 @@ export default function Editor() {
     }
   }, [state.content]);
 
-  // Erstellen Sie einen Portal-Container für den Vollbildmodus
+  // Portal-Container für Vollbildmodus anlegen
   useEffect(() => {
     const container = document.createElement('div');
     container.id = 'editor-fullscreen-overlay';
     document.body.appendChild(container);
     setFullscreenContainer(container);
+
     return () => {
       document.body.removeChild(container);
     };
   }, []);
 
   // Vollbildmodus umschalten
-  const toggleFullscreen = () => {
+  const toggleFullscreen = useCallback(() => {
     if (!isFullscreen) {
       const elem = document.documentElement;
       if (elem.requestFullscreen) {
@@ -89,9 +129,9 @@ export default function Editor() {
       }
       setIsFullscreen(false);
     }
-  };
+  }, [isFullscreen]);
 
-  // Vollbildmodus-Inhalt
+  // Vollbildmodus-Ansicht
   if (isFullscreen && fullscreenContainer) {
     return ReactDOM.createPortal(
       <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
@@ -107,7 +147,8 @@ export default function Editor() {
           <textarea
             ref={textareaRef}
             value={state.content}
-            onKeyDown={handleKeyPress}
+            onKeyDown={handleKeyDown}
+            onChange={handleChange}
             className={`w-full h-full p-6 ${fontSizeClasses[fontSize]} text-gray-800 bg-white border-none focus:outline-none resize-none`}
             placeholder="Beginnen Sie zu schreiben..."
             autoFocus
@@ -159,7 +200,8 @@ export default function Editor() {
         <textarea
           ref={textareaRef}
           value={state.content}
-          onKeyDown={handleKeyPress}
+          onKeyDown={handleKeyDown}
+          onChange={handleChange}
           className={`w-full h-96 p-6 ${fontSizeClasses[fontSize]} text-gray-800 bg-white border border-gray-300 rounded-lg shadow-lg resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300`}
           placeholder="Beginnen Sie zu schreiben..."
           autoFocus
