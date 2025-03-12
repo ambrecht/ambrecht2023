@@ -18,13 +18,13 @@ export function useEditorLogic({
   const [timer, setTimer] = useState(0);
   const [wordCount, setWordCount] = useState(0);
 
-  // 1) Timer starten, jede Sekunde hochzählen
+  // 1) Timer starten
   useEffect(() => {
     const interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // 2) Automatische Speicherung bei Tab-Wechsel oder Schließen
+  // 2) Speichern bei Tab-Wechsel oder Schließen
   useEffect(() => {
     const handleSave = async () => {
       if (validateSessionContent(state.content)) {
@@ -51,7 +51,7 @@ export function useEditorLogic({
     };
   }, [state.content]);
 
-  // 3) Regelmäßige Speicherung im localStorage (alle 5 Sekunden)
+  // 3) Automatische Speicherung im localStorage
   useEffect(() => {
     const interval = setInterval(() => {
       localStorage.setItem('sessionContent', state.content);
@@ -65,7 +65,7 @@ export function useEditorLogic({
     setWordCount(words);
   }, [state.content]);
 
-  // 5) Vollbild-Status aktualisieren (z. B. wenn per ESC verlassen)
+  // 5) Vollbild-Status aktualisieren
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -76,32 +76,41 @@ export function useEditorLogic({
     };
   }, []);
 
-  // 6) Änderungen im Textfeld behandeln (Typewriter-Effekt)
+  // 6) Textänderungen – Stack-Logik: Nur Anhängen erlaubt
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      let newContent = e.target.value;
+      const newContent = e.target.value;
 
-      // Verhindern von Löschaktionen
+      // ⛔ Verhindere jegliche Löschaktionen
       if (newContent.length < state.content.length) {
         e.target.value = state.content;
         return;
       }
 
-      // Entferne alle Zeilenumbrüche
-      newContent = newContent.replace(/\n/g, '');
-
-      // Verhindere aufeinanderfolgende Leerzeichen
-      if (/ {2}$/.test(newContent)) {
+      // ⛔ Verhindere Einfügungen in der Mitte
+      if (!newContent.startsWith(state.content)) {
         e.target.value = state.content;
         return;
       }
 
-      dispatch({ type: 'SET_CONTENT', payload: newContent });
+      // ⛔ Keine Zeilenumbrüche
+      const sanitizedContent = newContent.replace(/\n/g, ' ');
 
-      // Erzwinge, dass der Cursor stets am Ende des Textes bleibt
+      // ⛔ Keine aufeinanderfolgenden Leerzeichen
+      if (/ {2,}$/.test(sanitizedContent)) {
+        e.target.value = state.content;
+        return;
+      }
+
+      dispatch({ type: 'SET_CONTENT', payload: sanitizedContent });
+
+      // 📌 Cursor immer ans Ende setzen
       const textarea = textareaRef.current;
       if (textarea) {
-        textarea.setSelectionRange(newContent.length, newContent.length);
+        textarea.setSelectionRange(
+          sanitizedContent.length,
+          sanitizedContent.length,
+        );
         textarea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         textarea.focus();
       }
@@ -109,7 +118,7 @@ export function useEditorLogic({
     [state.content, dispatch, textareaRef],
   );
 
-  // 7) Session speichern und beenden (inkl. Vollbild beenden)
+  // 7) Session speichern & beenden
   const handleSaveSession = useCallback(async () => {
     if (!validateSessionContent(state.content)) {
       console.log('Sessioninhalt zu kurz; wird nicht gespeichert.');
