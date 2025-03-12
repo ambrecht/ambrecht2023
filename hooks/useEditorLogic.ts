@@ -80,34 +80,31 @@ export function useEditorLogic({
   // 6) Änderungen im Textfeld behandeln (Typewriter-Effekt)
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const newContent = e.target.value;
+      let newContent = e.target.value;
+
       // Löschen verhindern
       if (newContent.length < state.content.length) {
         e.target.value = state.content;
         return;
       }
+
+      // Entferne alle Zeilenumbrüche
+      newContent = newContent.replace(/\n/g, '');
+
+      // Verhindere aufeinanderfolgende Leerzeichen
+      if (/ {2}$/.test(newContent)) {
+        e.target.value = state.content;
+        return;
+      }
+
       dispatch({ type: 'SET_CONTENT', payload: newContent });
 
-      // Cursor stets im sichtbaren Bereich halten
+      // Sicherstellen, dass die aktuelle Eingabe sichtbar bleibt
       const textarea = textareaRef.current;
       if (textarea) {
-        const cursorPosition = textarea.selectionStart;
-        const textBeforeCursor = newContent.substring(0, cursorPosition);
-        const currentLine = textBeforeCursor.split('\n').length;
-
-        const computedStyle = window.getComputedStyle(textarea);
-        const lineHeight = parseInt(computedStyle.lineHeight, 10) || 24;
-        const cursorYPosition = (currentLine - 1) * lineHeight;
-
-        if (cursorYPosition < textarea.scrollTop) {
-          textarea.scrollTop = cursorYPosition;
-        } else if (
-          cursorYPosition >
-          textarea.scrollTop + textarea.clientHeight - lineHeight
-        ) {
-          textarea.scrollTop =
-            cursorYPosition - textarea.clientHeight + lineHeight;
-        }
+        textarea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Den Fokus beibehalten, auch im Vollbildmodus
+        textarea.focus();
       }
     },
     [state.content, dispatch, textareaRef],
