@@ -5,7 +5,6 @@ import { useSession } from '@/lib/context/SessionContext';
 import { validateSessionContent } from '@/lib/validation';
 
 interface UseEditorLogicParams {
-  // Auch hier mit | null, um konsistent zu sein
   textareaRef: RefObject<HTMLTextAreaElement | null>;
   editorRef: RefObject<HTMLDivElement | null>;
 }
@@ -82,7 +81,7 @@ export function useEditorLogic({
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       let newContent = e.target.value;
 
-      // Löschen verhindern
+      // Verhindern von Löschaktionen
       if (newContent.length < state.content.length) {
         e.target.value = state.content;
         return;
@@ -99,11 +98,11 @@ export function useEditorLogic({
 
       dispatch({ type: 'SET_CONTENT', payload: newContent });
 
-      // Sicherstellen, dass die aktuelle Eingabe sichtbar bleibt
+      // Erzwinge, dass der Cursor stets am Ende des Textes bleibt
       const textarea = textareaRef.current;
       if (textarea) {
+        textarea.setSelectionRange(newContent.length, newContent.length);
         textarea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        // Den Fokus beibehalten, auch im Vollbildmodus
         textarea.focus();
       }
     },
@@ -124,7 +123,6 @@ export function useEditorLogic({
       });
       dispatch({ type: 'SET_CONTENT', payload: '' });
 
-      // Vollbild beenden, falls aktiv
       if (document.fullscreenElement) {
         await document.exitFullscreen();
       }
@@ -147,7 +145,6 @@ export function useEditorLogic({
         console.error('Fehler beim Verlassen des Vollbildmodus:', err);
       });
     }
-    // Fokus auf das Textfeld
     textareaRef.current?.focus();
   }, [editorRef, textareaRef]);
 

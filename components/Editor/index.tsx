@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSession } from '@/lib/context/SessionContext';
 import { useEditorLogic } from '@/hooks/useEditorLogic';
 
@@ -10,12 +10,9 @@ import EditorFooter from './EditorFooter';
 
 export default function Editor() {
   const { state } = useSession();
-
-  // Beachten Sie hier: HTMLTextAreaElement | null
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const editorRef = useRef<HTMLDivElement | null>(null);
 
-  // Custom Hook mit kompletter Editor-Logik
   const {
     isFullscreen,
     timer,
@@ -24,6 +21,21 @@ export default function Editor() {
     handleSaveSession,
     toggleFullscreen,
   } = useEditorLogic({ textareaRef, editorRef });
+
+  // Zustand zur Steuerung der Schriftgröße
+  const [fontSize, setFontSize] = useState('text-xl');
+
+  const handleSetSmallFont = () => {
+    setFontSize('text-sm');
+  };
+
+  const handleSetVeryLargeFont = () => {
+    setFontSize('text-xl');
+  };
+
+  const handleSetMegaLargeFont = () => {
+    setFontSize('text-5xl');
+  };
 
   return (
     <div
@@ -35,10 +47,33 @@ export default function Editor() {
         onToggleFullscreen={toggleFullscreen}
       />
 
+      {/* Buttons zur Schriftgrößenwahl */}
+      <div className="flex space-x-2 mb-4">
+        <button
+          onClick={handleSetSmallFont}
+          className="px-3 py-1 bg-blue-600 text-white rounded"
+        >
+          Kleiner Font
+        </button>
+        <button
+          onClick={handleSetVeryLargeFont}
+          className="px-3 py-1 bg-blue-600 text-white rounded"
+        >
+          Sehr Großer Font
+        </button>
+        <button
+          onClick={handleSetMegaLargeFont}
+          className="px-3 py-1 bg-blue-600 text-white rounded"
+        >
+          Mega Großer Font
+        </button>
+      </div>
+
       <EditorTextarea
         textareaRef={textareaRef}
         value={state.content}
         onChange={handleChange}
+        fontSize={fontSize}
       />
 
       <EditorFooter
