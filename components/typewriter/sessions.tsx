@@ -19,6 +19,8 @@ interface Session {
  * Die Sessions werden von der API abgerufen, nach Erstellungsdatum (neueste zuerst)
  * sortiert und mit Erstelldatum, Wort- und Buchstabenzahl angezeigt.
  * Für Sessions, die älter als 24 Stunden sind, wird ein Lösch-Button eingeblendet.
+ * Nach erfolgreichem Speichern einer neuen Session wird diese Komponente automatisch
+ * aktualisiert, um den aktuellen Stand ohne Neuladen anzuzeigen.
  *
  * @returns Die gerenderte Liste der Sessions.
  */
@@ -27,8 +29,7 @@ export default function SessionList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Abruf der Sessions von der API
-  useEffect(() => {
+  const fetchSessions = () => {
     console.debug('Fetching sessions from /api/sessions ...');
     fetch('/api/sessions')
       .then((res) => {
@@ -52,6 +53,27 @@ export default function SessionList() {
         setError('Fehler beim Laden der Sessions.');
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchSessions();
+
+    const handleSessionSaved = (event: CustomEvent) => {
+      // Nach dem Speichern der Session neu laden
+      fetchSessions();
+    };
+
+    window.addEventListener(
+      'sessionSaved',
+      handleSessionSaved as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        'sessionSaved',
+        handleSessionSaved as EventListener,
+      );
+    };
   }, []);
 
   /**

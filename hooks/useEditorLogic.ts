@@ -24,15 +24,22 @@ export function useEditorLogic({
     return () => clearInterval(interval);
   }, []);
 
-  // 2) Speichern bei Tab-Wechsel oder Schließen
+  // 2) Speichern bei Tab-Wechsel, Neuladen oder Schließen (unter Nutzung von sendBeacon/keepalive)
   useEffect(() => {
-    const handleSave = async () => {
+    const handleSave = () => {
       if (validateSessionContent(state.content)) {
-        await fetch('/api/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: state.content }),
-        });
+        const payload = JSON.stringify({ content: state.content });
+        if (navigator.sendBeacon) {
+          const blob = new Blob([payload], { type: 'application/json' });
+          navigator.sendBeacon('/api/session', blob);
+        } else {
+          fetch('/api/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            keepalive: true,
+          });
+        }
       }
     };
 
@@ -44,10 +51,12 @@ export function useEditorLogic({
 
     window.addEventListener('beforeunload', handleSave);
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handleSave);
 
     return () => {
       window.removeEventListener('beforeunload', handleSave);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handleSave);
     };
   }, [state.content]);
 
@@ -118,29 +127,36 @@ export function useEditorLogic({
     [state.content, dispatch, textareaRef],
   );
 
-  // 7) Session speichern & beenden
-  const handleSaveSession = useCallback(async () => {
+  // 7) Session speichern & beenden (manuelles Speichern mit Event-Benachrichtigung)
+  const handleSaveSession = useCallback(() => {
     if (!validateSessionContent(state.content)) {
       console.log('Sessioninhalt zu kurz; wird nicht gespeichert.');
       return;
     }
-    try {
-      await fetch('/api/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: state.content }),
+    fetch('/api/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: state.content }),
+    })
+      .then(() => {
+        // Custom Event zur Benachrichtigung, dass eine neue Session gespeichert wurde
+        window.dispatchEvent(
+          new CustomEvent('sessionSaved', {
+            detail: { content: state.content },
+          }),
+        );
+        dispatch({ type: 'SET_CONTENT', payload: '' });
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch((err) => {
+            console.error('Fehler beim Verlassen des Vollbildmodus:', err);
+          });
+        }
+        console.log('Session erfolgreich gespeichert.');
+        setTimer(0);
+      })
+      .catch((error) => {
+        console.log('Fehler beim Speichern der Session.', error);
       });
-      dispatch({ type: 'SET_CONTENT', payload: '' });
-
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      }
-
-      console.log('Session erfolgreich gespeichert.');
-      setTimer(0);
-    } catch (error) {
-      console.log('Fehler beim Speichern der Session.');
-    }
   }, [state.content, dispatch]);
 
   // 8) Vollbildmodus umschalten

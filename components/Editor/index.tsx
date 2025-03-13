@@ -40,34 +40,38 @@ export default function Editor() {
   return (
     <div
       ref={editorRef}
-      className="flex flex-col h-screen bg-gray-50 font-serif p-6"
+      className="relative flex flex-col h-screen bg-gray-50 font-serif p-6"
     >
-      <EditorHeader
-        isFullscreen={isFullscreen}
-        onToggleFullscreen={toggleFullscreen}
-      />
+      {/* Im Nicht-Vollbildmodus: Kopfbereich und Schriftgrößensteuerung */}
+      {!isFullscreen && (
+        <>
+          <EditorHeader
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
+          />
 
-      {/* Buttons zur Schriftgrößenwahl */}
-      <div className="flex space-x-2 mb-4">
-        <button
-          onClick={handleSetSmallFont}
-          className="px-3 py-1 bg-blue-600 text-white rounded"
-        >
-          Kleiner Font
-        </button>
-        <button
-          onClick={handleSetVeryLargeFont}
-          className="px-3 py-1 bg-blue-600 text-white rounded"
-        >
-          Sehr Großer Font
-        </button>
-        <button
-          onClick={handleSetMegaLargeFont}
-          className="px-3 py-1 bg-blue-600 text-white rounded"
-        >
-          Mega Großer Font
-        </button>
-      </div>
+          <div className="flex space-x-2 mb-4">
+            <button
+              onClick={handleSetSmallFont}
+              className="px-3 py-1 bg-blue-600 text-white rounded"
+            >
+              Kleiner Font
+            </button>
+            <button
+              onClick={handleSetVeryLargeFont}
+              className="px-3 py-1 bg-blue-600 text-white rounded"
+            >
+              Sehr Großer Font
+            </button>
+            <button
+              onClick={handleSetMegaLargeFont}
+              className="px-3 py-1 bg-blue-600 text-white rounded"
+            >
+              Mega Großer Font
+            </button>
+          </div>
+        </>
+      )}
 
       <EditorTextarea
         textareaRef={textareaRef}
@@ -76,11 +80,25 @@ export default function Editor() {
         fontSize={fontSize}
       />
 
-      <EditorFooter
-        timer={timer}
-        wordCount={wordCount}
-        onSaveSession={handleSaveSession}
-      />
+      {/* Im Nicht-Vollbildmodus: Fußzeile */}
+      {!isFullscreen && (
+        <EditorFooter
+          timer={timer}
+          wordCount={wordCount}
+          onSaveSession={handleSaveSession}
+        />
+      )}
+
+      {/* Im Vollbildmodus: Kleiner "X"-Button zum Verlassen des Vollbildmodus */}
+      {isFullscreen && (
+        <button
+          onClick={toggleFullscreen}
+          className="absolute top-4 right-4 text-white bg-black rounded-full p-2"
+          title="Vollbild verlassen"
+        >
+          X
+        </button>
+      )}
     </div>
   );
 }

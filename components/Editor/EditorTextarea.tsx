@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface EditorTextareaProps {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -15,6 +15,13 @@ export default function EditorTextarea({
   onChange,
   fontSize,
 }: EditorTextareaProps) {
+  useEffect(() => {
+    // Setzt den Fokus immer, unabhängig vom Betriebssystem
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
+  }, [textareaRef]);
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Unerwünschte Tasten, die zu einer Cursorbewegung oder Löschaktion führen könnten
     const disallowedKeys = [
@@ -44,7 +51,6 @@ export default function EditorTextarea({
         onKeyDown={handleKeyDown}
         className={`w-full h-full p-4 font-serif ${fontSize} leading-relaxed border-none focus:outline-none resize-none`}
         placeholder="Beginnen Sie zu schreiben..."
-        autoFocus
       />
     </main>
   );

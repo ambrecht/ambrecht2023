@@ -12,7 +12,7 @@ interface SessionState {
 
 type SessionAction =
   | { type: 'APPEND_CONTENT'; payload: string }
-  | { type: 'SET_CONTENT'; payload: string } // <--- NEU
+  | { type: 'SET_CONTENT'; payload: string }
   | { type: 'LOCK_SESSION' }
   | { type: 'UNLOCK_SESSION' }
   | { type: 'UPDATE_WORD_COUNT'; payload: number }
@@ -45,7 +45,7 @@ const sessionReducer = (
     case 'SET_CONTENT':
       return {
         ...state,
-        content: action.payload, // <-- Handhabung der neuen Action
+        content: action.payload,
       };
     case 'LOCK_SESSION':
       return {
@@ -78,6 +78,14 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 // Provider-Komponente
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(sessionReducer, initialState);
+
+  // Beim Mounten wird der localStorage ausgelesen, um gespeicherten Inhalt wiederherzustellen
+  React.useEffect(() => {
+    const savedContent = localStorage.getItem('sessionContent');
+    if (savedContent) {
+      dispatch({ type: 'SET_CONTENT', payload: savedContent });
+    }
+  }, []);
 
   return (
     <SessionContext.Provider value={{ state, dispatch }}>
