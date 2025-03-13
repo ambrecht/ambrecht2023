@@ -18,82 +18,54 @@ export function useEditorLogic({
   const [timer, setTimer] = useState(0);
   const [wordCount, setWordCount] = useState(0);
 
-  // 1) Timer starten (einfacher Zähler, um die Tippdauer zu erfassen)
+  // 1) Timer starten
   useEffect(() => {
     const interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  /**
-   * HILFSFUNKTION: Session-Inhalt an Server senden (wenn gültig).
-   * Diese Funktion wird sowohl manuell als auch durch ein Intervall aufgerufen.
-   */
-  const saveSessionToServer = useCallback(() => {
-    if (!validateSessionContent(state.content)) {
-      return; // Ungültiger oder zu kurzer Inhalt, keine Speicherung
-    }
-
-    const payload = JSON.stringify({ content: state.content });
-
-    // sendBeacon ist auf manchen Android-Browsern nicht zuverlässig;
-    // wir versuchen es, fallen aber auf fetch zurück.
-    if (navigator.sendBeacon) {
-      try {
-        const blob = new Blob([payload], { type: 'application/json' });
-        navigator.sendBeacon('/api/session', blob);
-      } catch (err) {
-        // Fallback: fetch mit keepalive
-        fetch('/api/session', {
+  // 2) Speichern bei Tab-Wechsel oder Schließen
+  useEffect(() => {
+    const handleSave = async () => {
+      if (validateSessionContent(state.content)) {
+        await fetch('/api/session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: payload,
-          keepalive: true,
-        }).catch(() => {
-          console.warn('Fehler beim Speichern via fetch (Fallback).');
+          body: JSON.stringify({ content: state.content }),
         });
       }
-    } else {
-      // Bei Nichtverfügbarkeit von sendBeacon nutzen wir fetch
-      fetch('/api/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-        keepalive: true,
-      }).catch(() => {
-        console.warn('Fehler beim Speichern via fetch.');
-      });
-    }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        handleSave();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleSave);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleSave);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [state.content]);
 
-  /**
-   * 2) Intervallgesteuertes Speichern im localStorage und ggf. Server.
-   * Statt auf beforeunload zu warten, wird in regelmäßigen Abständen gespeichert.
-   */
+  // 3) Automatische Speicherung im localStorage
   useEffect(() => {
     const interval = setInterval(() => {
-      // Immer lokal speichern
       localStorage.setItem('sessionContent', state.content);
-
-      // Optional: Auch auf den Server senden
-      // Dadurch verhindert man, daß ein abruptes Schließen auf Android
-      // den Inhalt verliert.
-      saveSessionToServer();
     }, 5000);
-
     return () => clearInterval(interval);
-  }, [state.content, saveSessionToServer]);
+  }, [state.content]);
 
-  /**
-   * 3) Wortzähler aktualisieren
-   */
+  // 4) Wortzähler aktualisieren
   useEffect(() => {
     const words = state.content.trim().split(/\s+/).filter(Boolean).length;
     setWordCount(words);
   }, [state.content]);
 
-  /**
-   * 4) Vollbild-Status (um festzustellen, ob der Nutzer im Fullscreen ist)
-   */
+  // 5) Vollbild-Status aktualisieren
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -104,29 +76,27 @@ export function useEditorLogic({
     };
   }, []);
 
-  /**
-   * 5) Textänderungs-Logik – nur Anhängen erlaubt (keine Löschungen, kein Einfügen in der Mitte)
-   */
+  // 6) Textänderungen – Stack-Logik: Nur Anhängen erlaubt
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newContent = e.target.value;
 
-      // Löschaktionen abfangen
+      // ⛔ Verhindere jegliche Löschaktionen
       if (newContent.length < state.content.length) {
         e.target.value = state.content;
         return;
       }
 
-      // Einfügungen in der Mitte unterbinden
+      // ⛔ Verhindere Einfügungen in der Mitte
       if (!newContent.startsWith(state.content)) {
         e.target.value = state.content;
         return;
       }
 
-      // Keine Zeilenumbrüche zulassen
+      // ⛔ Keine Zeilenumbrüche
       const sanitizedContent = newContent.replace(/\n/g, ' ');
 
-      // Keine aufeinanderfolgenden Leerzeichen am Ende
+      // ⛔ Keine aufeinanderfolgenden Leerzeichen
       if (/ {2,}$/.test(sanitizedContent)) {
         e.target.value = state.content;
         return;
@@ -134,7 +104,7 @@ export function useEditorLogic({
 
       dispatch({ type: 'SET_CONTENT', payload: sanitizedContent });
 
-      // Cursor immer ans Ende setzen
+      // 📌 Cursor immer ans Ende setzen
       const textarea = textareaRef.current;
       if (textarea) {
         textarea.setSelectionRange(
@@ -148,44 +118,32 @@ export function useEditorLogic({
     [state.content, dispatch, textareaRef],
   );
 
-  /**
-   * 6) Manuelles Session-Speichern (z. B. beim Klick auf "Session beenden")
-   */
-  const handleSaveSession = useCallback(() => {
+  // 7) Session speichern & beenden
+  const handleSaveSession = useCallback(async () => {
     if (!validateSessionContent(state.content)) {
       console.log('Sessioninhalt zu kurz; wird nicht gespeichert.');
       return;
     }
-    fetch('/api/session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: state.content }),
-    })
-      .then(() => {
-        // Custom-Event, um andere Komponenten zu informieren
-        window.dispatchEvent(
-          new CustomEvent('sessionSaved', {
-            detail: { content: state.content },
-          }),
-        );
-        // Inhalt zurücksetzen
-        dispatch({ type: 'SET_CONTENT', payload: '' });
-        if (document.fullscreenElement) {
-          document.exitFullscreen().catch((err) => {
-            console.error('Fehler beim Verlassen des Vollbildmodus:', err);
-          });
-        }
-        console.log('Session erfolgreich gespeichert.');
-        setTimer(0);
-      })
-      .catch((error) => {
-        console.log('Fehler beim Speichern der Session.', error);
+    try {
+      await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: state.content }),
       });
+      dispatch({ type: 'SET_CONTENT', payload: '' });
+
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+
+      console.log('Session erfolgreich gespeichert.');
+      setTimer(0);
+    } catch (error) {
+      console.log('Fehler beim Speichern der Session.');
+    }
   }, [state.content, dispatch]);
 
-  /**
-   * 7) Vollbildmodus umschalten
-   */
+  // 8) Vollbildmodus umschalten
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement && editorRef.current) {
       editorRef.current.requestFullscreen().catch((err) => {
