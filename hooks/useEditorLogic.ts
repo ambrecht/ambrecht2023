@@ -18,63 +18,82 @@ export function useEditorLogic({
   const [timer, setTimer] = useState(0);
   const [wordCount, setWordCount] = useState(0);
 
-  // 1) Timer starten
+  // 1) Timer starten (einfacher Zähler, um die Tippdauer zu erfassen)
   useEffect(() => {
     const interval = setInterval(() => setTimer((prev) => prev + 1), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // 2) Speichern bei Tab-Wechsel, Neuladen oder Schließen (unter Nutzung von sendBeacon/keepalive)
-  useEffect(() => {
-    const handleSave = () => {
-      if (validateSessionContent(state.content)) {
-        const payload = JSON.stringify({ content: state.content });
-        if (navigator.sendBeacon) {
-          const blob = new Blob([payload], { type: 'application/json' });
-          navigator.sendBeacon('/api/session', blob);
-        } else {
-          fetch('/api/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: payload,
-            keepalive: true,
-          });
-        }
+  /**
+   * HILFSFUNKTION: Session-Inhalt an Server senden (wenn gültig).
+   * Diese Funktion wird sowohl manuell als auch durch ein Intervall aufgerufen.
+   */
+  const saveSessionToServer = useCallback(() => {
+    if (!validateSessionContent(state.content)) {
+      return; // Ungültiger oder zu kurzer Inhalt, keine Speicherung
+    }
+
+    const payload = JSON.stringify({ content: state.content });
+
+    // sendBeacon ist auf manchen Android-Browsern nicht zuverlässig;
+    // wir versuchen es, fallen aber auf fetch zurück.
+    if (navigator.sendBeacon) {
+      try {
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon('/api/session', blob);
+      } catch (err) {
+        // Fallback: fetch mit keepalive
+        fetch('/api/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {
+          console.warn('Fehler beim Speichern via fetch (Fallback).');
+        });
       }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        handleSave();
-      }
-    };
-
-    window.addEventListener('beforeunload', handleSave);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('pagehide', handleSave);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleSave);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('pagehide', handleSave);
-    };
+    } else {
+      // Bei Nichtverfügbarkeit von sendBeacon nutzen wir fetch
+      fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true,
+      }).catch(() => {
+        console.warn('Fehler beim Speichern via fetch.');
+      });
+    }
   }, [state.content]);
 
-  // 3) Automatische Speicherung im localStorage
+  /**
+   * 2) Intervallgesteuertes Speichern im localStorage und ggf. Server.
+   * Statt auf beforeunload zu warten, wird in regelmäßigen Abständen gespeichert.
+   */
   useEffect(() => {
     const interval = setInterval(() => {
+      // Immer lokal speichern
       localStorage.setItem('sessionContent', state.content);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [state.content]);
 
-  // 4) Wortzähler aktualisieren
+      // Optional: Auch auf den Server senden
+      // Dadurch verhindert man, daß ein abruptes Schließen auf Android
+      // den Inhalt verliert.
+      saveSessionToServer();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [state.content, saveSessionToServer]);
+
+  /**
+   * 3) Wortzähler aktualisieren
+   */
   useEffect(() => {
     const words = state.content.trim().split(/\s+/).filter(Boolean).length;
     setWordCount(words);
   }, [state.content]);
 
-  // 5) Vollbild-Status aktualisieren
+  /**
+   * 4) Vollbild-Status (um festzustellen, ob der Nutzer im Fullscreen ist)
+   */
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -85,27 +104,29 @@ export function useEditorLogic({
     };
   }, []);
 
-  // 6) Textänderungen – Stack-Logik: Nur Anhängen erlaubt
+  /**
+   * 5) Textänderungs-Logik – nur Anhängen erlaubt (keine Löschungen, kein Einfügen in der Mitte)
+   */
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newContent = e.target.value;
 
-      // ⛔ Verhindere jegliche Löschaktionen
+      // Löschaktionen abfangen
       if (newContent.length < state.content.length) {
         e.target.value = state.content;
         return;
       }
 
-      // ⛔ Verhindere Einfügungen in der Mitte
+      // Einfügungen in der Mitte unterbinden
       if (!newContent.startsWith(state.content)) {
         e.target.value = state.content;
         return;
       }
 
-      // ⛔ Keine Zeilenumbrüche
+      // Keine Zeilenumbrüche zulassen
       const sanitizedContent = newContent.replace(/\n/g, ' ');
 
-      // ⛔ Keine aufeinanderfolgenden Leerzeichen
+      // Keine aufeinanderfolgenden Leerzeichen am Ende
       if (/ {2,}$/.test(sanitizedContent)) {
         e.target.value = state.content;
         return;
@@ -113,7 +134,7 @@ export function useEditorLogic({
 
       dispatch({ type: 'SET_CONTENT', payload: sanitizedContent });
 
-      // 📌 Cursor immer ans Ende setzen
+      // Cursor immer ans Ende setzen
       const textarea = textareaRef.current;
       if (textarea) {
         textarea.setSelectionRange(
@@ -127,7 +148,9 @@ export function useEditorLogic({
     [state.content, dispatch, textareaRef],
   );
 
-  // 7) Session speichern & beenden (manuelles Speichern mit Event-Benachrichtigung)
+  /**
+   * 6) Manuelles Session-Speichern (z. B. beim Klick auf "Session beenden")
+   */
   const handleSaveSession = useCallback(() => {
     if (!validateSessionContent(state.content)) {
       console.log('Sessioninhalt zu kurz; wird nicht gespeichert.');
@@ -139,12 +162,13 @@ export function useEditorLogic({
       body: JSON.stringify({ content: state.content }),
     })
       .then(() => {
-        // Custom Event zur Benachrichtigung, dass eine neue Session gespeichert wurde
+        // Custom-Event, um andere Komponenten zu informieren
         window.dispatchEvent(
           new CustomEvent('sessionSaved', {
             detail: { content: state.content },
           }),
         );
+        // Inhalt zurücksetzen
         dispatch({ type: 'SET_CONTENT', payload: '' });
         if (document.fullscreenElement) {
           document.exitFullscreen().catch((err) => {
@@ -159,7 +183,9 @@ export function useEditorLogic({
       });
   }, [state.content, dispatch]);
 
-  // 8) Vollbildmodus umschalten
+  /**
+   * 7) Vollbildmodus umschalten
+   */
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement && editorRef.current) {
       editorRef.current.requestFullscreen().catch((err) => {
