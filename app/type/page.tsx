@@ -1,9 +1,4 @@
 'use client';
-/**
- * Diese Seite stellt den Editor bereit und zeigt ihn an.
- * Wir gehen davon aus, dass der Nutzer per /editor-Route
- * zu dieser Seite navigiert.
- */
 
 import React from 'react';
 import Editor from '@/components/Editor';
@@ -13,8 +8,10 @@ import SessionList from '@/components/typewriter/sessions';
 export default function EditorPage() {
   return (
     <SessionProvider>
-      <Editor />
-      <SessionList />
+      <div className="container mx-auto px-4 py-8">
+        <Editor />
+        <SessionList />
+      </div>
     </SessionProvider>
   );
 }
