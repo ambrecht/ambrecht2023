@@ -1,17 +1,15 @@
-'use client';
+// app/typewriter/page.tsx
+import Typewriter from './typewriter';
 
-import React from 'react';
-import Editor from '@/components/Editor';
-import { SessionProvider } from '@/lib/context/SessionContext';
-import SessionList from '@/components/typewriter/sessions';
+export const metadata = {
+  title: 'Typewriter - Schreibmaschinen-Simulation',
+  description: 'Eine Next.js-basierte Schreibmaschinen-Simulation',
+};
 
-export default function EditorPage() {
+export default function TypewriterPage() {
   return (
-    <SessionProvider>
-      <div className="container mx-auto px-4 py-8">
-        <Editor />
-        <SessionList />
-      </div>
-    </SessionProvider>
+    <div className="h-screen w-full">
+      <Typewriter />
+    </div>
   );
 }
