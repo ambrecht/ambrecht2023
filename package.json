@@ -45,7 +45,8 @@
     "three": "^0.161.0",
     "typewriter-effect": "^2.21.0",
     "uuid": "^11.1.0",
-    "web-api-hooks": "^3.0.2"
+    "web-api-hooks": "^3.0.2",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",
