@@ -13,7 +13,9 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 
 export default function SaveButton() {
   const { lines, activeLine, wordCount, letterCount } = useTypewriterStore();
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(
+    typeof window !== 'undefined' ? navigator.onLine : true,
+  );
 
   // Kombiniere alle Zeilen und die aktive Zeile zu einem vollständigen Text
   const fullText = [...lines, activeLine].join('\n');
@@ -37,14 +39,12 @@ export default function SaveButton() {
         },
       );
 
-      console.log('Response Status:', response.status);
-      const data = await response.json();
-      console.log('Response Data:', data);
-
       if (!response.ok) {
         throw new Error('Fehler beim Speichern des Textes');
       }
 
+      const data = await response.json();
+      console.log('Text erfolgreich gespeichert:', data);
       alert('Text erfolgreich gespeichert!');
     } catch (error) {
       console.error('Fehler:', error);
@@ -54,7 +54,7 @@ export default function SaveButton() {
     }
   };
 
-  // Online/Offline-Status überwachen
+  // Online/Offline-Status überwachen (nur im Browser)
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
