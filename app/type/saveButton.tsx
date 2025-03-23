@@ -21,25 +21,30 @@ export default function SaveButton() {
   // Funktion zum Speichern des Textes in der Datenbank
   const saveToDatabase = async () => {
     try {
-      const response = await fetch('/api/typewriter/save', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': process.env.NEXT_PUBLIC_API_KEY || '',
+      const response = await fetch(
+        'http://api.ambrecht.de:3001/api/typewriter/save',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
+          },
+          body: JSON.stringify({
+            text: fullText,
+            wordCount,
+            letterCount,
+          }),
         },
-        body: JSON.stringify({
-          text: fullText,
-          wordCount,
-          letterCount,
-        }),
-      });
+      );
+
+      console.log('Response Status:', response.status);
+      const data = await response.json();
+      console.log('Response Data:', data);
 
       if (!response.ok) {
         throw new Error('Fehler beim Speichern des Textes');
       }
 
-      const data = await response.json();
-      console.log('Text erfolgreich gespeichert:', data);
       alert('Text erfolgreich gespeichert!');
     } catch (error) {
       console.error('Fehler:', error);
