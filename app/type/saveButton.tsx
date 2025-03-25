@@ -5,7 +5,11 @@ import { useTypewriterStore } from './store';
 
 function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button {...props} className={`px-4 py-2 rounded ${props.className}`}>
+    <button
+      {...props}
+      className={`px-4 py-2 rounded transition-colors ${props.className}`}
+      disabled={props.disabled}
+    >
       {props.children}
     </button>
   );
@@ -13,18 +17,37 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 
 export default function SaveButton() {
   const { lines, activeLine, wordCount, letterCount } = useTypewriterStore();
-  const [isOnline, setIsOnline] = useState(
-    typeof window !== 'undefined' ? navigator.onLine : true,
-  );
+  const [isOnline, setIsOnline] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Kombiniere alle Zeilen und die aktive Zeile zu einem vollständigen Text
   const fullText = [...lines, activeLine].join('\n');
 
-  // Funktion zum Speichern des Textes in der Datenbank
+  useEffect(() => {
+    // Nur im Browser ausführen
+    if (typeof window !== 'undefined') {
+      setIsOnline(navigator.onLine);
+
+      const handleOnline = () => setIsOnline(true);
+      const handleOffline = () => setIsOnline(false);
+
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }
+  }, []);
+
   const saveToDatabase = async () => {
+    if (!isOnline || isLoading) return;
+
+    setIsLoading(true);
+
     try {
       const response = await fetch(
-        'http://api.ambrecht.de:3001/api/typewriter/save',
+        'https://api.ambrecht.de/api/typewriter/save',
         {
           method: 'POST',
           headers: {
@@ -36,52 +59,44 @@ export default function SaveButton() {
             wordCount,
             letterCount,
           }),
+          credentials: 'include', // Falls Cookies verwendet werden
         },
       );
 
       if (!response.ok) {
-        throw new Error('Fehler beim Speichern des Textes');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Text erfolgreich gespeichert:', data);
+      console.log('Erfolgreich gespeichert:', data);
       alert('Text erfolgreich gespeichert!');
     } catch (error) {
-      console.error('Fehler:', error);
-      alert(
-        'Fehler beim Speichern des Textes. Der Text wurde lokal gespeichert.',
-      );
+      console.error('Speicherfehler:', error);
+      alert('Fehler beim Speichern. Der Text wurde lokal gesichert.');
+      // Hier könnten Sie den Text im localStorage speichern
+      localStorage.setItem('typewriter_backup', fullText);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  // Online/Offline-Status überwachen (nur im Browser)
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
 
   return (
     <div className="flex gap-2">
       <Button
-        onClick={async () => {
-          if (isOnline) {
-            await saveToDatabase();
-          } else {
-            alert('Du bist offline. Der Text wurde lokal gespeichert.');
-          }
-        }}
-        className="bg-green-600 hover:bg-green-500"
+        onClick={saveToDatabase}
+        disabled={!isOnline || isLoading}
+        className={`bg-green-600 hover:bg-green-500 ${
+          isLoading ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
       >
-        Text speichern
+        {isLoading ? 'Wird gespeichert...' : 'Text speichern'}
       </Button>
+
+      {!isOnline && (
+        <div className="text-red-500 text-sm mt-1">
+          Offline - nur lokale Speicherung verfügbar
+        </div>
+      )}
     </div>
   );
 }
