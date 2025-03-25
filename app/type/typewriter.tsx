@@ -45,6 +45,8 @@ export default function Typewriter() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSize, setFontSize] = useState(24);
+  const [inputMode, setInputMode] = useState<'keydown' | 'change'>('keydown');
+  const lastKeyTimeRef = useRef<number>(0);
 
   // Hidden input field for keyboard input
   const hiddenInputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +55,19 @@ export default function Typewriter() {
   useEffect(() => {
     resetSession();
   }, [resetSession]);
+
+  // Detect if we're on a mobile device
+  useEffect(() => {
+    const isMobileDevice =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
+    // On mobile devices, prefer the onChange handler
+    if (isMobileDevice) {
+      setInputMode('change');
+    }
+  }, []);
 
   // Dynamically adjust maxCharsPerLine based on font size and container width
   useEffect(() => {
@@ -103,8 +118,41 @@ export default function Typewriter() {
     };
   }, []);
 
+  // Process a character input (shared between keydown and change handlers)
+  const processCharacter = (char: string) => {
+    // Check if line is full and needs to be moved to stack
+    if (activeLine.length >= maxCharsPerLine) {
+      // Find the last space to break at a word boundary if possible
+      const lastSpaceIndex = activeLine.lastIndexOf(' ');
+
+      if (lastSpaceIndex > 0 && lastSpaceIndex > maxCharsPerLine * 0.7) {
+        // Break at word boundary
+        const lineToAdd = activeLine.substring(0, lastSpaceIndex);
+        const remaining = activeLine.substring(lastSpaceIndex + 1);
+
+        // Update the store
+        setActiveLine(remaining + char);
+
+        // Add the line to the stack
+        useTypewriterStore.setState((state) => ({
+          lines: [...state.lines, lineToAdd],
+        }));
+      } else {
+        // No good space found, add the whole line to stack
+        addLineToStack();
+        setActiveLine(char);
+      }
+    } else {
+      // Add character to active line
+      setActiveLine(activeLine + char);
+    }
+  };
+
   // Handle key events
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Skip if we're using the change handler on this device
+    if (inputMode === 'change') return;
+
     // Allow Enter key to add line to stack
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -132,67 +180,39 @@ export default function Typewriter() {
     // Only process single characters (ignore shortcuts like Ctrl+C)
     if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
       e.preventDefault();
-
-      // Check if line is full and needs to be moved to stack
-      if (activeLine.length >= maxCharsPerLine) {
-        // Find the last space to break at a word boundary if possible
-        const lastSpaceIndex = activeLine.lastIndexOf(' ');
-
-        if (lastSpaceIndex > 0 && lastSpaceIndex > maxCharsPerLine * 0.7) {
-          // Break at word boundary
-          const lineToAdd = activeLine.substring(0, lastSpaceIndex);
-          const remaining = activeLine.substring(lastSpaceIndex + 1);
-
-          // Update the store
-          setActiveLine(remaining + e.key);
-
-          // Add the line to the stack
-          useTypewriterStore.setState((state) => ({
-            lines: [...state.lines, lineToAdd],
-          }));
-        } else {
-          // No good space found, add the whole line to stack
-          addLineToStack();
-          setActiveLine(e.key);
-        }
-      } else {
-        // Add character to active line
-        setActiveLine(activeLine + e.key);
-      }
+      lastKeyTimeRef.current = Date.now();
+      processCharacter(e.key);
     }
   };
 
   // Handle input change for mobile devices
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Skip if we're using the keydown handler on this device
+    if (inputMode === 'keydown') return;
+
     const value = e.target.value;
     if (value && value.length > 0) {
       // Get the last character typed
       const lastChar = value.charAt(value.length - 1);
 
-      // Add the character to the active line
-      if (activeLine.length >= maxCharsPerLine) {
-        // Handle line wrapping similar to keyDown handler
-        const lastSpaceIndex = activeLine.lastIndexOf(' ');
-
-        if (lastSpaceIndex > 0 && lastSpaceIndex > maxCharsPerLine * 0.7) {
-          const lineToAdd = activeLine.substring(0, lastSpaceIndex);
-          const remaining = activeLine.substring(lastSpaceIndex + 1);
-
-          setActiveLine(remaining + lastChar);
-
-          useTypewriterStore.setState((state) => ({
-            lines: [...state.lines, lineToAdd],
-          }));
-        } else {
-          addLineToStack();
-          setActiveLine(lastChar);
-        }
-      } else {
-        setActiveLine(activeLine + lastChar);
-      }
+      // Process the character
+      processCharacter(lastChar);
 
       // Clear the input field to prepare for the next character
       e.target.value = '';
+    }
+  };
+
+  // Handle Enter key for mobile devices
+  const handleInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (inputMode === 'change' && e.key === 'Enter') {
+      e.preventDefault();
+      addLineToStack();
+
+      // Clear the input field
+      if (hiddenInputRef.current) {
+        hiddenInputRef.current.value = '';
+      }
     }
   };
 
@@ -338,6 +358,7 @@ export default function Typewriter() {
           className="opacity-[.001] absolute bottom-0 left-0 w-full h-[10vh]"
           onKeyDown={handleKeyDown}
           onChange={handleInputChange}
+          onKeyUp={handleInputKeyUp}
           autoFocus
         />
       </div>
