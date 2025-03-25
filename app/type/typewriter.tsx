@@ -208,6 +208,7 @@ export default function Typewriter() {
       <input
         ref={hiddenInputRef}
         type="text"
+        className="opacity-[.001]"
         onKeyDown={handleKeyDown}
         autoFocus
         tabIndex={-1}
@@ -232,8 +233,8 @@ export default function Typewriter() {
             <Input
               id="fontSize"
               type="number"
-              min={12}
-              max={32}
+              min={24}
+              max={50}
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
               className="bg-gray-700 w-16 text-white text-xs h-8"
