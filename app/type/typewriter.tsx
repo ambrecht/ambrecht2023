@@ -204,17 +204,6 @@ export default function Typewriter() {
       } flex flex-col bg-gray-900 text-gray-100`}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {/* Verstecktes Eingabefeld für Tastatureingaben */}
-      <input
-        ref={hiddenInputRef}
-        type="text"
-        className="opacity-[.001]"
-        onKeyDown={handleKeyDown}
-        autoFocus
-        tabIndex={-1}
-        aria-hidden="true"
-      />
-
       {/* Control bar - only visible outside fullscreen */}
       {!isFullscreen && (
         <div className="flex flex-wrap gap-4 items-center justify-between p-3 bg-gray-800 text-white text-sm">
@@ -301,6 +290,16 @@ export default function Typewriter() {
             />
           </div>
         </div>
+        {/* Verstecktes Eingabefeld für Tastatureingaben */}
+        <input
+          ref={hiddenInputRef}
+          type="text"
+          className="opacity-[.001]"
+          onKeyDown={handleKeyDown}
+          autoFocus
+          tabIndex={-1}
+          aria-hidden="true"
+        />
       </div>
 
       {/* Exit fullscreen button */}
