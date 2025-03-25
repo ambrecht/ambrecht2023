@@ -1,283 +1,350 @@
+// components/typewriter.tsx
 'use client';
 
-import type React from 'react';
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useTypewriterStore } from './store';
+import SaveButton from './saveButton';
+import {
+  Fullscreen,
+  FullscreenIcon as FullscreenExit,
+  FileText,
+  AlignLeft,
+} from 'lucide-react';
 
-interface TypewriterProps {
-  lines: string[];
-  loop?: boolean;
-  typingSpeed?: number;
-  deleteSpeed?: number;
-  delayBeforeTypingNewText?: number;
+// UI Components
+function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      {...props}
+      className={`px-3 py-1.5 rounded text-sm ${props.className}`}
+    >
+      {props.children}
+    </button>
+  );
 }
 
-const Typewriter: React.FC<TypewriterProps> = ({
-  lines,
-  loop = true,
-  typingSpeed = 50,
-  deleteSpeed = 30,
-  delayBeforeTypingNewText = 1000,
-}) => {
-  const [lineStack, setLineStack] = useState<string[]>([]);
-  const [activeLine, setActiveLine] = useState('');
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      {...props}
+      className={`p-1.5 border rounded bg-gray-700 text-white ${props.className}`}
+    />
+  );
+}
+
+export default function Typewriter() {
+  const {
+    lines,
+    activeLine,
+    wordCount,
+    pageCount,
+    maxCharsPerLine,
+    setActiveLine,
+    addLineToStack,
+    setMaxCharsPerLine,
+    resetSession,
+  } = useTypewriterStore();
+
+  const containerRef = useRef<HTMLDivElement>(null);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(16);
+  const [showCursor, setShowCursor] = useState(true);
   const [hasExternalKeyboard, setHasExternalKeyboard] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Detect external keyboard (this is a heuristic, not perfect)
+  // 1. Initial Setup and Mobile Detection
   useEffect(() => {
-    const detectExternalKeyboard = () => {
-      // On Android, we can try to detect if an external keyboard is connected
-      // by checking for certain key events that only physical keyboards would trigger
-      const handleKeyDown = (e: KeyboardEvent) => {
-        // Tab key is rarely accessible on virtual keyboards
-        if (e.key === 'Tab' && isMobile) {
-          setHasExternalKeyboard(true);
-        }
-      };
-
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    };
-
-    return detectExternalKeyboard();
-  }, [isMobile]);
-
-  useEffect(() => {
-    setIsMobile(
+    // Detect mobile platform
+    const mobileCheck =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent,
-      ),
-    );
-  }, []);
+      );
+    setIsMobile(mobileCheck);
 
+    // Reset session but preserve last state if coming back
+    const lastText = localStorage.getItem('typewriter_lastText');
+    if (!lastText) {
+      resetSession();
+    }
+
+    // Setup for Android soft keyboard
+    if (mobileCheck) {
+      document.body.style.touchAction = 'manipulation';
+    }
+
+    return () => {
+      document.body.style.touchAction = '';
+    };
+  }, [resetSession]);
+
+  // 2. Focus Management - Critical for Android
   useEffect(() => {
-    const type = async () => {
-      const fullLine = lines[currentLineIndex];
-
-      if (isDeleting) {
-        setActiveLine((prevLine) => prevLine.substring(0, prevLine.length - 1));
-      } else {
-        setActiveLine((prevLine) => fullLine.substring(0, prevLine.length + 1));
-      }
-
-      const typingInterval = isDeleting ? deleteSpeed : typingSpeed;
-      await new Promise((resolve) => setTimeout(resolve, typingInterval));
-
-      if (!isDeleting && activeLine === fullLine) {
-        setIsDeleting(true);
-        await new Promise((resolve) =>
-          setTimeout(resolve, delayBeforeTypingNewText),
-        );
-      }
-
-      if (isDeleting && activeLine === '') {
-        setIsDeleting(false);
-        setCurrentLineIndex((prevIndex) =>
-          loop
-            ? (prevIndex + 1) % lines.length
-            : Math.min(prevIndex + 1, lines.length - 1),
-        );
-      }
-
-      if (!isDeleting && activeLine !== fullLine) {
-        type();
-      } else if (isDeleting && activeLine !== '') {
-        type();
+    const handleFocus = () => {
+      if (hiddenInputRef.current && !document.hidden) {
+        hiddenInputRef.current.focus({ preventScroll: true });
       }
     };
 
-    if (lines.length > 0 && currentLineIndex < lines.length) {
-      type();
+    // Initial focus with delay for Android
+    const focusTimer = setTimeout(handleFocus, 300);
+
+    // Re-focus handlers
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('click', handleFocus);
+    window.addEventListener('blur', handleFocus);
+
+    return () => {
+      clearTimeout(focusTimer);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('click', handleFocus);
+      window.removeEventListener('blur', handleFocus);
+    };
+  }, []);
+
+  // 3. Keyboard Detection
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Detect external keyboard on Android
+      if (isMobile && (e.key === 'Tab' || e.key === 'Alt')) {
+        setHasExternalKeyboard(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobile]);
+
+  // 4. Responsive Line Length Calculation
+  useEffect(() => {
+    const calculateMaxChars = () => {
+      if (!containerRef.current) return;
+      const containerWidth = containerRef.current.clientWidth;
+      const charWidth = fontSize * (isMobile ? 0.62 : 0.6); // Adjusted for mobile
+      const newMaxChars = Math.floor((containerWidth * 0.94) / charWidth);
+      setMaxCharsPerLine(Math.max(20, newMaxChars));
+    };
+
+    calculateMaxChars();
+    const resizeObserver = new ResizeObserver(calculateMaxChars);
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, [fontSize, isMobile, setMaxCharsPerLine]);
+
+  // 5. Combined Input Handling for Mobile/Desktop
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+
+    // Handle mobile input (including predictive text)
+    if (isMobile && !hasExternalKeyboard) {
+      setActiveLine(newValue);
+      return;
     }
-  }, [
-    lines,
-    currentLineIndex,
-    isDeleting,
-    typingSpeed,
-    deleteSpeed,
-    delayBeforeTypingNewText,
-    loop,
-    activeLine,
-  ]);
-
-  const addLineToStack = () => {
-    setLineStack([...lineStack, activeLine]);
-    setActiveLine('');
-  };
-
-  const handleCharacterInput = (char: string) => {
-    setActiveLine((prevLine) => prevLine + char);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // For Android with external keyboard, we need special handling
-    const isAndroidWithExternalKeyboard =
-      isMobile && /Android/i.test(navigator.userAgent);
+    // Mobile with external keyboard or desktop
+    if (hasExternalKeyboard || !isMobile) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addLineToStack();
+        if (hiddenInputRef.current) hiddenInputRef.current.value = '';
+        return;
+      }
 
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addLineToStack();
-      return;
-    }
-
-    // Let Android with external keyboard handle backspace natively
-    if (e.key === 'Backspace') {
-      if (!isAndroidWithExternalKeyboard) {
+      if (e.key === 'Backspace') {
         e.preventDefault();
         if (activeLine.length > 0) {
           setActiveLine(activeLine.substring(0, activeLine.length - 1));
         }
+        return;
       }
-      return;
-    }
 
-    if (
-      [
-        'ArrowLeft',
-        'ArrowRight',
-        'ArrowUp',
-        'ArrowDown',
-        'Home',
-        'End',
-        'PageUp',
-        'PageDown',
-      ].includes(e.key)
-    ) {
-      e.preventDefault();
-      return;
-    }
-
-    // For Android with external keyboard, let the input event handle character input
-    if (
-      !isAndroidWithExternalKeyboard &&
-      e.key.length === 1 &&
-      !e.ctrlKey &&
-      !e.altKey &&
-      !e.metaKey
-    ) {
-      e.preventDefault();
-      handleCharacterInput(e.key);
+      if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        e.preventDefault();
+        processCharacter(e.key);
+      }
     }
   };
 
-  // Keep input value in sync with activeLine
-  useEffect(() => {
-    if (hiddenInputRef.current && isMobile) {
-      hiddenInputRef.current.value = activeLine;
+  // 6. Character Processing Logic
+  const processCharacter = (char: string) => {
+    if (activeLine.length >= maxCharsPerLine) {
+      handleLineOverflow(char);
+    } else {
+      setActiveLine(activeLine + char);
     }
-  }, [activeLine, isMobile]);
+  };
 
-  // Improved focus management
-  useEffect(() => {
-    const focusInput = () => {
-      if (hiddenInputRef.current) {
-        hiddenInputRef.current.focus({ preventScroll: true });
-      }
-    };
+  const handleLineOverflow = (char: string) => {
+    const lastSpaceIndex = activeLine.lastIndexOf(' ');
+    const shouldBreakAtWord = lastSpaceIndex > maxCharsPerLine * 0.6;
 
-    // Focus on mount
-    focusInput();
-
-    // Re-focus on clicks
-    const handleClick = () => {
-      focusInput();
-    };
-
-    // Handle focus loss
-    const handleBlur = () => {
-      // Small delay to prevent focus issues during keyboard transitions
-      setTimeout(focusInput, 100);
-    };
-
-    document.addEventListener('click', handleClick);
-    if (hiddenInputRef.current) {
-      hiddenInputRef.current.addEventListener('blur', handleBlur);
+    if (shouldBreakAtWord) {
+      const newLine = activeLine.substring(0, lastSpaceIndex);
+      const remaining = activeLine.substring(lastSpaceIndex + 1);
+      setActiveLine(remaining + char);
+      useTypewriterStore.setState((state) => ({
+        lines: [...state.lines, newLine],
+      }));
+    } else {
+      addLineToStack();
+      setActiveLine(char);
     }
+  };
 
-    return () => {
-      document.removeEventListener('click', handleClick);
-      if (hiddenInputRef.current) {
-        hiddenInputRef.current.removeEventListener('blur', handleBlur);
-      }
-    };
+  // 7. Fullscreen Handling
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+        setTimeout(() => hiddenInputRef.current?.focus(), 100);
+      });
+    } else {
+      document.exitFullscreen().then(() => {
+        setIsFullscreen(false);
+        setTimeout(() => hiddenInputRef.current?.focus(), 100);
+      });
+    }
+  };
+
+  // 8. Cursor Blink Effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowCursor((prev) => !prev);
+    }, 530);
+    return () => clearInterval(interval);
   }, []);
 
-  // Improved focus management for Android with external keyboards
+  // 9. Auto-scroll and State Persistence
   useEffect(() => {
-    if (!isMobile || !/Android/i.test(navigator.userAgent)) return;
-
-    const focusInput = () => {
-      if (hiddenInputRef.current) {
-        hiddenInputRef.current.focus({ preventScroll: true });
-      }
-    };
-
-    // Handle focus loss
-    const handleBlur = () => {
-      // Small delay to prevent focus issues during keyboard transitions
-      setTimeout(focusInput, 100);
-    };
-
-    if (hiddenInputRef.current) {
-      hiddenInputRef.current.addEventListener('blur', handleBlur);
+    // Auto-scroll
+    const contentEl = document.getElementById('typewriter-content');
+    if (contentEl) {
+      contentEl.scrollTop = contentEl.scrollHeight;
     }
 
-    return () => {
-      if (hiddenInputRef.current) {
-        hiddenInputRef.current.removeEventListener('blur', handleBlur);
-      }
-    };
-  }, [isMobile]);
-
-  // Keep input value in sync with activeLine for Android external keyboards
-  useEffect(() => {
-    if (
-      hiddenInputRef.current &&
-      isMobile &&
-      /Android/i.test(navigator.userAgent)
-    ) {
-      // Only update if the focus is not on the input to prevent cursor jumping
-      if (document.activeElement !== hiddenInputRef.current) {
-        hiddenInputRef.current.value = activeLine;
-      }
-    }
-  }, [activeLine, isMobile]);
+    // Persist state
+    localStorage.setItem(
+      'typewriter_lastText',
+      [...lines, activeLine].join('\n'),
+    );
+  }, [lines, activeLine]);
 
   return (
-    <div className="relative">
-      {lineStack.map((line, index) => (
-        <div key={index}>{line}</div>
-      ))}
-      <div>
-        {activeLine}
-        <span className="inline-block w-1 h-5 bg-black animate-blink align-middle"></span>
-      </div>
+    <div
+      ref={containerRef}
+      className={`${
+        isFullscreen ? 'fixed inset-0 z-50' : 'h-full w-full'
+      } flex flex-col bg-gray-900 text-gray-100`}
+      onClick={() => hiddenInputRef.current?.focus()}
+    >
+      {/* Hidden Input - Core of Android Compatibility */}
       <input
         ref={hiddenInputRef}
         type="text"
         value={activeLine}
-        onChange={(e) => {
-          // For Android with external keyboard, use the onChange event
-          if (isMobile && /Android/i.test(navigator.userAgent)) {
-            setActiveLine(e.target.value);
-          }
-        }}
-        className={`absolute top-0 left-0 w-full h-full opacity-0 ${
-          isMobile ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
+        onChange={handleInput}
         onKeyDown={handleKeyDown}
+        className={`absolute ${
+          isMobile ? 'top-10 left-0 w-full h-12' : 'top-0 left-0 w-1 h-1'
+        } opacity-0`}
         autoFocus
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
-        inputMode="text" // Important for mobile
+        inputMode="text"
+        enterKeyHint="enter"
       />
+
+      {/* Control Bar - Optimized for Mobile */}
+      {!isFullscreen && (
+        <div className="flex flex-wrap gap-2 items-center p-2 bg-gray-800 text-xs sm:text-sm">
+          <div className="flex items-center gap-1">
+            <AlignLeft size={16} />
+            <span>{wordCount} Wörter</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <FileText size={16} />
+            <span>{pageCount} Seiten</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <label>Schrift:</label>
+            <Input
+              type="number"
+              min="12"
+              max="32"
+              value={fontSize}
+              onChange={(e) =>
+                setFontSize(Math.min(32, Math.max(12, Number(e.target.value))))
+              }
+              className="w-12 h-6 text-center"
+            />
+          </div>
+          <div className="flex-grow" />
+          <SaveButton />
+          <Button
+            onClick={toggleFullscreen}
+            className="bg-blue-600 hover:bg-blue-500"
+          >
+            <Fullscreen size={16} />
+          </Button>
+        </div>
+      )}
+
+      {/* Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div
+          id="typewriter-content"
+          className="flex-1 overflow-y-auto p-4 font-mono whitespace-pre-wrap break-words"
+          style={{
+            fontSize: `${fontSize}px`,
+            lineHeight: `${fontSize * 1.4}px`,
+          }}
+        >
+          {lines.map((line, i) => (
+            <div key={i} className="mb-1">
+              {line}
+            </div>
+          ))}
+          <div className="relative">
+            {activeLine}
+            <span
+              className={`absolute h-6 w-[2px] ml-1 ${
+                showCursor ? 'bg-white' : 'bg-transparent'
+              }`}
+              style={{ bottom: 1 }}
+            />
+          </div>
+        </div>
+
+        {/* Progress Indicator */}
+        <div className="h-1 bg-gray-700">
+          <div
+            className="h-full bg-blue-500 transition-all duration-100"
+            style={{
+              width: `${Math.min(
+                100,
+                (activeLine.length / maxCharsPerLine) * 100,
+              )}%`,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Fullscreen Exit Button */}
+      {isFullscreen && (
+        <div className="absolute top-2 right-2">
+          <Button
+            onClick={toggleFullscreen}
+            className="bg-gray-700 hover:bg-gray-600"
+          >
+            <FullscreenExit size={16} />
+          </Button>
+        </div>
+      )}
     </div>
   );
-};
-
-export default Typewriter;
+}
