@@ -292,7 +292,7 @@ export default function Typewriter() {
         {/* Scrollable area for previous lines */}
         <div
           className="flex-1 overflow-y-auto p-4 font-mono select-none"
-          style={{ fontSize: `${fontSize}px` }}
+          style={{ fontSize: `11px` }}
           id="typewriter-content"
         >
           <div className="min-h-full flex flex-col justify-end">
