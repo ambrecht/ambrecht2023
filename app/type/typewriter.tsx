@@ -296,6 +296,15 @@ export default function Typewriter() {
           type="text"
           className="opacity-[.001] h-[10vh]"
           onKeyDown={handleKeyDown}
+          onInput={(e) => {
+            const inputValue = e.currentTarget.value;
+            if (inputValue) {
+              // Hier verarbeiten Sie den neuen Text, ähnlich wie im Keydown-Handler
+              setActiveLine(activeLine + inputValue);
+              // Alternativ können Sie hier auch die Logik übernehmen, die im Keydown-Handler angewandt wird.
+              e.currentTarget.value = '';
+            }
+          }}
           autoFocus
         />
       </div>
