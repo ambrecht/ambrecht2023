@@ -1,8 +1,11 @@
+// components/typewriter.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTypewriterStore } from './store';
 import SaveButton from './saveButton';
+
 import {
   Fullscreen,
   FullscreenIcon as FullscreenExit,
@@ -10,6 +13,7 @@ import {
   AlignLeft,
 } from 'lucide-react';
 
+// components/ui/button.tsx
 function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button {...props} className={`px-4 py-2 rounded ${props.className}`}>
@@ -17,7 +21,6 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     </button>
   );
 }
-
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input {...props} className={`p-2 border rounded ${props.className}`} />
@@ -38,22 +41,18 @@ export default function Typewriter() {
   } = useTypewriterStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const hiddenInputRef = useRef<HTMLInputElement>(null);
-
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSize, setFontSize] = useState(18);
-  const [showCursor, setShowCursor] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
 
+  // Verstecktes Eingabefeld für Tastatureingaben
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
+
+  // Reset session on mount
   useEffect(() => {
     resetSession();
-    setIsMobile(
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent,
-      ),
-    );
   }, [resetSession]);
 
+  // Dynamically adjust maxCharsPerLine based on font size and container width
   useEffect(() => {
     const updateMaxChars = () => {
       if (!containerRef.current) return;
@@ -64,56 +63,54 @@ export default function Typewriter() {
     };
 
     updateMaxChars();
+
     const resizeObserver = new ResizeObserver(updateMaxChars);
-    if (containerRef.current) resizeObserver.observe(containerRef.current);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
 
     return () => resizeObserver.disconnect();
   }, [fontSize, setMaxCharsPerLine]);
 
+  // Keep focus on the hidden input
   useEffect(() => {
     const focusInput = () => {
-      setTimeout(
-        () => {
-          if (hiddenInputRef.current && !document.hidden) {
-            hiddenInputRef.current.focus({ preventScroll: true });
-          }
-        },
-        isMobile ? 300 : 0,
-      );
+      setTimeout(() => hiddenInputRef.current?.focus(), 10);
     };
 
     focusInput();
+
+    // Fokus bei jedem Klick auf das versteckte Eingabefeld setzen
+    const handleClick = () => {
+      focusInput();
+    };
+
+    document.addEventListener('click', handleClick);
+
+    // Handle fullscreen change events
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
       focusInput();
     };
 
-    window.addEventListener('focus', focusInput);
-    document.addEventListener('click', focusInput);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
 
     return () => {
-      window.removeEventListener('focus', focusInput);
-      document.removeEventListener('click', focusInput);
+      document.removeEventListener('click', handleClick);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
-  }, [isMobile]);
+  }, []);
 
+  // Handle key events
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow Enter key to add line to stack
     if (e.key === 'Enter') {
       e.preventDefault();
       addLineToStack();
       return;
     }
 
-    if (e.key === 'Backspace') {
-      e.preventDefault();
-      if (activeLine.length > 0) {
-        setActiveLine(activeLine.substring(0, activeLine.length - 1));
-      }
-      return;
-    }
-
+    // Ignore arrow keys, Home, End, etc.
     if (
       [
         'ArrowLeft',
@@ -130,31 +127,53 @@ export default function Typewriter() {
       return;
     }
 
+    // Only process single characters (ignore shortcuts like Ctrl+C)
     if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
       e.preventDefault();
-      processCharacter(e.key);
-    }
-  };
 
-  const processCharacter = (char: string) => {
-    if (activeLine.length >= maxCharsPerLine) {
-      const lastSpaceIndex = activeLine.lastIndexOf(' ');
-      if (lastSpaceIndex > maxCharsPerLine * 0.7) {
-        const lineToAdd = activeLine.substring(0, lastSpaceIndex);
-        const remaining = activeLine.substring(lastSpaceIndex + 1);
-        setActiveLine(remaining + char);
-        useTypewriterStore.setState((state) => ({
-          lines: [...state.lines, lineToAdd],
-        }));
+      // Check if line is full and needs to be moved to stack
+      if (activeLine.length >= maxCharsPerLine) {
+        // Find the last space to break at a word boundary if possible
+        const lastSpaceIndex = activeLine.lastIndexOf(' ');
+
+        if (lastSpaceIndex > 0 && lastSpaceIndex > maxCharsPerLine * 0.7) {
+          // Break at word boundary
+          const lineToAdd = activeLine.substring(0, lastSpaceIndex);
+          const remaining = activeLine.substring(lastSpaceIndex + 1);
+
+          // Update the store
+          setActiveLine(remaining + e.key);
+
+          // Add the line to the stack
+          useTypewriterStore.setState((state) => ({
+            lines: [...state.lines, lineToAdd],
+          }));
+        } else {
+          // No good space found, add the whole line to stack
+          addLineToStack();
+          setActiveLine(e.key);
+        }
       } else {
-        addLineToStack();
-        setActiveLine(char);
+        // Add character to active line
+        setActiveLine(activeLine + e.key);
       }
-    } else {
-      setActiveLine(activeLine + char);
     }
   };
 
+  // Toggle fullscreen mode
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement && containerRef.current) {
+      containerRef.current
+        .requestFullscreen()
+        .catch((err) => console.error('Fullscreen error:', err));
+    } else if (document.fullscreenElement) {
+      document
+        .exitFullscreen()
+        .catch((err) => console.error('Exit fullscreen error:', err));
+    }
+  };
+
+  // Auto-scroll to keep the most recent line visible
   useEffect(() => {
     const scrollToBottom = () => {
       const content = document.getElementById('typewriter-content');
@@ -166,20 +185,16 @@ export default function Typewriter() {
     scrollToBottom();
   }, [lines.length]);
 
+  // Blinkender Cursor-Effekt
+  const [showCursor, setShowCursor] = useState(true);
+
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev);
-    }, 530);
+    }, 530); // Typische Cursor-Blinkgeschwindigkeit
+
     return () => clearInterval(cursorInterval);
   }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement && containerRef.current) {
-      containerRef.current.requestFullscreen().catch(() => {});
-    } else if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    }
-  };
 
   return (
     <div
@@ -189,23 +204,18 @@ export default function Typewriter() {
       } flex flex-col bg-gray-900 text-gray-100`}
       onContextMenu={(e) => e.preventDefault()}
     >
+      {/* Verstecktes Eingabefeld für Tastatureingaben */}
       <input
         ref={hiddenInputRef}
         type="text"
-        className={`absolute ${
-          isMobile ? 'top-10 left-0 w-full h-12' : 'top-0 left-0 w-1 h-1'
-        } opacity-0`}
+        className="opacity-1 absolute top-0 left-0 w-1 h-1 pointer-events-none"
         onKeyDown={handleKeyDown}
         autoFocus
-        autoComplete="off"
-        autoCorrect="off"
-        spellCheck={false}
-        inputMode={isMobile ? 'text' : 'none'}
-        enterKeyHint="enter"
         tabIndex={-1}
         aria-hidden="true"
       />
 
+      {/* Control bar - only visible outside fullscreen */}
       {!isFullscreen && (
         <div className="flex flex-wrap gap-4 items-center justify-between p-3 bg-gray-800 text-white text-sm">
           <div className="flex items-center gap-2">
@@ -230,7 +240,7 @@ export default function Typewriter() {
               className="bg-gray-700 w-16 text-white text-xs h-8"
             />
           </div>
-          <SaveButton />
+          <SaveButton></SaveButton>
           <Button
             onClick={(e) => {
               e.preventDefault();
@@ -245,13 +255,16 @@ export default function Typewriter() {
         </div>
       )}
 
+      {/* Writing area with fixed active line at bottom */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
+        {/* Scrollable area for previous lines */}
         <div
           className="flex-1 overflow-y-auto p-4 font-mono select-none"
           style={{ fontSize: `${fontSize}px` }}
           id="typewriter-content"
         >
           <div className="min-h-full flex flex-col justify-end">
+            {/* Display lines in correct order (oldest at top, newest at bottom) */}
             {lines.map((line, i) => (
               <div key={i} className="whitespace-pre-wrap break-words">
                 {line}
@@ -260,6 +273,7 @@ export default function Typewriter() {
           </div>
         </div>
 
+        {/* Fixed active line at bottom - now read-only with custom cursor */}
         <div
           className="sticky bottom-0 bg-gray-800 p-4 font-mono border-t border-gray-700"
           style={{ fontSize: `${fontSize}px` }}
@@ -271,10 +285,13 @@ export default function Typewriter() {
               className={`inline-block w-[0.5em] h-[1.2em] ml-[1px] align-middle ${
                 showCursor ? 'bg-white' : 'bg-transparent'
               }`}
-              style={{ transform: 'translateY(-0.1em)' }}
+              style={{
+                transform: 'translateY(-0.1em)',
+              }}
             ></span>
           </div>
 
+          {/* Progress bar */}
           <div className="absolute bottom-0 left-0 h-1 bg-gray-700 w-full">
             <div
               className="h-full bg-blue-500 transition-all duration-75"
@@ -286,6 +303,7 @@ export default function Typewriter() {
         </div>
       </div>
 
+      {/* Exit fullscreen button */}
       {isFullscreen && (
         <div className="absolute top-2 right-2 z-50">
           <Button
