@@ -42,7 +42,7 @@ export default function Typewriter() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [fontSize, setFontSize] = useState(18);
+  const [fontSize, setFontSize] = useState(24);
 
   // Verstecktes Eingabefeld für Tastatureingaben
   const hiddenInputRef = useRef<HTMLInputElement>(null);
@@ -294,7 +294,7 @@ export default function Typewriter() {
         <input
           ref={hiddenInputRef}
           type="text"
-          className="opacity-[.001]"
+          className="opacity-[.001] h-[10vh]"
           onKeyDown={handleKeyDown}
           autoFocus
           tabIndex={-1}
