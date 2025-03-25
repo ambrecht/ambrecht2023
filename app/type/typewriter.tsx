@@ -297,8 +297,6 @@ export default function Typewriter() {
           className="opacity-[.001] h-[10vh]"
           onKeyDown={handleKeyDown}
           autoFocus
-          tabIndex={-1}
-          aria-hidden="true"
         />
       </div>
 
