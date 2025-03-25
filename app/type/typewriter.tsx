@@ -208,7 +208,6 @@ export default function Typewriter() {
       <input
         ref={hiddenInputRef}
         type="text"
-        className="absolute -left-[10000px] "
         onKeyDown={handleKeyDown}
         autoFocus
         tabIndex={-1}
