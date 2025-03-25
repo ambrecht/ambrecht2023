@@ -1,8 +1,8 @@
-// components/typewriter.tsx
 'use client';
 
+import type React from 'react';
+
 import { useEffect, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useTypewriterStore } from './store';
 import SaveButton from './saveButton';
 
@@ -13,7 +13,7 @@ import {
   AlignLeft,
 } from 'lucide-react';
 
-// components/ui/button.tsx
+// Simple Button component
 function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button {...props} className={`px-4 py-2 rounded ${props.className}`}>
@@ -21,6 +21,8 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     </button>
   );
 }
+
+// Simple Input component
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input {...props} className={`p-2 border rounded ${props.className}`} />
@@ -44,7 +46,7 @@ export default function Typewriter() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSize, setFontSize] = useState(24);
 
-  // Verstecktes Eingabefeld für Tastatureingaben
+  // Hidden input field for keyboard input
   const hiddenInputRef = useRef<HTMLInputElement>(null);
 
   // Reset session on mount
@@ -80,7 +82,7 @@ export default function Typewriter() {
 
     focusInput();
 
-    // Fokus bei jedem Klick auf das versteckte Eingabefeld setzen
+    // Set focus on hidden input field on every click
     const handleClick = () => {
       focusInput();
     };
@@ -160,6 +162,40 @@ export default function Typewriter() {
     }
   };
 
+  // Handle input change for mobile devices
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value && value.length > 0) {
+      // Get the last character typed
+      const lastChar = value.charAt(value.length - 1);
+
+      // Add the character to the active line
+      if (activeLine.length >= maxCharsPerLine) {
+        // Handle line wrapping similar to keyDown handler
+        const lastSpaceIndex = activeLine.lastIndexOf(' ');
+
+        if (lastSpaceIndex > 0 && lastSpaceIndex > maxCharsPerLine * 0.7) {
+          const lineToAdd = activeLine.substring(0, lastSpaceIndex);
+          const remaining = activeLine.substring(lastSpaceIndex + 1);
+
+          setActiveLine(remaining + lastChar);
+
+          useTypewriterStore.setState((state) => ({
+            lines: [...state.lines, lineToAdd],
+          }));
+        } else {
+          addLineToStack();
+          setActiveLine(lastChar);
+        }
+      } else {
+        setActiveLine(activeLine + lastChar);
+      }
+
+      // Clear the input field to prepare for the next character
+      e.target.value = '';
+    }
+  };
+
   // Toggle fullscreen mode
   const toggleFullscreen = () => {
     if (!document.fullscreenElement && containerRef.current) {
@@ -185,13 +221,13 @@ export default function Typewriter() {
     scrollToBottom();
   }, [lines.length]);
 
-  // Blinkender Cursor-Effekt
+  // Blinking cursor effect
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev);
-    }, 530); // Typische Cursor-Blinkgeschwindigkeit
+    }, 530); // Typical cursor blink speed
 
     return () => clearInterval(cursorInterval);
   }, []);
@@ -290,21 +326,18 @@ export default function Typewriter() {
             />
           </div>
         </div>
-        {/* Verstecktes Eingabefeld für Tastatureingaben */}
+
+        {/* Hidden input field for keyboard input - MODIFIED FOR MOBILE COMPATIBILITY */}
         <input
           ref={hiddenInputRef}
           type="text"
-          className="opacity-[.001] h-[10vh]"
+          inputMode="text"
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect="off"
+          className="opacity-[.001] absolute bottom-0 left-0 w-full h-[10vh]"
           onKeyDown={handleKeyDown}
-          onInput={(e) => {
-            const inputValue = e.currentTarget.value;
-            if (inputValue) {
-              // Hier verarbeiten Sie den neuen Text, ähnlich wie im Keydown-Handler
-              setActiveLine(activeLine + inputValue);
-              // Alternativ können Sie hier auch die Logik übernehmen, die im Keydown-Handler angewandt wird.
-              e.currentTarget.value = '';
-            }
-          }}
+          onChange={handleInputChange}
           autoFocus
         />
       </div>
