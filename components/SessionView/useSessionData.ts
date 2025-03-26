@@ -2,35 +2,46 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { ISession } from './SessionList';
 
-/**
- * Einfacher Hook, der Sessions vom Server lädt und ein periodisches
- * Aktualisieren erlaubt (alle 5 Sekunden). Bei Bedarf kann man auch
- * WebSockets oder Server-Sent Events nutzen.
- */
 export function useSessionData() {
   const [sessions, setSessions] = useState<ISession[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchSessions = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const res = await fetch('/api/sessions', { cache: 'no-store' });
-      if (!res.ok) {
-        console.error('Fehler beim Laden der Sessions:', res.statusText);
+      const response = await fetch(
+        'https://api.ambrecht.de/api/typewriter/all',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
+          },
+          credentials: 'include', // Falls Cookies verwendet werden
+          cache: 'no-store',
+        },
+      );
+
+      if (!response.ok) {
+        console.error('Fehler beim Laden der Sessions:', response.statusText);
         return;
       }
-      const data = await res.json();
+
+      const data = await response.json();
       setSessions(data);
     } catch (error) {
       console.error('Netzwerkfehler beim Laden der Sessions:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
-  // Laden beim ersten Rendern
+  // Initiales Laden der Daten beim ersten Rendern
   useEffect(() => {
     fetchSessions();
   }, [fetchSessions]);
 
-  // Wiederholtes Laden in Abständen von x Sekunden (z. B. 5s)
-  // Alternativ kann man hier auf eine Live-Methode (WebSocket, SSE etc.) wechseln.
+  // Periodisches Aktualisieren alle 5 Sekunden
   useEffect(() => {
     const interval = setInterval(() => {
       fetchSessions();
@@ -38,7 +49,7 @@ export function useSessionData() {
     return () => clearInterval(interval);
   }, [fetchSessions]);
 
-  // Manuelles Neu-Laden, wenn sich Sessions ändern (z. B. nach Löschung, Bearbeitung)
+  // Manuelles Neuladen der Daten, beispielsweise nach einer Änderung
   const refreshSessions = () => {
     fetchSessions();
   };
@@ -46,5 +57,6 @@ export function useSessionData() {
   return {
     sessions,
     refreshSessions,
+    isLoading,
   };
 }
