@@ -17,7 +17,7 @@ export function useSessionData() {
             'Content-Type': 'application/json',
             'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
           },
-          credentials: 'include', // Falls Cookies verwendet werden
+          credentials: 'include', // falls Cookies verwendet werden
           cache: 'no-store',
         },
       );
@@ -27,8 +27,12 @@ export function useSessionData() {
         return;
       }
 
-      const data = await response.json();
-      setSessions(data);
+      const json = await response.json();
+      if (json.success) {
+        setSessions(json.data);
+      } else {
+        console.error('API meldet einen Fehler:', json);
+      }
     } catch (error) {
       console.error('Netzwerkfehler beim Laden der Sessions:', error);
     } finally {
@@ -36,12 +40,12 @@ export function useSessionData() {
     }
   }, []);
 
-  // Initiales Laden der Daten beim ersten Rendern
+  // Erstes Laden der Daten beim Rendern
   useEffect(() => {
     fetchSessions();
   }, [fetchSessions]);
 
-  // Periodisches Aktualisieren alle 5 Sekunden
+  // Periodisches Aktualisieren der Sessions alle 5 Sekunden
   useEffect(() => {
     const interval = setInterval(() => {
       fetchSessions();
@@ -49,7 +53,7 @@ export function useSessionData() {
     return () => clearInterval(interval);
   }, [fetchSessions]);
 
-  // Manuelles Neuladen der Daten, beispielsweise nach einer Änderung
+  // Manuelles Neuladen der Sessions
   const refreshSessions = () => {
     fetchSessions();
   };
