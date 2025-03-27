@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function TypewriterPage() {
   return (
-    <div className="h-screen w-full">
+    <div>
       <SessionView />
     </div>
   );
