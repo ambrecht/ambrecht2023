@@ -1,55 +1,58 @@
-# Setze den Pfad des zu untersuchenden Ordners
-$folderPath = "E:\ambrecht2024\25092024\ambrecht2023\app"
+# Cleanup-Typewriter-Codebase.ps1
+# PowerShell-Skript zur Bereinigung und Vereinheitlichung der Typewriter-Codebase
 
-# Setze den Dateipfad der Ausgabedatei als JSON mit Datum
-$outputFile = "$([Environment]::GetFolderPath('Desktop'))\filestructure_$((Get-Date).ToString('yyyyMMdd')).json"
+$rootPath = "E:\ambrecht2024\25092024\ambrecht2023\app\typewriter"
+$backupFolder = "$rootPath\.backup_deleted_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
 
-# Falls die Datei existiert, löschen
-if (Test-Path $outputFile) {
-    Remove-Item $outputFile
-}
+# Liste veralteter/duplizierter Dateien (konsistente Schreibweise ist bereits in /components vorhanden)
+$filesToDelete = @(
+    "ControlBar.tsx",
+    "FullscreenExitButton.tsx",
+    "LineBreakSettingsPanel.tsx",
+    "SaveButton.tsx",
+    "WritingArea.tsx",
+    "InputField.tsx",
+    "lineBreakLogic.ts",
+    "store.ts"
+)
 
-# Optionale Filterung: Nur relevante Dateitypen einbeziehen
-$fileExtensions = @(".ts", ".tsx", ".js", ".jsx", ".json", ".md", ".css", ".scss")
+# Sicherungsordner anlegen
+New-Item -ItemType Directory -Force -Path $backupFolder | Out-Null
 
-# Liste für die Dateistruktur
-$fileList = @()
-
-# Funktion zum Einlesen von Datei-Inhalten
-function Get-FileStructure {
-    param (
-        [string]$filePath
-    )
-
-    # Maximale Zeichenanzahl für den Inhalt (z. B. 10.000 Zeichen)
-    $maxContentLength = 10000 
-
-    # Lese den Dateiinhalt (Fehlertolerant)
-    try {
-        $fileContent = Get-Content -Path $filePath -Raw -ErrorAction Stop
-
-        # Falls die Datei zu groß ist, kürzen
-        if ($fileContent.Length -gt $maxContentLength) {
-            $fileContent = $fileContent.Substring(0, $maxContentLength) + "`n... [Content Truncated]"
-        }
-    } catch {
-        $fileContent = "[Error reading file]"
-    }
-
-    # Strukturierte Rückgabe als PowerShell-Objekt
-    return [PSCustomObject]@{
-        file    = $filePath
-        content = $fileContent
+# Lösche alte Dateien und sichere sie
+foreach ($file in $filesToDelete) {
+    $fullPath = Join-Path $rootPath $file
+    if (Test-Path $fullPath) {
+        Write-Host "Sichere und lösche: $file" -ForegroundColor Yellow
+        Move-Item -Path $fullPath -Destination $backupFolder
+    } else {
+        Write-Host "Nicht gefunden (bereits gelöscht?): $file" -ForegroundColor DarkGray
     }
 }
 
-# Durchsuche alle relevanten Dateien im Ordner rekursiv
-Get-ChildItem -Path $folderPath -File -Recurse | Where-Object { $_.Extension -in $fileExtensions } | ForEach-Object {
-    $fileList += Get-FileStructure -filePath $_.FullName
+# Mapping inkonsistenter Importe => korrekte Schreibweise
+$importRewrites = @{
+    './components/Button'                   = './components/button'
+    './components/InputField'               = './components/input-field'
+    './components/SaveButton'               = './components/save-button'
+    './components/ControlBar'               = './components/control-bar'
+    './components/FullscreenExitButton'     = './components/fullscreen-exit-button'
+    './components/LineBreakSettingsPanel'   = './components/line-break-settings-panel'
 }
 
-# Konvertiere die Dateistruktur in JSON und speichere sie
-$fileList | ConvertTo-Json -Depth 3 | Set-Content -Path $outputFile -Encoding UTF8
+# Rekursiv alle .tsx-Dateien scannen und Importe korrigieren
+Get-ChildItem -Path $rootPath -Recurse -Include *.tsx | ForEach-Object {
+    $content = Get-Content $_.FullName -Raw
+    $originalContent = $content
+    foreach ($key in $importRewrites.Keys) {
+        $content = $content -replace [regex]::Escape($key), $importRewrites[$key]
+    }
 
-# Rückmeldung für den Benutzer
-Write-Host "Die Dateistruktur wurde in $outputFile gespeichert."
+    if ($content -ne $originalContent) {
+        Write-Host "Passe Importe an in: $($_.Name)" -ForegroundColor Green
+        Set-Content -Path $_.FullName -Value $content -Encoding UTF8
+    }
+}
+
+Write-Host "`n✅ Bereinigung abgeschlossen. Sicherungen unter:" -ForegroundColor Cyan
+Write-Host $backupFolder -ForegroundColor Cyan
