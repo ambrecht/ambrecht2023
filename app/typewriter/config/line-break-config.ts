@@ -3,7 +3,7 @@
  * @description Konfigurationsdatei für den Zeilenumbruch
  */
 
-import type { LineBreakConfig } from "../types"
+import type { LineBreakConfig } from '../types';
 
 /**
  * Standardkonfiguration für den Zeilenumbruch
@@ -11,6 +11,4 @@ import type { LineBreakConfig } from "../types"
  */
 export const defaultLineBreakConfig: LineBreakConfig = {
   maxCharsPerLine: 56,
-  incompleteWordAction: "move", // Nur Wortverschiebung als Option
-}
-
+};
