@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-
 import { useEffect, useRef, useState } from 'react';
 import { useTypewriterStore } from './store';
 import SaveButton from './saveButton';
@@ -13,7 +12,7 @@ import {
   AlignLeft,
 } from 'lucide-react';
 
-// Simple Button component
+// Einfacher Button
 function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button {...props} className={`px-4 py-2 rounded ${props.className}`}>
@@ -22,7 +21,7 @@ function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   );
 }
 
-// Simple Input component
+// Einfaches Input-Feld
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input {...props} className={`p-2 border rounded ${props.className}`} />
@@ -45,33 +44,22 @@ export default function Typewriter() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSize, setFontSize] = useState(24);
-  const lastKeyTimeRef = useRef<number>(0);
-
-  // Hidden input field for keyboard input
   const hiddenInputRef = useRef<HTMLInputElement>(null);
 
-  // Reset session on mount
+  // Letzte Zeitmessung für Tastenanschläge (falls benötigt)
+  const lastKeyTimeRef = useRef<number>(0);
+
+  // Sitzung zurücksetzen beim Laden
   useEffect(() => {
     resetSession();
   }, [resetSession]);
 
-  // Detect if we're on a mobile device
-  // useEffect(() => {
-  //   const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-  //     navigator.userAgent
-  //   );
-  //
-  //   // On mobile devices, prefer the onChange handler
-  //   if (isMobileDevice) {
-  //     setInputMode('change');
-  //   }
-  // }, []);
-
-  // Dynamically adjust maxCharsPerLine based on font size and container width
+  // maxCharsPerLine dynamisch anpassen
   useEffect(() => {
     const updateMaxChars = () => {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.clientWidth;
+      // geschätzte Breite eines Zeichens in einer Serif-Schrift
       const charWidth = fontSize * 0.6;
       const newMaxChars = Math.floor((containerWidth * 0.95) / charWidth);
       setMaxCharsPerLine(newMaxChars);
@@ -87,7 +75,7 @@ export default function Typewriter() {
     return () => resizeObserver.disconnect();
   }, [fontSize, setMaxCharsPerLine]);
 
-  // Keep focus on the hidden input
+  // Fokus auf das unsichtbare Input-Feld halten
   useEffect(() => {
     const focusInput = () => {
       setTimeout(() => hiddenInputRef.current?.focus(), 10);
@@ -95,14 +83,13 @@ export default function Typewriter() {
 
     focusInput();
 
-    // Set focus on hidden input field on every click
     const handleClick = () => {
       focusInput();
     };
 
     document.addEventListener('click', handleClick);
 
-    // Handle fullscreen change events
+    // Vollbild-Wechsel abfangen
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
       focusInput();
@@ -116,94 +103,7 @@ export default function Typewriter() {
     };
   }, []);
 
-  // Process a character input (shared between keydown and change handlers)
-  // const processCharacter = (char: string) => {
-  //   // Check if line is full and needs to be moved to stack
-  //   if (activeLine.length >= maxCharsPerLine) {
-  //     // Find the last space to break at a word boundary if possible
-  //     const lastSpaceIndex = activeLine.lastIndexOf(" ")
-  //
-  //     if (lastSpaceIndex > 0 && lastSpaceIndex > maxCharsPerLine * 0.7) {
-  //       // Break at word boundary
-  //       const lineToAdd = activeLine.substring(0, lastSpaceIndex)
-  //       const remaining = activeLine.substring(lastSpaceIndex + 1)
-  //
-  //       // Update the store
-  //       setActiveLine(remaining + char)
-  //
-  //       // Add the line to the stack
-  //       useTypewriterStore.setState((state) => ({
-  //         lines: [...state.lines, lineToAdd],
-  //       }))
-  //     } else {
-  //       // No good space found, add the whole line to stack
-  //       addLineToStack()
-  //       setActiveLine(char)
-  //     }
-  //   } else {
-  //     // Add character to active line
-  //     setActiveLine(activeLine + char)
-  //   }
-  // }
-
-  // Handle key events
-  // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   // Skip if we're using the change handler on this device
-  //   if (inputMode === "change") return
-  //
-  //   // Allow Enter key to add line to stack
-  //   if (e.key === "Enter") {
-  //     e.preventDefault()
-  //     addLineToStack()
-  //     return
-  //   }
-  //
-  //   // Ignore arrow keys, Home, End, etc.
-  //   if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(e.key)) {
-  //     e.preventDefault()
-  //     return
-  //   }
-  //
-  //   // Only process single characters (ignore shortcuts like Ctrl+C)
-  //   if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
-  //     e.preventDefault()
-  //     lastKeyTimeRef.current = Date.now()
-  //     processCharacter(e.key)
-  //   }
-  // }
-
-  // Handle input change for mobile devices
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   // Skip if we're using the keydown handler on this device
-  //   if (inputMode === "keydown") return
-  //
-  //   const value = e.target.value
-  //   if (value && value.length > 0) {
-  //     // Get the last character typed
-  //     const lastChar = value.charAt(value.length - 1)
-  //
-  //     // Process the character
-  //     processCharacter(lastChar)
-  //
-  //     // Clear the input field to prepare for the next character
-  //     e.target.value = ""
-  //   }
-  // }
-
-  // Handle Enter key for mobile devices
-  // const handleInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (inputMode === "change" && e.key === "Enter") {
-  //     e.preventDefault()
-  //     addLineToStack()
-  //
-  //     // Clear the input field
-  //     if (hiddenInputRef.current) {
-  //       hiddenInputRef.current.value = ""
-  //     }
-  //   }
-  // }
-
-  // Toggle fullscreen mode
+  // Vollbild an- und ausschalten
   const toggleFullscreen = () => {
     if (!document.fullscreenElement && containerRef.current) {
       containerRef.current
@@ -216,7 +116,7 @@ export default function Typewriter() {
     }
   };
 
-  // Auto-scroll to keep the most recent line visible
+  // Automatisch nach unten scrollen, damit die neueste Zeile sichtbar bleibt
   useEffect(() => {
     const scrollToBottom = () => {
       const content = document.getElementById('typewriter-content');
@@ -228,14 +128,13 @@ export default function Typewriter() {
     scrollToBottom();
   }, [lines.length]);
 
-  // Blinking cursor effect
+  // Blinkender Cursor
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev);
-    }, 530); // Typical cursor blink speed
-
+    }, 530);
     return () => clearInterval(cursorInterval);
   }, []);
 
@@ -243,13 +142,15 @@ export default function Typewriter() {
     <div
       ref={containerRef}
       className={`${
-        isFullscreen ? 'fixed inset-0 z-50' : 'h-full w-full'
-      } flex flex-col bg-gray-900 text-gray-100`}
+        isFullscreen
+          ? 'fixed inset-0 z-50'
+          : 'mx-auto max-w-[700px] h-full w-full'
+      } flex flex-col bg-[#f9f6f1] text-[#222] font-serif`}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {/* Control bar - only visible outside fullscreen */}
+      {/* Bedienleiste - nur sichtbar, wenn nicht im Vollbild */}
       {!isFullscreen && (
-        <div className="flex flex-wrap gap-4 items-center justify-between p-3 bg-gray-800 text-white text-sm">
+        <div className="flex flex-wrap gap-4 items-center justify-between p-3 bg-[#f3efe9] text-[#222] text-sm border-b border-[#ccc]">
           <div className="flex items-center gap-2">
             <AlignLeft className="h-4 w-4" />
             <span>Wörter: {wordCount}</span>
@@ -269,17 +170,17 @@ export default function Typewriter() {
               max={50}
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
-              className="bg-gray-700 w-16 text-white text-xs h-8"
+              className="bg-[#ebe8e3] w-16 text-[#222] text-xs h-8"
             />
           </div>
-          <SaveButton></SaveButton>
+          <SaveButton />
           <Button
             onClick={(e) => {
               e.preventDefault();
               toggleFullscreen();
               setTimeout(() => hiddenInputRef.current?.focus(), 100);
             }}
-            className="bg-blue-600 hover:bg-blue-500"
+            className="bg-[#d3d0cb] hover:bg-[#c4c1bc] text-[#222]"
           >
             <Fullscreen className="h-4 w-4 mr-1" />
             Vollbild
@@ -287,62 +188,58 @@ export default function Typewriter() {
         </div>
       )}
 
-      {/* Writing area with fixed active line at bottom */}
+      {/* Schreibbereich mit fixierter Eingabezeile am unteren Rand */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
-        {/* Scrollable area for previous lines */}
+        {/* Scrollbarer Bereich für bereits getippte Zeilen */}
         <div
-          className="flex-1 overflow-y-auto p-4 font-mono select-none"
-          style={{ fontSize: `11px` }}
+          className="flex-1 overflow-y-auto px-6 pt-6 pb-2 select-none"
+          style={{ fontSize: '16px', lineHeight: '1.6' }}
           id="typewriter-content"
         >
           <div className="min-h-full flex flex-col justify-end">
-            {/* Display lines in correct order (oldest at top, newest at bottom) */}
             {lines.map((line, i) => (
-              <div key={i} className="whitespace-pre-wrap break-words">
+              <div key={i} className="whitespace-pre-wrap break-words mb-2">
                 {line}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Visible but minimal input field at the bottom */}
-        <div className="sticky bottom-0 bg-gray-800 p-4 font-mono border-t border-gray-700">
+        {/* Sichtbares Eingabefeld am unteren Rand */}
+        <div className="sticky bottom-0 bg-[#f3efe9] p-4 font-serif border-t border-[#ccc]">
           <div className="relative">
-            {/* Display the active line with cursor */}
+            {/* Anzeige der aktiven Zeile mit Cursor */}
             <div
               className="whitespace-pre-wrap break-words absolute top-0 left-0 pointer-events-none"
-              style={{ fontSize: `${fontSize}px` }}
+              style={{ fontSize: `${fontSize}px`, lineHeight: '1.4' }}
             >
               {activeLine}
               <span
                 className={`inline-block w-[0.5em] h-[1.2em] ml-[1px] align-middle ${
-                  showCursor ? 'bg-white' : 'bg-transparent'
+                  showCursor ? 'bg-[#222]' : 'bg-transparent'
                 }`}
                 style={{
                   transform: 'translateY(-0.1em)',
                 }}
-              ></span>
+              />
             </div>
 
-            {/* Actual input field - styled to match the display but allow direct input */}
+            {/* Tatsächliches Input-Feld für die Eingabe */}
             <input
               ref={hiddenInputRef}
               type="text"
               value={activeLine}
               onChange={(e) => {
-                // Simply update the active line with the current input value
                 setActiveLine(e.target.value);
 
-                // Check if we need to break the line
+                // Zeilenumbruch, falls die Zeile zu lang wird
                 if (e.target.value.length > maxCharsPerLine) {
-                  // Find the last space to break at a word boundary if possible
                   const lastSpaceIndex = e.target.value.lastIndexOf(' ');
-
                   if (
                     lastSpaceIndex > 0 &&
                     lastSpaceIndex > maxCharsPerLine * 0.7
                   ) {
-                    // Break at word boundary
+                    // An einem Leerzeichen umbrechen
                     const lineToAdd = e.target.value.substring(
                       0,
                       lastSpaceIndex,
@@ -351,18 +248,15 @@ export default function Typewriter() {
                       lastSpaceIndex + 1,
                     );
 
-                    // Add the line to the stack
                     useTypewriterStore.setState((state) => ({
                       lines: [...state.lines, lineToAdd],
                     }));
-
-                    // Update the active line with the remaining text
                     setActiveLine(remaining);
                   }
                 }
               }}
               onKeyDown={(e) => {
-                // Handle Enter key to add line to stack
+                // Bei Enter die Zeile abschicken
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   addLineToStack();
@@ -371,16 +265,17 @@ export default function Typewriter() {
               className="w-full bg-transparent text-transparent caret-transparent outline-none"
               style={{
                 fontSize: `${fontSize}px`,
-                fontFamily: 'monospace',
+                lineHeight: '1.4',
+                fontFamily: 'serif',
               }}
               autoFocus
             />
           </div>
 
-          {/* Progress bar */}
-          <div className="absolute bottom-0 left-0 h-1 bg-gray-700 w-full">
+          {/* Fortschrittsbalken */}
+          <div className="absolute bottom-0 left-0 h-1 bg-[#e2dfda] w-full">
             <div
-              className="h-full bg-blue-500 transition-all duration-75"
+              className="h-full bg-[#bbb] transition-all duration-75"
               style={{
                 width: `${(activeLine.length / maxCharsPerLine) * 100}%`,
               }}
@@ -389,7 +284,7 @@ export default function Typewriter() {
         </div>
       </div>
 
-      {/* Exit fullscreen button */}
+      {/* Vollbild verlassen, nur sichtbar im Vollbild */}
       {isFullscreen && (
         <div className="absolute top-2 right-2 z-50">
           <Button
@@ -398,6 +293,7 @@ export default function Typewriter() {
               toggleFullscreen();
               setTimeout(() => hiddenInputRef.current?.focus(), 100);
             }}
+            className="bg-[#d3d0cb] hover:bg-[#c4c1bc] text-[#222]"
           >
             <FullscreenExit className="h-4 w-4 mr-1" />
             Vollbild verlassen
