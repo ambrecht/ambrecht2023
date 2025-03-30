@@ -1,17 +1,17 @@
-'use client';
+"use client"
 
 /**
  * @file control-bar.tsx
  * @description Komponente für die Kontrollleiste der Typewriter-Anwendung
  */
 
-import type React from 'react';
-import { AlignLeft, FileText, Fullscreen } from 'lucide-react';
-import SaveButton from './save-button';
-import InputField from './input-field';
-import Button from './button';
-import LineBreakSettingsPanel from './line-break-settings-panel';
-import type { ControlBarProps } from '../types';
+import type React from "react"
+import { AlignLeft, FileText, Fullscreen } from "lucide-react"
+import SaveButton from "./save-button"
+import InputField from "./input-field"
+import Button from "./button"
+import LineBreakSettingsPanel from "./line-break-settings-panel"
+import type { ControlBarProps } from "../types"
 
 /**
  * Die Komponente ControlBar rendert die obere Bedienleiste, welche Statistiken,
@@ -35,12 +35,12 @@ const ControlBar: React.FC<ControlBarProps> = ({
    * @param e - Das Änderungsevent des Eingabefeldes
    */
   const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSize = Number(e.target.value);
+    const newSize = Number(e.target.value)
     // Stelle sicher, dass die Schriftgröße im gültigen Bereich liegt
     if (newSize >= 24 && newSize <= 50) {
-      setFontSize(newSize);
+      setFontSize(newSize)
     }
-  };
+  }
 
   return (
     <div className="flex flex-wrap gap-4 items-center justify-between p-3 text-[#222] text-sm">
@@ -76,9 +76,9 @@ const ControlBar: React.FC<ControlBarProps> = ({
         <SaveButton />
         <Button
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            toggleFullscreen();
-            setTimeout(() => hiddenInputRef.current?.focus(), 100);
+            e.preventDefault()
+            toggleFullscreen()
+            setTimeout(() => hiddenInputRef.current?.focus(), 100)
           }}
           className="bg-[#d3d0cb] hover:bg-[#c4c1bc] text-[#222] flex items-center gap-1 transition-colors duration-200"
           aria-label="Vollbildmodus aktivieren"
@@ -89,7 +89,8 @@ const ControlBar: React.FC<ControlBarProps> = ({
         <LineBreakSettingsPanel />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ControlBar;
+export default ControlBar
+
