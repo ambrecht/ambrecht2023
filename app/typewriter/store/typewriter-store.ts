@@ -3,11 +3,11 @@
  * @description Zustandsverwaltung für die Typewriter-Anwendung mit Zustand
  */
 
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
-import type { LineBreakConfig, TypewriterState } from "../types"
-import { defaultLineBreakConfig } from "../config/line-break-config"
-import { reformatText } from "../utils/line-break-utils"
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { LineBreakConfig, TypewriterState } from '../types';
+import { defaultLineBreakConfig } from '../config/line-break-config';
+import { reformatText } from '../utils/line-break-utils';
 
 /**
  * Erstellt und exportiert den Typewriter-Store mit Zustand.
@@ -18,7 +18,7 @@ export const useTypewriterStore = create(
     (set, get) => ({
       // Initialzustand
       lines: [],
-      activeLine: "",
+      activeLine: '',
       maxCharsPerLine: defaultLineBreakConfig.maxCharsPerLine,
       letterCount: 0,
       wordCount: 0,
@@ -33,12 +33,12 @@ export const useTypewriterStore = create(
       setActiveLine: (text: string) =>
         set((state) => {
           // Berechne die Statistiken basierend auf dem gesamten Text
-          const fullText = [...state.lines, text].join(" ")
-          const wordCount = fullText.trim().split(/\s+/).filter(Boolean).length
-          const letterCount = fullText.replace(/\s+/g, "").length
-          const pageCount = Math.floor(fullText.length / 1600)
+          const fullText = [...state.lines, text].join(' ');
+          const wordCount = fullText.trim().split(/\s+/).filter(Boolean).length;
+          const letterCount = fullText.replace(/\s+/g, '').length;
+          const pageCount = Math.floor(fullText.length / 1600);
 
-          return { activeLine: text, wordCount, letterCount, pageCount }
+          return { activeLine: text, wordCount, letterCount, pageCount };
         }),
 
       /**
@@ -47,11 +47,11 @@ export const useTypewriterStore = create(
       addLineToStack: () =>
         set((state) => {
           // Wenn die aktive Zeile leer ist, ändere nichts
-          if (!state.activeLine.trim()) return state
+          if (!state.activeLine.trim()) return state;
 
           // Füge die aktive Zeile zum Stack hinzu und setze sie zurück
-          const newLines = [...state.lines, state.activeLine]
-          return { lines: newLines, activeLine: "" }
+          const newLines = [...state.lines, state.activeLine];
+          return { lines: newLines, activeLine: '' };
         }),
 
       /**
@@ -65,16 +65,16 @@ export const useTypewriterStore = create(
           const newConfig: LineBreakConfig = {
             ...state.lineBreakConfig,
             maxCharsPerLine: value,
-          }
+          };
 
           // Formatiere den Text neu mit der neuen Konfiguration
-          const newLines = reformatText(state.lines, newConfig)
+          const newLines = reformatText(state.lines, newConfig);
 
           return {
             maxCharsPerLine: value,
             lineBreakConfig: newConfig,
             lines: newLines,
-          }
+          };
         }),
 
       /**
@@ -83,7 +83,7 @@ export const useTypewriterStore = create(
       resetSession: () =>
         set(() => ({
           lines: [],
-          activeLine: "",
+          activeLine: '',
           wordCount: 0,
           letterCount: 0,
           pageCount: 0,
@@ -91,8 +91,7 @@ export const useTypewriterStore = create(
     }),
     {
       // Konfiguration für das persist-Middleware
-      name: "typewriter-storage",
+      name: 'typewriter-storage',
     },
   ),
-)
-
+);

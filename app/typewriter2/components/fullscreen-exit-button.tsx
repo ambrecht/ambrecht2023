@@ -9,6 +9,7 @@ import React from 'react';
 import { Minimize2 } from 'lucide-react';
 import Button from './button';
 import type { FullscreenExitButtonProps } from '../types';
+import { useTypewriterStore } from '../store/typewriter-store';
 
 /**
  * Die Komponente FullscreenExitButton rendert einen Button zum Verlassen
@@ -21,6 +22,8 @@ const FullscreenExitButton: React.FC<FullscreenExitButtonProps> = ({
   toggleFullscreen,
   hiddenInputRef,
 }) => {
+  const { darkMode } = useTypewriterStore();
+
   /**
    * Behandelt den Klick auf den Button
    *
@@ -36,7 +39,11 @@ const FullscreenExitButton: React.FC<FullscreenExitButtonProps> = ({
   return (
     <Button
       onClick={handleClick}
-      className="bg-[#d3d0cb] hover:bg-[#c4c1bc] text-[#222] flex items-center gap-1 transition-colors duration-200"
+      className={`${
+        darkMode
+          ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+          : 'bg-[#d3d0cb] hover:bg-[#c4c1bc] text-[#222]'
+      } flex items-center gap-1 transition-colors duration-200`}
       aria-label="Vollbildmodus verlassen"
     >
       <Minimize2 className="h-4 w-4" />

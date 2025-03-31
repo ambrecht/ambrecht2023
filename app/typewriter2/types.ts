@@ -1,8 +1,9 @@
-import React from 'react';
 /**
  * @file types.ts
  * @description Zentrale Typdefinitionen für die Typewriter-Anwendung
  */
+
+import React from 'react';
 
 /**
  * Konfiguration für den Zeilenumbruch
@@ -10,6 +11,8 @@ import React from 'react';
 export interface LineBreakConfig {
   /** Maximale Anzahl von Zeichen pro Zeile (Standard: 56) */
   maxCharsPerLine: number;
+  /** Automatische Berechnung der Zeilenlänge basierend auf dem Viewport */
+  autoMaxChars: boolean;
 }
 
 /**
@@ -17,6 +20,7 @@ export interface LineBreakConfig {
  */
 export const DEFAULT_LINE_BREAK_CONFIG: LineBreakConfig = {
   maxCharsPerLine: 56,
+  autoMaxChars: false,
 };
 
 /**
@@ -41,6 +45,8 @@ export interface WritingAreaProps {
   showCursor: boolean;
   /** Konfiguration für den Zeilenumbruch */
   lineBreakConfig?: LineBreakConfig;
+  /** Gibt an, ob der Nachtmodus aktiviert ist */
+  darkMode: boolean;
 }
 
 /**
@@ -51,10 +57,6 @@ export interface ControlBarProps {
   wordCount: number;
   /** Anzahl der Seiten im Text */
   pageCount: number;
-  /** Schriftgröße in Pixeln */
-  fontSize: number;
-  /** Funktion zum Setzen der Schriftgröße */
-  setFontSize: (size: number) => void;
   /** Funktion zum Umschalten des Vollbildmodus */
   toggleFullscreen: () => void;
   /** Referenz zum versteckten Eingabefeld */
@@ -75,8 +77,28 @@ export interface FullscreenExitButtonProps {
  * Props für die LineBreakSettingsPanel-Komponente
  */
 export interface LineBreakSettingsPanelProps {
-  /** Optionale Callback-Funktion, die aufgerufen wird, wenn die Konfiguration geändert wird */
-  onConfigChange?: () => void;
+  /** Schriftgröße in Pixeln */
+  fontSize: number;
+  /** Funktion zum Setzen der Schriftgröße */
+  setFontSize: (size: number) => void;
+  /** Konfiguration für den Zeilenumbruch */
+  lineBreakConfig: LineBreakConfig;
+  /** Funktion zum Aktualisieren der Konfiguration */
+  updateLineBreakConfig: (config: Partial<LineBreakConfig>) => void;
+  /** Gibt an, ob der Nachtmodus aktiviert ist */
+  darkMode: boolean;
+  /** Funktion zum Umschalten des Nachtmodus */
+  toggleDarkMode: () => void;
+  /** Funktion zum Löschen der aktuellen Eingabe */
+  clearCurrentInput: () => void;
+}
+
+/**
+ * Props für die HelpButton-Komponente
+ */
+export interface HelpButtonProps {
+  /** Gibt an, ob der Nachtmodus aktiviert ist */
+  darkMode: boolean;
 }
 
 /**
@@ -97,12 +119,22 @@ export interface TypewriterState {
   letterCount: number;
   /** Konfiguration für den Zeilenumbruch */
   lineBreakConfig: LineBreakConfig;
+  /** Schriftgröße in Pixeln */
+  fontSize: number;
+  /** Gibt an, ob der Nachtmodus aktiviert ist */
+  darkMode: boolean;
   /** Funktion zum Setzen der aktiven Zeile */
   setActiveLine: (text: string) => void;
   /** Funktion zum Hinzufügen der aktiven Zeile zum Stack */
   addLineToStack: () => void;
-  /** Funktion zum Setzen der maximalen Anzahl von Zeichen pro Zeile */
-  setMaxCharsPerLine: (value: number) => void;
+  /** Funktion zum Aktualisieren der Konfiguration */
+  updateLineBreakConfig: (config: Partial<LineBreakConfig>) => void;
+  /** Funktion zum Setzen der Schriftgröße */
+  setFontSize: (size: number) => void;
+  /** Funktion zum Umschalten des Nachtmodus */
+  toggleDarkMode: () => void;
+  /** Funktion zum Löschen der aktuellen Eingabe */
+  clearCurrentInput: () => void;
   /** Funktion zum Zurücksetzen der Sitzung */
   resetSession: () => void;
 }

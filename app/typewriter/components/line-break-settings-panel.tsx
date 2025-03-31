@@ -1,14 +1,14 @@
-"use client"
+'use client';
 
 /**
  * @file line-break-settings-panel.tsx
  * @description Komponente für das Einstellungspanel für den Zeilenumbruch
  */
 
-import type React from "react"
-import { useState } from "react"
-import { Settings } from "lucide-react"
-import type { LineBreakSettingsPanelProps } from "../types"
+import React from 'react';
+import { useState } from 'react';
+import { Settings } from 'lucide-react';
+import type { LineBreakSettingsPanelProps } from '../types';
 
 /**
  * Die Komponente LineBreakSettingsPanel rendert ein Panel mit Informationen
@@ -17,15 +17,17 @@ import type { LineBreakSettingsPanelProps } from "../types"
  * @component
  * @param props - Die Eigenschaften der Komponente
  */
-const LineBreakSettingsPanel: React.FC<LineBreakSettingsPanelProps> = ({ onConfigChange }) => {
-  const [isOpen, setIsOpen] = useState(false)
+const LineBreakSettingsPanel: React.FC<LineBreakSettingsPanelProps> = ({
+  onConfigChange,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   /**
    * Öffnet oder schließt das Panel
    */
   const togglePanel = () => {
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div className="relative">
@@ -50,7 +52,10 @@ const LineBreakSettingsPanel: React.FC<LineBreakSettingsPanelProps> = ({ onConfi
           aria-labelledby="line-break-settings-title"
         >
           <div className="flex justify-between items-center mb-3">
-            <h4 id="line-break-settings-title" className="font-bold text-gray-800">
+            <h4
+              id="line-break-settings-title"
+              className="font-bold text-gray-800"
+            >
               Zeilenumbruch Einstellungen
             </h4>
             <button
@@ -62,8 +67,9 @@ const LineBreakSettingsPanel: React.FC<LineBreakSettingsPanelProps> = ({ onConfi
             </button>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            Die Schreibmaschine ist auf 56 Zeichen pro Zeile eingestellt. Wörter, die nicht vollständig in eine Zeile
-            passen, werden automatisch in die nächste Zeile verschoben.
+            Die Schreibmaschine ist auf 56 Zeichen pro Zeile eingestellt.
+            Wörter, die nicht vollständig in eine Zeile passen, werden
+            automatisch in die nächste Zeile verschoben.
           </p>
           <button
             onClick={togglePanel}
@@ -75,8 +81,7 @@ const LineBreakSettingsPanel: React.FC<LineBreakSettingsPanelProps> = ({ onConfi
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LineBreakSettingsPanel
-
+export default LineBreakSettingsPanel;

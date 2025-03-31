@@ -28,6 +28,7 @@ const WritingArea: React.FC<WritingAreaProps> = ({
   hiddenInputRef,
   showCursor,
   lineBreakConfig = DEFAULT_LINE_BREAK_CONFIG,
+  darkMode,
 }) => {
   /**
    * Verarbeitet Änderungen im versteckten Eingabefeld.
@@ -70,7 +71,9 @@ const WritingArea: React.FC<WritingAreaProps> = ({
     <div className="flex-1 flex flex-col overflow-hidden relative">
       {/* Bereich für bereits geschriebene Zeilen */}
       <div
-        className="flex-1 overflow-y-auto px-6 pt-6 pb-2 select-none"
+        className={`flex-1 overflow-y-auto px-6 pt-6 pb-2 select-none ${
+          darkMode ? 'bg-gray-900 text-gray-200' : 'bg-[#fcfcfa] text-gray-800'
+        }`}
         style={{ fontSize: '16px', lineHeight: '1.6' }}
         id="typewriter-content"
         aria-live="polite"
@@ -79,7 +82,9 @@ const WritingArea: React.FC<WritingAreaProps> = ({
           {lines.map((line, i) => (
             <div
               key={i}
-              className="whitespace-pre-wrap break-words mb-2 font-serif text-gray-800"
+              className={`whitespace-pre-wrap break-words mb-2 font-serif ${
+                darkMode ? 'text-gray-200' : 'text-gray-800'
+              }`}
             >
               {line}
             </div>
@@ -89,20 +94,30 @@ const WritingArea: React.FC<WritingAreaProps> = ({
 
       {/* Bereich für die aktive Zeile mit Cursor */}
       <div
-        className="sticky bottom-0 bg-[#f3efe9] p-4 font-serif border-t border-[#e0dcd3]"
+        className={`sticky bottom-0 p-4 font-serif border-t ${
+          darkMode
+            ? 'bg-gray-800 border-gray-700'
+            : 'bg-[#f3efe9] border-[#e0dcd3]'
+        }`}
         style={{ height: `${fontSize * 2.2}px` }}
       >
         <div className="relative">
           {/* Sichtbarer Text mit Cursor */}
           <div
-            className="whitespace-pre-wrap break-words absolute top-0 left-0 pointer-events-none text-gray-800 overflow-hidden"
+            className={`whitespace-pre-wrap break-words absolute top-0 left-0 pointer-events-none overflow-hidden ${
+              darkMode ? 'text-gray-200' : 'text-gray-800'
+            }`}
             style={{ fontSize: `${fontSize}px`, lineHeight: '1.4' }}
             aria-hidden="true"
           >
             {activeLine}
             <span
               className={`inline-block w-[0.5em] h-[1.2em] ml-[1px] align-middle ${
-                showCursor ? 'bg-[#222]' : 'bg-transparent'
+                showCursor
+                  ? darkMode
+                    ? 'bg-gray-200'
+                    : 'bg-[#222]'
+                  : 'bg-transparent'
               }`}
               style={{ transform: 'translateY(-0.1em)' }}
             />
@@ -128,9 +143,15 @@ const WritingArea: React.FC<WritingAreaProps> = ({
         </div>
 
         {/* Fortschrittsbalken für die Zeilenlänge */}
-        <div className="absolute bottom-0 left-0 h-1 bg-[#e2dfda] w-full">
+        <div
+          className={`absolute bottom-0 left-0 h-1 ${
+            darkMode ? 'bg-gray-700' : 'bg-[#e2dfda]'
+          } w-full`}
+        >
           <div
-            className="h-full bg-[#bbb] transition-all duration-75"
+            className={`h-full ${
+              darkMode ? 'bg-gray-500' : 'bg-[#bbb]'
+            } transition-all duration-75`}
             style={{
               width: `${(activeLine.length / maxCharsPerLine) * 100}%`,
             }}
