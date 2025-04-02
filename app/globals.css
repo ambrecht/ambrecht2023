@@ -5,3 +5,15 @@
 body {
   overflow-x: hidden;
 }
+
+@media (min-width: 768px) {
+  #typewriter-content {
+    height: 50vh !important;
+    max-height: 50vh;
+  }
+}
+
+html:fullscreen #typewriter-content {
+  height: calc(100vh - 2.2em); /* aktive Zeile berücksichtigen */
+  max-height: calc(100vh - 2.2em);
+}

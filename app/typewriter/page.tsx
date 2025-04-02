@@ -101,7 +101,7 @@ export default function TypewriterPage() {
   return (
     <div
       ref={containerRef}
-      className={`min-h-screen flex flex-col ${
+      className={`max-h-screen flex flex-col ${
         isFullscreen ? 'bg-[#f8f5f0]' : 'bg-[#f3efe9]'
       } text-gray-900 transition-colors duration-300`}
     >
