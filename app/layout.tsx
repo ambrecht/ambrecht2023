@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import './globals.css';
 import StyledComponentsRegistry from '@/lib/registry';
 import Navigation from '@/components/Navigation';
 import { Frame } from '@/components/Frame';
