@@ -3,14 +3,10 @@
  * @description Spezifische CSS-Anpassungen für Android-Geräte
  */
 
-/* Verhindere, dass die Tastatur das Layout verschiebt */
+/* Angepasste Styles für Android-Geräte */
 .android-typewriter {
+  /* Entferne position: fixed, da es mit dem Vollbildmodus kollidiert */
   height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   overflow: hidden;
 }
 
@@ -118,5 +114,13 @@
 /* Verbessere die Darstellung von Checkboxen auf Android */
 .android-typewriter input[type="checkbox"] {
   transform: scale(1.2);
+}
+
+/* Spezielle Anpassungen für den Vollbildmodus auf Android */
+.android-typewriter:fullscreen {
+  position: static; /* Stelle sicher, dass keine fixed-Position im Vollbildmodus verwendet wird */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 

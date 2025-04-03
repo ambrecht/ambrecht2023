@@ -177,7 +177,24 @@ export default function TypewriterPage() {
    */
   const toggleFullscreen = () => {
     if (!document.fullscreenElement && containerRef.current) {
-      containerRef.current.requestFullscreen().catch((err) => console.error("Fullscreen error:", err))
+      // Entferne temporär die android-typewriter Klasse, falls sie existiert
+      if (isAndroid && containerRef.current.classList.contains("android-typewriter")) {
+        containerRef.current.classList.remove("android-typewriter")
+
+        // Warte kurz, bevor der Vollbildmodus aktiviert wird
+        setTimeout(() => {
+          containerRef.current?.requestFullscreen().catch((err) => console.error("Fullscreen error:", err))
+
+          // Füge die Klasse nach dem Wechsel in den Vollbildmodus wieder hinzu
+          setTimeout(() => {
+            if (containerRef.current) {
+              containerRef.current.classList.add("android-typewriter")
+            }
+          }, 100)
+        }, 50)
+      } else {
+        containerRef.current.requestFullscreen().catch((err) => console.error("Fullscreen error:", err))
+      }
     } else if (document.fullscreenElement) {
       document.exitFullscreen().catch((err) => console.error("Exit fullscreen error:", err))
     }
