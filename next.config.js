@@ -22,7 +22,7 @@ module.exports = {
       {
         source: '/typewriter',
         destination: 'https://v0-erstelle-neues-projekt-moevc6.vercel.app/',
-        permanent: false, // oder true, wenn es eine dauerhafte Weiterleitung sein soll
+        permanent: true, // oder true, wenn es eine dauerhafte Weiterleitung sein soll
       },
     ];
   },
