@@ -5,6 +5,8 @@ import type React from "react"
  */
 
 import "./styles/android-fixes.css"
+import "./styles/isolation.css"
+import "./styles/iframe-fixes.css"
 
 export default function TypewriterLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,7 +17,8 @@ export default function TypewriterLayout({ children }: { children: React.ReactNo
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="mobile-web-app-capable" content="yes" />
 
-      {children}
+      {/* Wrapper-Div mit Isolationsklasse */}
+      <div className="typewriter-app-container">{children}</div>
     </>
   )
 }

@@ -77,7 +77,7 @@ export default function TypewriterPage() {
     if (typeof window !== "undefined") {
       const userAgent = window.navigator.userAgent.toLowerCase()
       setIsAndroid(/android/.test(userAgent))
-
+      
       // Prüfe, ob die App in einem iframe läuft
       try {
         setIsIframe(window.self !== window.top)
@@ -265,12 +265,5 @@ export default function TypewriterPage() {
       </main>
       <footer
         className={`typewriter-footer p-3 border-t ${
-          darkMode ? "border-gray-700 text-gray-400 bg-gray-900" : "border-[#d3d0cb] text-gray-600"
-        } text-center text-sm`}
-      >
-        Typing Machine Application — Moderne Umsetzung des klassischen Schreibmaschinengefühls
-      </footer>
-    </div>
-  )
-}
+          darkMode ? "border-gray-700
 

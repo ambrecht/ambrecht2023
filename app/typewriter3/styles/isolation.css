@@ -1,0 +1,76 @@
+/**
+ * @file isolation.css
+ * @description CSS zur Isolation der Typewriter-App von der umgebenden Website
+ */
+
+/* Container für die gesamte Typewriter-App */
+.typewriter-app-container {
+  /* Grundlegende Isolation */
+  all: initial;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+
+  /* Vollständige Größe */
+  display: block;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  /* Stacking-Kontext erstellen */
+  position: relative;
+  z-index: 1;
+
+  /* Verhindern, dass externe Styles eindringen */
+  color: inherit;
+  background: transparent;
+}
+
+/* Stelle sicher, dass alle Kindelemente die Box-Sizing-Eigenschaft erben */
+.typewriter-app-container * {
+  box-sizing: border-box;
+}
+
+/* Setze grundlegende Stile zurück, die möglicherweise von der umgebenden Website überschrieben wurden */
+.typewriter-app-container h1,
+.typewriter-app-container h2,
+.typewriter-app-container h3,
+.typewriter-app-container h4,
+.typewriter-app-container h5,
+.typewriter-app-container h6,
+.typewriter-app-container p,
+.typewriter-app-container div,
+.typewriter-app-container span,
+.typewriter-app-container button,
+.typewriter-app-container input {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+}
+
+/* Stelle sicher, dass die Typewriter-App im Vollbildmodus korrekt angezeigt wird */
+.typewriter-app-container:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+.typewriter-app-container:-moz-full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+.typewriter-app-container:-ms-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.typewriter-app-container:fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
