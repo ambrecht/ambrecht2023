@@ -17,6 +17,15 @@ module.exports = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/typewriter',
+        destination: 'https://v0-erstelle-neues-projekt-moevc6.vercel.app/',
+        permanent: false, // oder true, wenn es eine dauerhafte Weiterleitung sein soll
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
