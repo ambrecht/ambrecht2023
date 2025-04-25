@@ -1,81 +1,98 @@
+// E:\ambrecht2024\25092024\ambrecht2023\app\start\GridItem.tsx
+
 import styled from 'styled-components';
 import { ReactNode } from 'react';
 import Image from 'next/image';
 
-interface GridItemComponentProps {
+interface GridItemProps {
   text: string;
   link: string;
   SvgSrc: string;
 }
 
-// This component uses the styled GridItem and renders the SVG, text, and link
-const GridItemComponent: React.FC<GridItemComponentProps> = ({
-  text,
-  link,
-  SvgSrc,
-}) => {
+const GridItem: React.FC<GridItemProps> = ({ text, link, SvgSrc }) => {
   return (
-    <GridItem>
-      <a href={link} target="_blank" rel="noopener noreferrer">
-        <LogoContainer src={SvgSrc} alt={text} width={75} height={75} />{' '}
+    <GridItemContainer>
+      <Link href={link} target="_blank" rel="noopener noreferrer">
+        <ImageWrapper>
+          <LogoContainer src={SvgSrc} alt={text} width={75} height={75} />
+        </ImageWrapper>
         <Text>{text}</Text>
-      </a>
-    </GridItem>
+      </Link>
+    </GridItemContainer>
   );
 };
 
-export default GridItemComponent;
+export default GridItem;
 
-// Define our breakpoints
 const breakpoints = {
   sm: '640px',
   md: '768px',
 };
 
-// Create a styled div for the grid items with Tailwind-inspired styles
-export const GridItem = styled.div`
+const GridItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem; // p-4
-  border-left: 1px solid rgba(255, 255, 255, 0.1); // border-l border-white/10
+  padding: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 300ms ease, transform 300ms ease;
 
   @media (min-width: ${breakpoints.sm}) {
-    padding: 1.5rem; // sm:p-6
+    padding: 1.5rem;
   }
 
   @media (min-width: ${breakpoints.md}) {
-    padding-top: 3rem; // md:py-12
-    padding-bottom: 3rem; // md:py-12
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
 
   &:hover {
-    border-color: #0070f3; // hover:border-blue-500
+    border-color: #0070f3;
+    transform: translateY(-5px);
   }
-
-  transition: border-color 300ms; // transition-colors duration-300
 `;
 
-export const LogoContainer = styled(Image)`
+const Link = styled.a`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+`;
+
+const ImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 300ms ease, filter 300ms ease;
+
+  ${GridItemContainer}:hover & {
+    transform: scale(1.2);
+    filter: brightness(1.2) contrast(1.2);
+  }
+`;
+
+const LogoContainer = styled(Image)`
   filter: grayscale(100%);
-  transition: 0.3s;
+  transition: filter 300ms ease;
 
-  &:hover {
-    filter: grayscale(0%); // hover:border-blue-500
-
-    transform: scale(2);
+  ${GridItemContainer}:hover & {
+    filter: grayscale(0%);
   }
 `;
 
 const Text = styled.span`
+  margin-top: 0.75rem;
   text-align: center;
-  margin-top: 200vh;
   opacity: 0;
   font-weight: 800;
   color: white;
-  transition: opacity 300ms ease-in-out;
-  ${GridItem}:hover & {
+  transition: opacity 400ms ease, transform 400ms ease;
+  transform: translateY(10px);
+
+  ${GridItemContainer}:hover & {
     opacity: 1;
+    transform: translateY(0px);
   }
 `;
