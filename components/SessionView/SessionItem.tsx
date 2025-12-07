@@ -13,14 +13,14 @@ export function SessionItem({ session }: SessionItemProps) {
     : [];
 
   return (
-    <article className="max-w-[72ch] mx-auto">
-      <header className="mb-4">
-        <h1 className="text-3xl sm:text-4xl font-semibold text-[#1f150f] leading-tight">
+    <article className="max-w-[72ch] mx-auto py-10 border-b border-[#e5d9c9] last:border-b-0 last:pb-0">
+      <header className="mb-3">
+        <h2 className="text-3xl sm:text-4xl font-semibold text-[#120c08] leading-tight">
           Session #{id}
-        </h1>
-        <div className="mt-2 text-[13px] text-[#5b5147] flex flex-wrap gap-3">
+        </h2>
+        <div className="mt-2 text-sm text-[#5b5147] flex flex-wrap gap-3">
           <time dateTime={created_at}>
-            {new Date(created_at).toLocaleString()}
+            {new Date(created_at).toLocaleDateString()}
           </time>
           <span aria-hidden="true">·</span>
           <span>{word_count} Wörter</span>
@@ -32,7 +32,7 @@ export function SessionItem({ session }: SessionItemProps) {
       </header>
 
       <div
-        className="mt-8 space-y-6 text-[19px] md:text-[20px] leading-[1.75] text-[#1f150f] font-serif"
+        className="mt-6 space-y-6 text-[19px] md:text-[20px] leading-[1.75] text-[#1f150f] font-serif"
         style={{ fontFeatureSettings: '"liga","kern"' }}
       >
         {paragraphs.length > 0 ? (
