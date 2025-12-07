@@ -10,14 +10,17 @@ export function SessionItem({ session }: SessionItemProps) {
   const { id, text, created_at, letter_count, word_count, char_count } = session;
 
   return (
-    <div className="border border-gray-600 p-4 rounded text-gray-200 bg-black">
-      <div className="text-sm text-gray-400">
-        ID: {id} - Erstellt am: {new Date(created_at).toLocaleString()}
-      </div>
-      <p className="mt-2 whitespace-pre-wrap">{text}</p>
-      <p className="text-xs text-gray-500 mt-1">
-        {word_count} Woerter - {char_count} Zeichen - {letter_count} Buchstaben
+    <article className="rounded-xl border border-gray-800 bg-neutral-900/80 p-4 shadow-sm hover:border-gray-700 transition-colors">
+      <header className="flex items-center justify-between text-xs text-gray-500">
+        <span className="font-semibold text-gray-300">Session #{id}</span>
+        <time dateTime={created_at}>{new Date(created_at).toLocaleString()}</time>
+      </header>
+      <p className="mt-3 whitespace-pre-wrap leading-relaxed text-lg text-gray-50">
+        {text}
       </p>
-    </div>
+      <footer className="mt-3 text-xs text-gray-500">
+        {word_count} Wörter · {char_count} Zeichen · {letter_count} Buchstaben
+      </footer>
+    </article>
   );
 }
