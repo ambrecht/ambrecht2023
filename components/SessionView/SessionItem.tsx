@@ -8,28 +8,43 @@ interface SessionItemProps {
 
 export function SessionItem({ session }: SessionItemProps) {
   const { id, text, created_at, letter_count, word_count, char_count } = session;
+  const paragraphs = text.trim().length
+    ? text.trim().split(/\n{2,}/)
+    : [];
 
   return (
     <article className="max-w-[72ch] mx-auto">
-      <header className="flex items-center justify-between text-[12px] text-amber-900/70 font-medium">
-        <span className="tracking-wide">Session #{id}</span>
-        <time dateTime={created_at}>{new Date(created_at).toLocaleString()}</time>
+      <header className="mb-4">
+        <h1 className="text-3xl sm:text-4xl font-semibold text-[#1f150f] leading-tight">
+          Session #{id}
+        </h1>
+        <div className="mt-2 text-[13px] text-[#5b5147] flex flex-wrap gap-3">
+          <time dateTime={created_at}>
+            {new Date(created_at).toLocaleString()}
+          </time>
+          <span aria-hidden="true">·</span>
+          <span>{word_count} Wörter</span>
+          <span aria-hidden="true">·</span>
+          <span>{char_count} Zeichen</span>
+          <span aria-hidden="true">·</span>
+          <span>{letter_count} Buchstaben</span>
+        </div>
       </header>
 
-      <p
-        className="mt-6 whitespace-pre-wrap text-[19px] md:text-[20px] leading-[1.75] text-amber-950 font-serif"
+      <div
+        className="mt-8 space-y-6 text-[19px] md:text-[20px] leading-[1.75] text-[#1f150f] font-serif"
         style={{ fontFeatureSettings: '"liga","kern"' }}
       >
-        {text}
-      </p>
-
-      <footer className="mt-5 text-[12px] text-amber-900/70 flex gap-3 flex-wrap">
-        <span>{word_count} Wörter</span>
-        <span aria-hidden="true">·</span>
-        <span>{char_count} Zeichen</span>
-        <span aria-hidden="true">·</span>
-        <span>{letter_count} Buchstaben</span>
-      </footer>
+        {paragraphs.length > 0 ? (
+          paragraphs.map((para, idx) => (
+            <p key={idx} className="whitespace-pre-wrap">
+              {para}
+            </p>
+          ))
+        ) : (
+          <p className="whitespace-pre-wrap">{text}</p>
+        )}
+      </div>
     </article>
   );
 }

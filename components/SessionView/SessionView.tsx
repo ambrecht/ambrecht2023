@@ -27,52 +27,91 @@ export function SessionView() {
   }, [sessions, selectedSession]);
 
   const activeId = selectedSession?.id;
+  const currentIndex = activeId
+    ? sessions.findIndex((s) => s.id === activeId)
+    : -1;
+  const prevSession = currentIndex >= 0 && currentIndex < sessions.length - 1
+    ? sessions[currentIndex + 1]
+    : null;
+  const nextSession = currentIndex > 0 ? sessions[currentIndex - 1] : null;
 
   return (
-    <main className="min-h-screen bg-[#0f0d0a] text-amber-50">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10">
+    <main className="min-h-screen bg-[#f4f0e9] text-[#1f150f]">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
         <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <p className="text-xs tracking-[0.25em] uppercase text-amber-500/70 font-semibold">
-              Lesesaal
+            <p className="text-xs tracking-[0.25em] uppercase text-[#7a6a5a] font-semibold">
+              Archiv &amp; Leseraum
             </p>
-            <h1 className="text-3xl sm:text-4xl font-semibold text-amber-50 leading-tight">
-              Bestehende Sessions
+            <h1 className="text-3xl sm:text-4xl font-semibold text-[#120c08] leading-tight">
+              Sessions als Blog
             </h1>
-            <p className="text-sm text-amber-200/80 mt-1">
-              Ruhe, Raum und Lesbarkeit – keine Eingriffe, nur betrachten.
+            <p className="text-sm text-[#6f6458] mt-1">
+              Lesen im Fokus: Übersicht links, Blog-Artikel rechts.
             </p>
           </div>
           <button
             onClick={refreshSessions}
             disabled={isLoading}
-            className="inline-flex items-center gap-2 rounded-lg border border-amber-300/40 px-3 py-2 text-sm text-amber-100 hover:bg-amber-100/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-[#c1b5a6] px-3 py-2 text-sm text-[#1f150f] hover:bg-[#e9e2d9] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] disabled:opacity-50"
           >
             {isLoading ? 'Aktualisiere…' : 'Neu laden'}
           </button>
         </header>
 
         {error && (
-          <div className="mb-6 rounded-lg border border-red-600/60 bg-red-900/40 text-red-100 px-4 py-3">
+          <div className="mb-6 rounded-lg border border-red-600/40 bg-red-50 text-red-700 px-4 py-3">
             Fehler: {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr,320px] gap-8 lg:items-start">
-          <section className="order-1 rounded-3xl bg-amber-50 text-amber-950 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.6)] px-6 sm:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,320px] gap-10 lg:items-start">
+          <section className="order-1 rounded-3xl bg-white/90 text-[#1f150f] border border-[#e5d9c9] px-6 sm:px-8 py-12 shadow-sm">
             {isLoading && sessions.length === 0 ? (
-              <p className="text-amber-800">Lade Sessions…</p>
+              <p className="text-[#4b4035]">Lade Sessions…</p>
             ) : selectedSession ? (
-              <SessionItem session={selectedSession} />
+              <>
+                <SessionItem session={selectedSession} />
+                <div className="mt-10 flex flex-wrap items-center gap-3 text-sm text-[#52483c]">
+                  <a
+                    href="#archiv"
+                    className="underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] rounded-sm px-1"
+                  >
+                    Zurück zum Archiv
+                  </a>
+                  {prevSession && (
+                    <>
+                      <span aria-hidden="true">•</span>
+                      <button
+                        onClick={() => setSelectedSession(prevSession)}
+                        className="underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] rounded-sm px-1"
+                      >
+                        Vorherige Session
+                      </button>
+                    </>
+                  )}
+                  {nextSession && (
+                    <>
+                      <span aria-hidden="true">•</span>
+                      <button
+                        onClick={() => setSelectedSession(nextSession)}
+                        className="underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] rounded-sm px-1"
+                      >
+                        Nächste Session
+                      </button>
+                    </>
+                  )}
+                </div>
+              </>
             ) : (
-              <p className="text-amber-800">Keine Session ausgewählt.</p>
+              <p className="text-[#4b4035]">Keine Session ausgewählt.</p>
             )}
           </section>
 
-          <aside className="order-2 lg:order-none space-y-3">
-            <div className="rounded-xl border border-amber-100/25 bg-amber-50/5 backdrop-blur-sm p-4">
-              <div className="flex items-center justify-between text-xs text-amber-100/80">
-                <span>Inhaltsverzeichnis</span>
+          <aside className="order-2 lg:order-none space-y-3" id="archiv">
+            <div className="rounded-xl border border-[#e5d9c9] bg-[#f8f4ed] p-4">
+              <div className="flex items-center justify-between text-xs text-[#5f5347]">
+                <span>Archiv</span>
                 <span>
                   {pagination.total
                     ? `${sessions.length}/${pagination.total}`
