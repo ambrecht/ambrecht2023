@@ -2,11 +2,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Session, SessionPagination } from './types';
 
-// Default Base-URL enthӧlt bereits /api/v1, damit buildApiUrl nur den Pfad anhängt.
-const DEFAULT_API_BASE_URL = 'https://api.ambrecht.de/api/v1';
-const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL
-).replace(/\/$/, '');
+// Default: interner Proxy (/api/sessions) vermeidet CORS im Browser.
+const DEFAULT_API_BASE_URL = '/api';
+const API_BASE_URL = DEFAULT_API_BASE_URL.replace(/\/$/, '');
 const API_HEADERS = {
   'Content-Type': 'application/json',
   'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
