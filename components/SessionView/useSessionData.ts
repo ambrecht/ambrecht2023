@@ -2,7 +2,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Session, SessionPagination } from './types';
 
-const DEFAULT_API_BASE_URL = 'https://api.ambrecht.de';
+// Default Base-URL enthӧlt bereits /api/v1, damit buildApiUrl nur den Pfad anhängt.
+const DEFAULT_API_BASE_URL = 'https://api.ambrecht.de/api/v1';
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL
 ).replace(/\/$/, '');
@@ -64,7 +65,7 @@ export function useSessionData(limit = DEFAULT_LIMIT) {
 
       try {
         const response = await fetch(
-          buildApiUrl('/api/v1/sessions', {
+          buildApiUrl('/sessions', {
             limit,
             offset: offsetToLoad,
           }),
@@ -142,7 +143,7 @@ export function useSessionData(limit = DEFAULT_LIMIT) {
       setError(null);
 
       try {
-        const response = await fetch(buildApiUrl('/api/v1/sessions'), {
+        const response = await fetch(buildApiUrl('/sessions'), {
           method: 'POST',
           headers: API_HEADERS,
           body: JSON.stringify({ text: payload }),
