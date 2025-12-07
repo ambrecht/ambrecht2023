@@ -2,9 +2,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Session, SessionPagination } from './types';
 
-// Default: interner Proxy (/api/sessions) vermeidet CORS im Browser.
+// Default: interner Proxy (/api/sessions) vermeidet CORS im Browser; kann bei Bedarf via NEXT_PUBLIC_API_BASE_URL überschrieben werden.
 const DEFAULT_API_BASE_URL = '/api';
-const API_BASE_URL = DEFAULT_API_BASE_URL.replace(/\/$/, '');
+const API_BASE_URL = (
+  process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL
+).replace(/\/$/, '');
 const API_HEADERS = {
   'Content-Type': 'application/json',
   'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',

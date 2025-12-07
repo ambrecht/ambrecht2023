@@ -1,7 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SessionList } from './SessionList';
 import { useSessionData } from './useSessionData';
+import { SessionItem } from './SessionItem';
+import type { Session } from './types';
 
 export function SessionView() {
   const {
@@ -11,49 +13,84 @@ export function SessionView() {
     error,
     refreshSessions,
   } = useSessionData();
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    if (sessions.length === 0) {
+      setSelectedSession(null);
+      return;
+    }
+    // Falls bisher nichts ausgewählt, wähle die jüngste (erste) Session.
+    if (!selectedSession || !sessions.find((s) => s.id === selectedSession.id)) {
+      setSelectedSession(sessions[0]);
+    }
+  }, [sessions, selectedSession]);
+
+  const activeId = selectedSession?.id;
 
   return (
-    <div className="rounded-2xl bg-neutral-950 text-gray-100 border border-gray-800 p-6 shadow-lg">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gray-500">
-            Archiv
-          </p>
-          <h2 className="text-3xl font-semibold leading-tight">
-            Bestehende Sessions
-          </h2>
-          <p className="text-sm text-gray-400 mt-1">
-            Lesemodus – Text wird nur angezeigt.
-          </p>
+    <main className="min-h-screen bg-[#0f0d0a] text-amber-50">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10">
+        <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div>
+            <p className="text-xs tracking-[0.25em] uppercase text-amber-500/70 font-semibold">
+              Lesesaal
+            </p>
+            <h1 className="text-3xl sm:text-4xl font-semibold text-amber-50 leading-tight">
+              Bestehende Sessions
+            </h1>
+            <p className="text-sm text-amber-200/80 mt-1">
+              Ruhe, Raum und Lesbarkeit – keine Eingriffe, nur betrachten.
+            </p>
+          </div>
+          <button
+            onClick={refreshSessions}
+            disabled={isLoading}
+            className="inline-flex items-center gap-2 rounded-lg border border-amber-300/40 px-3 py-2 text-sm text-amber-100 hover:bg-amber-100/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-50"
+          >
+            {isLoading ? 'Aktualisiere…' : 'Neu laden'}
+          </button>
+        </header>
+
+        {error && (
+          <div className="mb-6 rounded-lg border border-red-600/60 bg-red-900/40 text-red-100 px-4 py-3">
+            Fehler: {error}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-[320px,1fr] gap-6">
+          <aside className="space-y-3">
+            <div className="rounded-xl border border-amber-100/30 bg-amber-50/10 backdrop-blur-sm p-4">
+              <div className="flex items-center justify-between text-xs text-amber-100/80">
+                <span>Archiv</span>
+                <span>
+                  {pagination.total
+                    ? `${sessions.length}/${pagination.total}`
+                    : `${sessions.length}`}{" "}
+                  Einträge
+                </span>
+              </div>
+              <div className="mt-3 max-h-[70vh] overflow-y-auto pr-1 custom-scroll">
+                <SessionList
+                  sessions={sessions}
+                  selectedId={activeId}
+                  onSelect={(session) => setSelectedSession(session)}
+                />
+              </div>
+            </div>
+          </aside>
+
+          <section className="rounded-2xl bg-amber-50 text-amber-950 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.6)] px-6 sm:px-8 py-8">
+            {isLoading && sessions.length === 0 ? (
+              <p className="text-amber-800">Lade Sessions…</p>
+            ) : selectedSession ? (
+              <SessionItem session={selectedSession} />
+            ) : (
+              <p className="text-amber-800">Keine Session ausgewählt.</p>
+            )}
+          </section>
         </div>
-        <button
-          onClick={refreshSessions}
-          disabled={isLoading}
-          className="px-3 py-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50"
-        >
-          {isLoading ? 'Aktualisiere...' : 'Neu laden'}
-        </button>
       </div>
-
-      {error && (
-        <div className="mt-4 rounded border border-red-700 bg-red-950 text-red-200 p-3">
-          Fehler: {error}
-        </div>
-      )}
-
-      {isLoading && sessions.length === 0 ? (
-        <p className="mt-6 text-gray-400">Lade Sessions...</p>
-      ) : (
-        <div className="mt-6">
-          <SessionList sessions={sessions} />
-        </div>
-      )}
-
-      <div className="mt-6 text-xs text-gray-500">
-        {pagination.total
-          ? `${sessions.length} von ${pagination.total} Einträgen geladen`
-          : `${sessions.length} Einträge geladen`}
-      </div>
-    </div>
+    </main>
   );
 }
