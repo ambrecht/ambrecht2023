@@ -14,7 +14,7 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
   }
 
   return (
-    <ul className="space-y-3">
+    <ul className="space-y-2">
       {sessions.map((session) => {
         const isActive = session.id === selectedId;
         const teaser = session.text.length > 120
@@ -25,23 +25,23 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
           <li key={session.id}>
             <button
               onClick={() => onSelect(session)}
-              className={`w-full text-left rounded-xl border transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              className={`w-full text-left rounded-lg transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                 isActive
-                  ? 'border-amber-400/70 bg-amber-50 text-amber-900'
-                  : 'border-gray-200 bg-white/80 text-gray-900 hover:border-gray-300 hover:bg-white'
+                  ? 'bg-amber-100/70 text-amber-900 shadow-[0_6px_24px_-18px_rgba(0,0,0,0.6)]'
+                  : 'bg-transparent text-amber-100 hover:bg-amber-50/10'
               }`}
             >
-              <div className="px-4 py-3">
-                <div className="flex items-center justify-between text-xs text-gray-500 font-medium">
-                  <span className="tracking-wide">Session #{session.id}</span>
-                  <time dateTime={session.created_at} className="text-[11px]">
+              <div className="px-3 py-2">
+                <div className="flex items-center justify-between text-[12px] text-amber-200/90">
+                  <span className="font-medium">Session #{session.id}</span>
+                  <time dateTime={session.created_at}>
                     {new Date(session.created_at).toLocaleDateString()}
                   </time>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-800 line-clamp-3">
+                <p className="mt-1 text-[14px] leading-[1.5] text-amber-50 line-clamp-2">
                   {teaser}
                 </p>
-                <div className="mt-2 text-[11px] text-gray-500">
+                <div className="mt-1 text-[11px] text-amber-200/70">
                   {session.word_count} Wörter · {session.char_count} Zeichen
                 </div>
               </div>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SessionList } from './SessionList';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
@@ -58,29 +58,8 @@ export function SessionView() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-[320px,1fr] gap-6">
-          <aside className="space-y-3">
-            <div className="rounded-xl border border-amber-100/30 bg-amber-50/10 backdrop-blur-sm p-4">
-              <div className="flex items-center justify-between text-xs text-amber-100/80">
-                <span>Archiv</span>
-                <span>
-                  {pagination.total
-                    ? `${sessions.length}/${pagination.total}`
-                    : `${sessions.length}`}{" "}
-                  Einträge
-                </span>
-              </div>
-              <div className="mt-3 max-h-[70vh] overflow-y-auto pr-1 custom-scroll">
-                <SessionList
-                  sessions={sessions}
-                  selectedId={activeId}
-                  onSelect={(session) => setSelectedSession(session)}
-                />
-              </div>
-            </div>
-          </aside>
-
-          <section className="rounded-2xl bg-amber-50 text-amber-950 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.6)] px-6 sm:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,320px] gap-8 lg:items-start">
+          <section className="order-1 rounded-3xl bg-amber-50 text-amber-950 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.6)] px-6 sm:px-8 py-10">
             {isLoading && sessions.length === 0 ? (
               <p className="text-amber-800">Lade Sessions…</p>
             ) : selectedSession ? (
@@ -89,6 +68,27 @@ export function SessionView() {
               <p className="text-amber-800">Keine Session ausgewählt.</p>
             )}
           </section>
+
+          <aside className="order-2 lg:order-none space-y-3">
+            <div className="rounded-xl border border-amber-100/25 bg-amber-50/5 backdrop-blur-sm p-4">
+              <div className="flex items-center justify-between text-xs text-amber-100/80">
+                <span>Inhaltsverzeichnis</span>
+                <span>
+                  {pagination.total
+                    ? `${sessions.length}/${pagination.total}`
+                    : `${sessions.length}`}{" "}
+                  Einträge
+                </span>
+              </div>
+              <div className="mt-3 max-h-[70vh] overflow-y-auto pr-1">
+                <SessionList
+                  sessions={sessions}
+                  selectedId={activeId}
+                  onSelect={(session) => setSelectedSession(session)}
+                />
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </main>
