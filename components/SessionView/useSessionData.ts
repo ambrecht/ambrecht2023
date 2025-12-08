@@ -43,9 +43,7 @@ const buildApiUrl = (
 };
 
 export function useSessionData(limit = DEFAULT_LIMIT) {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [pagination, setPagination] = useState<SessionPagination>({
-    limit,
+  const [sessions, setSessions] = useState<Session[]>([]); 
     offset: 0,
     total: 0,
   });
