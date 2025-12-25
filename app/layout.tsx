@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import StyledComponentsRegistry from '@/lib/registry';
 import Navigation from '@/components/Navigation';
 import { Frame } from '@/components/Frame';
-import { Footer } from '@/components/Footer';
+import Footer from '@/components/Footer';
 import { Padding } from '@/components/Padding';
 import { getFooterContent, getNavContent } from '@/src/content/loader';
 import type { Locale } from '@/src/content/schemas';

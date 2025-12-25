@@ -4,45 +4,49 @@ import Image from 'next/image';
 import React from 'react';
 import { Paragraph } from '@/styles/index';
 import Link from 'next/link';
+import type { FooterContent } from '@/src/content/schemas';
 import SecondFooter from '@/components/secondFooter';
+
 // MARKUP
-export function Footer() {
+type FooterProps = {
+  content: FooterContent;
+};
+
+const Footer = ({ content }: FooterProps) => {
   return (
     <Wrapper>
-      <StyledImage
-        src={'/footer.png'}
-        alt="Brutalism"
-        fill={true}
-      ></StyledImage>
+      <StyledImage src="/footer.png" alt="Brutalism" fill={true}></StyledImage>
       <Footerbox>
         <Container>
-          <Link href="/tools/wordprocess">
+          <Link href={content.logoLink}>
             <Bild
               src="/3DDREIECK.svg"
-              alt="Logo"
+              alt={content.logoAlt}
               width={250}
               height={250}
             ></Bild>
           </Link>
         </Container>
         <Para>
-          <Label>Impressum:</Label>
+          <Label>{content.addressLabel}</Label>
           <br />
-          Tino Ambrecht <br />
-          Schleifmühlweg. 9 <br />
-          95119 Naila <br />
+          {content.addressLines.map((line) => (
+            <React.Fragment key={line}>
+              {line} <br />
+            </React.Fragment>
+          ))}
         </Para>
         <Para>
-          <Label>Kontakt:</Label>
+          <Label>{content.contactLabel}</Label>
           <br />
-          tino@ambrecht.de
+          {content.contactEmail}
         </Para>
 
         <Container>
-          <Link href="https://github.com/ambrecht">
+          <Link href={content.githubUrl}>
             <Bild
               src="/github-mark-white.svg"
-              alt="Logo"
+              alt="GitHub"
               width={100}
               height={100}
             ></Bild>
@@ -51,11 +55,11 @@ export function Footer() {
       </Footerbox>
 
       <Copy>
-        <SecondFooter></SecondFooter>
+        <SecondFooter content={content.secondary}></SecondFooter>
       </Copy>
     </Wrapper>
   );
-}
+};
 
 // STYLE
 
@@ -84,7 +88,7 @@ const Bild = styled(Image)`
   opacity: 200%;
   objectfit: contain;
   padding: 0;
-  margin-right: 10rem; // Überschreibt das Padding
+  margin-right: 10rem; // よberschreibt das Padding
   @media (max-width: 1300px) {
     width: 10vw;
   }
@@ -125,8 +129,8 @@ const StyledImage = styled(Image)`
   right: 0;
   bottom: 0;
   width: 100vw; // Setzt die Breite auf die volle Breite des Viewports
-  height: auto; // Passt die Höhe automatisch an, um das Seitenverhältnis zu erhalten
-  object-fit: cover; // Sorgt dafür, dass das Bild den Bereich vollständig ausfüllt
+  height: auto; // Passt die HБhe automatisch an, um das Seitenverhビltnis zu erhalten
+  object-fit: cover; // Sorgt dafグr, dass das Bild den Bereich vollstビndig ausfグllt
   z-index: -1; // Stellt sicher, dass das Bild immer im Hintergrund bleibt
 `;
 
@@ -147,3 +151,5 @@ const Container = styled.div`
   max-height: 10vw;
   align-self: center;
 `;
+
+export default Footer;
