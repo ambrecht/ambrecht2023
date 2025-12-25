@@ -1,15 +1,16 @@
 'use client';
 import styled from 'styled-components';
 import Link from 'next/link';
+import type { NavContent } from '@/src/content/schemas';
 import Logo from './Logo';
 import ContactButton from './ContactButton';
 
-interface NavItemProps {
+type NavItemProps = {
   href: string;
   label: string;
-}
+};
 
-const NavItem: React.FC<NavItemProps> = ({ href, label }) => (
+const NavItem = ({ href, label }: NavItemProps) => (
   <StyledLi>
     <Link href={href} passHref>
       {label}
@@ -17,23 +18,28 @@ const NavItem: React.FC<NavItemProps> = ({ href, label }) => (
   </StyledLi>
 );
 
-const Navigation: React.FC = () => {
+type NavigationProps = {
+  content: NavContent;
+};
+
+const Navigation = ({ content }: NavigationProps) => {
   const handleEmailClick = () => {
-    window.location.href =
-      'mailto:tino@ambrecht.de?subject=Betreff&body=Hallo,';
+    window.location.href = content.contact.mailto;
   };
+
   return (
     <NavContainer>
       <Grid>
         <Logo />
         <NavList>
-          <NavItem href="/vision" label="Vision" />
-          <NavItem href="/process" label="Prozess" />
-          <NavItem href="/work" label="Werkstatt" />
-          <NavItem href="/blog" label="Blog" />
+          {content.items.map((item) => (
+            <NavItem key={item.href} href={item.href} label={item.label} />
+          ))}
         </NavList>
         <Gridelement>
-          <ContactButton onClick={handleEmailClick}>kontakt</ContactButton>
+          <ContactButton onClick={handleEmailClick}>
+            {content.contact.label}
+          </ContactButton>
         </Gridelement>
       </Grid>
     </NavContainer>
