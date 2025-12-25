@@ -1,0 +1,12 @@
+{
+  "items": [
+    { "href": "/vision", "label": "Vision" },
+    { "href": "/process", "label": "Prozess" },
+    { "href": "/work", "label": "Werkstatt" },
+    { "href": "/blog", "label": "Blog" }
+  ],
+  "contact": {
+    "label": "kontakt",
+    "mailto": "mailto:tino@ambrecht.de?subject=Betreff&body=Hallo,"
+  }
+}

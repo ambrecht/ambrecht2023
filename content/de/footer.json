@@ -1,0 +1,21 @@
+{
+  "logoLink": "/tools/wordprocess",
+  "logoAlt": "Logo",
+  "addressLabel": "Impressum:",
+  "addressLines": [
+    "Tino Ambrecht",
+    "Schleifmühlweg 9",
+    "95119 Naila"
+  ],
+  "contactLabel": "Kontakt:",
+  "contactEmail": "tino@ambrecht.de",
+  "githubUrl": "https://github.com/ambrecht",
+  "secondary": {
+    "copyright": "© 2019-2024 Ambrecht LLC. All Rights Reserved.",
+    "links": [
+      { "href": "/contact", "label": "Kontakt" },
+      { "href": "/impressum", "label": "Impressum" },
+      { "href": "/datenschutz", "label": "Datenschutz" }
+    ]
+  }
+}

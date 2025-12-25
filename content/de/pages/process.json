@@ -1,0 +1,26 @@
+{
+  "quote": "Es gilt, die Maschine zu beherrschen, um nicht von der Maschine beherrscht zu werden.",
+  "headline": "Der Weg zum positiven Mehrwerterlebnis:",
+  "phases": [
+    {
+      "title": "Phase 1",
+      "body": "In dieser ersten Phase liegt mein Hauptaugenmerk darauf, die Zielgruppe im Detail zu verstehen. Ich tauche tief in die Welt meiner potenziellen Nutzer ein und versuche, ihre Bedürfnisse, Wünsche und Sehnsüchte genau zu erfassen. Ich möchte herausfinden, wer diese Menschen sind, die von meinem Produkt angesprochen werden sollen. Wie groß ist diese Zielgruppe? Welche Kommunikationskanäle stehen mir zur Verfügung, um sie zu erreichen? Die Antworten auf diese Fragen sind für mich entscheidend, um eine solide Grundlage für meine weitere Produktentwicklung zu schaffen.",
+      "image": { "src": "/Flow/Problem.svg", "alt": "Phase 1 Illustration" }
+    },
+    {
+      "title": "Phase 2",
+      "body": "In dieser zweiten Phase arbeite ich daran, ein langfristiges und inspirierendes Leitbild für mein Produkt zu schaffen. Dieses Leitbild dient mir als Nordstern, der mich in jeder weiteren Entscheidung und Maßnahme leitet. Es ist von wesentlicher Bedeutung, klar zu kommunizieren, warum mein Produkt existiert und welchen Mehrwert es für meine Zielgruppe bietet. Ich will nicht nur ein Produkt entwickeln, sondern eine Vision verfolgen, die meine Nutzer begeistert und inspiriert.",
+      "image": { "src": "/Flow/Vision.svg", "alt": "Phase 2 Illustration" }
+    },
+    {
+      "title": "Phase 3",
+      "body": "Sobald ich das Leitbild festgelegt habe, stürze ich mich in die kreative Phase. Ich setze verschiedene Kreativitätstechniken ein, um eine Vielzahl von Ideen zu generieren. Diese Ideen entwickle ich in kurzen, agilen Iterationen weiter. Anschließend wähle ich die vielversprechendsten Konzepte aus und verwandle sie in erste Prototypen. Diese Prototypen sind meine ersten greifbaren Versuche, die ich in realen Nutzerszenarien teste, um wertvolles Feedback zu sammeln. Mein Ziel ist es, innovative Lösungen zu finden, die das Potenzial haben, mein Leitbild zu verwirklichen.",
+      "image": { "src": "/Flow/Ideen.svg", "alt": "Phase 3 Illustration" }
+    },
+    {
+      "title": "Phase 4",
+      "body": "In dieser vierten und letzten Phase nehme ich alle gesammelten Erkenntnisse zusammen. Ich werte die Daten aus den Nutzertests aus, setze die technischen Rahmenbedingungen und beginne mit der agilen Produktentwicklung. Hier liegt meine Herausforderung darin, die visionären Aspekte meines Leitbildes in konkrete technische Parameter zu übersetzen. Der Prozess ist agil und iterativ, was bedeutet, dass ich immer wieder evaluieren und korrigieren muss, um sicherzustellen, dass mein Endprodukt den gewünschten Mehrwert liefert. Es ist ein fortwährender Zyklus der Verbesserung und Anpassung, um sicherzustellen, dass ich das bestmögliche positive Mehrwerterlebnis für meine Nutzer schaffe.",
+      "image": { "src": "/Flow/Implementieren.svg", "alt": "Phase 4 Illustration" }
+    }
+  ]
+}

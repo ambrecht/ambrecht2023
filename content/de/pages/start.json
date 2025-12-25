@@ -1,0 +1,13 @@
+{
+  "hero": {
+    "introLines": [
+      "Mein Name ist Tino Ambrecht, ich bin ein",
+      "Mein Ziel ist es mit Hilfe von Technologie, Strategie und Design Werte für Menschen zu schaffen."
+    ],
+    "highlight": "digitaler Ikonoklast."
+  },
+  "headings": {
+    "teamFit": "Passe ich in Ihr Team?",
+    "techStack": "Technologiestack"
+  }
+}
