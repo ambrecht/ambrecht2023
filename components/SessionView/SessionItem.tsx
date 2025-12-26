@@ -55,7 +55,7 @@ export function SessionItem({ session }: SessionItemProps) {
     return (token: string) => {
       const hit = cache.get(token);
       if (hit) return hit;
-      const cls = classifyWord(token);
+      const cls = classifyWord(token, false);
       cache.set(token, cls);
       return cls;
     };
