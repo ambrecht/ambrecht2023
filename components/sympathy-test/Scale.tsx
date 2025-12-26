@@ -9,6 +9,7 @@ interface LikertScaleProps {
   questionIndex: number;
   questionLenght: number;
   onValueChange: (questionId: number, value: number) => void;
+  scaleEdgeLabels: { left: string; right: string };
 }
 
 const ScaleContainer = styled.div`
@@ -117,6 +118,7 @@ const LikertScale: React.FC<LikertScaleProps> = ({
   onValueChange,
   questionIndex,
   questionLenght,
+  scaleEdgeLabels,
 }) => {
   const [selectedValue, setSelectedValue] = useState<number | null>(null);
 
@@ -132,7 +134,7 @@ const LikertScale: React.FC<LikertScaleProps> = ({
       </ProgressIndicator>
       <QuestionText>{question.questionText}</QuestionText>
       <ScaleOptionsContainer>
-        <ScaleLabels>Stimme gar nicht zu</ScaleLabels>
+        <ScaleLabels>{scaleEdgeLabels.left}</ScaleLabels>
         {labels.map((label, index) => (
           <ScaleOption
             className="sp-radio radio--opt-mgtrm size--70 color--green"
@@ -146,11 +148,12 @@ const LikertScale: React.FC<LikertScaleProps> = ({
                 checked={selectedValue === label.value}
                 onChange={() => handleChange(label.value)}
                 value={label.value}
+                aria-label={label.text}
               />
             </ScaleLabel>
           </ScaleOption>
         ))}
-        <ScaleLabels>Stimme vollkommen zu</ScaleLabels>
+        <ScaleLabels>{scaleEdgeLabels.right}</ScaleLabels>
       </ScaleOptionsContainer>
     </ScaleContainer>
   );

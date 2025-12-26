@@ -1,46 +1,54 @@
 import React, { useState } from 'react';
 import LikertScale from '@/components/sympathy-test/Scale';
-import {
-  Questions,
-  likertSkalaLabels,
-  initialScores,
-} from '@/components/sympathy-test/surveyData';
 import { useScoreUpdater } from '@/components/sympathy-test/useScoreUpdater';
-import { Quote, Headline1, Headline2, Paragraph, Bild } from '@/styles/index';
+import { Paragraph } from '@/styles/index';
 import ContactButton from '@/components/ContactButton';
 import styled from 'styled-components';
 import Assesment from '@/components/sympathy-test/Assessment';
+import {
+  DimensionScores,
+  LikertLabel,
+  Question,
+} from '@/components/sympathy-test/interfaces';
 
-const Survey: React.FC = () => {
-  const { scores, updateScores } = useScoreUpdater(initialScores, Questions);
+interface SurveyProps {
+  content: {
+    intro: string;
+    ctaLabel: string;
+    scale: { left: string; right: string };
+    likertLabels: LikertLabel[];
+    initialScores: DimensionScores;
+    questions: Question[];
+  };
+}
+
+const Survey: React.FC<SurveyProps> = ({ content }) => {
+  const { scores, updateScores } = useScoreUpdater(
+    content.initialScores,
+    content.questions,
+  );
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSurveyCompleted, setIsSurveyCompleted] = useState(false);
   const [startSurvey, setStartSurvey] = useState(false);
 
   const handleValueChange = (questionId: number, selectedValue: number) => {
     updateScores(questionId, selectedValue);
-    // Gehe zur nächsten Frage, wenn es noch weitere Fragen gibt
-    if (currentQuestionIndex < Questions.length - 1) {
+    if (currentQuestionIndex < content.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Markiere das Quiz als beendet
       setIsSurveyCompleted(true);
     }
   };
 
-  const currentQuestion = Questions[currentQuestionIndex];
+  const currentQuestion = content.questions[currentQuestionIndex];
 
   return (
     <Container>
       {!startSurvey && (
         <Index>
-          <Paragraph>
-            Sind Sie auf der Suche nach der idealen Ergänzung für Ihr Team?
-            Dieser Test hilft Ihnen, schnell und effizient zu erkennen, ob eine
-            Synergie zwischen uns besteht!
-          </Paragraph>
+          <Paragraph>{content.intro}</Paragraph>
           <ContactButton onClick={() => setStartSurvey(!startSurvey)}>
-            TeamFit-Test starten!
+            {content.ctaLabel}
           </ContactButton>
         </Index>
       )}
@@ -48,11 +56,12 @@ const Survey: React.FC = () => {
       {!isSurveyCompleted && startSurvey && (
         <LikertScale
           key={currentQuestion.id}
-          labels={likertSkalaLabels}
+          labels={content.likertLabels}
           question={currentQuestion}
           onValueChange={handleValueChange}
           questionIndex={currentQuestionIndex}
-          questionLenght={Questions.length}
+          questionLenght={content.questions.length}
+          scaleEdgeLabels={content.scale}
         />
       )}
       {isSurveyCompleted && <Assesment scores={scores}></Assesment>}
