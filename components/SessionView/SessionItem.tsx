@@ -10,6 +10,7 @@ import {
   computeAnalysis,
   splitPreservingWhitespace,
   type WordClass,
+  type Highlight,
 } from '@/lib/textAnalysis';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 
@@ -41,7 +42,10 @@ export function SessionItem({ session }: SessionItemProps) {
   }, [text]);
 
   const tags = useMemo(() => buildTags(text), [text]);
-  const analysis = useMemo(() => computeAnalysis(text), [text]);
+  const { counts, densityPer100Words, highlights } = useMemo(
+    () => computeAnalysis(text),
+    [text],
+  );
   const readingTime = Math.max(1, Math.round(safeWordCount / 180));
   const status = safeWordCount > 400 ? 'Überarbeitet' : 'Roh';
 
@@ -79,6 +83,10 @@ export function SessionItem({ session }: SessionItemProps) {
     }
 
     const tokens = splitPreservingWhitespace(para);
+    const baseIndex = paragraphs
+      .slice(0, idx)
+      .reduce((acc, cur) => acc + splitPreservingWhitespace(cur).length, 0);
+
     return (
       <p key={`${id}-p-${idx}`} className="whitespace-pre-wrap">
         {tokens.map((token, tokenIdx) => {
@@ -86,13 +94,22 @@ export function SessionItem({ session }: SessionItemProps) {
             return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
           }
 
+          const globalIndex = baseIndex + tokenIdx;
+          const hit: Highlight | undefined = highlights.find((h) => h.index === globalIndex);
           const cls = classifier(token);
           if (cls === 'none') {
             return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
           }
 
+          const types: string[] = [];
+          types.push(classToSpan(cls));
+          if (hit?.type === 'nominalStyle') types.push('analysis-nominal');
+          if (hit?.type === 'deadVerb') types.push('analysis-deadverb');
+          if (hit?.type === 'passive') types.push('analysis-passive');
+          if (hit?.type === 'longSentence') types.push('analysis-long-sentence');
+
           return (
-            <span key={tokenIdx} className={classToSpan(cls)}>
+            <span key={tokenIdx} className={types.join(' ').trim()}>
               {token}
             </span>
           );
@@ -167,8 +184,8 @@ export function SessionItem({ session }: SessionItemProps) {
 
       <div className="mt-4 flex items-center gap-3 text-xs text-[#d6c9ba]">
         <span className="inline-flex items-center gap-1 rounded-full bg-[#18130f] px-2.5 py-1 border border-[#2f2822]">
-          <Sparkles size={14} /> Analyse: Verben {analysis.verbs} · Nomen {analysis.nouns} ·
-          Adverbien {analysis.adverbs}
+          <Sparkles size={14} /> Analyse: Verben {counts.verbs} · Nomen {counts.nouns} · Adjektive{' '}
+          {counts.adjectives} · Adverbien {counts.adverbs}
         </span>
         <button
           type="button"

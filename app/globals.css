@@ -60,3 +60,19 @@ html:fullscreen #typewriter-content {
   opacity: 0.5;
   border-radius: 999px;
 }
+
+.analysis-nominal {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.25), rgba(255, 165, 0, 0.3));
+}
+
+.analysis-deadverb {
+  background: linear-gradient(90deg, rgba(255, 99, 132, 0.25), rgba(255, 59, 48, 0.35));
+}
+
+.analysis-passive {
+  background: linear-gradient(90deg, rgba(0, 191, 255, 0.25), rgba(0, 128, 255, 0.35));
+}
+
+.analysis-long-sentence {
+  text-decoration: underline wavy rgba(255, 255, 0, 0.7);
+}
