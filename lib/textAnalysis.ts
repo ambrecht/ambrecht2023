@@ -191,9 +191,14 @@ export const buildTags = (text: string) => {
     }
   }
 
-  const sorted = [...freq.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([k]) => k);
+  const entries: { key: string; val: number }[] = [];
+  freq.forEach((val, key) => {
+    entries.push({ key, val });
+  });
+
+  const sorted = entries
+    .sort((a, b) => b.val - a.val)
+    .map((item) => item.key);
 
   if (sorted.length === 0) return ['Notiz'];
   return sorted.slice(0, 3);
