@@ -19,12 +19,13 @@ html:fullscreen #typewriter-content {
 }
 
 /* Gradient text styling for blog content */
-.blog-gradient p,
-.blog-gradient li,
-.blog-gradient strong,
-.blog-gradient em,
-.blog-gradient a,
-.blog-gradient span {
+.blog-gradient h1,
+.blog-gradient h2,
+.blog-gradient h3,
+.blog-gradient h4,
+.blog-gradient h5,
+.blog-gradient h6,
+.blog-gradient strong {
   background: linear-gradient(
     72.61deg,
     rgb(0, 130, 255) 22.63%,

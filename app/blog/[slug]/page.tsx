@@ -84,7 +84,7 @@ export default async function Post({ params }: Props) {
 
           {/* Hauptinhalt */}
           <section
-            className="prose prose-lg leading-relaxed max-w-none space-y-6 blog-gradient"
+            className="prose prose-lg prose-invert leading-relaxed max-w-none space-y-6 blog-gradient"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
         </div>
