@@ -14,6 +14,23 @@ body {
 }
 
 html:fullscreen #typewriter-content {
-  height: calc(100vh - 2.2em); /* aktive Zeile berücksichtigen */
+  height: calc(100vh - 2.2em); /* aktive Zeile beruecksichtigen */
   max-height: calc(100vh - 2.2em);
+}
+
+/* Gradient text styling for blog content */
+.blog-gradient p,
+.blog-gradient li,
+.blog-gradient strong,
+.blog-gradient em,
+.blog-gradient a,
+.blog-gradient span {
+  background: linear-gradient(
+    72.61deg,
+    rgb(0, 130, 255) 22.63%,
+    rgb(79, 5, 245) 84.67%
+  ) padding-box text;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
