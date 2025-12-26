@@ -2,111 +2,97 @@
 
 import React, { useMemo, useState } from 'react';
 import { Copy, Edit3, MoreHorizontal, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import type { Session } from './types';
+import {
+  buildTags,
+  classifyWord,
+  computeAnalysis,
+  splitPreservingWhitespace,
+  type WordClass,
+} from '@/lib/textAnalysis';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 
 interface SessionItemProps {
   session: Session;
 }
 
-type WordClass = 'verb' | 'noun' | 'adverb' | 'none';
-
-const classifyWord = (word: string): WordClass => {
-  const cleaned = word.replace(/[.,;:!?()"„“«»]/g, '');
-  if (!cleaned || cleaned.length <= 2) return 'none';
-
-  const lower = cleaned.toLowerCase();
-
-  const looksLikeVerb =
-    lower.endsWith('en') ||
-    lower.endsWith('ern') ||
-    lower.endsWith('eln') ||
-    lower.endsWith('ieren');
-
-  const looksLikeAdverb = lower.endsWith('lich') || lower.endsWith('weise');
-  const looksLikeNoun = /^[A-ZÄÖÜ]/.test(cleaned);
-
-  if (looksLikeVerb) return 'verb';
-  if (looksLikeAdverb) return 'adverb';
-  if (looksLikeNoun) return 'noun';
-  return 'none';
-};
-
-const buildTags = (text: string) => {
-  const words = text.split(/\s+/).slice(0, 50);
-  const tags = new Set<string>();
-  words.forEach((w) => {
-    const cleaned = w.replace(/[.,;:!?()"„“«»]/g, '');
-    if (/^[A-ZÄÖÜ]/.test(cleaned) && cleaned.length > 3) {
-      tags.add(cleaned);
-    }
-  });
-  if (tags.size === 0) tags.add('Notiz');
-  return Array.from(tags).slice(0, 3);
-};
-
-const computeAnalysis = (text: string) => {
-  const tokens = text.split(/\s+/);
-  return tokens.reduce(
-    (acc, token) => {
-      const cls = classifyWord(token);
-      if (cls === 'verb') acc.verbs += 1;
-      if (cls === 'noun') acc.nouns += 1;
-      if (cls === 'adverb') acc.adverbs += 1;
-      return acc;
-    },
-    { verbs: 0, nouns: 0, adverbs: 0 },
-  );
+const classToSpan = (cls: WordClass) => {
+  if (cls === 'verb') return 'analysis-verb';
+  if (cls === 'noun') return 'analysis-noun';
+  if (cls === 'adverb') return 'analysis-adverb';
+  return '';
 };
 
 export function SessionItem({ session }: SessionItemProps) {
+  const router = useRouter();
   const { id, text, created_at, letter_count, word_count, char_count } = session;
-  const paragraphs = text.trim().length ? text.trim().split(/\n{2,}/) : [];
   const [showAnalysis, setShowAnalysis] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard(1500);
+
+  const safeWordCount = word_count ?? 0;
+  const safeCharCount = char_count ?? 0;
+  const safeLetterCount = letter_count ?? 0;
+
+  const paragraphs = useMemo(() => {
+    const t = text.trim();
+    if (!t) return [];
+    return t.split(/\n{2,}/);
+  }, [text]);
 
   const tags = useMemo(() => buildTags(text), [text]);
   const analysis = useMemo(() => computeAnalysis(text), [text]);
-  const readingTime = Math.max(1, Math.round((word_count ?? 0) / 180));
-  const status = word_count > 400 ? 'Überarbeitet' : 'Roh';
+  const readingTime = Math.max(1, Math.round(safeWordCount / 180));
+  const status = safeWordCount > 400 ? 'Überarbeitet' : 'Roh';
+
+  // Cache classifications so we don't re-run classifyWord for identical tokens
+  const classifier = useMemo(() => {
+    const cache = new Map<string, WordClass>();
+    return (token: string) => {
+      const hit = cache.get(token);
+      if (hit) return hit;
+      const cls = classifyWord(token);
+      cache.set(token, cls);
+      return cls;
+    };
+  }, []);
+
+  const handleEdit = () => {
+    router.push(`/session?active=${encodeURIComponent(String(id))}`);
+  };
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      await copy(text);
     } catch (err) {
       console.error('Konnte nicht kopieren', err);
     }
   };
 
-  const handleEdit = () => {
-    // Hook up to the editor route if available
-    window.location.href = `/session?active=${id}`;
-  };
-
   const renderParagraph = (para: string, idx: number) => {
     if (!showAnalysis) {
       return (
-        <p key={idx} className="whitespace-pre-wrap">
+        <p key={`${id}-p-${idx}`} className="whitespace-pre-wrap">
           {para}
         </p>
       );
     }
 
-    const tokens = para.split(/(\s+)/);
+    const tokens = splitPreservingWhitespace(para);
     return (
-      <p key={idx} className="whitespace-pre-wrap">
+      <p key={`${id}-p-${idx}`} className="whitespace-pre-wrap">
         {tokens.map((token, tokenIdx) => {
-          const cls = classifyWord(token);
-          if (cls === 'none') return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
-          const className =
-            cls === 'verb'
-              ? 'analysis-verb'
-              : cls === 'noun'
-                ? 'analysis-noun'
-                : 'analysis-adverb';
+          if (!token || !token.trim()) {
+            return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
+          }
+
+          const cls = classifier(token);
+          if (cls === 'none') {
+            return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
+          }
+
           return (
-            <span key={tokenIdx} className={className}>
+            <span key={tokenIdx} className={classToSpan(cls)}>
               {token}
             </span>
           );
@@ -137,31 +123,38 @@ export function SessionItem({ session }: SessionItemProps) {
           </div>
           <div className="text-sm text-[#cbbfb0] flex flex-wrap gap-3">
             <time dateTime={created_at}>
-              {new Date(created_at).toLocaleDateString()}
+              {new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(
+                new Date(created_at),
+              )}
             </time>
             <span aria-hidden="true">·</span>
-            <span>{word_count} Wörter</span>
+            <span>{safeWordCount} Wörter</span>
             <span aria-hidden="true">·</span>
-            <span>{char_count} Zeichen</span>
+            <span>{safeCharCount} Zeichen</span>
             <span aria-hidden="true">·</span>
-            <span>{letter_count} Buchstaben</span>
+            <span>{safeLetterCount} Buchstaben</span>
             <span aria-hidden="true">·</span>
             <span>{readingTime} min Lesezeit</span>
           </div>
         </div>
         <div className="flex items-center gap-2 opacity-70 group-hover:opacity-100 sm:self-start">
           <button
+            type="button"
             onClick={handleEdit}
             className="inline-flex items-center gap-1 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#211a13]"
           >
             <Edit3 size={14} /> Bearbeiten
           </button>
           <button
+            type="button"
             onClick={handleCopy}
             className="inline-flex items-center gap-1 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#211a13]"
           >
             <Copy size={14} /> {copied ? 'Kopiert' : 'Kopieren'}
           </button>
+          <span className="sr-only" aria-live="polite">
+            {copied ? 'In die Zwischenablage kopiert.' : ''}
+          </span>
           <button
             type="button"
             className="inline-flex items-center rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#211a13]"
@@ -174,10 +167,13 @@ export function SessionItem({ session }: SessionItemProps) {
 
       <div className="mt-4 flex items-center gap-3 text-xs text-[#d6c9ba]">
         <span className="inline-flex items-center gap-1 rounded-full bg-[#18130f] px-2.5 py-1 border border-[#2f2822]">
-          <Sparkles size={14} /> Analyse: Verben {analysis.verbs} · Nomen {analysis.nouns} · Adverbien {analysis.adverbs}
+          <Sparkles size={14} /> Analyse: Verben {analysis.verbs} · Nomen {analysis.nouns} ·
+          Adverbien {analysis.adverbs}
         </span>
         <button
+          type="button"
           onClick={() => setShowAnalysis((v) => !v)}
+          aria-pressed={showAnalysis}
           className="text-[11px] uppercase tracking-wide rounded-full border border-[#2f2822] px-3 py-1 hover:bg-[#18130f]"
         >
           {showAnalysis ? 'Markierungen aus' : 'Markierungen an'}
