@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { Search, Filter, MoreHorizontal } from 'lucide-react';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
@@ -7,6 +7,8 @@ import type { Session } from './types';
 
 export function SessionView() {
   const [search, setSearch] = useState('');
+  const deferredSearch = useDeferredValue(search);
+  const isSearching = search.trim().length > 0;
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'words' | 'letters'>(
     'newest',
   );
@@ -15,14 +17,22 @@ export function SessionView() {
     pagination,
     isLoading,
     isLoadingMore,
+    isPending,
     hasMore,
     error,
     refreshSessions,
     loadMore,
-  } = useSessionData();
+    ensureAllLoaded,
+  } = useSessionData({ pageSize: 50, prefetchDelayMs: 1200, autoPrefetch: !isSearching });
+
+  useEffect(() => {
+    const term = deferredSearch.trim();
+    if (!term) return;
+    void ensureAllLoaded();
+  }, [deferredSearch, ensureAllLoaded]);
 
   const filtered = useMemo(() => {
-    const term = search.trim().toLowerCase();
+    const term = deferredSearch.trim().toLowerCase();
     const base =
       term.length === 0
         ? sessions
@@ -44,7 +54,7 @@ export function SessionView() {
     });
 
     return sorted;
-  }, [search, sessions, sortBy]);
+  }, [deferredSearch, sessions, sortBy]);
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
@@ -72,6 +82,12 @@ export function SessionView() {
                 className="bg-transparent outline-none text-sm placeholder:text-[#6f6259] flex-1"
               />
             </div>
+            {deferredSearch.trim() && hasMore && (
+              <p className="text-xs text-[#cbbfb0]">
+                Suche laedt noch Daten... ({sessions.length}/{pagination.total || '...'})
+                {isPending ? ' - aktualisiere' : ''}
+              </p>
+            )}
             <div className="flex items-center gap-2 justify-end text-sm text-[#d6c9ba]">
               <Filter size={16} />
               <label htmlFor="sort" className="sr-only">
