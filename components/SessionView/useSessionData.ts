@@ -284,11 +284,11 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         const createdSession = json.data;
         const nextMap = new Map<number, Session>();
         nextMap.set(createdSession.id, createdSession);
-        for (const [key, value] of byIdRef.current.entries()) {
+        byIdRef.current.forEach((value, key) => {
           if (key !== createdSession.id) {
             nextMap.set(key, value);
           }
-        }
+        });
         byIdRef.current = nextMap;
 
         const merged = Array.from(nextMap.values());
