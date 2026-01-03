@@ -17,9 +17,9 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
     <ul className="space-y-1">
       {sessions.map((session) => {
         const isActive = session.id === selectedId;
-        const teaser = session.text.length > 120
-          ? `${session.text.slice(0, 120)}…`
-          : session.text;
+        const title = session.title?.trim() || `Session #${session.id}`;
+        const teaser =
+          session.text.length > 120 ? `${session.text.slice(0, 120)}…` : session.text;
 
         return (
           <li key={session.id}>
@@ -33,7 +33,7 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
             >
               <div className="px-3 py-2">
                 <div className="flex items-center justify-between text-[12px] text-amber-200/90">
-                  <span className="font-medium">Session #{session.id}</span>
+                  <span className="font-medium">{title}</span>
                   <time dateTime={session.created_at}>
                     {new Date(session.created_at).toLocaleDateString()}
                   </time>

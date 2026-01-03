@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Copy, Edit3, MoreHorizontal, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Session } from './types';
 import {
-  buildTags,
   classifyWord,
   computeAnalysis,
   splitPreservingWhitespace,
@@ -16,6 +15,11 @@ import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 
 interface SessionItemProps {
   session: Session;
+  onUpdate?: (
+    id: number,
+    payload: Partial<Pick<Session, 'title' | 'status' | 'tags'>>,
+  ) => Promise<{ success: boolean; error?: string } | { success: boolean }>;
+  disableActions?: boolean;
 }
 
 const classToSpan = (cls: WordClass) => {
@@ -25,10 +29,33 @@ const classToSpan = (cls: WordClass) => {
   return '';
 };
 
-export function SessionItem({ session }: SessionItemProps) {
+const statusLabels: Record<NonNullable<Session['status']>, string> = {
+  draft: 'Roh',
+  in_progress: 'In Arbeit',
+  revised: 'Überarbeitet',
+  final: 'Final',
+};
+
+export function SessionItem({ session, onUpdate, disableActions }: SessionItemProps) {
   const router = useRouter();
-  const { id, text, created_at, letter_count, word_count, char_count } = session;
+  const {
+    id,
+    text,
+    title,
+    status = 'draft',
+    tags = [],
+    created_at,
+    updated_at,
+    letter_count,
+    word_count,
+    char_count,
+  } = session;
+
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [analysis, setAnalysis] = useState<ReturnType<typeof computeAnalysis> | null>(null);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(title ?? '');
+  const [newTag, setNewTag] = useState('');
   const { copied, copy } = useCopyToClipboard(1500);
 
   const safeWordCount = word_count ?? 0;
@@ -41,13 +68,23 @@ export function SessionItem({ session }: SessionItemProps) {
     return t.split(/\n{2,}/);
   }, [text]);
 
-  const tags = useMemo(() => buildTags(text), [text]);
-  const { counts, densityPer100Words, highlights } = useMemo(
-    () => computeAnalysis(text),
-    [text],
-  );
-  const readingTime = Math.max(1, Math.round(safeWordCount / 180));
-  const status = safeWordCount > 400 ? 'Überarbeitet' : 'Roh';
+  useEffect(() => {
+    setDraftTitle(title ?? '');
+  }, [title]);
+
+  useEffect(() => {
+    if (showAnalysis) {
+      setAnalysis(computeAnalysis(text));
+    }
+  }, [showAnalysis, text]);
+
+  const counts = analysis?.counts ?? {
+    verbs: 0,
+    nouns: 0,
+    adjectives: 0,
+    adverbs: 0,
+  };
+  const highlights = analysis?.highlights ?? [];
 
   // Cache classifications so we don't re-run classifyWord for identical tokens
   const classifier = useMemo(() => {
@@ -70,6 +107,57 @@ export function SessionItem({ session }: SessionItemProps) {
       await copy(text);
     } catch (err) {
       console.error('Konnte nicht kopieren', err);
+    }
+  };
+
+  const handleSaveTitle = async () => {
+    if (!onUpdate) {
+      setIsEditingTitle(false);
+      return;
+    }
+    if (!isEditingTitle) {
+      setIsEditingTitle(true);
+      return;
+    }
+    const nextTitle = draftTitle.trim();
+    try {
+      await onUpdate(id, { title: nextTitle.length > 0 ? nextTitle : null });
+    } catch (err) {
+      console.error('Titel konnte nicht aktualisiert werden', err);
+    } finally {
+      setIsEditingTitle(false);
+    }
+  };
+
+  const handleStatusChange = async (nextStatus: NonNullable<Session['status']>) => {
+    if (!onUpdate) return;
+    try {
+      await onUpdate(id, { status: nextStatus });
+    } catch (err) {
+      console.error('Status konnte nicht aktualisiert werden', err);
+    }
+  };
+
+  const handleAddTag = async () => {
+    if (!onUpdate) return;
+    const t = newTag.trim();
+    if (!t) return;
+    const nextTags = Array.from(new Set([...(tags ?? []), t]));
+    try {
+      await onUpdate(id, { tags: nextTags });
+      setNewTag('');
+    } catch (err) {
+      console.error('Tag konnte nicht hinzugefügt werden', err);
+    }
+  };
+
+  const handleRemoveTag = async (tag: string) => {
+    if (!onUpdate) return;
+    const nextTags = (tags ?? []).filter((t) => t.toLowerCase() !== tag.toLowerCase());
+    try {
+      await onUpdate(id, { tags: nextTags });
+    } catch (err) {
+      console.error('Tag konnte nicht entfernt werden', err);
     }
   };
 
@@ -121,22 +209,78 @@ export function SessionItem({ session }: SessionItemProps) {
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-[#2f2822] bg-[#120f0c]/80 p-6 shadow-lg shadow-black/20 hover:-translate-y-1 hover:shadow-black/30 transition-all duration-200">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1">
+        <div className="space-y-2">
           <div className="flex items-center gap-3 flex-wrap">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-[#fdfbf7] leading-tight">
-              Session #{id}
-            </h2>
+            <div className="flex items-center gap-2">
+              {isEditingTitle ? (
+                <input
+                  value={draftTitle}
+                  onChange={(e) => setDraftTitle(e.target.value)}
+                  className="text-2xl sm:text-3xl font-semibold text-[#fdfbf7] leading-tight bg-[#18130f] border border-[#2f2822] rounded-lg px-2 py-1"
+                  placeholder={`Session #${id}`}
+                />
+              ) : (
+                <h2 className="text-2xl sm:text-3xl font-semibold text-[#fdfbf7] leading-tight">
+                  {title?.trim() || `Session #${id}`}
+                </h2>
+              )}
+              <button
+                type="button"
+                onClick={handleSaveTitle}
+                disabled={disableActions}
+                className="text-xs rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-50"
+              >
+                {isEditingTitle ? 'Speichern' : 'Titel bearbeiten'}
+              </button>
+            </div>
             <span className="inline-flex items-center gap-2 rounded-full bg-[#1c1814] px-3 py-1 text-xs uppercase tracking-wide text-[#d6c9ba]">
-              {status}
+              {statusLabels[status] ?? status}
             </span>
-            {tags.map((tag) => (
+            <select
+              value={status}
+              onChange={(e) => handleStatusChange(e.target.value as NonNullable<Session['status']>)}
+              disabled={disableActions}
+              className="rounded-lg border border-[#2f2822] bg-[#120f0c] px-2 py-1 text-xs disabled:opacity-50"
+            >
+              <option value="draft">Roh</option>
+              <option value="in_progress">In Arbeit</option>
+              <option value="revised">Überarbeitet</option>
+              <option value="final">Final</option>
+            </select>
+            {tags?.map((tag) => (
               <span
                 key={tag}
                 className="inline-flex items-center rounded-full border border-[#2f2822] px-2.5 py-1 text-[11px] text-[#e8ded2] bg-[#17130f]"
               >
                 {tag}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveTag(tag)}
+                  disabled={disableActions}
+                  className="ml-1 text-[10px] text-[#9c8f82] hover:text-[#fdfbf7] disabled:opacity-50"
+                  aria-label={`Tag ${tag} entfernen`}
+                >
+                  ×
+                </button>
               </span>
             ))}
+          </div>
+          <div className="flex items-center gap-2 text-[12px] text-[#cbbfb0]">
+            <input
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              placeholder="Tag hinzufügen"
+              className="bg-[#18130f] border border-[#2f2822] rounded-lg px-2 py-1 focus:outline-none"
+              disabled={disableActions}
+            />
+            <button
+              type="button"
+              onClick={handleAddTag}
+              disabled={disableActions}
+              className="text-xs rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-50"
+            >
+              Tag speichern
+            </button>
           </div>
           <div className="text-sm text-[#cbbfb0] flex flex-wrap gap-3">
             <time dateTime={created_at}>
@@ -144,14 +288,25 @@ export function SessionItem({ session }: SessionItemProps) {
                 new Date(created_at),
               )}
             </time>
-            <span aria-hidden="true">·</span>
+            {updated_at && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  Aktualisiert:{' '}
+                  {new Intl.DateTimeFormat('de-DE', { dateStyle: 'medium' }).format(
+                    new Date(updated_at),
+                  )}
+                </span>
+              </>
+            )}
+            <span aria-hidden="true">嫉</span>
             <span>{safeWordCount} Wörter</span>
-            <span aria-hidden="true">·</span>
+            <span aria-hidden="true">嫉</span>
             <span>{safeCharCount} Zeichen</span>
-            <span aria-hidden="true">·</span>
+            <span aria-hidden="true">嫉</span>
             <span>{safeLetterCount} Buchstaben</span>
-            <span aria-hidden="true">·</span>
-            <span>{readingTime} min Lesezeit</span>
+            <span aria-hidden="true">嫉</span>
+            <span>{Math.max(1, Math.round(safeWordCount / 180))} min Lesezeit</span>
           </div>
         </div>
         <div className="flex items-center gap-2 opacity-70 group-hover:opacity-100 sm:self-start">
@@ -184,8 +339,7 @@ export function SessionItem({ session }: SessionItemProps) {
 
       <div className="mt-4 flex items-center gap-3 text-xs text-[#d6c9ba]">
         <span className="inline-flex items-center gap-1 rounded-full bg-[#18130f] px-2.5 py-1 border border-[#2f2822]">
-          <Sparkles size={14} /> Analyse: Verben {counts.verbs} · Nomen {counts.nouns} · Adjektive{' '}
-          {counts.adjectives} · Adverbien {counts.adverbs}
+          <Sparkles size={14} /> Analyse: Verben {counts.verbs} · Nomen {counts.nouns} · Adjektive {counts.adjectives} · Adverbien {counts.adverbs}
         </span>
         <button
           type="button"

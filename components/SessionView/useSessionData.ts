@@ -1,8 +1,8 @@
 'use client';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
-import type { Session, SessionPagination } from './types';
+import type { SearchPagination, Session, SessionPagination } from './types';
 
-const DEFAULT_API_BASE_URL = '/api';
+const DEFAULT_API_BASE_URL = '/api/v1';
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL
 ).replace(/\/$/, '');
@@ -13,25 +13,39 @@ if (process.env.NEXT_PUBLIC_API_KEY) {
   API_HEADERS['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY;
 }
 
-type SessionsResponse = {
-  success: boolean;
-  data?: Session[];
-  pagination?: SessionPagination;
-  error?: string;
-  message?: string;
-};
+type SessionsResponse =
+  | {
+      success: true;
+      data: Session[];
+      pagination: SessionPagination;
+    }
+  | {
+      success: false;
+      error?: string;
+      message?: string;
+    };
 
-type CreateSessionResponse = {
-  success: boolean;
-  data?: Session;
-  error?: string;
-  message?: string;
-};
+type SearchPageResponse =
+  | {
+      success: true;
+      data: Session[];
+      pagination: SearchPagination;
+    }
+  | {
+      success: false;
+      error?: string;
+      message?: string;
+    };
+
+type UpdateSessionPayload = Partial<
+  Pick<Session, 'title' | 'status' | 'tags'>
+>;
 
 type UseSessionDataOptions = {
   pageSize?: number;
   prefetchDelayMs?: number;
   autoPrefetch?: boolean;
+  searchQuery?: string;
 };
 
 const buildApiUrl = (
@@ -55,6 +69,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   const pageSize = options.pageSize ?? 50;
   const prefetchDelayMs = options.prefetchDelayMs ?? 1200;
   const autoPrefetch = options.autoPrefetch ?? true;
+  const searchQuery = options.searchQuery?.trim() ?? '';
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [pagination, setPagination] = useState<SessionPagination>(() => ({
@@ -62,38 +77,26 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     offset: 0,
     total: 0,
   }));
+  const [searchPage, setSearchPage] = useState<SearchPagination>(() => ({
+    page: 1,
+    pageSize,
+    total: 0,
+  }));
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
 
   const abortRef = useRef<AbortController | null>(null);
   const prefetchTimerRef = useRef<number | null>(null);
-
   const byIdRef = useRef<Map<number, Session>>(new Map());
-  const paginationRef = useRef<SessionPagination>({
-    limit: pageSize,
-    offset: 0,
-    total: 0,
-  });
-  const sessionsCountRef = useRef(0);
-  const autoPrefetchRef = useRef(autoPrefetch);
   const loadingRef = useRef(false);
   const loadingMoreRef = useRef(false);
-
-  useEffect(() => {
-    paginationRef.current = pagination;
-  }, [pagination]);
-
-  useEffect(() => {
-    sessionsCountRef.current = sessions.length;
-  }, [sessions.length]);
-
-  useEffect(() => {
-    autoPrefetchRef.current = autoPrefetch;
-  }, [autoPrefetch]);
+  const modeRef = useRef<'list' | 'search'>('list');
+  const lastQueryRef = useRef(searchQuery);
 
   const mergeSessions = useCallback(
     (incoming: Session[], append: boolean) => {
@@ -104,16 +107,13 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         byIdRef.current.set(session.id, session);
       }
       const merged = Array.from(byIdRef.current.values());
-      sessionsCountRef.current = merged.length;
-      startTransition(() => {
-        setSessions(merged);
-      });
+      startTransition(() => setSessions(merged));
       return merged.length;
     },
     [startTransition],
   );
 
-  const fetchPage = useCallback(
+  const fetchListPage = useCallback(
     async (offsetToLoad: number, append: boolean, silent = false) => {
       if (!silent) {
         setError(null);
@@ -143,29 +143,20 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
             signal: controller.signal,
           },
         );
-
         const json = (await response.json()) as SessionsResponse;
-        const data = json.data;
-
-        if (!response.ok || !json.success || !Array.isArray(data)) {
+        if (!response.ok || !json.success) {
           throw new Error(
-            json.message || json.error || 'Sessions konnten nicht geladen werden.',
+            json.error || json.message || 'Sessions konnten nicht geladen werden.',
           );
         }
-
         const nextPagination: SessionPagination = {
           limit: json.pagination?.limit ?? pageSize,
           offset: json.pagination?.offset ?? offsetToLoad,
-          total: json.pagination?.total ?? offsetToLoad + data.length,
+          total: json.pagination?.total ?? offsetToLoad + json.data.length,
         };
-
-        paginationRef.current = nextPagination;
-        startTransition(() => {
-          setPagination(nextPagination);
-        });
-
-        mergeSessions(data, append);
-        return { ok: true as const, count: data.length, pagination: nextPagination };
+        startTransition(() => setPagination(nextPagination));
+        mergeSessions(json.data, append);
+        return { ok: true as const, total: nextPagination.total };
       } catch (err) {
         if ((err as { name?: string }).name === 'AbortError') {
           return { ok: false as const, aborted: true as const };
@@ -174,9 +165,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           err instanceof Error
             ? err.message
             : 'Unbekannter Fehler beim Laden der Sessions.';
-        if (!silent) {
-          setError(message);
-        }
+        if (!silent) setError(message);
         return { ok: false as const, message };
       } finally {
         if (!silent) {
@@ -190,6 +179,75 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     [mergeSessions, pageSize, startTransition],
   );
 
+  const fetchSearchPage = useCallback(
+    async (page: number, append: boolean, silent = false) => {
+      if (!silent) {
+        setError(null);
+        if (append) {
+          loadingMoreRef.current = true;
+          setIsLoadingMore(true);
+        } else {
+          loadingRef.current = true;
+          setIsLoading(true);
+        }
+      }
+
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      try {
+        const response = await fetch(
+          buildApiUrl('/sessions/search_page', {
+            q: searchQuery,
+            page,
+            pageSize,
+            sort: 'created_at',
+            order: 'desc',
+          }),
+          {
+            method: 'GET',
+            headers: API_HEADERS,
+            cache: 'no-store',
+            signal: controller.signal,
+          },
+        );
+        const json = (await response.json()) as SearchPageResponse;
+        if (!response.ok || !json.success) {
+          throw new Error(
+            json.error || json.message || 'Sessions konnten nicht geladen werden.',
+          );
+        }
+        const nextPagination: SearchPagination = {
+          page: json.pagination?.page ?? page,
+          pageSize: json.pagination?.pageSize ?? pageSize,
+          total: json.pagination?.total ?? json.data.length,
+        };
+        startTransition(() => setSearchPage(nextPagination));
+        mergeSessions(json.data, append);
+        return { ok: true as const, total: nextPagination.total };
+      } catch (err) {
+        if ((err as { name?: string }).name === 'AbortError') {
+          return { ok: false as const, aborted: true as const };
+        }
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Unbekannter Fehler beim Laden der Sessions.';
+        if (!silent) setError(message);
+        return { ok: false as const, message };
+      } finally {
+        if (!silent) {
+          loadingRef.current = false;
+          loadingMoreRef.current = false;
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
+      }
+    },
+    [mergeSessions, pageSize, searchQuery, startTransition],
+  );
+
   const stopPrefetch = useCallback(() => {
     if (prefetchTimerRef.current === null) return;
     if (typeof window !== 'undefined') {
@@ -201,9 +259,10 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   const schedulePrefetchTick = useCallback(() => {
     stopPrefetch();
     if (typeof window === 'undefined') return;
+    if (modeRef.current !== 'list') return;
 
     prefetchTimerRef.current = window.setTimeout(async () => {
-      if (!autoPrefetchRef.current) return;
+      if (!autoPrefetch) return;
       if (loadingRef.current || loadingMoreRef.current) {
         schedulePrefetchTick();
         return;
@@ -212,146 +271,104 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         schedulePrefetchTick();
         return;
       }
-      const total = paginationRef.current.total;
-      const loaded = sessionsCountRef.current;
-      if (!total || loaded >= total) return;
+      if (sessions.length >= pagination.total) return;
 
-      const nextOffset =
-        paginationRef.current.offset + paginationRef.current.limit;
-      await fetchPage(nextOffset, true, true);
+      const nextOffset = pagination.offset + pagination.limit;
+      await fetchListPage(nextOffset, true, true);
       schedulePrefetchTick();
     }, prefetchDelayMs);
-  }, [fetchPage, prefetchDelayMs, stopPrefetch]);
-
-  const startPrefetchAll = useCallback(() => {
-    if (!autoPrefetchRef.current) return;
-    const total = paginationRef.current.total;
-    if (!total) return;
-    if (sessionsCountRef.current >= total) return;
-    schedulePrefetchTick();
-  }, [schedulePrefetchTick]);
+  }, [autoPrefetch, fetchListPage, pagination.limit, pagination.offset, pagination.total, prefetchDelayMs, sessions.length, stopPrefetch]);
 
   const refreshSessions = useCallback(async () => {
     stopPrefetch();
     byIdRef.current = new Map();
-    sessionsCountRef.current = 0;
+    startTransition(() => setSessions([]));
 
-    const freshPagination = { limit: pageSize, offset: 0, total: 0 };
-    paginationRef.current = freshPagination;
+    if (searchQuery) {
+      modeRef.current = 'search';
+      setSearchPage({ page: 1, pageSize, total: 0 });
+      return fetchSearchPage(1, false);
+    }
 
-    setSessions([]);
-    setPagination(freshPagination);
-    return fetchPage(0, false);
-  }, [fetchPage, pageSize, stopPrefetch]);
+    modeRef.current = 'list';
+    setPagination({ limit: pageSize, offset: 0, total: 0 });
+    return fetchListPage(0, false);
+  }, [fetchListPage, fetchSearchPage, pageSize, searchQuery, stopPrefetch, startTransition]);
 
   const loadMore = useCallback(() => {
     if (isLoading || isLoadingMore) return;
-    const total = paginationRef.current.total;
-    if (total && sessionsCountRef.current >= total) return;
     stopPrefetch();
-    const nextOffset =
-      paginationRef.current.offset + paginationRef.current.limit;
-    return fetchPage(nextOffset, true);
-  }, [fetchPage, isLoading, isLoadingMore, stopPrefetch]);
 
-  const createSession = useCallback(
-    async (text: string) => {
-      const payload = text.trim();
+    if (modeRef.current === 'search') {
+      if (sessions.length >= searchPage.total) return;
+      const nextPage = searchPage.page + 1;
+      return fetchSearchPage(nextPage, true);
+    }
 
-      if (!payload) {
-        setError('Text darf nicht leer sein.');
-        return { success: false as const };
-      }
+    if (sessions.length >= pagination.total) return;
+    const nextOffset = pagination.offset + pagination.limit;
+    return fetchListPage(nextOffset, true);
+  }, [fetchListPage, fetchSearchPage, isLoading, isLoadingMore, pagination.limit, pagination.offset, pagination.total, searchPage.page, searchPage.total, sessions.length, stopPrefetch]);
 
-      setIsCreating(true);
+  const updateSession = useCallback(
+    async (id: number, payload: UpdateSessionPayload) => {
+      const body: Record<string, unknown> = {};
+      if (payload.title !== undefined) body.title = payload.title;
+      if (payload.status !== undefined) body.status = payload.status;
+      if (payload.tags !== undefined) body.tags = payload.tags;
+      if (Object.keys(body).length === 0) return { success: false as const };
+
+      setIsUpdating(true);
       setError(null);
-
       try {
-        const response = await fetch(buildApiUrl('/sessions'), {
-          method: 'POST',
+        const res = await fetch(buildApiUrl(`/sessions/${id}`), {
+          method: 'PATCH',
           headers: API_HEADERS,
-          body: JSON.stringify({ text: payload }),
+          body: JSON.stringify(body),
         });
-
-        const json = (await response.json()) as CreateSessionResponse;
-
-        if (!response.ok || !json.success || !json.data) {
-          throw new Error(
-            json.message || json.error || 'Session konnte nicht angelegt werden.',
-          );
+        const json = (await res.json()) as { success: boolean; data?: Session; error?: string; message?: string };
+        if (!res.ok || !json.success || !json.data) {
+          throw new Error(json.error || json.message || 'Update fehlgeschlagen.');
         }
-
-        const createdSession = json.data;
-        const nextMap = new Map<number, Session>();
-        nextMap.set(createdSession.id, createdSession);
-        byIdRef.current.forEach((value, key) => {
-          if (key !== createdSession.id) {
-            nextMap.set(key, value);
-          }
-        });
-        byIdRef.current = nextMap;
-
-        const merged = Array.from(nextMap.values());
-        sessionsCountRef.current = merged.length;
-        startTransition(() => {
-          setSessions(merged);
-        });
-
-        setPagination((prev) => {
-          const next = {
-            limit: prev.limit ?? pageSize,
-            offset: prev.offset ?? 0,
-            total: (prev.total ?? 0) + 1,
-          };
-          paginationRef.current = next;
-          return next;
-        });
-
-        return { success: true as const, session: createdSession };
+        const existing = byIdRef.current.get(id);
+        const merged: Session = { ...(existing ?? {} as Session), ...json.data };
+        byIdRef.current.set(id, merged);
+        startTransition(() => setSessions(Array.from(byIdRef.current.values())));
+        return { success: true as const, session: merged };
       } catch (err) {
         const message =
-          err instanceof Error
-            ? err.message
-            : 'Unbekannter Fehler beim Anlegen der Session.';
+          err instanceof Error ? err.message : 'Unbekannter Fehler beim Update.';
         setError(message);
         return { success: false as const, error: message };
       } finally {
-        setIsCreating(false);
+        setIsUpdating(false);
       }
     },
-    [pageSize, startTransition],
+    [startTransition],
   );
 
-  const ensureAllLoaded = useCallback(async () => {
-    stopPrefetch();
-    while (true) {
-      const total = paginationRef.current.total;
-      const loaded = sessionsCountRef.current;
-      if (!total || loaded >= total) break;
-      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-        break;
-      }
-      const nextOffset =
-        paginationRef.current.offset + paginationRef.current.limit;
-      const result = await fetchPage(nextOffset, true, true);
-      if (!result.ok) break;
-    }
-  }, [fetchPage, stopPrefetch]);
+  useEffect(() => {
+    if (searchQuery === lastQueryRef.current) return;
+    lastQueryRef.current = searchQuery;
+    void refreshSessions();
+  }, [refreshSessions, searchQuery]);
 
   useEffect(() => {
     void refreshSessions();
-  }, [refreshSessions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if (!autoPrefetch) {
+    if (modeRef.current !== 'list') {
       stopPrefetch();
       return;
     }
+    if (!autoPrefetch) return;
     if (isLoading || isLoadingMore) return;
     if (!pagination.total) return;
     if (sessions.length >= pagination.total) return;
 
-    startPrefetchAll();
+    schedulePrefetchTick();
     return stopPrefetch;
   }, [
     autoPrefetch,
@@ -359,27 +376,27 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     isLoadingMore,
     pagination.total,
     sessions.length,
-    startPrefetchAll,
+    schedulePrefetchTick,
     stopPrefetch,
   ]);
 
   const hasMore =
-    pagination.total > 0 ? sessions.length < pagination.total : false;
+    modeRef.current === 'search'
+      ? sessions.length < searchPage.total
+      : sessions.length < pagination.total;
 
   return {
     sessions,
     pagination,
+    searchPage,
     hasMore,
     isLoading,
     isLoadingMore,
-    isCreating,
+    isUpdating,
     isPending,
     error,
     refreshSessions,
     loadMore,
-    startPrefetchAll,
-    stopPrefetch,
-    ensureAllLoaded,
-    createSession,
+    updateSession,
   };
 }

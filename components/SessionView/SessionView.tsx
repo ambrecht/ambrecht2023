@@ -1,5 +1,5 @@
 'use client';
-import React, { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Search, Filter, MoreHorizontal } from 'lucide-react';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
@@ -15,32 +15,25 @@ export function SessionView() {
   const {
     sessions,
     pagination,
+    searchPage,
     isLoading,
     isLoadingMore,
     isPending,
+    isUpdating,
     hasMore,
     error,
     refreshSessions,
     loadMore,
-    ensureAllLoaded,
-  } = useSessionData({ pageSize: 50, prefetchDelayMs: 1200, autoPrefetch: !isSearching });
-
-  useEffect(() => {
-    const term = deferredSearch.trim();
-    if (!term) return;
-    void ensureAllLoaded();
-  }, [deferredSearch, ensureAllLoaded]);
+    updateSession,
+  } = useSessionData({
+    pageSize: 50,
+    prefetchDelayMs: 1200,
+    autoPrefetch: !isSearching,
+    searchQuery: deferredSearch,
+  });
 
   const filtered = useMemo(() => {
-    const term = deferredSearch.trim().toLowerCase();
-    const base =
-      term.length === 0
-        ? sessions
-        : sessions.filter((s) =>
-            `${s.id} ${s.text}`.toLowerCase().includes(term),
-          );
-
-    const sorted = [...base].sort((a, b) => {
+    const sorted = [...sessions].sort((a, b) => {
       switch (sortBy) {
         case 'oldest':
           return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
@@ -78,13 +71,18 @@ export function SessionView() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Suchen (Titel & Text)"
+                placeholder="Suchen (Titel, Text, Tags)"
                 className="bg-transparent outline-none text-sm placeholder:text-[#6f6259] flex-1"
               />
             </div>
-            {deferredSearch.trim() && hasMore && (
+            {deferredSearch.trim() && (
               <p className="text-xs text-[#cbbfb0]">
-                Suche laedt noch Daten... ({sessions.length}/{pagination.total || '...'})
+                Suche laedt...
+                {searchPage.total
+                  ? ` (${sessions.length}/${searchPage.total})`
+                  : pagination.total
+                  ? ` (${sessions.length}/${pagination.total})`
+                  : ''}
                 {isPending ? ' - aktualisiere' : ''}
               </p>
             )}
@@ -136,16 +134,25 @@ export function SessionView() {
             <p className="text-[#d6c9ba]">Keine Sessions gefunden.</p>
           ) : (
             filtered.map((session: Session) => (
-              <SessionItem key={session.id} session={session} />
+              <SessionItem
+                key={session.id}
+                session={session}
+                onUpdate={updateSession}
+                disableActions={isUpdating}
+              />
             ))
           )}
         </section>
 
         <div className="mt-10 flex items-center justify-between text-sm text-[#d6c9ba]">
           <span>
-            {pagination.total
-              ? `${sessions.length} von ${pagination.total} Eintraegen`
-            : `${sessions.length} Eintraege`}
+            {deferredSearch.trim()
+              ? searchPage.total
+                ? `${sessions.length} von ${searchPage.total} Treffern`
+                : `${sessions.length} Treffer`
+              : pagination.total
+                ? `${sessions.length} von ${pagination.total} Eintraegen`
+                : `${sessions.length} Eintraege`}
           </span>
           <div className="flex items-center gap-3">
             {hasMore && (
