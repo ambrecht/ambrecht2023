@@ -47,7 +47,7 @@ export function SessionView() {
     });
 
     return sorted;
-  }, [deferredSearch, sessions, sortBy]);
+  }, [sessions, sortBy]);
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">

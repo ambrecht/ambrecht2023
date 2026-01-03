@@ -2,40 +2,29 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import type { SearchPagination, Session, SessionPagination } from './types';
 
-const DEFAULT_API_BASE_URL = '/api/v1';
+const DEFAULT_API_BASE_URL = '/api';
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL
 ).replace(/\/$/, '');
 const API_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',
 };
-if (process.env.NEXT_PUBLIC_API_KEY) {
-  API_HEADERS['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY;
-}
 
-type SessionsResponse =
-  | {
-      success: true;
-      data: Session[];
-      pagination: SessionPagination;
-    }
-  | {
-      success: false;
-      error?: string;
-      message?: string;
-    };
+type SessionsResponse = {
+  success: boolean;
+  data?: Session[];
+  pagination?: SessionPagination;
+  error?: string;
+  message?: string;
+};
 
-type SearchPageResponse =
-  | {
-      success: true;
-      data: Session[];
-      pagination: SearchPagination;
-    }
-  | {
-      success: false;
-      error?: string;
-      message?: string;
-    };
+type SearchPageResponse = {
+  success: boolean;
+  data?: Session[];
+  pagination?: SearchPagination;
+  error?: string;
+  message?: string;
+};
 
 type UpdateSessionPayload = Partial<
   Pick<Session, 'title' | 'status' | 'tags'>
@@ -46,6 +35,17 @@ type UseSessionDataOptions = {
   prefetchDelayMs?: number;
   autoPrefetch?: boolean;
   searchQuery?: string;
+};
+
+type SessionPayload = Session & { text_preview?: string; tags?: string[] };
+
+const normalizeSession = (entry: SessionPayload): Session => {
+  return {
+    ...entry,
+    text: entry.text ?? entry.text_preview ?? '',
+    tags: entry.tags ?? [],
+    status: entry.status ?? 'draft',
+  };
 };
 
 const buildApiUrl = (
@@ -144,18 +144,21 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           },
         );
         const json = (await response.json()) as SessionsResponse;
-        if (!response.ok || !json.success) {
-          throw new Error(
-            json.error || json.message || 'Sessions konnten nicht geladen werden.',
-          );
+        if (!response.ok || !json.success || !json.data) {
+          const message =
+            (!json.success && (json.error || json.message)) ||
+            json.message ||
+            'Sessions konnten nicht geladen werden.';
+          throw new Error(message);
         }
+        const normalized = json.data.map(normalizeSession);
         const nextPagination: SessionPagination = {
           limit: json.pagination?.limit ?? pageSize,
           offset: json.pagination?.offset ?? offsetToLoad,
-          total: json.pagination?.total ?? offsetToLoad + json.data.length,
+          total: json.pagination?.total ?? offsetToLoad + normalized.length,
         };
         startTransition(() => setPagination(nextPagination));
-        mergeSessions(json.data, append);
+        mergeSessions(normalized, append);
         return { ok: true as const, total: nextPagination.total };
       } catch (err) {
         if ((err as { name?: string }).name === 'AbortError') {
@@ -213,18 +216,21 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           },
         );
         const json = (await response.json()) as SearchPageResponse;
-        if (!response.ok || !json.success) {
-          throw new Error(
-            json.error || json.message || 'Sessions konnten nicht geladen werden.',
-          );
+        if (!response.ok || !json.success || !json.data) {
+          const message =
+            (!json.success && (json.error || json.message)) ||
+            json.message ||
+            'Sessions konnten nicht geladen werden.';
+          throw new Error(message);
         }
+        const normalized = json.data.map(normalizeSession);
         const nextPagination: SearchPagination = {
           page: json.pagination?.page ?? page,
           pageSize: json.pagination?.pageSize ?? pageSize,
-          total: json.pagination?.total ?? json.data.length,
+          total: json.pagination?.total ?? normalized.length,
         };
         startTransition(() => setSearchPage(nextPagination));
-        mergeSessions(json.data, append);
+        mergeSessions(normalized, append);
         return { ok: true as const, total: nextPagination.total };
       } catch (err) {
         if ((err as { name?: string }).name === 'AbortError') {
@@ -326,12 +332,18 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           headers: API_HEADERS,
           body: JSON.stringify(body),
         });
-        const json = (await res.json()) as { success: boolean; data?: Session; error?: string; message?: string };
+        const json = (await res.json()) as {
+          success: boolean;
+          data?: Session;
+          error?: string;
+          message?: string;
+        };
         if (!res.ok || !json.success || !json.data) {
           throw new Error(json.error || json.message || 'Update fehlgeschlagen.');
         }
+        const updated = normalizeSession(json.data as SessionPayload);
         const existing = byIdRef.current.get(id);
-        const merged: Session = { ...(existing ?? {} as Session), ...json.data };
+        const merged: Session = { ...(existing ?? ({} as Session)), ...updated };
         byIdRef.current.set(id, merged);
         startTransition(() => setSessions(Array.from(byIdRef.current.values())));
         return { success: true as const, session: merged };
