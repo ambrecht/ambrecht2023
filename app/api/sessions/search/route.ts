@@ -10,7 +10,7 @@ const API_KEY = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY || '';
 const buildExternalUrl = (searchParams: URLSearchParams) => {
   const qs = searchParams.toString();
   const base = EXTERNAL_API_BASE_URL.replace(/\/$/, '');
-  return `${base}/sessions/search_page${qs ? `?${qs}` : ''}`;
+  return `${base}/sessions/search${qs ? `?${qs}` : ''}`;
 };
 
 export async function GET(request: NextRequest) {

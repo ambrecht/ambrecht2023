@@ -20,7 +20,7 @@ type SessionsResponse = {
 
 type SearchPageResponse = {
   success: boolean;
-  data?: Session[];
+  data?: SessionPayload[];
   pagination?: SearchPagination;
   error?: string;
   message?: string;
@@ -78,9 +78,9 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     total: 0,
   }));
   const [searchPage, setSearchPage] = useState<SearchPagination>(() => ({
-    page: 1,
-    pageSize,
-    total: 0,
+    limit: pageSize,
+    cursor: null,
+    next_cursor: null,
   }));
 
   const [isLoading, setIsLoading] = useState(false);
@@ -183,7 +183,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   );
 
   const fetchSearchPage = useCallback(
-    async (page: number, append: boolean, silent = false) => {
+    async (cursor: string | null, append: boolean, silent = false) => {
       if (!silent) {
         setError(null);
         if (append) {
@@ -201,10 +201,10 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
 
       try {
         const response = await fetch(
-          buildApiUrl('/sessions/search_page', {
+          buildApiUrl('/sessions/search', {
             q: searchQuery,
-            page,
-            pageSize,
+            limit: pageSize,
+            cursor: cursor ?? undefined,
             sort: 'created_at',
             order: 'desc',
           }),
@@ -225,9 +225,9 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         }
         const normalized = json.data.map(normalizeSession);
         const nextPagination: SearchPagination = {
-          page: json.pagination?.page ?? page,
-          pageSize: json.pagination?.pageSize ?? pageSize,
-          total: json.pagination?.total ?? normalized.length,
+          limit: json.pagination?.limit ?? pageSize,
+          cursor: cursor ?? null,
+          next_cursor: json.pagination?.next_cursor ?? null,
         };
         startTransition(() => setSearchPage(nextPagination));
         mergeSessions(normalized, append);
@@ -292,8 +292,8 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
 
     if (searchQuery) {
       modeRef.current = 'search';
-      setSearchPage({ page: 1, pageSize, total: 0 });
-      return fetchSearchPage(1, false);
+      setSearchPage({ limit: pageSize, cursor: null, next_cursor: null });
+      return fetchSearchPage(null, false);
     }
 
     modeRef.current = 'list';
@@ -306,15 +306,25 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     stopPrefetch();
 
     if (modeRef.current === 'search') {
-      if (sessions.length >= searchPage.total) return;
-      const nextPage = searchPage.page + 1;
-      return fetchSearchPage(nextPage, true);
+      if (!searchPage.next_cursor) return;
+      return fetchSearchPage(searchPage.next_cursor, true);
     }
 
     if (sessions.length >= pagination.total) return;
     const nextOffset = pagination.offset + pagination.limit;
     return fetchListPage(nextOffset, true);
-  }, [fetchListPage, fetchSearchPage, isLoading, isLoadingMore, pagination.limit, pagination.offset, pagination.total, searchPage.page, searchPage.total, sessions.length, stopPrefetch]);
+  }, [
+    fetchListPage,
+    fetchSearchPage,
+    isLoading,
+    isLoadingMore,
+    pagination.limit,
+    pagination.offset,
+    pagination.total,
+    searchPage.next_cursor,
+    sessions.length,
+    stopPrefetch,
+  ]);
 
   const updateSession = useCallback(
     async (id: number, payload: UpdateSessionPayload) => {
@@ -394,7 +404,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
 
   const hasMore =
     modeRef.current === 'search'
-      ? sessions.length < searchPage.total
+      ? Boolean(searchPage.next_cursor)
       : sessions.length < pagination.total;
 
   return {

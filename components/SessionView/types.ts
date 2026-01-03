@@ -18,7 +18,8 @@ export interface SessionPagination {
 }
 
 export interface SearchPagination {
-  page: number;
-  pageSize: number;
-  total: number;
+  limit: number;
+  cursor?: string | null;
+  next_cursor?: string | null;
+  total?: number;
 }

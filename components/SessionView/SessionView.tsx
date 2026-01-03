@@ -78,11 +78,9 @@ export function SessionView() {
             {deferredSearch.trim() && (
               <p className="text-xs text-[#cbbfb0]">
                 Suche laedt...
-                {searchPage.total
-                  ? ` (${sessions.length}/${searchPage.total})`
-                  : pagination.total
-                  ? ` (${sessions.length}/${pagination.total})`
-                  : ''}
+                {searchPage.next_cursor
+                  ? ` (${sessions.length}+ Treffer...)`
+                  : ` (${sessions.length} Treffer)`}
                 {isPending ? ' - aktualisiere' : ''}
               </p>
             )}
@@ -147,8 +145,8 @@ export function SessionView() {
         <div className="mt-10 flex items-center justify-between text-sm text-[#d6c9ba]">
           <span>
             {deferredSearch.trim()
-              ? searchPage.total
-                ? `${sessions.length} von ${searchPage.total} Treffern`
+              ? searchPage.next_cursor
+                ? `${sessions.length}+ Treffer`
                 : `${sessions.length} Treffer`
               : pagination.total
                 ? `${sessions.length} von ${pagination.total} Eintraegen`
