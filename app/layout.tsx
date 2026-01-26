@@ -31,11 +31,7 @@ export default async function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <Frame>
-            <Padding>
-              <Navigation content={navContent} />
-              {children}
-            </Padding>
-            <Footer content={footerContent} />
+            <Padding>{children}</Padding>
           </Frame>
         </StyledComponentsRegistry>
       </body>
