@@ -20,10 +20,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale: Locale = 'de';
-  const [navContent, footerContent] = await Promise.all([
-    getNavContent(locale),
-    getFooterContent(locale),
-  ]);
 
   return (
     <html lang="de">
