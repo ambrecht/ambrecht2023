@@ -50,6 +50,7 @@ const Home = () => {
   const [storyActive, setStoryActive] = useState(false);
   const [displayedStory, setDisplayedStory] = useState('');
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const storyIndex = useRef(0);
 
   useEffect(() => {
@@ -82,6 +83,16 @@ const Home = () => {
     }
     mediaQuery.addListener(updatePreference);
     return () => mediaQuery.removeListener(updatePreference);
+  }, []);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -236,6 +247,18 @@ const Home = () => {
     setMode('STORY');
   };
 
+  const handleFullscreenToggle = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.warn('Fullscreen request failed', error);
+    }
+  };
+
   return (
     <Container>
       <NewsTicker mode={mode} prefersReducedMotion={prefersReducedMotion} />
@@ -256,6 +279,9 @@ const Home = () => {
           prefersReducedMotion={prefersReducedMotion}
         />
       </SiteGrid>
+      <FullscreenButton onClick={handleFullscreenToggle} type="button">
+        {isFullscreen ? 'Vollbild verlassen' : 'Vollbild'}
+      </FullscreenButton>
       {STORY_ENABLED && (
         <StoryTrigger onClick={handleStoryTrigger}>
           {storyActive ? 'Schluss mit dem Stream' : 'Story einschalten'}
@@ -300,6 +326,30 @@ const StoryTrigger = styled.button`
   letter-spacing: 0.15rem;
   cursor: pointer;
   font-size: 0.8rem;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const FullscreenButton = styled.button`
+  position: fixed;
+  right: 1rem;
+  top: 3.75rem;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.12rem;
+  cursor: pointer;
+  font-size: 0.7rem;
   transition:
     transform 0.2s ease,
     background 0.2s ease;
