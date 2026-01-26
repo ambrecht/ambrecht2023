@@ -113,6 +113,10 @@ const Scene = ({ imagePaths, mode, onZap }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [flashTrigger, setFlashTrigger] = useState(0);
   const onZapRef = useRef(onZap);
+  const zapCycleRef = useRef({
+    burstTimer: null,
+    holdTimer: null,
+  });
 
   useEffect(() => {
     onZapRef.current = onZap;
@@ -147,8 +151,22 @@ const Scene = ({ imagePaths, mode, onZap }) => {
     }
 
     const availableCount = textures.length;
+    const BURST_DURATION_MS = 3000;
+    const BURST_STEP_MS = 200;
+    const HOLD_DURATION_MS = 7000;
 
-    const intervalId = window.setInterval(() => {
+    const clearTimers = () => {
+      if (zapCycleRef.current.burstTimer) {
+        window.clearTimeout(zapCycleRef.current.burstTimer);
+      }
+      if (zapCycleRef.current.holdTimer) {
+        window.clearTimeout(zapCycleRef.current.holdTimer);
+      }
+      zapCycleRef.current.burstTimer = null;
+      zapCycleRef.current.holdTimer = null;
+    };
+
+    const doZap = () => {
       setCurrentImageIndex((prevIndex) => {
         if (availableCount <= 1) {
           return prevIndex;
@@ -161,10 +179,29 @@ const Scene = ({ imagePaths, mode, onZap }) => {
         return nextIndex;
       });
       setFlashTrigger((value) => value + 1);
-    }, 4000);
+    };
+
+    const startBurst = () => {
+      const burstEndAt = Date.now() + BURST_DURATION_MS;
+      const step = () => {
+        if (Date.now() >= burstEndAt) {
+          zapCycleRef.current.holdTimer = window.setTimeout(
+            startBurst,
+            HOLD_DURATION_MS,
+          );
+          return;
+        }
+        doZap();
+        zapCycleRef.current.burstTimer = window.setTimeout(step, BURST_STEP_MS);
+      };
+      step();
+    };
+
+    clearTimers();
+    startBurst();
 
     return () => {
-      window.clearInterval(intervalId);
+      clearTimers();
     };
   }, [textures.length, mode, isBrowser]);
 
