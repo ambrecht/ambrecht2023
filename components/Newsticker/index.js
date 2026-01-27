@@ -467,12 +467,6 @@ const ClassicNewsChannel = ({ mode, prefersReducedMotion }) => {
 
   return (
     <Container>
-      <NewsHeaderFooter theme="header">
-        <ApocalypticHeader>
-          {apocalypticHeadlines[headlineIndex]}
-        </ApocalypticHeader>
-      </NewsHeaderFooter>
-
       <Ticker>
         <TickerWrapper onAnimationIteration={handleTickerLoop}>
           {tickerItems.map((item, index) => {
