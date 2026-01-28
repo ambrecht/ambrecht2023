@@ -2,17 +2,17 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ShaderMaterial, TextureLoader, Vector2 } from 'three';
 import styled from 'styled-components';
-import { fragment as fragmentShader } from './fragment';
-import { vertex as vertexShader } from './vertex';
 import { createUniforms } from './uniform';
+import fragmentShader from './fragment';
+import vertexShader from './vertex';
 
 const BackgroundCanvas = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
   z-index: -100;
+  overflow: hidden;
 `;
 
 function ResizableCanvas() {
@@ -63,8 +63,10 @@ const ShaderPlane = ({ texture, flashTrigger, mode }) => {
     if (!material) {
       return;
     }
-    material.uniforms.u_resolution.value.set(size.width, size.height);
-  }, [material, size.width, size.height]);
+    const v = new Vector2();
+    gl.getDrawingBufferSize(v);
+    material.uniforms.u_resolution.value.set(v.x, v.y);
+  }, [material, gl, size.width, size.height]);
 
   useFrame(() => {
     if (typeof window === 'undefined') {
@@ -141,12 +143,7 @@ const Scene = ({ imagePaths, mode, onZap }) => {
   }, [textures.length]);
 
   useEffect(() => {
-    if (
-      !isBrowser ||
-      !textures.length ||
-      mode === 'FREEZE' ||
-      mode === 'END'
-    ) {
+    if (!isBrowser || !textures.length || mode === 'FREEZE' || mode === 'END') {
       return;
     }
 
@@ -238,14 +235,9 @@ const Scene = ({ imagePaths, mode, onZap }) => {
   return (
     <BackgroundCanvas>
       <Canvas
+        style={{ width: '100%', height: '100%' }}
         frameloop="always"
-        camera={{
-          position: [0, 0, 2],
-          fov: 45,
-          near: 1,
-          far: 10000,
-          aspect: window.innerWidth / window.innerHeight,
-        }}
+        camera={{ position: [0, 0, 2], fov: 45, near: 1, far: 10000 }}
         onCreated={({ gl }) => {
           gl.setSize(window.innerWidth, window.innerHeight);
         }}

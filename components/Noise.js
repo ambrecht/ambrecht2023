@@ -6,7 +6,7 @@ const NoiseCanvas = styled.canvas`
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.28;
+  opacity: 0.1;
   mix-blend-mode: screen;
   filter: contrast(1.2) brightness(1.1);
   z-index: 1000;
