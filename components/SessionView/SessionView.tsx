@@ -1,5 +1,12 @@
 'use client';
-import React, { useDeferredValue, useMemo, useState } from 'react';
+import React, {
+  useDeferredValue,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
+
 import { Search, Filter, MoreHorizontal } from 'lucide-react';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
@@ -12,6 +19,22 @@ export function SessionView() {
   const [sortBy, setSortBy] = useState<
     'newest' | 'oldest' | 'words' | 'letters' | 'random'
   >('newest');
+  const [randomSeed, setRandomSeed] = useState(() => Date.now());
+  const randomKeyRef = useRef(new Map<number, number>());
+
+  useEffect(() => {
+    randomKeyRef.current.clear();
+  }, [randomSeed]);
+
+  const getRandomKey = (id: number) => {
+    const map = randomKeyRef.current;
+    const existing = map.get(id);
+    if (existing != null) return existing;
+
+    const key = (Math.random() + (randomSeed % 1000000) / 1000000) % 1;
+    map.set(id, key);
+    return key;
+  };
   const {
     sessions,
     pagination,
@@ -34,29 +57,35 @@ export function SessionView() {
 
   const filtered = useMemo(() => {
     if (sortBy === 'random') {
-      const shuffled = [...sessions];
-      for (let i = shuffled.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      const alive = new Set(sessions.map((s) => s.id));
+      for (const id of randomKeyRef.current.keys()) {
+        if (!alive.has(id)) randomKeyRef.current.delete(id);
       }
-      return shuffled;
+
+      return [...sessions].sort(
+        (a, b) => getRandomKey(a.id) - getRandomKey(b.id),
+      );
     }
 
     const sorted = [...sessions].sort((a, b) => {
       switch (sortBy) {
         case 'oldest':
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
         case 'words':
           return (b.word_count ?? 0) - (a.word_count ?? 0);
         case 'letters':
           return (b.letter_count ?? 0) - (a.letter_count ?? 0);
         default:
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
       }
     });
 
     return sorted;
-  }, [sessions, sortBy]);
+  }, [sessions, sortBy, randomSeed]);
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
@@ -70,8 +99,8 @@ export function SessionView() {
               Sessions als Blogposts
             </h1>
             <p className="text-sm text-[#d6c9ba] max-w-3xl">
-              Schnell filtern, kopieren oder bearbeiten – mit optionaler Text-Analyse
-              pro Session.
+              Schnell filtern, kopieren oder bearbeiten – mit optionaler
+              Text-Analyse pro Session.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:min-w-[280px]">
@@ -101,7 +130,14 @@ export function SessionView() {
               <select
                 id="sort"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                onChange={(e) => {
+                  const next = e.target.value as typeof sortBy;
+                  setSortBy(next);
+                  if (next === 'random') {
+                    randomKeyRef.current.clear();
+                    setRandomSeed(Date.now());
+                  }
+                }}
                 className="rounded-lg border border-[#2f2822] bg-[#120f0c] px-3 py-2 focus:outline-none"
               >
                 <option value="newest">Neueste zuerst</option>
@@ -110,6 +146,18 @@ export function SessionView() {
                 <option value="letters">Nach Buchstaben</option>
                 <option value="random">Zufall</option>
               </select>
+              {sortBy === 'random' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    randomKeyRef.current.clear();
+                    setRandomSeed(Date.now());
+                  }}
+                  className="rounded-lg border border-[#2f2822] bg-[#120f0c] px-3 py-2 hover:bg-[#191511]"
+                >
+                  Neu mischen
+                </button>
+              )}
             </div>
           </div>
         </header>
