@@ -1,5 +1,6 @@
 'use client';
 import React, {
+  useCallback,
   useDeferredValue,
   useMemo,
   useState,
@@ -26,15 +27,18 @@ export function SessionView() {
     randomKeyRef.current.clear();
   }, [randomSeed]);
 
-  const getRandomKey = (id: number) => {
-    const map = randomKeyRef.current;
-    const existing = map.get(id);
-    if (existing != null) return existing;
+  const getRandomKey = useCallback(
+    (id: number) => {
+      const map = randomKeyRef.current;
+      const existing = map.get(id);
+      if (existing != null) return existing;
 
-    const key = (Math.random() + (randomSeed % 1000000) / 1000000) % 1;
-    map.set(id, key);
-    return key;
-  };
+      const key = (Math.random() + (randomSeed % 1000000) / 1000000) % 1;
+      map.set(id, key);
+      return key;
+    },
+    [randomSeed],
+  );
   const {
     sessions,
     pagination,
@@ -58,9 +62,9 @@ export function SessionView() {
   const filtered = useMemo(() => {
     if (sortBy === 'random') {
       const alive = new Set(sessions.map((s) => s.id));
-      for (const id of randomKeyRef.current.keys()) {
+      randomKeyRef.current.forEach((_, id) => {
         if (!alive.has(id)) randomKeyRef.current.delete(id);
-      }
+      });
 
       return [...sessions].sort(
         (a, b) => getRandomKey(a.id) - getRandomKey(b.id),
@@ -85,7 +89,7 @@ export function SessionView() {
     });
 
     return sorted;
-  }, [sessions, sortBy, randomSeed]);
+  }, [getRandomKey, sessions, sortBy, randomSeed]);
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
