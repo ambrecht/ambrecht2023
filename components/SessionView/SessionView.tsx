@@ -1,6 +1,6 @@
 'use client';
-import React, { useCallback, useDeferredValue, useMemo, useState } from 'react';
-import { Search, Filter, MoreHorizontal, Shuffle } from 'lucide-react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
+import { Search, Filter, MoreHorizontal } from 'lucide-react';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
 import type { Session } from './types';
@@ -9,10 +9,9 @@ export function SessionView() {
   const [search, setSearch] = useState('');
   const deferredSearch = useDeferredValue(search);
   const isSearching = search.trim().length > 0;
-  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'words' | 'letters'>(
-    'newest',
-  );
-  const [highlightId, setHighlightId] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<
+    'newest' | 'oldest' | 'words' | 'letters' | 'random'
+  >('newest');
   const {
     sessions,
     pagination,
@@ -34,6 +33,15 @@ export function SessionView() {
   });
 
   const filtered = useMemo(() => {
+    if (sortBy === 'random') {
+      const shuffled = [...sessions];
+      for (let i = shuffled.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
     const sorted = [...sessions].sort((a, b) => {
       switch (sortBy) {
         case 'oldest':
@@ -49,20 +57,6 @@ export function SessionView() {
 
     return sorted;
   }, [sessions, sortBy]);
-
-  const pickRandom = useCallback(() => {
-    if (filtered.length === 0) return;
-
-    const idx = Math.floor(Math.random() * filtered.length);
-    const chosen = filtered[idx];
-
-    setHighlightId(chosen.id);
-
-    requestAnimationFrame(() => {
-      const el = document.getElementById(`session-${chosen.id}`);
-      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-  }, [filtered]);
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
@@ -114,6 +108,7 @@ export function SessionView() {
                 <option value="oldest">Älteste zuerst</option>
                 <option value="words">Nach Wörteranzahl</option>
                 <option value="letters">Nach Buchstaben</option>
+                <option value="random">Zufall</option>
               </select>
             </div>
           </div>
@@ -126,14 +121,6 @@ export function SessionView() {
             className="inline-flex items-center gap-2 rounded-lg border border-[#3a3129] px-3 py-2 text-sm text-[#f7f4ed] hover:bg-[#191511] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] disabled:opacity-50"
           >
             {isLoading ? 'Aktualisiere...' : 'Neu laden'}
-          </button>
-          <button
-            onClick={pickRandom}
-            disabled={filtered.length === 0}
-            className="inline-flex items-center gap-2 rounded-lg border border-[#3a3129] px-3 py-2 text-sm text-[#f7f4ed] hover:bg-[#191511] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] disabled:opacity-50"
-          >
-            <Shuffle size={16} />
-            Random
           </button>
           {error && (
             <span className="text-sm text-red-300 bg-red-950/60 border border-red-900/60 px-3 py-2 rounded-lg">
@@ -160,7 +147,6 @@ export function SessionView() {
                 session={session}
                 onUpdate={updateSession}
                 disableActions={isUpdating}
-                highlight={session.id === highlightId}
               />
             ))
           )}
