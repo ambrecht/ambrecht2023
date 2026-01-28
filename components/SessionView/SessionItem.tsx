@@ -20,6 +20,7 @@ interface SessionItemProps {
     payload: Partial<Pick<Session, 'title' | 'status' | 'tags'>>,
   ) => Promise<{ success: boolean; error?: string } | { success: boolean }>;
   disableActions?: boolean;
+  highlight?: boolean;
 }
 
 const classToSpan = (cls: WordClass) => {
@@ -36,7 +37,7 @@ const statusLabels: Record<NonNullable<Session['status']>, string> = {
   final: 'Final',
 };
 
-export function SessionItem({ session, onUpdate, disableActions }: SessionItemProps) {
+export function SessionItem({ session, onUpdate, disableActions, highlight }: SessionItemProps) {
   const router = useRouter();
   const {
     id,
@@ -207,7 +208,13 @@ export function SessionItem({ session, onUpdate, disableActions }: SessionItemPr
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-[#2f2822] bg-[#120f0c]/80 p-6 shadow-lg shadow-black/20 hover:-translate-y-1 hover:shadow-black/30 transition-all duration-200">
+    <article
+      id={`session-${id}`}
+      data-session-id={id}
+      className={`group relative overflow-hidden rounded-2xl border border-[#2f2822] bg-[#120f0c]/80 p-6 shadow-lg shadow-black/20 hover:-translate-y-1 hover:shadow-black/30 transition-all duration-200 ${
+        highlight ? 'ring-2 ring-[#c9b18a]' : ''
+      }`}
+    >
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-3 flex-wrap">
