@@ -4,27 +4,37 @@ const fragment = `
   uniform float u_time;
   uniform vec2 u_resolution;
   uniform float u_flash;
+  uniform float u_glitchSeed;
   uniform sampler2D u_texture;
+  float rand(float n) {
+    return fract(sin(n) * 43758.5453123);
+  }
   void main(){
 
     vec2 q = gl_FragCoord.xy / u_resolution.xy;
     vec2 uv = 0.5 + (q - 0.5) * (0.9 + 0.1 * sin(0.2 * u_time / 5.0));
     vec3 col;
 
-    vec2 newRes = vec2(512.0);
-    vec3 pal = vec3(6.0,6.0,6.0);
+    float flash = clamp(u_flash, 0.0, 1.0);
 
+    float line = floor(q.y * 240.0);
+    float lineRand = rand(line + u_glitchSeed * 91.7);
+    float lineOffset = (lineRand - 0.5) * 0.08 * flash;
+    float vJitter = (rand(u_time * 2.1 + u_glitchSeed) - 0.5) * 0.01 * flash;
 
-    if (u_flash > 0.0){
-      uv = floor(uv * newRes) / newRes;
-      col = texture2D(u_texture, uv).xyz;
+    vec2 glitchUv = uv;
+    glitchUv.x += lineOffset;
+    glitchUv.y += vJitter;
 
-    }
-     else {
-      col.r = texture2D(u_texture, vec2(uv.x + 0.003, uv.y)).x;
-      col.g = texture2D(u_texture, vec2(uv.x + 0.00, uv.y)).y;
-      col.b = texture2D(u_texture, vec2(uv.x - 0.003, uv.y)).z;
-     }
+    vec2 block = vec2(220.0, 140.0);
+    vec2 blockUv = floor(glitchUv * block) / block;
+    glitchUv = mix(glitchUv, blockUv, flash * 0.7);
+
+    vec2 chroma = vec2(0.003, 0.0) + vec2(flash * 0.01, 0.0);
+
+    col.r = texture2D(u_texture, glitchUv + chroma).r;
+    col.g = texture2D(u_texture, glitchUv).g;
+    col.b = texture2D(u_texture, glitchUv - chroma).b;
 
     
 
@@ -51,15 +61,9 @@ const fragment = `
     // make things a bit more blue
     col.b = col.b * 1.05;
 
-    // offset colors a bit
-    if (u_flash > 0.0){
-      col.g = col.g * sin(u_flash * 50000.0) - cos(u_time);
-      col.xyz = floor(col.xyz * pal) / pal.xyz;
-      gl_FragColor = vec4(col - 0.5, 1.0);
-    }
-    else {
-      gl_FragColor = vec4(col - 0.05, 1.0);
-    }
+    col += flash * vec3(0.18, 0.2, 0.22);
+    col = mix(col, vec3(1.0), flash * 0.08);
+    gl_FragColor = vec4(col - 0.05, 1.0);
     
     
 
