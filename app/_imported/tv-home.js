@@ -261,14 +261,6 @@ const Home = () => {
 
   return (
     <Container>
-      <NewsTicker mode={mode} prefersReducedMotion={prefersReducedMotion} />
-      {(storyActive || mode === 'FREEZE') && (
-        <StoryOverlay>
-          <StoryText>
-            {mode === 'FREEZE' ? freezeText : displayedStory || '\u00a0'}
-          </StoryText>
-        </StoryOverlay>
-      )}
       <Noise mode={mode} prefersReducedMotion={prefersReducedMotion} />
       <SiteGrid>
         <Scene
@@ -282,11 +274,6 @@ const Home = () => {
       <FullscreenButton onClick={handleFullscreenToggle} type="button">
         {isFullscreen ? 'Vollbild verlassen' : 'Vollbild'}
       </FullscreenButton>
-      {STORY_ENABLED && (
-        <StoryTrigger onClick={handleStoryTrigger}>
-          {storyActive ? 'Schluss mit dem Stream' : 'Story einschalten'}
-        </StoryTrigger>
-      )}
     </Container>
   );
 };
