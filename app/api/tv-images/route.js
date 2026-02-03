@@ -33,8 +33,8 @@ async function collectImages(directory, relativePath = '') {
     }
 
     if (entry.isFile()) {
-      const extension = path.extname(entry.name).toLowerCase();
-      if (IMAGE_EXTENSIONS.has(extension)) {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (IMAGE_EXTENSIONS.has(ext)) {
         const filePath = relativePath
           ? `${relativePath}/${entry.name}`
           : entry.name;
@@ -46,30 +46,37 @@ async function collectImages(directory, relativePath = '') {
   return results;
 }
 
-function pickRandom(arr) {
-  return arr[randomInt(arr.length)];
+function shuffleInPlace(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
-export async function GET() {
+export async function GET(req) {
   const headers = { 'Cache-Control': 'no-store, max-age=0' };
 
   try {
     const tvDir = path.join(process.cwd(), 'public', 'TV');
     const images = await collectImages(tvDir, 'TV');
 
-    if (images.length === 0) {
-      return NextResponse.json({ image: null }, { headers });
-    }
+    shuffleInPlace(images);
 
-    return NextResponse.json({ image: pickRandom(images) }, { headers });
+    // Optional: /api/tv-images?limit=1
+    const { searchParams } = new URL(req.url);
+    const limit = Number(searchParams.get('limit') ?? '0');
+
+    const sliced = limit > 0 ? images.slice(0, limit) : images;
+
+    return NextResponse.json({ images: sliced }, { headers });
   } catch (error) {
     if (error?.code === 'ENOENT') {
-      return NextResponse.json({ image: null }, { headers });
+      return NextResponse.json({ images: [] }, { headers });
     }
-
     console.error('Failed to list public TV images', error);
     return NextResponse.json(
-      { image: null, error: 'Could not read public images' },
+      { images: [], error: 'Could not read public images' },
       { status: 500, headers },
     );
   }
