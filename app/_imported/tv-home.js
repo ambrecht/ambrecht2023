@@ -120,13 +120,23 @@ const Home = () => {
   useEffect(() => {
     const loadImages = async () => {
       try {
-        const response = await fetch('/api/tv-images');
-        if (!response.ok) {
+        const response = await fetch('/api/tv-images', { cache: 'no-store' });
+        if (!response.ok)
           throw new Error(`Server responded with ${response.status}`);
-        }
+
         const data = await response.json();
-        if (data.images?.length) {
-          setImagePaths(data.images);
+
+        // akzeptiert beide Shapes (images-array oder single image)
+        const images = Array.isArray(data.images)
+          ? data.images
+          : typeof data.image === 'string'
+            ? [data.image]
+            : [];
+
+        if (images.length) {
+          setImagePaths(images);
+        } else {
+          console.warn('API returned no images:', data);
         }
       } catch (error) {
         console.error('Failed to load TV images', error);
