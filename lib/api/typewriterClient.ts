@@ -34,10 +34,33 @@ const buildApiUrl = (
   return `${API_BASE_URL}${normalizedPath}${queryString ? `?${queryString}` : ''}`;
 };
 
-const getErrorMessage = (json: ApiResponse<unknown> | null, fallback: string) => {
-  if (!json) return fallback;
-  if (json.success) return fallback;
-  return json.error || json.message || fallback;
+const parseJsonSafe = <T,>(rawText: string | null) => {
+  if (!rawText) return null;
+  try {
+    return JSON.parse(rawText) as T;
+  } catch {
+    return null;
+  }
+};
+
+const getErrorMessage = (
+  json: ApiResponse<unknown> | null,
+  fallback: string,
+  status?: number,
+  rawText?: string,
+) => {
+  const statusLabel = typeof status === 'number' ? `HTTP ${status}` : 'HTTP error';
+  const snippet = rawText ? rawText.slice(0, 200) : '';
+  if (!json) {
+    return snippet ? `${statusLabel}: ${fallback} - ${snippet}` : `${statusLabel}: ${fallback}`;
+  }
+  if (json.success) {
+    return snippet ? `${statusLabel}: ${fallback} - ${snippet}` : `${statusLabel}: ${fallback}`;
+  }
+  const message = json.error || json.message || fallback;
+  return snippet && !message.includes(snippet)
+    ? `${statusLabel}: ${message} - ${snippet}`
+    : `${statusLabel}: ${message}`;
 };
 
 async function request<T>(
@@ -53,9 +76,12 @@ async function request<T>(
     },
     cache: rest.cache ?? 'no-store',
   });
-  const json = (await response.json().catch(() => null)) as ApiResponse<T> | null;
+  const rawText = await response.text();
+  const json = parseJsonSafe<ApiResponse<T>>(rawText);
   if (!response.ok || !json || !json.success) {
-    throw new Error(getErrorMessage(json, 'Unerwartete API-Antwort.'));
+    throw new Error(
+      getErrorMessage(json, 'Unerwartete API-Antwort.', response.status, rawText),
+    );
   }
   return json as ApiSuccess<T>;
 }
@@ -72,9 +98,12 @@ async function requestNoContent(
     },
   });
   if (response.status === 204) return;
-  const json = (await response.json().catch(() => null)) as ApiResponse<unknown> | null;
+  const rawText = await response.text();
+  const json = parseJsonSafe<ApiResponse<unknown>>(rawText);
   if (!response.ok || !json || !json.success) {
-    throw new Error(getErrorMessage(json, 'Unerwartete API-Antwort.'));
+    throw new Error(
+      getErrorMessage(json, 'Unerwartete API-Antwort.', response.status, rawText),
+    );
   }
 }
 

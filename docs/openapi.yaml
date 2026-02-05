@@ -1,0 +1,1301 @@
+openapi: 3.0.3
+info:
+  title: Typewriter API
+  version: 1.0.0
+  description: API für Typewriter-Sessions und LiveSessions (Streaming via WebSocket)
+servers:
+  - url: https://example.com
+    description: Platzhalter
+  - url: http://localhost:{port}
+    description: Lokales Development (Port = ENV PORT oder Default 3001)
+    variables:
+      port:
+        default: "3001"
+security:
+  - apiKeyAuth: []
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+        document_id:
+          type: integer
+          nullable: true
+          description: Zugehoeriges Dokument (Container)
+        parent_id:
+          type: integer
+          nullable: true
+          description: ID der Ursprungssession wenn als Bearbeitung angelegt
+        title:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [draft, in_progress, revised, final]
+          default: draft
+        tags:
+          type: array
+          items:
+            type: string
+          default: []
+        text:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        word_count:
+          type: integer
+        char_count:
+          type: integer
+        letter_count:
+          type: integer
+      required: [id, status, tags, text, created_at, updated_at, word_count, char_count, letter_count]
+    SessionListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        word_count:
+          type: integer
+        char_count:
+          type: integer
+        letter_count:
+          type: integer
+        text_preview:
+          type: string
+          description: Preview-Text (max 400 Zeichen)
+        parent_id:
+          type: integer
+          nullable: true
+          description: ID der Ursprungssession wenn als Bearbeitung angelegt
+        highlights:
+          type: array
+          nullable: true
+          items:
+            type: string
+        rank:
+          type: number
+          nullable: true
+      required: [id, created_at, word_count, char_count, letter_count, text_preview]
+    SessionPageSearchItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [draft, in_progress, revised, final]
+        tags:
+          type: array
+          items:
+            type: string
+          default: []
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        word_count:
+          type: integer
+        char_count:
+          type: integer
+        letter_count:
+          type: integer
+        text_preview:
+          type: string
+          description: Preview-Text (max 400 Zeichen)
+        parent_id:
+          type: integer
+          nullable: true
+          description: ID der Ursprungssession wenn als Bearbeitung angelegt
+      required: [id, status, tags, created_at, updated_at, word_count, char_count, letter_count, text_preview]
+    LiveSessionEvent:
+      type: object
+      properties:
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required: [content, created_at]
+    LiveSessionCreateResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+      required: [sessionId, created_at]
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          nullable: true
+      required: [success, error, message]
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        root_session_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+      required: [id, created_at]
+    AnalysisRun:
+      type: object
+      properties:
+        id:
+          type: integer
+        session_id:
+          type: integer
+        engine_version:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+        config_hash:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+      required: [id, session_id, engine_version, config, config_hash, created_at]
+    Finding:
+      type: object
+      description: Offsets gelten nur innerhalb dieser Session-Version.
+      properties:
+        id:
+          type: integer
+        analysis_run_id:
+          type: integer
+        session_id:
+          type: integer
+        finding_type:
+          type: string
+        severity:
+          type: string
+          enum: [info, warn]
+        start_offset:
+          type: integer
+          minimum: 0
+        end_offset:
+          type: integer
+          minimum: 1
+        explanation:
+          type: string
+          nullable: true
+        metrics:
+          type: object
+          nullable: true
+          additionalProperties: true
+      required: [id, analysis_run_id, session_id, finding_type, severity, start_offset, end_offset]
+    Note:
+      type: object
+      description: Offsets gelten nur innerhalb dieser Session-Version.
+      properties:
+        id:
+          type: integer
+        session_id:
+          type: integer
+        start_offset:
+          type: integer
+          minimum: 0
+        end_offset:
+          type: integer
+          minimum: 1
+        note:
+          type: string
+      required: [id, session_id, start_offset, end_offset, note]
+paths:
+  /api/v1/sessions:
+    post:
+      summary: Text-Session anlegen
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  minLength: 1
+              required: [text]
+      responses:
+        "201":
+          description: Session erfolgreich angelegt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                required: [success, data]
+        "400":
+          description: validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: Sessions paginiert auflisten
+      security: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+            maximum: 200
+            minimum: 1
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        "200":
+          description: Liste der Sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  pagination:
+                    type: object
+                    properties:
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      total:
+                        type: integer
+                    required: [limit, offset, total]
+                required: [success, data, pagination]
+        "400":
+          description: invalid_pagination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/search:
+    get:
+      summary: Sessions durchsuchen (Full-Text) mit Cursor-Pagination
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+            maxLength: 200
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+            minimum: 1
+        - in: query
+          name: cursor
+          schema:
+            type: string
+            description: Opaquer Cursor fuer naechste Seite
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [relevance, created_at, id]
+            default: relevance
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: min_words
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: max_words
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Trefferliste (SessionListItem)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SessionListItem'
+                  pagination:
+                    type: object
+                    properties:
+                      limit:
+                        type: integer
+                      next_cursor:
+                        type: string
+                        nullable: true
+                    required: [limit]
+                  meta:
+                    type: object
+                    properties:
+                      took_ms:
+                        type: integer
+                        description: Dauer in Millisekunden
+                required: [success, data, pagination, meta]
+        "400":
+          description: invalid_search_params | invalid_cursor | invalid_date_range | invalid_word_range
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/search_page:
+    get:
+      summary: Sessions durchsuchen (Substring) mit page/pageSize oder Cursor
+      description: Substring-Suche auf title/text/tags. Optional Cursor fuer Keyset-Pagination (created_at,id).
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+            maxLength: 200
+          description: Falls leer/fehlend, kein Filter.
+        - in: query
+          name: cursor
+          description: Opaquer Cursor fuer Keyset-Pagination (page/pageSize wird ignoriert).
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+            minimum: 1
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+            minimum: 1
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [created_at, id]
+            default: created_at
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        "200":
+          description: Trefferliste (Cursor oder page/pageSize)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SessionPageSearchItem'
+                  pagination:
+                    oneOf:
+                      - type: object
+                        properties:
+                          page:
+                            type: integer
+                          pageSize:
+                            type: integer
+                          total:
+                            type: integer
+                        required: [page, pageSize, total]
+                      - type: object
+                        properties:
+                          limit:
+                            type: integer
+                          next_cursor:
+                            type: string
+                            nullable: true
+                        required: [limit]
+                  meta:
+                    type: object
+                    properties:
+                      took_ms:
+                        type: integer
+                        description: Dauer in Millisekunden
+                required: [success, data, pagination, meta]
+        "400":
+          description: invalid_search_params
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/last:
+    get:
+      summary: Letzte Session abrufen
+      security:
+        - apiKeyAuth: []
+      responses:
+        "200":
+          description: Letzte Session gefunden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                required: [success, data]
+        "404":
+          description: no_sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/{id}:
+    get:
+      summary: Session per ID abrufen
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Session gefunden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                required: [success, data]
+        "400":
+          description: invalid_session_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Session-Felder aktualisieren (Teil-Update)
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  nullable: true
+                  maxLength: 200
+                status:
+                  type: string
+                  enum: [draft, in_progress, revised, final]
+                tags:
+                  type: array
+                  items:
+                    type: string
+              description: Mindestens ein Feld muss gesetzt sein.
+      responses:
+        "200":
+          description: Session aktualisiert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                required: [success, data]
+        "400":
+          description: invalid_session_id | validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/{id}/edits:
+    post:
+      summary: Session nicht-destruktiv bearbeiten
+      description: Speichert die Bearbeitung als neue Session und verknuepft sie mit der Ursprungssession.
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  minLength: 1
+              required: [text]
+      responses:
+        "201":
+          description: Bearbeitung als neue Session gespeichert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Session'
+                required: [success, data]
+        "400":
+          description: invalid_session_id | validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/live-sessions:
+    post:
+      summary: LiveSession anlegen (immer neu)
+      security: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "201":
+          description: LiveSession neu erstellt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/LiveSessionCreateResponse'
+                required: [success, data]
+        "400":
+          description: invalid_payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/live-sessions/{id}/input:
+    post:
+      summary: Text-Event in LiveSession pushen
+      security: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  minLength: 1
+              required: [text]
+      responses:
+        "200":
+          description: Event gespeichert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      eventId:
+                        type: integer
+                      created_at:
+                        type: string
+                        format: date-time
+                    required: [eventId, created_at]
+                required: [success, data]
+        "400":
+          description: invalid_session_id | invalid_payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/live-sessions/{id}/history:
+    get:
+      summary: Events einer LiveSession als History abrufen
+      security: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: History geliefert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LiveSessionEvent'
+                required: [success, data]
+        "400":
+          description: invalid_session_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/documents:
+    post:
+      summary: Dokument anlegen
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "201":
+          description: Dokument erstellt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Document'
+                required: [success, data]
+        "400":
+          description: validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/documents/{document_id}:
+    get:
+      summary: Dokument abrufen
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: document_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Dokument gefunden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Document'
+                required: [success, data]
+        "404":
+          description: document_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/documents/{document_id}/versions:
+    get:
+      summary: Versionen eines Dokuments (neueste zuerst)
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: document_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+            minimum: 1
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        "200":
+          description: Versionsliste
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  pagination:
+                    type: object
+                    properties:
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      total:
+                        type: integer
+                    required: [limit, offset, total]
+                required: [success, data, pagination]
+        "404":
+          description: document_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/{session_id}/analysis-runs:
+    post:
+      summary: Analyse-Run anlegen oder aus Cache liefern
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                engine_version:
+                  type: string
+                config:
+                  type: object
+                  additionalProperties: true
+              required: [engine_version, config]
+      responses:
+        "201":
+          description: Analyse-Run erstellt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AnalysisRun'
+                required: [success, data]
+        "200":
+          description: Analyse-Run aus Cache
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AnalysisRun'
+                required: [success, data]
+        "400":
+          description: validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: Analyse-Runs einer Session
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+            minimum: 1
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        "200":
+          description: Analyse-Run-Liste
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AnalysisRun'
+                  pagination:
+                    type: object
+                    properties:
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      total:
+                        type: integer
+                    required: [limit, offset, total]
+                required: [success, data, pagination]
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/analysis-runs/{run_id}:
+    get:
+      summary: Analyse-Run abrufen
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: run_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Analyse-Run gefunden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AnalysisRun'
+                required: [success, data]
+        "404":
+          description: run_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/analysis-runs/{run_id}/findings:
+    get:
+      summary: Findings im Viewport
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: run_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: start
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: end
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: types
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: string
+          description: Kommagetrennte Typenliste, z. B. LONG_SENTENCE,PASSIVE
+      responses:
+        "200":
+          description: Findings-Liste
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Finding'
+                required: [success, data]
+        "400":
+          description: invalid_range
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: run_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/sessions/{session_id}/notes:
+    post:
+      summary: Notiz erstellen
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_offset:
+                  type: integer
+                  minimum: 0
+                end_offset:
+                  type: integer
+                  minimum: 1
+                note:
+                  type: string
+              required: [start_offset, end_offset, note]
+      responses:
+        "201":
+          description: Notiz erstellt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Note'
+                required: [success, data]
+        "400":
+          description: validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: Notizen im Viewport
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: start
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: end
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Notizen-Liste
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Note'
+                required: [success, data]
+        "400":
+          description: invalid_range
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: session_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/notes/{note_id}:
+    patch:
+      summary: Notiz aktualisieren
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: note_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_offset:
+                  type: integer
+                  minimum: 0
+                end_offset:
+                  type: integer
+                  minimum: 1
+                note:
+                  type: string
+              description: Mindestens ein Feld muss gesetzt sein.
+      responses:
+        "200":
+          description: Notiz aktualisiert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Note'
+                required: [success, data]
+        "400":
+          description: validation_error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: note_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Notiz loeschen
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - in: path
+          name: note_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Notiz geloescht
+        "404":
+          description: note_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
