@@ -209,33 +209,6 @@ export default function SessionEditorPage() {
     setHistoryIndex(next.length - 1);
   }, []);
 
-  const loadSession = useCallback(
-    async (id: number) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await getSession(id);
-        setSession(data);
-        suppressHistoryRef.current = true;
-        setText(data.text ?? '');
-        resetHistory(data.text ?? '');
-        setFindings([]);
-        setAnalysisRun(null);
-        setAnalysisStale(false);
-        setFindingToggles({});
-        await Promise.all([loadVersions(data), loadNotes(data, data.text ?? '')]);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Session konnte nicht geladen werden.',
-        );
-      } finally {
-        setLoading(false);
-        suppressHistoryRef.current = false;
-      }
-    },
-    [loadNotes, loadVersions, resetHistory],
-  );
-
   const loadVersions = useCallback(async (baseSession: Session) => {
     setVersionsLoading(true);
     try {
@@ -293,6 +266,33 @@ export default function SessionEditorPage() {
       setNotesLoading(false);
     }
   }, []);
+
+  const loadSession = useCallback(
+    async (id: number) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getSession(id);
+        setSession(data);
+        suppressHistoryRef.current = true;
+        setText(data.text ?? '');
+        resetHistory(data.text ?? '');
+        setFindings([]);
+        setAnalysisRun(null);
+        setAnalysisStale(false);
+        setFindingToggles({});
+        await Promise.all([loadVersions(data), loadNotes(data, data.text ?? '')]);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Session konnte nicht geladen werden.',
+        );
+      } finally {
+        setLoading(false);
+        suppressHistoryRef.current = false;
+      }
+    },
+    [loadNotes, loadVersions, resetHistory],
+  );
 
   useEffect(() => {
     if (!activeParam) return;
