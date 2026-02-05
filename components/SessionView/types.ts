@@ -9,6 +9,8 @@ export interface Session {
   letter_count: number;
   status?: 'draft' | 'in_progress' | 'revised' | 'final';
   tags?: string[];
+  document_id?: number | null;
+  parent_id?: number | null;
 }
 
 export interface SessionPagination {

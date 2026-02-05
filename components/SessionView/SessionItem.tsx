@@ -100,7 +100,7 @@ export function SessionItem({ session, onUpdate, disableActions, highlight }: Se
   }, []);
 
   const handleEdit = () => {
-    router.push(`/session?active=${encodeURIComponent(String(id))}`);
+    router.push(`/session/edit?active=${encodeURIComponent(String(id))}`);
   };
 
   const handleCopy = async () => {
