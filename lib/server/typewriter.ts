@@ -5,12 +5,15 @@ const TypewriterEnvSchema = z.object({
   TYPEWRITER_API_KEY: z.string().min(1),
 });
 
+const DEFAULT_TYPEWRITER_API_BASE_URL = 'https://api.ambrecht.de';
+
 function getEnv() {
   const parsed = TypewriterEnvSchema.safeParse({
     TYPEWRITER_API_BASE_URL:
       process.env.TYPEWRITER_API_BASE_URL ||
       process.env.EXTERNAL_API_BASE_URL ||
-      process.env.NEXT_PUBLIC_API_BASE_URL,
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      DEFAULT_TYPEWRITER_API_BASE_URL,
     TYPEWRITER_API_KEY:
       process.env.TYPEWRITER_API_KEY ||
       process.env.API_KEY ||
