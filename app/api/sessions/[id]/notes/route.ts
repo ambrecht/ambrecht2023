@@ -1,32 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export const runtime = 'nodejs';
-
-const EXTERNAL_API_BASE_URL =
-  process.env.EXTERNAL_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'https://api.ambrecht.de/api/v1';
-
-const API_KEY = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY || '';
-
-const buildUpstreamUrl = (sessionId: string, searchParams?: URLSearchParams) => {
-  const qs = searchParams?.toString() ?? '';
-  const base = EXTERNAL_API_BASE_URL.replace(/\/$/, '');
-  return `${base}/sessions/${sessionId}/notes${qs ? `?${qs}` : ''}`;
-};
-
-const missingApiKey = () =>
-  NextResponse.json(
-    { success: false, error: 'missing_api_key', message: 'API key fehlt.' },
-    { status: 500 },
-  );
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  if (!API_KEY) return missingApiKey();
-
   const start = request.nextUrl.searchParams.get('start');
   const end = request.nextUrl.searchParams.get('end');
   if (start === null || end === null) {
@@ -40,49 +20,20 @@ export async function GET(
     );
   }
 
-  const upstreamUrl = buildUpstreamUrl(params.id, request.nextUrl.searchParams);
-
-  try {
-    const upstream = await fetch(upstreamUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
-      cache: 'no-store',
-    });
-
-    const headers = new Headers(upstream.headers);
-    headers.delete('set-cookie');
-
-    const buffer = await upstream.arrayBuffer();
-    return new Response(buffer, {
-      status: upstream.status,
-      headers,
-    });
-  } catch (err) {
-    console.error('sessions.notes proxy error', {
-      session_id: params.id,
-      upstream_url: upstreamUrl,
-      error: err instanceof Error ? err.message : String(err),
-    });
-    const message =
-      err instanceof Error
-        ? err.message
-        : 'Unerwarteter Fehler beim Weiterleiten der Anfrage.';
-    return NextResponse.json(
-      { success: false, error: 'internal_error', message },
-      { status: 500 },
-    );
-  }
+  return proxyRequest({
+    method: 'GET',
+    path: `/sessions/${params.id}/notes`,
+    query: request.nextUrl.searchParams,
+    cache: 'no-store',
+    requireApiKey: true,
+    context: { route: 'sessions.notes.list', session_id: params.id },
+  });
 }
 
 export async function POST(
   request: Request,
   { params }: { params: { id: string } },
 ) {
-  if (!API_KEY) return missingApiKey();
-
   let payload:
     | { start_offset?: unknown; end_offset?: unknown; note?: unknown }
     | null = null;
@@ -121,43 +72,15 @@ export async function POST(
     );
   }
 
-  const upstreamUrl = buildUpstreamUrl(params.id);
-
-  try {
-    const upstream = await fetch(upstreamUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
-      body: JSON.stringify({
-        start_offset: startOffset,
-        end_offset: endOffset,
-        note,
-      }),
-    });
-
-    const headers = new Headers(upstream.headers);
-    headers.delete('set-cookie');
-
-    const buffer = await upstream.arrayBuffer();
-    return new Response(buffer, {
-      status: upstream.status,
-      headers,
-    });
-  } catch (err) {
-    console.error('sessions.notes proxy error', {
-      session_id: params.id,
-      upstream_url: upstreamUrl,
-      error: err instanceof Error ? err.message : String(err),
-    });
-    const message =
-      err instanceof Error
-        ? err.message
-        : 'Unerwarteter Fehler beim Weiterleiten der Anfrage.';
-    return NextResponse.json(
-      { success: false, error: 'internal_error', message },
-      { status: 500 },
-    );
-  }
+  return proxyRequest({
+    method: 'POST',
+    path: `/sessions/${params.id}/notes`,
+    body: JSON.stringify({
+      start_offset: startOffset,
+      end_offset: endOffset,
+      note,
+    }),
+    requireApiKey: true,
+    context: { route: 'sessions.notes.create', session_id: params.id },
+  });
 }

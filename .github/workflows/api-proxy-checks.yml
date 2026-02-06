@@ -1,0 +1,50 @@
+name: api-proxy-checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: API Proxy Coverage
+        run: npm run check:api-proxy
+
+      - name: Build
+        run: npm run build
+
+      - name: Start server
+        if: ${{ secrets.API_KEY != '' || secrets.TYPEWRITER_API_KEY != '' }}
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          TYPEWRITER_API_KEY: ${{ secrets.TYPEWRITER_API_KEY }}
+          EXTERNAL_API_BASE_URL: ${{ secrets.EXTERNAL_API_BASE_URL }}
+        run: |
+          npm run start -- --hostname 0.0.0.0 --port 3000 &
+          echo $! > .next.pid
+
+      - name: Wait for server
+        if: ${{ secrets.API_KEY != '' || secrets.TYPEWRITER_API_KEY != '' }}
+        run: node -e "const http=require('http');const max=40;let tries=0;const ping=()=>{http.get('http://127.0.0.1:3000',res=>{process.exit(res.statusCode?0:1)}).on('error',()=>{tries+=1; if(tries>max){process.exit(1);} setTimeout(ping,500);});};ping();"
+
+      - name: Smoke API
+        if: ${{ secrets.API_KEY != '' || secrets.TYPEWRITER_API_KEY != '' }}
+        env:
+          BASE_URL: http://127.0.0.1:3000
+          API_KEY: ${{ secrets.API_KEY }}
+          TYPEWRITER_API_KEY: ${{ secrets.TYPEWRITER_API_KEY }}
+          EXTERNAL_API_BASE_URL: ${{ secrets.EXTERNAL_API_BASE_URL }}
+        run: npm run smoke:api

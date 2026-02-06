@@ -1,26 +1,12 @@
 import { NextResponse } from 'next/server';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export const runtime = 'nodejs';
-
-const EXTERNAL_API_BASE_URL =
-  process.env.EXTERNAL_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'https://api.ambrecht.de/api/v1';
-
-const API_KEY = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY || '';
-
-const missingApiKey = () =>
-  NextResponse.json(
-    { success: false, error: 'missing_api_key', message: 'API key fehlt.' },
-    { status: 500 },
-  );
 
 export async function PATCH(
   request: Request,
   { params }: { params: { id: string } },
 ) {
-  if (!API_KEY) return missingApiKey();
-
   let payload:
     | { start_offset?: unknown; end_offset?: unknown; note?: unknown }
     | null = null;
@@ -41,85 +27,23 @@ export async function PATCH(
     );
   }
 
-  const upstreamUrl = `${EXTERNAL_API_BASE_URL.replace(/\/$/, '')}/notes/${params.id}`;
-
-  try {
-    const upstream = await fetch(upstreamUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
-      body: JSON.stringify(payload ?? {}),
-    });
-
-    const headers = new Headers(upstream.headers);
-    headers.delete('set-cookie');
-
-    const buffer = await upstream.arrayBuffer();
-    return new Response(buffer, {
-      status: upstream.status,
-      headers,
-    });
-  } catch (err) {
-    console.error('notes.patch proxy error', {
-      note_id: params.id,
-      upstream_url: upstreamUrl,
-      error: err instanceof Error ? err.message : String(err),
-    });
-    const message =
-      err instanceof Error
-        ? err.message
-        : 'Unerwarteter Fehler beim Weiterleiten der Anfrage.';
-    return NextResponse.json(
-      { success: false, error: 'internal_error', message },
-      { status: 500 },
-    );
-  }
+  return proxyRequest({
+    method: 'PATCH',
+    path: `/notes/${params.id}`,
+    body: JSON.stringify(payload ?? {}),
+    requireApiKey: true,
+    context: { route: 'notes.update', note_id: params.id },
+  });
 }
 
 export async function DELETE(
   _request: Request,
   { params }: { params: { id: string } },
 ) {
-  if (!API_KEY) return missingApiKey();
-
-  const upstreamUrl = `${EXTERNAL_API_BASE_URL.replace(/\/$/, '')}/notes/${params.id}`;
-
-  try {
-    const upstream = await fetch(upstreamUrl, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
-    });
-
-    if (upstream.status === 204) {
-      return new Response(null, { status: upstream.status });
-    }
-
-    const headers = new Headers(upstream.headers);
-    headers.delete('set-cookie');
-
-    const buffer = await upstream.arrayBuffer();
-    return new Response(buffer, {
-      status: upstream.status,
-      headers,
-    });
-  } catch (err) {
-    console.error('notes.delete proxy error', {
-      note_id: params.id,
-      upstream_url: upstreamUrl,
-      error: err instanceof Error ? err.message : String(err),
-    });
-    const message =
-      err instanceof Error
-        ? err.message
-        : 'Unerwarteter Fehler beim Weiterleiten der Anfrage.';
-    return NextResponse.json(
-      { success: false, error: 'internal_error', message },
-      { status: 500 },
-    );
-  }
+  return proxyRequest({
+    method: 'DELETE',
+    path: `/notes/${params.id}`,
+    requireApiKey: true,
+    context: { route: 'notes.delete', note_id: params.id },
+  });
 }

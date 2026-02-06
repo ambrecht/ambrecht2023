@@ -1,14 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { typewriterFetch } from '@/lib/server/typewriter';
+import { NextRequest } from 'next/server';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  const qs = request.nextUrl.searchParams.toString();
-  const path = `/api/v1/documents/${params.id}/versions${qs ? `?${qs}` : ''}`;
-  const upstream = await typewriterFetch(path, { method: 'GET' });
-
-  const data = await upstream.json().catch(() => null);
-  return NextResponse.json(data ?? null, { status: upstream.status });
+  return proxyRequest({
+    method: 'GET',
+    path: `/documents/${params.id}/versions`,
+    query: request.nextUrl.searchParams,
+    cache: 'no-store',
+    requireApiKey: true,
+    context: { route: 'documents.versions', document_id: params.id },
+  });
 }

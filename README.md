@@ -28,3 +28,17 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## API Proxy Coverage
+
+Source of truth: `docs/openapi.yaml` (see `docs/API_SOURCE_OF_TRUTH.md`).
+
+Commands:
+```bash
+npm run check:api-proxy
+npm run smoke:api
+```
+
+Smoke test options:
+- `BASE_URL` (default `http://localhost:3000`)
+- `SMOKE_SKIP_OPTIONAL=1` to skip optional `sessions/last` and `sessions/search_page` checks

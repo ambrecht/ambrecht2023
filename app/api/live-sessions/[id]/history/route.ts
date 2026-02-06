@@ -1,4 +1,4 @@
-import { typewriterFetch } from '@/lib/server/typewriter';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export const runtime = 'nodejs';
 
@@ -8,15 +8,11 @@ export async function GET(
 ) {
   const { id } = ctx.params;
 
-  const upstream = await typewriterFetch(`/api/v1/live-sessions/${id}/history`, {
+  return proxyRequest({
     method: 'GET',
-  });
-
-  const headers = new Headers(upstream.headers);
-  headers.delete('set-cookie');
-
-  return new Response(await upstream.arrayBuffer(), {
-    status: upstream.status,
-    headers,
+    path: `/live-sessions/${id}/history`,
+    cache: 'no-store',
+    requireApiKey: false,
+    context: { route: 'live-sessions.history', session_id: id },
   });
 }

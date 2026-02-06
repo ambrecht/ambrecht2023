@@ -1,20 +1,15 @@
-import { typewriterFetch } from '@/lib/server/typewriter';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   const body = await req.text();
 
-  const upstream = await typewriterFetch('/api/v1/live-sessions', {
+  return proxyRequest({
     method: 'POST',
+    path: '/live-sessions',
     body,
-  });
-
-  const headers = new Headers(upstream.headers);
-  headers.delete('set-cookie');
-
-  return new Response(await upstream.arrayBuffer(), {
-    status: upstream.status,
-    headers,
+    requireApiKey: false,
+    context: { route: 'live-sessions.create' },
   });
 }

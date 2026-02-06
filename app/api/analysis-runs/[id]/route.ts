@@ -1,14 +1,14 @@
-import { NextResponse } from 'next/server';
-import { typewriterFetch } from '@/lib/server/typewriter';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export async function GET(
   _request: Request,
   { params }: { params: { id: string } },
 ) {
-  const upstream = await typewriterFetch(`/api/v1/analysis-runs/${params.id}`, {
+  return proxyRequest({
     method: 'GET',
+    path: `/analysis-runs/${params.id}`,
+    cache: 'no-store',
+    requireApiKey: true,
+    context: { route: 'analysis-runs.get', run_id: params.id },
   });
-
-  const data = await upstream.json().catch(() => null);
-  return NextResponse.json(data ?? null, { status: upstream.status });
 }

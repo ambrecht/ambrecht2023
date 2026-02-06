@@ -1,63 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-const EXTERNAL_API_BASE_URL =
-  process.env.EXTERNAL_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'https://api.ambrecht.de/api/v1';
-
-const API_KEY = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY || '';
+import { NextRequest } from 'next/server';
+import { proxyRequest } from '@/lib/server/apiProxy';
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  if (!API_KEY) {
-    return NextResponse.json(
-      { success: false, error: 'missing_api_key' },
-      { status: 500 },
-    );
-  }
-
-  const targetUrl = `${EXTERNAL_API_BASE_URL.replace(/\/$/, '')}/sessions/${params.id}`;
   const body = await request.text();
-
-  const response = await fetch(targetUrl, {
+  return proxyRequest({
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-    },
+    path: `/sessions/${params.id}`,
     body,
+    requireApiKey: true,
+    context: { route: 'sessions.update', session_id: params.id },
   });
-
-  const data = await response.json().catch(() => null);
-
-  return NextResponse.json(data ?? null, { status: response.status });
 }
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  if (!API_KEY) {
-    return NextResponse.json(
-      { success: false, error: 'missing_api_key' },
-      { status: 500 },
-    );
-  }
-
-  const targetUrl = `${EXTERNAL_API_BASE_URL.replace(/\/$/, '')}/sessions/${params.id}`;
-
-  const response = await fetch(targetUrl, {
+  return proxyRequest({
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-    },
+    path: `/sessions/${params.id}`,
     cache: 'no-store',
+    requireApiKey: true,
+    context: { route: 'sessions.get', session_id: params.id },
   });
-
-  const data = await response.json().catch(() => null);
-
-  return NextResponse.json(data ?? null, { status: response.status });
 }

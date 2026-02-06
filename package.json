@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:api-proxy": "node scripts/check-api-proxy-coverage.js",
+    "smoke:api": "node scripts/smoke-api.js"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -64,6 +66,7 @@
     "eslint-config-next": "14.0.4",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "yaml": "^2.8.2"
   }
 }
