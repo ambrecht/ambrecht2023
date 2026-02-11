@@ -1,5 +1,4 @@
-﻿
-'use client';
+﻿'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -30,10 +29,50 @@ import {
   updateNote,
 } from '@/lib/api/typewriterClient';
 
+import type { Block, BlockType, SessionVersion } from '@/lib/session-editor/types';
+import {
+  computeBlockStats,
+  computeMovedBlocks,
+  findAllMatches,
+  parseTextToBlocks,
+  replaceAllInText,
+  serializeBlocksToText,
+  updateBlockOrder,
+} from '@/lib/session-editor/blocks';
+import { BlockEditor } from '@/components/session-editor/BlockEditor';
+import {
+  getVersionStoreKey,
+  loadLocalVersionMap,
+  saveLocalVersion,
+} from '@/lib/session-editor/versionStore';
+
 const ANALYSIS_ENGINE_VERSION = 'deterministic-v1';
 const ANALYSIS_CONFIG: Record<string, unknown> = {};
 
+const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
+  paragraph: 'Absatz',
+  dialog: 'Dialog',
+  heading: 'Überschrift',
+  free: 'Freitext',
+};
+
 type DiffLine = { type: 'equal' | 'insert' | 'delete'; text: string };
+
+type EditorMode = 'text' | 'blocks';
+
+type EditorSnapshot = {
+  text: string;
+  blocks: Block[];
+  blocksSynced: boolean;
+};
+
+type BlockMatch = {
+  blockId: string;
+  start: number;
+  end: number;
+  blockIndex: number;
+  matchIndex: number;
+};
 
 const formatDate = (value?: string) => {
   if (!value) return '—';
@@ -141,6 +180,7 @@ export default function SessionEditorPage() {
   const activeId = activeParam ? Number(activeParam) : NaN;
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const blockRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [session, setSession] = useState<Session | null>(null);
   const [text, setText] = useState('');
@@ -148,10 +188,26 @@ export default function SessionEditorPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [editorMode, setEditorMode] = useState<EditorMode>('text');
+  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [blocksSynced, setBlocksSynced] = useState(true);
+  const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [localVersions, setLocalVersions] = useState<
+    Record<string, SessionVersion>
+  >({});
+  const [replaceSelectionOnly, setReplaceSelectionOnly] = useState(false);
+  const [activeBlockMatch, setActiveBlockMatch] = useState<{
+    blockId: string;
+    start: number;
+    end: number;
+  } | null>(null);
+
   const [versions, setVersions] = useState<Session[]>([]);
   const [versionsLoading, setVersionsLoading] = useState(false);
 
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<EditorSnapshot[]>([]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const suppressHistoryRef = useRef(false);
   const historyRef = useRef(history);
@@ -180,9 +236,9 @@ export default function SessionEditorPage() {
     {},
   );
 
-  const [activeTab, setActiveTab] = useState<'versions' | 'notes' | 'analysis' | 'diff'>(
-    'versions',
-  );
+  const [activeTab, setActiveTab] = useState<
+    'versions' | 'notes' | 'analysis' | 'diff'
+  >('versions');
   const [diffA, setDiffA] = useState<number | null>(null);
   const [diffB, setDiffB] = useState<number | null>(null);
 
@@ -193,16 +249,16 @@ export default function SessionEditorPage() {
     historyIndexRef.current = historyIndex;
   }, [historyIndex]);
 
-  const resetHistory = useCallback((value: string) => {
-    setHistory([value]);
+  const resetHistory = useCallback((snapshot: EditorSnapshot) => {
+    setHistory([snapshot]);
     setHistoryIndex(0);
-    historyRef.current = [value];
+    historyRef.current = [snapshot];
     historyIndexRef.current = 0;
   }, []);
 
-  const pushHistory = useCallback((value: string) => {
+  const pushHistory = useCallback((snapshot: EditorSnapshot) => {
     const next = historyRef.current.slice(0, historyIndexRef.current + 1);
-    next.push(value);
+    next.push(snapshot);
     historyRef.current = next;
     historyIndexRef.current = next.length - 1;
     setHistory(next);
@@ -274,14 +330,26 @@ export default function SessionEditorPage() {
       try {
         const data = await getSession(id);
         setSession(data);
+        const rawText = data.text ?? '';
+        const storeKey = getVersionStoreKey(data);
+        const localMap = loadLocalVersionMap(storeKey);
+        setLocalVersions(localMap);
+        const localVersion = localMap[String(data.id)];
+        const nextBlocks =
+          localVersion && localVersion.rawText === rawText
+            ? localVersion.blocks
+            : parseTextToBlocks(rawText);
         suppressHistoryRef.current = true;
-        setText(data.text ?? '');
-        resetHistory(data.text ?? '');
+        setText(rawText);
+        setBlocks(nextBlocks);
+        setBlocksSynced(true);
+        setSelectedBlockIds(new Set());
+        resetHistory({ text: rawText, blocks: nextBlocks, blocksSynced: true });
         setFindings([]);
         setAnalysisRun(null);
         setAnalysisStale(false);
         setFindingToggles({});
-        await Promise.all([loadVersions(data), loadNotes(data, data.text ?? '')]);
+        await Promise.all([loadVersions(data), loadNotes(data, rawText)]);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : 'Session konnte nicht geladen werden.',
@@ -311,27 +379,75 @@ export default function SessionEditorPage() {
     }
   }, [analysisRun, session, text]);
 
+  useEffect(() => {
+    if (editorMode === 'blocks') {
+      setSelection(null);
+    }
+  }, [editorMode]);
+
+  useEffect(() => {
+    if (selectedBlockIds.size === 0) return;
+    const existing = new Set(blocks.map((block) => block.id));
+    setSelectedBlockIds((prev) => {
+      const next = new Set([...prev].filter((id) => existing.has(id)));
+      return next;
+    });
+  }, [blocks, selectedBlockIds.size]);
+
+  useEffect(() => {
+    setMatchIndex(0);
+    setActiveBlockMatch(null);
+  }, [findQuery, caseSensitive, editorMode]);
+
   const wordCount = useMemo(() => {
     const trimmed = text.trim();
     if (!trimmed) return 0;
     return trimmed.split(/\s+/).filter(Boolean).length;
   }, [text]);
 
-  const matchPositions = useMemo(() => {
-    if (!findQuery) return [];
-    const needle = caseSensitive ? findQuery : findQuery.toLowerCase();
-    if (!needle) return [];
-    const haystack = caseSensitive ? text : text.toLowerCase();
-    const result: number[] = [];
-    let idx = 0;
-    while (idx <= haystack.length) {
-      const hit = haystack.indexOf(needle, idx);
-      if (hit === -1) break;
-      result.push(hit);
-      idx = hit + Math.max(needle.length, 1);
-    }
+  const textMatchPositions = useMemo(() => {
+    if (editorMode !== 'text' || !findQuery) return [];
+    return findAllMatches(text, findQuery, caseSensitive);
+  }, [caseSensitive, editorMode, findQuery, text]);
+
+  const blockMatchGroups = useMemo(() => {
+    if (editorMode !== 'blocks' || !findQuery)
+      return [] as { block: Block; index: number; positions: number[] }[];
+    return blocks
+      .map((block, index) => {
+        const positions = findAllMatches(block.text, findQuery, caseSensitive);
+        if (positions.length === 0) return null;
+        return { block, index, positions };
+      })
+      .filter(
+        (group): group is { block: Block; index: number; positions: number[] } =>
+          Boolean(group),
+      );
+  }, [blocks, caseSensitive, editorMode, findQuery]);
+
+  const flatBlockMatches = useMemo(() => {
+    const result: BlockMatch[] = [];
+    blockMatchGroups.forEach((group) => {
+      group.positions.forEach((start, matchIdx) => {
+        result.push({
+          blockId: group.block.id,
+          start,
+          end: start + findQuery.length,
+          blockIndex: group.index,
+          matchIndex: matchIdx,
+        });
+      });
+    });
     return result;
-  }, [caseSensitive, findQuery, text]);
+  }, [blockMatchGroups, findQuery.length]);
+
+  const blockMatchCounts = useMemo(() => {
+    const map: Record<string, number> = {};
+    blockMatchGroups.forEach((group) => {
+      map[group.block.id] = group.positions.length;
+    });
+    return map;
+  }, [blockMatchGroups]);
 
   const visibleFindings = useMemo(() => {
     const enabledTypes = Object.keys(findingToggles).filter(
@@ -359,36 +475,97 @@ export default function SessionEditorPage() {
     };
   }, [activeTab, diffA, diffB, versions]);
 
-  const handleTextChange = useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const next = event.target.value;
-      setText(next);
+  const blockDiff = useMemo(() => {
+    if (activeTab !== 'diff') return null;
+    if (!diffA || !diffB) return null;
+    const leftVersion = localVersions[String(diffA)];
+    const rightVersion = localVersions[String(diffB)];
+    if (!leftVersion || !rightVersion) return null;
+    return computeMovedBlocks(leftVersion.blocks, rightVersion.blocks);
+  }, [activeTab, diffA, diffB, localVersions]);
+
+  const commitTextChange = useCallback(
+    (nextText: string) => {
+      setText(nextText);
+      setBlocksSynced(false);
       if (suppressHistoryRef.current) {
         suppressHistoryRef.current = false;
         return;
       }
-      pushHistory(next);
+      pushHistory({ text: nextText, blocks, blocksSynced: false });
+    },
+    [blocks, pushHistory],
+  );
+
+  const commitBlocksChange = useCallback(
+    (nextBlocks: Block[]) => {
+      const ordered = updateBlockOrder(nextBlocks);
+      const nextText = serializeBlocksToText(ordered);
+      setBlocks(ordered);
+      setText(nextText);
+      setBlocksSynced(true);
+      if (suppressHistoryRef.current) {
+        suppressHistoryRef.current = false;
+        return;
+      }
+      pushHistory({ text: nextText, blocks: ordered, blocksSynced: true });
     },
     [pushHistory],
+  );
+
+  const handleModeChange = useCallback(
+    (nextMode: EditorMode) => {
+      if (nextMode === editorMode) return;
+      if (nextMode === 'blocks' && !blocksSynced) {
+        const nextBlocks = parseTextToBlocks(text, blocks);
+        setBlocks(nextBlocks);
+        setBlocksSynced(true);
+      }
+      setEditorMode(nextMode);
+      setMatchIndex(0);
+      setActiveBlockMatch(null);
+    },
+    [blocks, blocksSynced, editorMode, text],
+  );
+
+  const handleTextChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const next = event.target.value;
+      commitTextChange(next);
+    },
+    [commitTextChange],
+  );
+
+  const applySnapshot = useCallback(
+    (snapshot: EditorSnapshot) => {
+      let nextBlocks = snapshot.blocks;
+      let nextBlocksSynced = snapshot.blocksSynced;
+      if (editorMode === 'blocks' && !snapshot.blocksSynced) {
+        nextBlocks = parseTextToBlocks(snapshot.text, snapshot.blocks);
+        nextBlocksSynced = true;
+      }
+      setText(snapshot.text);
+      setBlocks(nextBlocks);
+      setBlocksSynced(nextBlocksSynced);
+    },
+    [editorMode],
   );
 
   const handleUndo = useCallback(() => {
     if (historyIndexRef.current <= 0) return;
     const nextIndex = historyIndexRef.current - 1;
-    const nextValue = historyRef.current[nextIndex];
-    suppressHistoryRef.current = true;
-    setText(nextValue);
+    const nextSnapshot = historyRef.current[nextIndex];
+    applySnapshot(nextSnapshot);
     setHistoryIndex(nextIndex);
-  }, []);
+  }, [applySnapshot]);
 
   const handleRedo = useCallback(() => {
     if (historyIndexRef.current >= historyRef.current.length - 1) return;
     const nextIndex = historyIndexRef.current + 1;
-    const nextValue = historyRef.current[nextIndex];
-    suppressHistoryRef.current = true;
-    setText(nextValue);
+    const nextSnapshot = historyRef.current[nextIndex];
+    applySnapshot(nextSnapshot);
     setHistoryIndex(nextIndex);
-  }, []);
+  }, [applySnapshot]);
 
   const handleSave = useCallback(async () => {
     if (!session) return;
@@ -396,10 +573,30 @@ export default function SessionEditorPage() {
     setError(null);
     try {
       const created = await createEdit(session.id, text);
+      const savedText = created.text ?? '';
+      const alignedBlocks =
+        blocksSynced && savedText === text
+          ? blocks
+          : parseTextToBlocks(savedText, blocks);
+      const versionPayload: SessionVersion = {
+        id: String(created.id),
+        sessionId: String(created.id),
+        createdAt: created.created_at,
+        rawText: savedText,
+        blocks: alignedBlocks,
+        hints: [],
+      };
+      const storeKey = getVersionStoreKey(created);
+      saveLocalVersion(storeKey, versionPayload);
+      setLocalVersions((prev) => ({ ...prev, [versionPayload.id]: versionPayload }));
+
       setSession(created);
       suppressHistoryRef.current = true;
-      setText(created.text ?? '');
-      resetHistory(created.text ?? '');
+      setText(savedText);
+      setBlocks(alignedBlocks);
+      setBlocksSynced(true);
+      setSelectedBlockIds(new Set());
+      resetHistory({ text: savedText, blocks: alignedBlocks, blocksSynced: true });
       setFindings([]);
       setAnalysisRun(null);
       setAnalysisStale(false);
@@ -408,7 +605,7 @@ export default function SessionEditorPage() {
       if (!Number.isNaN(created.id)) {
         router.replace(`/session/edit?active=${created.id}`);
       }
-      await Promise.all([loadVersions(created), loadNotes(created, created.text ?? '')]);
+      await Promise.all([loadVersions(created), loadNotes(created, savedText)]);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Speichern der Version fehlgeschlagen.',
@@ -417,22 +614,58 @@ export default function SessionEditorPage() {
       setSaving(false);
       suppressHistoryRef.current = false;
     }
-  }, [loadNotes, loadVersions, resetHistory, router, session, text]);
+  }, [
+    blocks,
+    blocksSynced,
+    loadNotes,
+    loadVersions,
+    resetHistory,
+    router,
+    session,
+    text,
+  ]);
 
-  const handleFindNext = useCallback(() => {
-    if (!matchPositions.length) return;
-    const nextIndex = matchIndex % matchPositions.length;
-    const start = matchPositions[nextIndex];
+  const handleTextFindNext = useCallback(() => {
+    if (!textMatchPositions.length) return;
+    const nextIndex = matchIndex % textMatchPositions.length;
+    const start = textMatchPositions[nextIndex];
     const end = start + findQuery.length;
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.focus();
       textarea.setSelectionRange(start, end);
     }
-    setMatchIndex((prev) => (prev + 1) % matchPositions.length);
-  }, [findQuery.length, matchIndex, matchPositions]);
+    setMatchIndex((prev) => (prev + 1) % textMatchPositions.length);
+  }, [findQuery.length, matchIndex, textMatchPositions]);
 
-  const handleReplace = useCallback(() => {
+  const scrollToBlock = useCallback((blockId: string) => {
+    const node = blockRefs.current[blockId];
+    if (!node) return;
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, []);
+
+  const handleBlockFindNext = useCallback(() => {
+    if (!flatBlockMatches.length) return;
+    const nextIndex = matchIndex % flatBlockMatches.length;
+    const match = flatBlockMatches[nextIndex];
+    setActiveBlockMatch({
+      blockId: match.blockId,
+      start: match.start,
+      end: match.end,
+    });
+    scrollToBlock(match.blockId);
+    setMatchIndex((prev) => (prev + 1) % flatBlockMatches.length);
+  }, [flatBlockMatches, matchIndex, scrollToBlock]);
+
+  const handleFindNext = useCallback(() => {
+    if (editorMode === 'blocks') {
+      handleBlockFindNext();
+      return;
+    }
+    handleTextFindNext();
+  }, [editorMode, handleBlockFindNext, handleTextFindNext]);
+
+  const handleTextReplace = useCallback(() => {
     const textarea = textareaRef.current;
     if (!textarea || !findQuery) return;
     const start = textarea.selectionStart ?? 0;
@@ -443,36 +676,113 @@ export default function SessionEditorPage() {
 
     if (selected && hay === needle) {
       const next = `${text.slice(0, start)}${replaceQuery}${text.slice(end)}`;
-      setText(next);
-      pushHistory(next);
+      commitTextChange(next);
       const cursor = start + replaceQuery.length;
       textarea.setSelectionRange(cursor, cursor);
       return;
     }
-    handleFindNext();
-  }, [caseSensitive, findQuery, handleFindNext, pushHistory, replaceQuery, text]);
+    handleTextFindNext();
+  }, [
+    caseSensitive,
+    commitTextChange,
+    findQuery,
+    handleTextFindNext,
+    replaceQuery,
+    text,
+  ]);
+
+  const handleBlockReplace = useCallback(() => {
+    if (!findQuery || flatBlockMatches.length === 0) return;
+    const target =
+      activeBlockMatch ?? flatBlockMatches[matchIndex % flatBlockMatches.length];
+    if (!target) return;
+    const blockIndex = blocks.findIndex((block) => block.id === target.blockId);
+    if (blockIndex === -1) return;
+    const block = blocks[blockIndex];
+    const nextText = `${block.text.slice(0, target.start)}${replaceQuery}${block.text.slice(target.end)}`;
+    const nextBlocks = [...blocks];
+    nextBlocks[blockIndex] = {
+      ...block,
+      text: nextText,
+      stats: computeBlockStats(nextText),
+    };
+    commitBlocksChange(nextBlocks);
+    setActiveBlockMatch({
+      blockId: block.id,
+      start: target.start,
+      end: target.start + replaceQuery.length,
+    });
+    setMatchIndex((prev) => (prev + 1) % Math.max(flatBlockMatches.length, 1));
+  }, [
+    activeBlockMatch,
+    blocks,
+    commitBlocksChange,
+    findQuery,
+    flatBlockMatches,
+    matchIndex,
+    replaceQuery,
+  ]);
+
+  const handleReplace = useCallback(() => {
+    if (editorMode === 'blocks') {
+      handleBlockReplace();
+      return;
+    }
+    handleTextReplace();
+  }, [editorMode, handleBlockReplace, handleTextReplace]);
+
+  const handleTextReplaceAll = useCallback(() => {
+    if (!findQuery) return;
+    const result = replaceAllInText(text, findQuery, replaceQuery, caseSensitive);
+    if (result.count === 0) return;
+    commitTextChange(result.text);
+  }, [caseSensitive, commitTextChange, findQuery, replaceQuery, text]);
+
+  const handleBlockReplaceAll = useCallback(() => {
+    if (!findQuery) return;
+    const scopeIds =
+      replaceSelectionOnly && selectedBlockIds.size > 0 ? selectedBlockIds : null;
+    let changed = false;
+    const nextBlocks = blocks.map((block) => {
+      if (scopeIds && !scopeIds.has(block.id)) return block;
+      const result = replaceAllInText(
+        block.text,
+        findQuery,
+        replaceQuery,
+        caseSensitive,
+      );
+      if (result.count === 0) return block;
+      changed = true;
+      return {
+        ...block,
+        text: result.text,
+        stats: computeBlockStats(result.text),
+      };
+    });
+    if (!changed) return;
+    commitBlocksChange(nextBlocks);
+    setMatchIndex(0);
+    setActiveBlockMatch(null);
+  }, [
+    blocks,
+    caseSensitive,
+    commitBlocksChange,
+    findQuery,
+    replaceQuery,
+    replaceSelectionOnly,
+    selectedBlockIds,
+  ]);
 
   const handleReplaceAll = useCallback(() => {
-    if (!findQuery) return;
-    const needle = caseSensitive ? findQuery : findQuery.toLowerCase();
-    const source = caseSensitive ? text : text.toLowerCase();
-    if (!needle || !source.includes(needle)) return;
-    let next = '';
-    let idx = 0;
-    while (idx < source.length) {
-      const hit = source.indexOf(needle, idx);
-      if (hit === -1) {
-        next += text.slice(idx);
-        break;
-      }
-      next += text.slice(idx, hit) + replaceQuery;
-      idx = hit + needle.length;
+    if (editorMode === 'blocks') {
+      handleBlockReplaceAll();
+      return;
     }
-    setText(next);
-    pushHistory(next);
-  }, [caseSensitive, findQuery, pushHistory, replaceQuery, text]);
+    handleTextReplaceAll();
+  }, [editorMode, handleBlockReplaceAll, handleTextReplaceAll]);
 
   const handleSelection = useCallback(() => {
+    if (editorMode !== 'text') return;
     const textarea = textareaRef.current;
     if (!textarea) return;
     const start = textarea.selectionStart ?? 0;
@@ -482,10 +792,10 @@ export default function SessionEditorPage() {
       return;
     }
     setSelection({ start, end });
-  }, []);
+  }, [editorMode]);
 
   const handleAddNote = useCallback(async () => {
-    if (!session || !selection) return;
+    if (!session || !selection || editorMode !== 'text') return;
     const note = noteDraft.trim();
     if (!note) return;
     try {
@@ -499,7 +809,7 @@ export default function SessionEditorPage() {
     } catch (err) {
       console.error('Notiz konnte nicht gespeichert werden', err);
     }
-  }, [loadNotes, noteDraft, selection, session, text]);
+  }, [editorMode, loadNotes, noteDraft, selection, session, text]);
 
   const handleUpdateNote = useCallback(
     async (noteId: number) => {
@@ -533,30 +843,37 @@ export default function SessionEditorPage() {
     [loadNotes, session, text],
   );
 
-  const handleJumpToRange = useCallback(
-    (start: number, end: number) => {
-      const textarea = textareaRef.current;
-      if (!textarea) return;
-      textarea.focus();
-      textarea.setSelectionRange(start, end);
+  const handleJumpToRange = useCallback((start: number, end: number) => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      setEditorMode('text');
       requestAnimationFrame(() => {
-        const styles = window.getComputedStyle(textarea);
-        const fontSize = Number.parseFloat(styles.fontSize || '16');
-        const parsedLineHeight = Number.parseFloat(styles.lineHeight || '');
-        const lineHeight = Number.isFinite(parsedLineHeight)
-          ? parsedLineHeight
-          : Math.round(fontSize * 1.5);
-        const paddingTop = Number.parseFloat(styles.paddingTop || '0') || 0;
-        const before = textarea.value.slice(0, start);
-        const lineCount = (before.match(/\n/g) || []).length;
-        const target = lineCount * lineHeight + paddingTop;
-        const nextScrollTop = Math.max(0, target - textarea.clientHeight / 3);
-        textarea.scrollTop = nextScrollTop;
-        textarea.scrollIntoView({ block: 'center' });
+        const nextTextarea = textareaRef.current;
+        if (nextTextarea) {
+          nextTextarea.focus();
+          nextTextarea.setSelectionRange(start, end);
+        }
       });
-    },
-    [],
-  );
+      return;
+    }
+    textarea.focus();
+    textarea.setSelectionRange(start, end);
+    requestAnimationFrame(() => {
+      const styles = window.getComputedStyle(textarea);
+      const fontSize = Number.parseFloat(styles.fontSize || '16');
+      const parsedLineHeight = Number.parseFloat(styles.lineHeight || '');
+      const lineHeight = Number.isFinite(parsedLineHeight)
+        ? parsedLineHeight
+        : Math.round(fontSize * 1.5);
+      const paddingTop = Number.parseFloat(styles.paddingTop || '0') || 0;
+      const before = textarea.value.slice(0, start);
+      const lineCount = (before.match(/\n/g) || []).length;
+      const target = lineCount * lineHeight + paddingTop;
+      const nextScrollTop = Math.max(0, target - textarea.clientHeight / 3);
+      textarea.scrollTop = nextScrollTop;
+      textarea.scrollIntoView({ block: 'center' });
+    });
+  }, []);
 
   const handleRunAnalysis = useCallback(async () => {
     if (!session) return;
@@ -609,6 +926,9 @@ export default function SessionEditorPage() {
     );
   }
 
+  const totalMatches =
+    editorMode === 'blocks' ? flatBlockMatches.length : textMatchPositions.length;
+
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12">
@@ -629,6 +949,30 @@ export default function SessionEditorPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex overflow-hidden rounded-lg border border-[#2f2822]">
+              <button
+                type="button"
+                onClick={() => handleModeChange('text')}
+                className={`px-3 py-2 text-sm ${
+                  editorMode === 'text'
+                    ? 'bg-[#211a13] text-[#f7f4ed]'
+                    : 'bg-[#120f0c] text-[#cbbfb0]'
+                }`}
+              >
+                Fließtext
+              </button>
+              <button
+                type="button"
+                onClick={() => handleModeChange('blocks')}
+                className={`px-3 py-2 text-sm ${
+                  editorMode === 'blocks'
+                    ? 'bg-[#211a13] text-[#f7f4ed]'
+                    : 'bg-[#120f0c] text-[#cbbfb0]'
+                }`}
+              >
+                Bausteine
+              </button>
+            </div>
             <button
               type="button"
               onClick={handleUndo}
@@ -676,19 +1020,32 @@ export default function SessionEditorPage() {
                 <span>Aktualisiert: {formatDate(session?.updated_at)}</span>
                 <span>Wörter: {wordCount}</span>
                 <span>Zeichen: {text.length}</span>
+                <span>Bausteine: {blocks.length}</span>
               </div>
             </div>
 
             <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4">
-              <textarea
-                ref={textareaRef}
-                value={text}
-                onChange={handleTextChange}
-                onSelect={handleSelection}
-                placeholder={loading ? 'Lade Session...' : 'Text bearbeiten'}
-                className="min-h-[360px] w-full resize-y rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-4 text-sm leading-relaxed text-[#f7f4ed] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
-                spellCheck
-              />
+              {editorMode === 'text' ? (
+                <textarea
+                  ref={textareaRef}
+                  value={text}
+                  onChange={handleTextChange}
+                  onSelect={handleSelection}
+                  placeholder={loading ? 'Lade Session...' : 'Text bearbeiten'}
+                  className="min-h-[360px] w-full resize-y rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-4 text-sm leading-relaxed text-[#f7f4ed] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+                  spellCheck
+                />
+              ) : (
+                <BlockEditor
+                  blocks={blocks}
+                  onBlocksChange={commitBlocksChange}
+                  selectedIds={selectedBlockIds}
+                  onSelectedIdsChange={setSelectedBlockIds}
+                  activeMatchBlockId={activeBlockMatch?.blockId ?? null}
+                  matchCounts={blockMatchCounts}
+                  blockRefs={blockRefs}
+                />
+              )}
             </div>
 
             <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-3">
@@ -742,10 +1099,64 @@ export default function SessionEditorPage() {
                   />
                   Groß/Kleinschreibung
                 </label>
-                <span className="text-xs text-[#cbbfb0]">
-                  {matchPositions.length} Treffer
-                </span>
+                {editorMode === 'blocks' && (
+                  <label className="inline-flex items-center gap-2 text-xs text-[#cbbfb0]">
+                    <input
+                      type="checkbox"
+                      checked={replaceSelectionOnly}
+                      onChange={(event) =>
+                        setReplaceSelectionOnly(event.target.checked)
+                      }
+                    />
+                    Nur Auswahl ersetzen
+                  </label>
+                )}
+                <span className="text-xs text-[#cbbfb0]">{totalMatches} Treffer</span>
               </div>
+
+              {editorMode === 'blocks' && findQuery && (
+                <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-xs text-[#d6c9ba] space-y-2 max-h-[220px] overflow-auto">
+                  {blockMatchGroups.length === 0 ? (
+                    <p className="text-[11px] text-[#cbbfb0]">
+                      Keine Treffer in Bausteinen.
+                    </p>
+                  ) : (
+                    blockMatchGroups.map((group) => (
+                      <button
+                        key={`block-match-${group.block.id}`}
+                        type="button"
+                        onClick={() => {
+                          const firstHit = group.positions[0];
+                          setActiveBlockMatch({
+                            blockId: group.block.id,
+                            start: firstHit,
+                            end: firstHit + findQuery.length,
+                          });
+                          scrollToBlock(group.block.id);
+                        }}
+                        className="w-full text-left rounded-md border border-[#2f2822] bg-[#120f0c] px-3 py-2 hover:bg-[#191511]"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold">
+                            Block #{group.index + 1} ·{' '}
+                            {BLOCK_TYPE_LABELS[group.block.type]}
+                          </span>
+                          <span className="text-[11px] text-[#cbbfb0]">
+                            {group.positions.length} Treffer
+                          </span>
+                        </div>
+                        <div className="mt-1 text-[11px] text-[#cbbfb0]">
+                          {buildSnippet(
+                            group.block.text,
+                            group.positions[0],
+                            group.positions[0] + findQuery.length,
+                          )}
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
           </section>
 
@@ -825,15 +1236,20 @@ export default function SessionEditorPage() {
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold">
-                            Version #{version.id}
-                          </span>
+                          <span className="font-semibold">Version #{version.id}</span>
                           <span>{formatDate(version.created_at)}</span>
                         </div>
                         <div className="mt-1 text-[11px] text-[#cbbfb0]">
                           {version.word_count ?? 0} Wörter ·{' '}
                           {version.char_count ?? 0} Zeichen
                         </div>
+                        {localVersions[String(version.id)] && (
+                          <div className="mt-1 text-[10px] text-[#cbbfb0]">
+                            <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[9px] uppercase tracking-wide text-[#f7f4ed]">
+                              Bausteine
+                            </span>
+                          </div>
+                        )}
                         <div className="mt-2 flex items-center gap-2">
                           <button
                             type="button"
@@ -857,6 +1273,11 @@ export default function SessionEditorPage() {
                 <div className="text-xs text-[#cbbfb0]">
                   Notizen (offset-basiert, Auswahl im Editor)
                 </div>
+                {editorMode === 'blocks' && (
+                  <div className="rounded-lg border border-[#4a3d2b] bg-[#2b2218] px-3 py-2 text-[11px] text-[#f7f4ed]">
+                    Notizen lassen sich nur im Fließtext-Modus anlegen.
+                  </div>
+                )}
                 <div className="space-y-2">
                   <textarea
                     value={noteDraft}
@@ -868,12 +1289,12 @@ export default function SessionEditorPage() {
                   <button
                     type="button"
                     onClick={handleAddNote}
-                    disabled={!selection || !noteDraft.trim()}
+                    disabled={!selection || !noteDraft.trim() || editorMode !== 'text'}
                     className="inline-flex items-center gap-2 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-xs text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
                   >
                     Notiz speichern
                   </button>
-                  {!selection && (
+                  {!selection && editorMode === 'text' && (
                     <p className="text-[11px] text-[#cbbfb0]">
                       Tipp: Text im Editor markieren, um Start/Ende zu setzen.
                     </p>
@@ -911,7 +1332,9 @@ export default function SessionEditorPage() {
                           <div className="space-y-2">
                             <textarea
                               value={editingNoteText}
-                              onChange={(event) => setEditingNoteText(event.target.value)}
+                              onChange={(event) =>
+                                setEditingNoteText(event.target.value)
+                              }
                               className="w-full rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-2 text-xs text-[#f7f4ed]"
                               rows={3}
                             />
@@ -1131,7 +1554,9 @@ export default function SessionEditorPage() {
                     <select
                       value={diffA ?? ''}
                       onChange={(event) =>
-                        setDiffA(event.target.value ? Number(event.target.value) : null)
+                        setDiffA(
+                          event.target.value ? Number(event.target.value) : null,
+                        )
                       }
                       className="mt-1 w-full rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-2 py-1 text-xs text-[#f7f4ed]"
                     >
@@ -1148,7 +1573,9 @@ export default function SessionEditorPage() {
                     <select
                       value={diffB ?? ''}
                       onChange={(event) =>
-                        setDiffB(event.target.value ? Number(event.target.value) : null)
+                        setDiffB(
+                          event.target.value ? Number(event.target.value) : null,
+                        )
                       }
                       className="mt-1 w-full rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-2 py-1 text-xs text-[#f7f4ed]"
                     >
@@ -1189,6 +1616,31 @@ export default function SessionEditorPage() {
                             : `  ${line.text}`}
                       </div>
                     ))}
+                  </div>
+                )}
+                {blockDiff && blockDiff.length > 0 && (
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3">
+                    <div className="text-[11px] text-[#cbbfb0] mb-2">
+                      Baustein-Bewegungen (heuristisch)
+                    </div>
+                    <ul className="space-y-2 text-[11px] text-[#d6c9ba]">
+                      {blockDiff.slice(0, 8).map((item, idx) => (
+                        <li
+                          key={`${item.hash}-${idx}`}
+                          className="rounded-md border border-[#2f2822] bg-[#120f0c] px-2 py-2"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span>
+                              #{item.from + 1} → #{item.to + 1}
+                            </span>
+                            <span className="text-[10px] text-[#cbbfb0]">Move</span>
+                          </div>
+                          {item.preview && (
+                            <div className="mt-1 text-[#cbbfb0]">{item.preview}</div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
