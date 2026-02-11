@@ -389,7 +389,12 @@ export default function SessionEditorPage() {
     if (selectedBlockIds.size === 0) return;
     const existing = new Set(blocks.map((block) => block.id));
     setSelectedBlockIds((prev) => {
-      const next = new Set([...prev].filter((id) => existing.has(id)));
+      const next = new Set<string>();
+      prev.forEach((id) => {
+        if (existing.has(id)) {
+          next.add(id);
+        }
+      });
       return next;
     });
   }, [blocks, selectedBlockIds.size]);
