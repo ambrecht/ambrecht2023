@@ -5,6 +5,7 @@ export async function POST(
   { params }: { params: { id: string } },
 ) {
   return proxyRequest({
+    target: 'writer',
     method: 'POST',
     path: `/versions/${params.id}/analyze`,
     requireApiKey: true,

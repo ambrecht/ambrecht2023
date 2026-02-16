@@ -5,6 +5,7 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   return proxyRequest({
+    target: 'writer',
     method: 'GET',
     path: `/analyses/${params.id}/tools/adverbs`,
     cache: 'no-store',

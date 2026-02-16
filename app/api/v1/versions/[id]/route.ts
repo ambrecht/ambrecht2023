@@ -5,6 +5,7 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   return proxyRequest({
+    target: 'writer',
     method: 'GET',
     path: `/versions/${params.id}`,
     cache: 'no-store',

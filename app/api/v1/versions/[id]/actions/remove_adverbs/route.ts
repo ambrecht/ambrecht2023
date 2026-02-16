@@ -6,6 +6,7 @@ export async function POST(
 ) {
   const body = await request.text();
   return proxyRequest({
+    target: 'writer',
     method: 'POST',
     path: `/versions/${params.id}/actions/remove_adverbs`,
     body,
