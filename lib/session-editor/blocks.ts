@@ -22,7 +22,9 @@ const splitIntoParagraphs = (rawText: string) => {
   const normalized = normalizeLineBreaks(rawText);
   return normalized
     .split(/\n\s*\n+/)
-    .filter((part) => part.trim().length > 0);
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+    .map((text, index) => ({ id: `p-${index + 1}`, text }));
 };
 
 const splitIntoSentences = (rawText: string) => {
@@ -57,44 +59,104 @@ const splitIntoSentences = (rawText: string) => {
     .filter((part) => part.length > 0);
 };
 
+const buildReuseMap = (previousBlocks: Block[]) => {
+  const reuseMap = new Map<string, Block[]>();
+  previousBlocks.forEach((block) => {
+    const key = block.text.trim();
+    const list = reuseMap.get(key) ?? [];
+    list.push(block);
+    reuseMap.set(key, list);
+  });
+  return reuseMap;
+};
+
+const takeReusableBlock = (
+  reuseMap: Map<string, Block[]>,
+  text: string,
+  paragraphId: string,
+) => {
+  const key = text.trim();
+  const reuseList = reuseMap.get(key);
+  if (!reuseList || reuseList.length === 0) return null;
+  const exactParagraphIndex = reuseList.findIndex(
+    (block) => block.paragraphId === paragraphId,
+  );
+  if (exactParagraphIndex >= 0) {
+    const [exact] = reuseList.splice(exactParagraphIndex, 1);
+    return exact ?? null;
+  }
+  return reuseList.shift() ?? null;
+};
+
 export const parseTextToBlocks = (
   rawText: string,
   previousBlocks: Block[] = [],
 ): Block[] => {
-  const paragraphParts = splitIntoParagraphs(rawText);
-  const sentenceParts = splitIntoSentences(rawText);
-  const parts = sentenceParts.length > 0 ? sentenceParts : paragraphParts;
-  if (parts.length === 0) return [];
+  const paragraphs = splitIntoParagraphs(rawText);
+  if (paragraphs.length === 0) return [];
 
-  const reuseMap = new Map<string, Block[]>();
-  previousBlocks.forEach((block) => {
-    const list = reuseMap.get(block.text) ?? [];
-    list.push(block);
-    reuseMap.set(block.text, list);
-  });
+  const reuseMap = buildReuseMap(previousBlocks);
+  const nextBlocks: Block[] = [];
 
-  const nextBlocks = parts.map((text, index) => {
-    const reuseList = reuseMap.get(text);
-    const reuse = reuseList && reuseList.length > 0 ? reuseList.shift() : null;
-    const id = reuse?.id ?? buildBlockId();
-    const type = reuse?.type ?? DEFAULT_BLOCK_TYPE;
-    const labels = reuse?.labels ? [...reuse.labels] : [];
-    return {
-      id,
-      order: index,
-      type,
-      text,
-      labels,
-      stats: computeBlockStats(text),
-    } satisfies Block;
+  paragraphs.forEach((paragraph) => {
+    const sentenceParts = splitIntoSentences(paragraph.text);
+    const parts = sentenceParts.length > 0 ? sentenceParts : [paragraph.text];
+    parts.forEach((part) => {
+      const text = part.trim();
+      if (!text) return;
+      const reuse = takeReusableBlock(reuseMap, text, paragraph.id);
+      const id = reuse?.id ?? buildBlockId();
+      const type = reuse?.type ?? DEFAULT_BLOCK_TYPE;
+      const labels = reuse?.labels ? [...reuse.labels] : [];
+      nextBlocks.push({
+        id,
+        order: nextBlocks.length,
+        type,
+        text,
+        labels,
+        paragraphId: paragraph.id,
+        stats: computeBlockStats(text),
+      });
+    });
   });
 
   return nextBlocks;
 };
 
+export type ParagraphGroup = {
+  id: string;
+  index: number;
+  blocks: Block[];
+};
+
+export const groupBlocksByParagraph = (blocks: Block[]): ParagraphGroup[] => {
+  const ordered = updateBlockOrder(blocks);
+  const groups: ParagraphGroup[] = [];
+  ordered.forEach((block, index) => {
+    const paragraphId = block.paragraphId?.trim() || `p-${index + 1}`;
+    const lastGroup = groups[groups.length - 1];
+    if (lastGroup && lastGroup.id === paragraphId) {
+      lastGroup.blocks.push(block);
+      return;
+    }
+    groups.push({
+      id: paragraphId,
+      index: groups.length,
+      blocks: [block],
+    });
+  });
+  return groups;
+};
+
 export const serializeBlocksToText = (blocks: Block[]) =>
-  updateBlockOrder(blocks)
-    .map((block) => block.text)
+  groupBlocksByParagraph(blocks)
+    .map((group) =>
+      group.blocks
+        .map((block) => block.text)
+        .filter((text) => text.trim().length > 0)
+        .join(' '),
+    )
+    .filter(Boolean)
     .join('\n\n');
 
 export const findAllMatches = (

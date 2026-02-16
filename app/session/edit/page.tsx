@@ -48,7 +48,10 @@ import {
   serializeBlocksToText,
   updateBlockOrder,
 } from '@/lib/session-editor/blocks';
-import { BlockEditor } from '@/components/session-editor/BlockEditor';
+import {
+  BlockEditor,
+  type InlineFindingSpan,
+} from '@/components/session-editor/BlockEditor';
 import {
   getVersionStoreKey,
   loadLocalVersionMap,
@@ -143,31 +146,45 @@ const WORKSHOP_PRESETS: WorkshopPreset[] = [
 
 const CATEGORY_STYLE: Record<
   WorkshopCategory,
-  { label: string; badge: string; markClass: string; dotClass: string }
+  {
+    label: string;
+    badge: string;
+    markClass: string;
+    dotClass: string;
+    underlineClass: string;
+  }
 > = {
   adverb: {
     label: 'Adverbien',
     badge: 'ADV',
     markClass: 'bg-[#6f2f39]/80 text-[#fff1f3]',
     dotClass: 'bg-[#d46a7a]',
+    underlineClass:
+      'underline decoration-[#d46a7a] decoration-2 decoration-dotted underline-offset-2',
   },
   description: {
     label: 'Beschreibungen',
     badge: 'DESC',
     markClass: 'bg-[#6b4c1d]/80 text-[#fff6dc]',
     dotClass: 'bg-[#f0b35d]',
+    underlineClass:
+      'underline decoration-[#f0b35d] decoration-2 decoration-dashed underline-offset-2',
   },
   tense_pov: {
     label: 'POV/Tempus',
     badge: 'POV',
     markClass: 'bg-[#174b4b]/85 text-[#defefe]',
     dotClass: 'bg-[#63c7c2]',
+    underlineClass:
+      'underline decoration-[#63c7c2] decoration-2 decoration-wavy underline-offset-2',
   },
   kwic: {
     label: 'Begriffe',
     badge: 'KWIC',
     markClass: 'bg-[#2f3f69]/85 text-[#eef3ff]',
     dotClass: 'bg-[#89a6ff]',
+    underlineClass:
+      'underline decoration-[#89a6ff] decoration-2 decoration-solid underline-offset-2',
   },
 };
 
@@ -180,8 +197,6 @@ const FINDING_HINTS: Record<WorkshopCategory, string> = {
   kwic: 'Prüfe, ob die Wiederholung rhythmisch oder redundant wirkt.',
 };
 
-const PARKED_LABEL = '__ablage__';
-
 type DiffLine = { type: 'equal' | 'insert' | 'delete'; text: string };
 
 type EditorMode = 'text' | 'blocks';
@@ -190,6 +205,7 @@ type EditorSnapshot = {
   text: string;
   blocks: Block[];
   blocksSynced: boolean;
+  parkedIds: string[];
 };
 
 type BlockMatch = {
@@ -215,37 +231,6 @@ const buildSnippet = (text: string, start: number, end: number, pad = 18) => {
   const safeStart = Math.max(0, start - pad);
   const safeEnd = Math.min(text.length, end + pad);
   return text.slice(safeStart, safeEnd).replace(/\s+/g, ' ').trim();
-};
-
-const buildHighlightSegments = (text: string, findings: Finding[]) => {
-  if (!text || findings.length === 0) {
-    return [{ text, finding: null as Finding | null }];
-  }
-
-  const sorted = [...findings]
-    .filter((f) => f.start_offset < f.end_offset)
-    .sort((a, b) => a.start_offset - b.start_offset);
-
-  const segments: { text: string; finding: Finding | null }[] = [];
-  let cursor = 0;
-
-  for (const finding of sorted) {
-    const start = Math.max(cursor, finding.start_offset);
-    const end = Math.max(start, finding.end_offset);
-    if (start > cursor) {
-      segments.push({ text: text.slice(cursor, start), finding: null });
-    }
-    if (end > cursor) {
-      segments.push({ text: text.slice(start, end), finding });
-      cursor = end;
-    }
-  }
-
-  if (cursor < text.length) {
-    segments.push({ text: text.slice(cursor), finding: null });
-  }
-
-  return segments;
 };
 
 const computeLineDiff = (a: string, b: string) => {
@@ -299,6 +284,47 @@ const computeLineDiff = (a: string, b: string) => {
   return { tooLarge: false as const, lines };
 };
 
+const getParkedStoreKey = (session: Session | null) => {
+  if (!session) return null;
+  return `session-editor-parked:${session.document_id ?? session.id}:${session.id}`;
+};
+
+const loadParkedIds = (storeKey: string | null) => {
+  if (!storeKey || typeof window === 'undefined') return new Set<string>();
+  try {
+    const raw = window.localStorage.getItem(storeKey);
+    if (!raw) return new Set<string>();
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set<string>();
+    return new Set(
+      parsed.filter((item): item is string => typeof item === 'string' && item.length > 0),
+    );
+  } catch {
+    return new Set<string>();
+  }
+};
+
+const formatDateTime = (value?: string) => {
+  if (!value) return '—';
+  try {
+    return new Intl.DateTimeFormat('de-DE', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date(value));
+  } catch {
+    return value;
+  }
+};
+
+const saveParkedIds = (storeKey: string | null, ids: Set<string>) => {
+  if (!storeKey || typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(storeKey, JSON.stringify(Array.from(ids)));
+  } catch {
+    // ignore persistence issues
+  }
+};
+
 export default function SessionEditorPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -316,10 +342,12 @@ export default function SessionEditorPage() {
 
   const [editorMode, setEditorMode] = useState<EditorMode>('text');
   const [blocks, setBlocks] = useState<Block[]>([]);
+  const [parkedBlockIds, setParkedBlockIds] = useState<Set<string>>(new Set());
   const [blocksSynced, setBlocksSynced] = useState(true);
   const [selectedBlockIds, setSelectedBlockIds] = useState<Set<string>>(
     new Set(),
   );
+  const [expandedBlockId, setExpandedBlockId] = useState<string | null>(null);
   const [localVersions, setLocalVersions] = useState<
     Record<string, SessionVersion>
   >({});
@@ -361,6 +389,7 @@ export default function SessionEditorPage() {
     versionId: number;
     analysisId: number;
     scannedText: string;
+    scannedAt: string;
     preset: WorkshopPresetId;
     kwicTerm?: string;
   } | null>(null);
@@ -396,7 +425,7 @@ export default function SessionEditorPage() {
 
   const [activeTab, setActiveTab] = useState<
     'versions' | 'notes' | 'analysis' | 'diff'
-  >('versions');
+  >('analysis');
   const [diffA, setDiffA] = useState<number | null>(null);
   const [diffB, setDiffB] = useState<number | null>(null);
 
@@ -497,12 +526,28 @@ export default function SessionEditorPage() {
           localVersion && localVersion.rawText === rawText
             ? localVersion.blocks
             : parseTextToBlocks(rawText);
+        const parkedStoreKey = getParkedStoreKey(data);
+        const restoredParked = loadParkedIds(parkedStoreKey);
+        const validIds = new Set(nextBlocks.map((block) => block.id));
+        const nextParked = new Set<string>();
+        restoredParked.forEach((id) => {
+          if (validIds.has(id)) {
+            nextParked.add(id);
+          }
+        });
         suppressHistoryRef.current = true;
         setText(rawText);
         setBlocks(nextBlocks);
+        setParkedBlockIds(nextParked);
         setBlocksSynced(true);
         setSelectedBlockIds(new Set());
-        resetHistory({ text: rawText, blocks: nextBlocks, blocksSynced: true });
+        setExpandedBlockId(null);
+        resetHistory({
+          text: rawText,
+          blocks: nextBlocks,
+          blocksSynced: true,
+          parkedIds: Array.from(nextParked),
+        });
         setFindings([]);
         setScanMeta(null);
         setNlpDocumentId(null);
@@ -570,6 +615,7 @@ export default function SessionEditorPage() {
   useEffect(() => {
     if (editorMode === 'blocks') {
       setSelection(null);
+      setActiveTab((prev) => (prev === 'diff' ? prev : 'analysis'));
     }
   }, [editorMode]);
 
@@ -588,6 +634,35 @@ export default function SessionEditorPage() {
   }, [blocks, selectedBlockIds.size]);
 
   useEffect(() => {
+    if (parkedBlockIds.size === 0) return;
+    const existing = new Set(blocks.map((block) => block.id));
+    let changed = false;
+    const next = new Set<string>();
+    parkedBlockIds.forEach((id) => {
+      if (existing.has(id)) {
+        next.add(id);
+      } else {
+        changed = true;
+      }
+    });
+    if (changed) {
+      setParkedBlockIds(next);
+    }
+  }, [blocks, parkedBlockIds]);
+
+  useEffect(() => {
+    if (!expandedBlockId) return;
+    if (!blocks.some((block) => block.id === expandedBlockId)) {
+      setExpandedBlockId(null);
+    }
+  }, [blocks, expandedBlockId]);
+
+  useEffect(() => {
+    const key = getParkedStoreKey(session);
+    saveParkedIds(key, parkedBlockIds);
+  }, [parkedBlockIds, session]);
+
+  useEffect(() => {
     setMatchIndex(0);
     setActiveBlockMatch(null);
   }, [findQuery, caseSensitive, editorMode]);
@@ -598,6 +673,30 @@ export default function SessionEditorPage() {
     return trimmed.split(/\s+/).filter(Boolean).length;
   }, [text]);
 
+  const activeBlocks = useMemo(
+    () => blocks.filter((block) => !parkedBlockIds.has(block.id)),
+    [blocks, parkedBlockIds],
+  );
+  const serializableActiveBlocks = useMemo(
+    () => activeBlocks.filter((block) => block.text.trim().length > 0),
+    [activeBlocks],
+  );
+  const activeBlockRanges = useMemo(() => {
+    const ranges: Array<{ block: Block; start: number; end: number }> = [];
+    let cursor = 0;
+    serializableActiveBlocks.forEach((block, index) => {
+      const start = cursor;
+      const end = start + block.text.length;
+      ranges.push({ block, start, end });
+      const next = serializableActiveBlocks[index + 1];
+      if (!next) return;
+      const sameParagraph =
+        (block.paragraphId ?? '') === (next.paragraphId ?? '');
+      cursor = end + (sameParagraph ? 1 : 2);
+    });
+    return ranges;
+  }, [serializableActiveBlocks]);
+
   const textMatchPositions = useMemo(() => {
     if (editorMode !== 'text' || !findQuery) return [];
     return findAllMatches(text, findQuery, caseSensitive);
@@ -606,7 +705,7 @@ export default function SessionEditorPage() {
   const blockMatchGroups = useMemo(() => {
     if (editorMode !== 'blocks' || !findQuery)
       return [] as { block: Block; index: number; positions: number[] }[];
-    return blocks
+    return activeBlocks
       .map((block, index) => {
         const positions = findAllMatches(block.text, findQuery, caseSensitive);
         if (positions.length === 0) return null;
@@ -616,7 +715,7 @@ export default function SessionEditorPage() {
         (group): group is { block: Block; index: number; positions: number[] } =>
           Boolean(group),
       );
-  }, [blocks, caseSensitive, editorMode, findQuery]);
+  }, [activeBlocks, caseSensitive, editorMode, findQuery]);
 
   const flatBlockMatches = useMemo(() => {
     const result: BlockMatch[] = [];
@@ -647,6 +746,18 @@ export default function SessionEditorPage() {
     [workshopPreset],
   );
 
+  useEffect(() => {
+    if (!selectedPreset) {
+      setFindingToggles({});
+      return;
+    }
+    const next: Record<string, boolean> = {};
+    selectedPreset.categories.forEach((category) => {
+      next[category] = true;
+    });
+    setFindingToggles(next);
+  }, [selectedPreset]);
+
   const visibleFindings = useMemo(() => {
     const filteredByIgnore = findings.filter(
       (finding) => !ignoredFindingIds.has(finding.id),
@@ -667,9 +778,9 @@ export default function SessionEditorPage() {
     return presetFiltered.filter((finding) => findingToggles[finding.finding_type]);
   }, [findingToggles, findings, ignoredFindingIds, selectedPreset]);
 
-  const highlightedSegments = useMemo(
-    () => buildHighlightSegments(text, visibleFindings),
-    [text, visibleFindings],
+  const ignoredFindings = useMemo(
+    () => findings.filter((finding) => ignoredFindingIds.has(finding.id)),
+    [findings, ignoredFindingIds],
   );
 
   const categoryCounts = useMemo(() => {
@@ -680,6 +791,77 @@ export default function SessionEditorPage() {
     });
     return counts;
   }, [findings, ignoredFindingIds]);
+
+  const findingStyles = useMemo(() => {
+    const map: Record<
+      string,
+      {
+        label: string;
+        badge: string;
+        dotClass: string;
+        markClass: string;
+        underlineClass: string;
+      }
+    > = {};
+    (Object.keys(CATEGORY_STYLE) as WorkshopCategory[]).forEach((category) => {
+      map[category] = CATEGORY_STYLE[category];
+    });
+    return map;
+  }, []);
+
+  const findingSpansByBlock = useMemo(() => {
+    const mapped: Record<string, InlineFindingSpan[]> = {};
+    visibleFindings.forEach((finding) => {
+      activeBlockRanges.forEach(({ block, start, end }) => {
+        if (finding.start_offset >= end || finding.end_offset <= start) return;
+        const localStart = Math.max(0, finding.start_offset - start);
+        const localEnd = Math.min(block.text.length, finding.end_offset - start);
+        if (localEnd <= localStart) return;
+        const token = block.text.slice(localStart, localEnd);
+        const entry: InlineFindingSpan = {
+          findingId: finding.id,
+          findingType: finding.finding_type,
+          severity: finding.severity,
+          start: localStart,
+          end: localEnd,
+          explanation: finding.explanation,
+          token,
+        };
+        const list = mapped[block.id] ?? [];
+        list.push(entry);
+        mapped[block.id] = list;
+      });
+    });
+
+    Object.values(mapped).forEach((entries) => {
+      entries.sort((a, b) => a.start - b.start);
+    });
+
+    return mapped;
+  }, [activeBlockRanges, visibleFindings]);
+
+  const findingCountsByBlock = useMemo(() => {
+    const counts: Record<string, Record<string, number>> = {};
+    Object.entries(findingSpansByBlock).forEach(([blockId, spans]) => {
+      const bucket: Record<string, number> = {};
+      spans.forEach((span) => {
+        bucket[span.findingType] = (bucket[span.findingType] ?? 0) + 1;
+      });
+      counts[blockId] = bucket;
+    });
+    return counts;
+  }, [findingSpansByBlock]);
+
+  const findingsByCategory = useMemo(() => {
+    const grouped: Record<string, Finding[]> = {};
+    visibleFindings.forEach((finding) => {
+      const key = finding.finding_type;
+      const list = grouped[key] ?? [];
+      list.push(finding);
+      grouped[key] = list;
+    });
+    return grouped;
+  }, [visibleFindings]);
 
   const diffData = useMemo(() => {
     if (activeTab !== 'diff') return null;
@@ -710,28 +892,47 @@ export default function SessionEditorPage() {
         suppressHistoryRef.current = false;
         return;
       }
-      pushHistory({ text: nextText, blocks, blocksSynced: false });
+      pushHistory({
+        text: nextText,
+        blocks,
+        blocksSynced: false,
+        parkedIds: Array.from(parkedBlockIds),
+      });
     },
-    [blocks, pushHistory],
+    [blocks, parkedBlockIds, pushHistory],
   );
 
   const commitBlocksChange = useCallback(
-    (nextBlocks: Block[]) => {
+    (nextBlocks: Block[], nextParkedIds?: Set<string>) => {
       const ordered = updateBlockOrder(nextBlocks);
-      const activeBlocks = ordered.filter(
-        (block) => !block.labels.includes(PARKED_LABEL),
+      const candidateParked = nextParkedIds ?? parkedBlockIds;
+      const validIds = new Set(ordered.map((block) => block.id));
+      const sanitizedParked = new Set<string>();
+      candidateParked.forEach((id) => {
+        if (validIds.has(id)) {
+          sanitizedParked.add(id);
+        }
+      });
+      const activeOnly = ordered.filter(
+        (block) => !sanitizedParked.has(block.id),
       );
-      const nextText = serializeBlocksToText(activeBlocks);
+      const nextText = serializeBlocksToText(activeOnly);
       setBlocks(ordered);
+      setParkedBlockIds(sanitizedParked);
       setText(nextText);
       setBlocksSynced(true);
       if (suppressHistoryRef.current) {
         suppressHistoryRef.current = false;
         return;
       }
-      pushHistory({ text: nextText, blocks: ordered, blocksSynced: true });
+      pushHistory({
+        text: nextText,
+        blocks: ordered,
+        blocksSynced: true,
+        parkedIds: Array.from(sanitizedParked),
+      });
     },
-    [pushHistory],
+    [parkedBlockIds, pushHistory],
   );
 
   const handleModeChange = useCallback(
@@ -740,7 +941,9 @@ export default function SessionEditorPage() {
       if (nextMode === 'blocks' && !blocksSynced) {
         const nextBlocks = parseTextToBlocks(text, blocks);
         setBlocks(nextBlocks);
+        setParkedBlockIds(new Set());
         setBlocksSynced(true);
+        setExpandedBlockId(null);
       }
       setEditorMode(nextMode);
       setMatchIndex(0);
@@ -761,12 +964,22 @@ export default function SessionEditorPage() {
     (snapshot: EditorSnapshot) => {
       let nextBlocks = snapshot.blocks;
       let nextBlocksSynced = snapshot.blocksSynced;
+      let nextParked = new Set(snapshot.parkedIds ?? []);
       if (editorMode === 'blocks' && !snapshot.blocksSynced) {
         nextBlocks = parseTextToBlocks(snapshot.text, snapshot.blocks);
         nextBlocksSynced = true;
+        nextParked = new Set();
       }
+      const validIds = new Set(nextBlocks.map((block) => block.id));
+      const sanitizedParked = new Set<string>();
+      nextParked.forEach((id) => {
+        if (validIds.has(id)) {
+          sanitizedParked.add(id);
+        }
+      });
       setText(snapshot.text);
       setBlocks(nextBlocks);
+      setParkedBlockIds(sanitizedParked);
       setBlocksSynced(nextBlocksSynced);
     },
     [editorMode],
@@ -795,10 +1008,7 @@ export default function SessionEditorPage() {
     try {
       const created = await createEdit(session.id, text);
       const savedText = created.text ?? '';
-      const alignedBlocks =
-        blocksSynced && savedText === text
-          ? blocks
-          : parseTextToBlocks(savedText, blocks);
+      const alignedBlocks = parseTextToBlocks(savedText, blocks);
       const versionPayload: SessionVersion = {
         id: String(created.id),
         sessionId: String(created.id),
@@ -815,9 +1025,16 @@ export default function SessionEditorPage() {
       suppressHistoryRef.current = true;
       setText(savedText);
       setBlocks(alignedBlocks);
+      setParkedBlockIds(new Set());
       setBlocksSynced(true);
       setSelectedBlockIds(new Set());
-      resetHistory({ text: savedText, blocks: alignedBlocks, blocksSynced: true });
+      setExpandedBlockId(null);
+      resetHistory({
+        text: savedText,
+        blocks: alignedBlocks,
+        blocksSynced: true,
+        parkedIds: [],
+      });
       setFindings([]);
       setScanMeta(null);
       setAnalysisStale(false);
@@ -839,7 +1056,6 @@ export default function SessionEditorPage() {
     }
   }, [
     blocks,
-    blocksSynced,
     loadNotes,
     loadVersions,
     resetHistory,
@@ -871,6 +1087,8 @@ export default function SessionEditorPage() {
     if (!flatBlockMatches.length) return;
     const nextIndex = matchIndex % flatBlockMatches.length;
     const match = flatBlockMatches[nextIndex];
+    setExpandedBlockId(match.blockId);
+    setSelectedBlockIds(new Set([match.blockId]));
     setActiveBlockMatch({
       blockId: match.blockId,
       start: match.start,
@@ -921,6 +1139,7 @@ export default function SessionEditorPage() {
     if (!target) return;
     const blockIndex = blocks.findIndex((block) => block.id === target.blockId);
     if (blockIndex === -1) return;
+    if (parkedBlockIds.has(target.blockId)) return;
     const block = blocks[blockIndex];
     const nextText = `${block.text.slice(0, target.start)}${replaceQuery}${block.text.slice(target.end)}`;
     const nextBlocks = [...blocks];
@@ -943,6 +1162,7 @@ export default function SessionEditorPage() {
     findQuery,
     flatBlockMatches,
     matchIndex,
+    parkedBlockIds,
     replaceQuery,
   ]);
 
@@ -963,10 +1183,16 @@ export default function SessionEditorPage() {
 
   const handleBlockReplaceAll = useCallback(() => {
     if (!findQuery) return;
+    const activeIdSet = new Set(activeBlocks.map((block) => block.id));
     const scopeIds =
-      replaceSelectionOnly && selectedBlockIds.size > 0 ? selectedBlockIds : null;
+      replaceSelectionOnly && selectedBlockIds.size > 0
+        ? new Set(
+            Array.from(selectedBlockIds).filter((blockId) => activeIdSet.has(blockId)),
+          )
+        : null;
     let changed = false;
     const nextBlocks = blocks.map((block) => {
+      if (parkedBlockIds.has(block.id)) return block;
       if (scopeIds && !scopeIds.has(block.id)) return block;
       const result = replaceAllInText(
         block.text,
@@ -987,10 +1213,12 @@ export default function SessionEditorPage() {
     setMatchIndex(0);
     setActiveBlockMatch(null);
   }, [
+    activeBlocks,
     blocks,
     caseSensitive,
     commitBlocksChange,
     findQuery,
+    parkedBlockIds,
     replaceQuery,
     replaceSelectionOnly,
     selectedBlockIds,
@@ -1112,6 +1340,7 @@ export default function SessionEditorPage() {
 
     setAnalysisLoading(true);
     setAnalysisError(null);
+    setActiveTab('analysis');
     try {
       const sourceText = text.trim();
       if (!sourceText) {
@@ -1245,6 +1474,7 @@ export default function SessionEditorPage() {
         versionId,
         analysisId: analysis.analysis_id,
         scannedText: text,
+        scannedAt: new Date().toISOString(),
         preset: preset.id,
         kwicTerm: preset.needsTerm ? kwicTerm.trim() : undefined,
       });
@@ -1281,40 +1511,74 @@ export default function SessionEditorPage() {
     (finding: Finding) => {
       setActiveTab('analysis');
       if (editorMode === 'blocks') {
-        let cursor = 0;
         let target: Block | null = null;
-        for (const block of blocks) {
-          const start = cursor;
-          const end = start + block.text.length;
+        let localStart = 0;
+        let localEnd = 0;
+        for (const range of activeBlockRanges) {
+          const { block, start, end } = range;
           if (finding.start_offset < end && finding.end_offset > start) {
             target = block;
+            localStart = Math.max(0, finding.start_offset - start);
+            localEnd = Math.min(block.text.length, finding.end_offset - start);
             break;
           }
-          cursor = end + 2;
         }
         if (target) {
+          setExpandedBlockId(target.id);
+          setSelectedBlockIds(new Set([target.id]));
+          setActiveBlockMatch({
+            blockId: target.id,
+            start: localStart,
+            end: Math.max(localStart, localEnd),
+          });
           scrollToBlock(target.id);
           return;
         }
       }
       handleJumpToRange(finding.start_offset, finding.end_offset);
     },
-    [blocks, editorMode, handleJumpToRange, scrollToBlock],
+    [activeBlockRanges, editorMode, handleJumpToRange, scrollToBlock],
   );
 
   const handlePrevFinding = useCallback(() => {
     if (visibleFindings.length === 0) return;
-    setActiveFindingIndex((prev) =>
-      prev <= 0 ? visibleFindings.length - 1 : prev - 1,
-    );
-  }, [visibleFindings.length]);
+    setActiveFindingIndex((prev) => {
+      const next = prev <= 0 ? visibleFindings.length - 1 : prev - 1;
+      const finding = visibleFindings[next];
+      if (finding) {
+        jumpToFinding(finding);
+      }
+      return next;
+    });
+  }, [jumpToFinding, visibleFindings]);
 
   const handleNextFinding = useCallback(() => {
     if (visibleFindings.length === 0) return;
-    setActiveFindingIndex((prev) =>
-      prev >= visibleFindings.length - 1 ? 0 : prev + 1,
-    );
-  }, [visibleFindings.length]);
+    setActiveFindingIndex((prev) => {
+      const next = prev >= visibleFindings.length - 1 ? 0 : prev + 1;
+      const finding = visibleFindings[next];
+      if (finding) {
+        jumpToFinding(finding);
+      }
+      return next;
+    });
+  }, [jumpToFinding, visibleFindings]);
+
+  const handleIgnoreFinding = useCallback((findingId: number) => {
+    setIgnoredFindingIds((prev) => {
+      const next = new Set(prev);
+      next.add(findingId);
+      return next;
+    });
+  }, []);
+
+  const handleRestoreIgnoredFinding = useCallback((findingId: number) => {
+    setIgnoredFindingIds((prev) => {
+      const next = new Set(prev);
+      next.delete(findingId);
+      return next;
+    });
+  }, []);
 
   const handleOpenAdverbPreview = useCallback(async () => {
     if (!scanMeta) return;
@@ -1358,6 +1622,13 @@ export default function SessionEditorPage() {
     }
   }, [analysisStale, scanMeta]);
 
+  const handleInlinePreviewRequest = useCallback(
+    (_findingId: number) => {
+      void handleOpenAdverbPreview();
+    },
+    [handleOpenAdverbPreview],
+  );
+
   const closePreview = useCallback(() => {
     setPreviewAction({
       open: false,
@@ -1393,9 +1664,16 @@ export default function SessionEditorPage() {
       suppressHistoryRef.current = true;
       setText(savedText);
       setBlocks(alignedBlocks);
+      setParkedBlockIds(new Set());
       setBlocksSynced(true);
       setSelectedBlockIds(new Set());
-      resetHistory({ text: savedText, blocks: alignedBlocks, blocksSynced: true });
+      setExpandedBlockId(null);
+      resetHistory({
+        text: savedText,
+        blocks: alignedBlocks,
+        blocksSynced: true,
+        parkedIds: [],
+      });
       setFindings([]);
       setScanMeta(null);
       setAnalysisStale(false);
@@ -1600,47 +1878,84 @@ export default function SessionEditorPage() {
                 <span>Aktualisiert: {formatDate(session?.updated_at)}</span>
                 <span>Wörter: {wordCount}</span>
                 <span>Zeichen: {text.length}</span>
-                <span>Bausteine: {blocks.length}</span>
+                <span>Bausteine: {activeBlocks.length}</span>
+                {parkedBlockIds.size > 0 && <span>Ablage: {parkedBlockIds.size}</span>}
               </div>
             </div>
 
             <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-3">
-              <div className="text-xs text-[#cbbfb0]">Werkstatt & Legende</div>
+              <div className="flex items-center justify-between text-xs text-[#cbbfb0]">
+                <span>Brille (Hinweise)</span>
+                {analysisStale && (
+                  <span className="rounded-full border border-[#5f4a31] bg-[#2f2316] px-2 py-0.5 text-[10px] text-[#f7d9a6]">
+                    Scan empfohlen
+                  </span>
+                )}
+              </div>
               {selectedPreset ? (
                 <>
                   <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-xs text-[#d6c9ba]">
                     <div className="text-sm font-semibold text-[#f7f4ed]">
                       {selectedPreset.label}
                     </div>
-                    <p className="mt-1">{selectedPreset.description}</p>
-                    <p className="mt-2 text-[#cbbfb0]">
-                      Ziel: {selectedPreset.goal}
-                    </p>
-                    {selectedPreset.nextSteps.length > 0 && (
-                      <ol className="mt-2 list-decimal pl-4 space-y-1 text-[11px] text-[#cbbfb0]">
-                        {selectedPreset.nextSteps.map((step) => (
-                          <li key={step}>{step}</li>
-                        ))}
-                      </ol>
-                    )}
+                    <p className="mt-1 text-[11px]">{selectedPreset.goal}</p>
                   </div>
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                    {selectedPreset.categories.map((category) => (
-                      <div
-                        key={category}
-                        className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-2 py-2 text-[11px] text-[#d6c9ba]"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="inline-flex items-center gap-2">
-                            <span
-                              className={`inline-block h-2.5 w-2.5 rounded-full ${CATEGORY_STYLE[category].dotClass}`}
-                            />
-                            {CATEGORY_STYLE[category].label}
-                          </span>
-                          <span>{categoryCounts[category] ?? 0}</span>
+                  <div className="space-y-2">
+                    {selectedPreset.categories.map((category) => {
+                      const enabled = findingToggles[category] ?? false;
+                      return (
+                        <div
+                          key={category}
+                          className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-2 py-2 text-[11px] text-[#d6c9ba]"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="inline-flex items-center gap-2">
+                              <span
+                                className={`inline-block h-2.5 w-2.5 rounded-full ${CATEGORY_STYLE[category].dotClass}`}
+                              />
+                              {CATEGORY_STYLE[category].label}
+                              <span className="rounded border border-[#3a2f24] px-1 text-[10px] text-[#f7f4ed]">
+                                {CATEGORY_STYLE[category].badge}
+                              </span>
+                            </span>
+                            <span>{categoryCounts[category] ?? 0}</span>
+                          </div>
+                          <div className="mt-2 flex items-center justify-end gap-1">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setFindingToggles((prev) => ({
+                                  ...prev,
+                                  [category]: !enabled,
+                                }))
+                              }
+                              disabled={findings.length === 0}
+                              className={`rounded border px-2 py-0.5 text-[10px] ${
+                                enabled
+                                  ? 'border-[#5c4a34] bg-[#2f2316] text-[#f7d9a6]'
+                                  : 'border-[#2f2822] bg-[#18130f] text-[#f7f4ed]'
+                              } disabled:opacity-40`}
+                            >
+                              {enabled ? 'An' : 'Aus'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const next: Record<string, boolean> = {};
+                                selectedPreset.categories.forEach((entry) => {
+                                  next[entry] = entry === category;
+                                });
+                                setFindingToggles(next);
+                              }}
+                              disabled={findings.length === 0}
+                              className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-0.5 text-[10px] text-[#f7f4ed] disabled:opacity-40"
+                            >
+                              Solo
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </>
               ) : (
@@ -1651,11 +1966,6 @@ export default function SessionEditorPage() {
               {analysisLoading && (
                 <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
                   Scan läuft... Ergebnisse werden gleich eingeblendet.
-                </div>
-              )}
-              {analysisStale && (
-                <div className="rounded-lg border border-[#5f4a31] bg-[#2f2316] px-3 py-2 text-[11px] text-[#f7d9a6]">
-                  Änderungen erkannt - Scan empfohlen.
                 </div>
               )}
             </div>
@@ -1674,11 +1984,24 @@ export default function SessionEditorPage() {
               ) : (
                 <BlockEditor
                   blocks={blocks}
-                  onBlocksChange={commitBlocksChange}
+                  parkedIds={parkedBlockIds}
+                  onChange={commitBlocksChange}
                   selectedIds={selectedBlockIds}
                   onSelectedIdsChange={setSelectedBlockIds}
+                  expandedBlockId={expandedBlockId}
+                  onExpandedBlockIdChange={setExpandedBlockId}
                   activeMatchBlockId={activeBlockMatch?.blockId ?? null}
+                  activeFindingId={activeReviewFinding?.id ?? null}
                   matchCounts={blockMatchCounts}
+                  findingSpansByBlock={analysisStale ? {} : findingSpansByBlock}
+                  findingCountsByBlock={findingCountsByBlock}
+                  findingStyles={findingStyles}
+                  analysisStale={analysisStale}
+                  allowInlinePreviewAction={Boolean(
+                    selectedPreset?.supportsAdverbAction,
+                  )}
+                  onRequestPreview={handleInlinePreviewRequest}
+                  onIgnoreFinding={handleIgnoreFinding}
                   blockRefs={blockRefs}
                 />
               )}
@@ -1800,14 +2123,14 @@ export default function SessionEditorPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => setActiveTab('versions')}
+                onClick={() => setActiveTab('analysis')}
                 className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  activeTab === 'versions'
+                  activeTab === 'analysis'
                     ? 'border-[#c9b18a] bg-[#211a13]'
                     : 'border-[#2f2822] bg-[#120f0c]'
                 }`}
               >
-                <ClipboardList size={14} /> Versionen
+                <Sparkles size={14} /> Hinweise
               </button>
               <button
                 type="button"
@@ -1822,14 +2145,14 @@ export default function SessionEditorPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setActiveTab('analysis')}
+                onClick={() => setActiveTab('versions')}
                 className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  activeTab === 'analysis'
+                  activeTab === 'versions'
                     ? 'border-[#c9b18a] bg-[#211a13]'
                     : 'border-[#2f2822] bg-[#120f0c]'
                 }`}
               >
-                <Sparkles size={14} /> Hinweise
+                <ClipboardList size={14} /> Versionen
               </button>
               <button
                 type="button"
@@ -2040,9 +2363,40 @@ export default function SessionEditorPage() {
                   </button>
                 </div>
 
-                {!workshopPreset && (
+                {!selectedPreset && (
                   <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
-                    Noch keine Werkzeuge ausgeführt. Wähle ein Preset und starte den Scan.
+                    <div className="font-semibold text-[#f7f4ed]">
+                      Noch keine Werkzeuge ausgeführt
+                    </div>
+                    <div className="mt-1">
+                      Wähle ein Preset und starte den Scan. Danach: Review, optional
+                      Vorschau, dann als Version speichern.
+                    </div>
+                    <ol className="mt-2 list-decimal pl-4 space-y-1 text-[10px] text-[#cbbfb0]">
+                      <li>Preset wählen</li>
+                      <li>Scan starten</li>
+                      <li>Hinweise prüfen</li>
+                      <li>Optional Vorschau nutzen</li>
+                      <li>Version speichern</li>
+                    </ol>
+                  </div>
+                )}
+
+                {selectedPreset && (
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba]">
+                    <div className="font-semibold text-[#f7f4ed]">{selectedPreset.label}</div>
+                    <div className="mt-1">
+                      Scan:{' '}
+                      {scanMeta ? formatDateTime(scanMeta.scannedAt) : 'Noch kein Scan'}
+                    </div>
+                    <div className="mt-1">
+                      Status:{' '}
+                      {scanMeta
+                        ? analysisStale
+                          ? 'veraltet'
+                          : 'frisch'
+                        : 'ausstehend'}
+                    </div>
                   </div>
                 )}
 
@@ -2058,194 +2412,174 @@ export default function SessionEditorPage() {
                   </div>
                 )}
 
-                <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 space-y-2">
-                  <div className="text-[11px] text-[#cbbfb0]">Legend</div>
-                  <div className="space-y-2 text-[11px] text-[#d6c9ba]">
-                    {(selectedPreset?.categories ?? []).map((category) => {
-                      const style = CATEGORY_STYLE[category];
-                      return (
-                        <label
-                          key={category}
-                          className="flex items-center justify-between gap-2 rounded-md border border-[#2f2822] px-2 py-1"
-                        >
-                          <span className="inline-flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={findingToggles[category] ?? false}
-                              disabled={findings.length === 0}
-                              onChange={(event) =>
-                                setFindingToggles((prev) => ({
-                                  ...prev,
-                                  [category]: event.target.checked,
-                                }))
-                              }
-                            />
-                            <span
-                              className={`inline-block h-2.5 w-2.5 rounded-full ${style.dotClass}`}
-                            />
-                            <span>{style.label}</span>
-                            <span className="rounded border border-[#3a2f24] px-1 text-[10px] text-[#f7f4ed]">
-                              {style.badge}
-                            </span>
-                          </span>
-                          <span className="text-[#cbbfb0]">
-                            {categoryCounts[category] ?? 0}
-                          </span>
-                        </label>
-                      );
-                    })}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handlePrevFinding}
+                      disabled={visibleFindings.length === 0}
+                      className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                    >
+                      Vorheriger
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNextFinding}
+                      disabled={visibleFindings.length === 0}
+                      className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                    >
+                      Nächster
+                    </button>
+                    <span className="text-[11px] text-[#cbbfb0]">
+                      {visibleFindings.length > 0
+                        ? `${activeFindingIndex + 1}/${visibleFindings.length}`
+                        : '0/0'}
+                    </span>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handlePrevFinding}
-                    disabled={visibleFindings.length === 0}
-                    className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
-                  >
-                    Vorheriger
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNextFinding}
-                    disabled={visibleFindings.length === 0}
-                    className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
-                  >
-                    Nächster
-                  </button>
-                  <span className="text-[11px] text-[#cbbfb0]">
-                    {visibleFindings.length > 0
-                      ? `${activeFindingIndex + 1}/${visibleFindings.length}`
-                      : '0/0'}
-                  </span>
+                  {selectedPreset?.supportsAdverbAction && (
+                    <button
+                      type="button"
+                      onClick={handleOpenAdverbPreview}
+                      disabled={analysisStale || analysisLoading}
+                      className="rounded-md border border-[#3a3129] bg-[#2b2218] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                    >
+                      Adverbien straffen (Vorschau)
+                    </button>
+                  )}
                 </div>
 
                 {findings.length === 0 ? (
-                  <p className="text-xs text-[#cbbfb0]">
-                    Noch keine Ergebnisse. Scan starten, um Hinweise zu sehen.
-                  </p>
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-3 text-xs text-[#cbbfb0]">
+                    Noch keine Ergebnisse. Starte einen Scan, um Hinweise zu sehen.
+                  </div>
+                ) : visibleFindings.length === 0 ? (
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-3 text-xs text-[#cbbfb0]">
+                    Keine aktiven Hinweise sichtbar. Prüfe die Brille-Toggles oder
+                    setze ignorierte Hinweise zurück.
+                  </div>
                 ) : (
-                  <>
-                    <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba] space-y-2 max-h-[240px] overflow-auto">
-                      {visibleFindings.map((finding, index) => (
-                        <button
-                          key={finding.id}
-                          type="button"
-                          onClick={() => {
-                            setActiveFindingIndex(index);
-                            jumpToFinding(finding);
-                          }}
-                          className={`w-full text-left rounded-md border px-2 py-2 ${
-                            index === activeFindingIndex
-                              ? 'border-[#c9b18a] bg-[#201911]'
-                              : 'border-[#2f2822] bg-[#120f0c] hover:bg-[#191511]'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold">
-                                {CATEGORY_STYLE[
-                                  finding.finding_type as WorkshopCategory
-                                ]?.label ?? finding.finding_type}
-                              </span>
-                              <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[9px] uppercase tracking-wide text-[#f7f4ed]">
-                                Heuristik
-                              </span>
-                            </div>
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba] space-y-3 max-h-[360px] overflow-auto">
+                    {Object.entries(findingsByCategory).map(([category, entries]) => (
+                      <div key={`group-${category}`} className="space-y-2">
+                        <div className="sticky top-0 z-10 flex items-center justify-between rounded bg-[#0f0c0a]/95 px-1 py-1">
+                          <span className="inline-flex items-center gap-2 font-semibold">
                             <span
-                              className={`text-[10px] uppercase ${
-                                finding.severity === 'warn'
-                                  ? 'text-[#f6c177]'
-                                  : 'text-[#a6da95]'
+                              className={`inline-block h-2.5 w-2.5 rounded-full ${
+                                CATEGORY_STYLE[category as WorkshopCategory]?.dotClass ??
+                                'bg-[#cbbfb0]'
+                              }`}
+                            />
+                            {CATEGORY_STYLE[category as WorkshopCategory]?.label ?? category}
+                          </span>
+                          <span className="text-[10px] text-[#cbbfb0]">{entries.length}</span>
+                        </div>
+                        {entries.map((finding) => {
+                          const visibleIndex = visibleFindings.findIndex(
+                            (entry) => entry.id === finding.id,
+                          );
+                          return (
+                            <div
+                              key={finding.id}
+                              className={`rounded-md border px-2 py-2 ${
+                                visibleIndex === activeFindingIndex
+                                  ? 'border-[#c9b18a] bg-[#201911]'
+                                  : 'border-[#2f2822] bg-[#120f0c]'
                               }`}
                             >
-                              {finding.severity}
-                            </span>
-                          </div>
-                          <div className="mt-1 text-[#cbbfb0]">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (visibleIndex >= 0) {
+                                    setActiveFindingIndex(visibleIndex);
+                                  }
+                                  jumpToFinding(finding);
+                                }}
+                                className="w-full text-left"
+                              >
+                                <div className="text-[#cbbfb0]">
+                                  {buildSnippet(
+                                    text,
+                                    finding.start_offset,
+                                    finding.end_offset,
+                                  )}
+                                </div>
+                                {finding.explanation && (
+                                  <div className="mt-1 text-[#f7f4ed]">
+                                    {finding.explanation}
+                                  </div>
+                                )}
+                              </button>
+                              <div className="mt-2 flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => jumpToFinding(finding)}
+                                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[10px] text-[#f7f4ed]"
+                                >
+                                  Zur Stelle
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleIgnoreFinding(finding.id)}
+                                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[10px] text-[#f7f4ed]"
+                                >
+                                  Ignorieren
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {ignoredFindings.length > 0 && (
+                  <div className="rounded-lg border border-[#3a3129] bg-[#17120e] p-3 text-[11px] text-[#d8c8b8] space-y-2">
+                    <div className="font-semibold text-[#f7f4ed]">
+                      Ignoriert ({ignoredFindings.length})
+                    </div>
+                    <div className="max-h-[120px] overflow-auto space-y-1">
+                      {ignoredFindings.map((finding) => (
+                        <div
+                          key={`ignored-${finding.id}`}
+                          className="flex items-center justify-between gap-2 rounded border border-[#2f2822] bg-[#0f0c0a] px-2 py-1"
+                        >
+                          <span className="line-clamp-1">
                             {buildSnippet(
                               text,
                               finding.start_offset,
                               finding.end_offset,
                             )}
-                          </div>
-                          {finding.explanation && (
-                            <div className="mt-1 text-[#f7f4ed]">
-                              {finding.explanation}
-                            </div>
-                          )}
-                        </button>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRestoreIgnoredFinding(finding.id)}
+                            className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-0.5 text-[10px] text-[#f7f4ed]"
+                          >
+                            Zurückholen
+                          </button>
+                        </div>
                       ))}
                     </div>
+                  </div>
+                )}
 
-                    {activeReviewFinding && (
-                      <div className="rounded-lg border border-[#3a3129] bg-[#1a140f] p-3 text-[11px] text-[#e6d8c8] space-y-2">
-                        <div className="font-semibold text-[#f7f4ed]">
-                          {CATEGORY_STYLE[
-                            activeReviewFinding.finding_type as WorkshopCategory
-                          ]?.label ?? activeReviewFinding.finding_type}
-                        </div>
-                        <div>{activeReviewFinding.explanation}</div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => jumpToFinding(activeReviewFinding)}
-                            className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
-                          >
-                            Zur Stelle
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setIgnoredFindingIds((prev) => {
-                                const next = new Set(prev);
-                                next.add(activeReviewFinding.id);
-                                return next;
-                              })
-                            }
-                            className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
-                          >
-                            Ignorieren
-                          </button>
-                          {selectedPreset?.supportsAdverbAction && (
-                            <button
-                              type="button"
-                              onClick={handleOpenAdverbPreview}
-                              disabled={analysisStale || analysisLoading}
-                              className="rounded-md border border-[#3a3129] bg-[#2b2218] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
-                            >
-                              Adverbien straffen (Vorschau)
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3">
-                      <div className="text-[11px] text-[#cbbfb0] mb-2">
-                        Vorschau (Inline-Hinweise)
-                      </div>
-                      <div className="max-h-[220px] overflow-auto text-xs leading-relaxed text-[#f7f4ed]">
-                        {highlightedSegments.map((segment, idx) =>
-                          segment.finding ? (
-                            <mark
-                              key={`${segment.finding.id}-${idx}`}
-                              className={`rounded-sm px-0.5 ${
-                                CATEGORY_STYLE[
-                                  segment.finding.finding_type as WorkshopCategory
-                                ]?.markClass ?? 'bg-[#5a3e1b] text-[#fef4d1]'
-                              }`}
-                            >
-                              {segment.text}
-                            </mark>
-                          ) : (
-                            <span key={`plain-${idx}`}>{segment.text}</span>
-                          ),
-                        )}
-                      </div>
+                {activeReviewFinding && (
+                  <div className="rounded-lg border border-[#3a3129] bg-[#1a140f] p-3 text-[11px] text-[#e6d8c8] space-y-2">
+                    <div className="font-semibold text-[#f7f4ed]">
+                      {CATEGORY_STYLE[
+                        activeReviewFinding.finding_type as WorkshopCategory
+                      ]?.label ?? activeReviewFinding.finding_type}
                     </div>
-                  </>
+                    <div>{activeReviewFinding.explanation}</div>
+                    <button
+                      type="button"
+                      onClick={() => jumpToFinding(activeReviewFinding)}
+                      className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                    >
+                      Zur Stelle
+                    </button>
+                  </div>
                 )}
               </div>
             )}

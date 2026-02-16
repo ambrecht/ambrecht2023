@@ -2,6 +2,7 @@
 
 import {
   findAllMatches,
+  groupBlocksByParagraph,
   mergeBlocks,
   moveBlocksBySelection,
   parseTextToBlocks,
@@ -24,6 +25,22 @@ describe('blocks utilities', () => {
     const blocks = parseTextToBlocks('A\n\nB');
     const text = serializeBlocksToText(blocks);
     expect(text).toBe('A\n\nB');
+  });
+
+  it('keeps sentence blocks in the same paragraph bucket', () => {
+    const blocks = parseTextToBlocks('Erster Satz. Zweiter Satz.\n\nDritter Satz.');
+    expect(blocks.length).toBeGreaterThanOrEqual(3);
+    expect(blocks[0].paragraphId).toBe('p-1');
+    expect(blocks[1].paragraphId).toBe('p-1');
+    expect(blocks[blocks.length - 1].paragraphId).toBe('p-2');
+
+    const grouped = groupBlocksByParagraph(blocks);
+    expect(grouped).toHaveLength(2);
+    expect(grouped[0].blocks.length).toBeGreaterThanOrEqual(2);
+
+    const serialized = serializeBlocksToText(blocks);
+    expect(serialized).toContain('\n\n');
+    expect(serialized).toContain('Erster Satz.');
   });
 
   it('splits blocks at a cursor position', () => {

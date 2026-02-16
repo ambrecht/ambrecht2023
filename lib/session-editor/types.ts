@@ -11,6 +11,7 @@ export type Block = {
   type: BlockType;
   text: string;
   labels: string[];
+  paragraphId?: string;
   stats?: BlockStats;
 };
 
