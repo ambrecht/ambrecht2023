@@ -25,11 +25,45 @@ const splitIntoParagraphs = (rawText: string) => {
     .filter((part) => part.trim().length > 0);
 };
 
+const splitIntoSentences = (rawText: string) => {
+  const normalized = normalizeLineBreaks(rawText);
+  if (!normalized.trim()) return [] as string[];
+
+  const SegmenterCtor = (
+    Intl as unknown as {
+      Segmenter?: new (...args: unknown[]) => {
+        segment: (input: string) => Iterable<{ segment: string }>;
+      };
+    }
+  ).Segmenter;
+
+  if (SegmenterCtor) {
+    const segmenter = new SegmenterCtor('de', { granularity: 'sentence' });
+    const items: string[] = [];
+    Array.from(segmenter.segment(normalized)).forEach((entry) => {
+      const sentence = entry.segment.trim();
+      if (sentence) {
+        items.push(sentence);
+      }
+    });
+    if (items.length > 0) {
+      return items;
+    }
+  }
+
+  return normalized
+    .split(/(?<=[.!?])\s+|\n+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
+};
+
 export const parseTextToBlocks = (
   rawText: string,
   previousBlocks: Block[] = [],
 ): Block[] => {
-  const parts = splitIntoParagraphs(rawText);
+  const paragraphParts = splitIntoParagraphs(rawText);
+  const sentenceParts = splitIntoSentences(rawText);
+  const parts = sentenceParts.length > 0 ? sentenceParts : paragraphParts;
   if (parts.length === 0) return [];
 
   const reuseMap = new Map<string, Block[]>();

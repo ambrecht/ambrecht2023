@@ -1,0 +1,2175 @@
+openapi: 3.1.0
+info:
+  title: writer-mvp API
+  version: 1.0.0
+  description: API fuer den Writing-Workbench-Backend-Service. Dieses Dokument ist auf Frontend-Integration
+    ausgerichtet (Versionierung, Analyse, Tooling, Aktionen, Lore, Voice-Checks).
+paths:
+  /v1/documents:
+    post:
+      summary: Dokument anlegen
+      operationId: create_document_v1_documents_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentCreateRequest'
+            examples:
+              english_text:
+                summary: Explizite Sprache
+                value:
+                  text: Alice really quickly moved to town.
+                  lang: en
+              auto_detect:
+                summary: Automatische Spracherkennung
+                value:
+                  text: Alice lief gestern schnell nach Hause.
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentCreateResponse'
+              examples:
+                created:
+                  value:
+                    document_id: 42
+                    version_id: 1001
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Documents
+      description: Erzeugt ein neues Dokument und direkt die erste Version. Die Antwort liefert IDs fuer
+        Folgerouten.
+      parameters:
+      - $ref: '#/components/parameters/RequestIdHeader'
+  /v1/documents/{document_id}:
+    get:
+      summary: Dokument-Metadaten lesen
+      operationId: get_document_v1_documents__document_id__get
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMetadataResponse'
+              examples:
+                metadata:
+                  value:
+                    document_id: 42
+                    owner_id: null
+                    lang: en
+                    created_at: '2026-02-15T17:42:11.123456Z'
+                    latest_version_id: 1002
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Documents
+      description: Liefert Metadaten zum Dokument inklusive letzter Versions-ID.
+  /v1/versions/{version_id}:
+    get:
+      summary: Version lesen
+      operationId: get_version_v1_versions__version_id__get
+      parameters:
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Id
+          minimum: 1
+        description: Interne Versions-ID.
+        example: 1002
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionReadResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Version not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Versions
+      description: Liefert den vollstaendigen Text einer Version mit Metadaten.
+  /v1/documents/{document_id}/versions:
+    post:
+      summary: Neue Version anlegen
+      operationId: create_version_v1_documents__document_id__versions_post
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentVersionCreateRequest'
+            examples:
+              full_text:
+                summary: Neue Version per Volltext
+                value:
+                  text: Hello new world.
+              patch:
+                summary: Neue Version per Delete-Patch
+                value:
+                  patch:
+                  - op: delete_span
+                    start: 6
+                    end: 12
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentVersionCreateResponse'
+              examples:
+                created:
+                  value:
+                    version_id: 1003
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Versions
+      description: Erzeugt eine neue Version aus vollem Text oder aus einem Delete-Span-Patch gegen die
+        aktuellste Version.
+  /v1/versions/{version_id}/analyze:
+    post:
+      summary: Version analysieren
+      operationId: analyze_version_v1_versions__version_id__analyze_post
+      parameters:
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Id
+          minimum: 1
+        description: Zu analysierende Versions-ID.
+        example: 1003
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyzeVersionResponse'
+              examples:
+                analysis_created:
+                  value:
+                    analysis_id: 501
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Version not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Analysis
+      description: Persistiert einen Analyse-Snapshot fuer die angegebene Version.
+  /v1/analyses/{analysis_id}:
+    get:
+      summary: Analyse lesen
+      operationId: get_analysis_v1_analyses__analysis_id__get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Analysis Id
+          minimum: 1
+        description: Interne Analyse-ID.
+        example: 501
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisReadResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Analysis not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Analysis
+      description: Liefert den gespeicherten Analyse-Payload (Tokens, Saetze, Morphologie).
+  /v1/analyses/{analysis_id}/findings:
+    get:
+      summary: Findings nach Pass lesen
+      operationId: get_findings_v1_analyses__analysis_id__findings_get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Analysis Id
+          minimum: 1
+        description: Interne Analyse-ID.
+        example: 501
+      - name: pass
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Pass
+          enum: &id001
+          - MEANING
+          - STRUCTURE
+          - SENTENCE
+          - WORD
+          - SOUND
+        description: Analyse-Pass (required).
+        example: WORD
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindingsListResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Analysis not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Analysis
+      description: Filtert Findings einer Analyse nach Analyse-Pass.
+  /v1/analyses/{analysis_id}/tools/adverbs:
+    get:
+      summary: Adverb-Tool
+      operationId: tool_adverbs_v1_analyses__analysis_id__tools_adverbs_get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Analysis Id
+          minimum: 1
+        description: Interne Analyse-ID.
+        example: 501
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdverbToolResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Analysis not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Tools
+      description: Ermittelt Adverb-Kandidaten und legt/aktualisiert passende Findings vom Typ `ADVERB`.
+  /v1/versions/{version_id}/actions/remove_adverbs:
+    post:
+      summary: Adverbien entfernen
+      operationId: action_remove_adverbs_v1_versions__version_id__actions_remove_adverbs_post
+      parameters:
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Id
+          minimum: 1
+        description: Quell-Version fuer die Aktion.
+        example: 1003
+      - $ref: '#/components/parameters/RequestIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveAdverbsActionRequest'
+            examples:
+              default_constraints:
+                value:
+                  constraints:
+                    voice_lock: false
+                    no_new_facts: false
+              strict_constraints:
+                value:
+                  constraints:
+                    voice_lock: true
+                    no_new_facts: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveAdverbsActionResponse'
+              examples:
+                action_result:
+                  value:
+                    action_id: 77
+                    type: REMOVE_ADVERBS
+                    constraints:
+                      voice_lock: true
+                      no_new_facts: true
+                      rationale: Removed detected adverb spans only and applied minimal whitespace cleanup.
+                    patch:
+                    - op: delete_span
+                      start: 6
+                      end: 12
+                    diff: '--- version-1003
+
+                      +++ version-1004
+
+                      @@
+
+                      -Hello brave world.
+
+                      +Hello world.
+
+                      '
+                    new_version_id: 1004
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Version not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Actions
+      description: Erzeugt aus einer Version eine neue Version, indem erkannte Adverb-Spans entfernt werden.
+        Gibt Patch und Unified-Diff zurueck.
+  /v1/analyses/{analysis_id}/tools/descriptions:
+    get:
+      summary: Description-Tool
+      operationId: tool_descriptions_v1_analyses__analysis_id__tools_descriptions_get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Analysis Id
+          minimum: 1
+        description: Interne Analyse-ID.
+        example: 501
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescriptionToolResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Analysis not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Tools
+      description: Erkennt beschreibende Stellen (z. B. ADJ-Modifier oder PP-Kandidaten) und speichert
+        Findings.
+  /v1/analyses/{analysis_id}/tools/tense_pov_distance:
+    get:
+      summary: Tense/POV-Drift
+      operationId: tool_tense_pov_distance_v1_analyses__analysis_id__tools_tense_pov_distance_get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Analysis Id
+          minimum: 1
+        description: Interne Analyse-ID.
+        example: 501
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TensePovDistanceResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Analysis not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Tools
+      description: Markiert Saetze, deren Tempus oder Perspektive vom dominanten Muster des Dokuments
+        abweicht.
+  /v1/analyses/{analysis_id}/tools/kwic:
+    get:
+      summary: KWIC-Suche
+      operationId: tool_kwic_v1_analyses__analysis_id__tools_kwic_get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Analysis Id
+          minimum: 1
+        description: Interne Analyse-ID.
+        example: 501
+      - name: term
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Term
+        description: Suchterm (case-insensitive).
+        example: river
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KwicResponse'
+              examples:
+                matches:
+                  value:
+                    term: river
+                    matches:
+                    - start: 0
+                      end: 5
+                      left: ''
+                      match: River
+                      right: ' light. The river bends beside the riv'
+                      sentence_i: 0
+                      context_window: 40
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Analysis not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Tools
+      description: Liefert Key-Word-In-Context-Treffer fuer einen Suchterm (maximal 50 Treffer).
+  /v1/documents/{document_id}/lore/entities:
+    get:
+      summary: Lore-Entities aggregieren
+      operationId: lore_entities_v1_documents__document_id__lore_entities_get
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoreEntitiesResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Lore entities not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Lore
+      description: Scant bis zu 20 letzte Versionen und aggregiert Eigennamen-Kandidaten inklusive Evidenz.
+  /v1/documents/{document_id}/lore/timeline:
+    get:
+      summary: Timeline-Marker aggregieren
+      operationId: lore_timeline_v1_documents__document_id__lore_timeline_get
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimelineResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Lore
+      description: Findet relative Zeitmarker in den letzten Versionen und liefert normalisierte Hinweise
+        fuer Timeline-UI.
+  /v1/documents/{document_id}/voice/profile:
+    post:
+      summary: Voice-Profil erzeugen
+      operationId: create_voice_profile_v1_documents__document_id__voice_profile_post
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoiceProfileRequest'
+            examples:
+              profile_request:
+                value:
+                  taboo_words:
+                  - quietly
+                  preferred_words:
+                  - write
+                  - clear
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceProfileResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Voice
+      description: Erstellt aus der aktuellen Dokumentversion ein Voice-Profil. Optionale Wortlisten steuern
+        Tabu-/Preferred-Vokabular.
+  /v1/versions/{version_id}/voice/check:
+    post:
+      summary: Voice-Constraints pruefen
+      operationId: check_voice_v1_versions__version_id__voice_check_post
+      parameters:
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Id
+          minimum: 1
+        description: Zu pruefende Versions-ID.
+        example: 1005
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceCheckResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Voice profile not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Voice
+      description: Prueft eine Version gegen das zuletzt gespeicherte Voice-Profil des Dokuments und erzeugt
+        Findings.
+  /v1/documents/{document_id}/analysis:
+    get:
+      summary: 'Legacy: Analyse-Summary'
+      operationId: legacy_analysis_v1_documents__document_id__analysis_get
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyAnalysisResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Legacy
+      description: Kompatibilitaetsroute fuer altes Frontend. Nutzt intern die neue Analyse-Pipeline.
+      deprecated: true
+  /v1/documents/{document_id}/adverbs:
+    get:
+      summary: 'Legacy: Adverb-Liste'
+      operationId: legacy_adverbs_v1_documents__document_id__adverbs_get
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyAdverbsResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Legacy
+      description: Kompatibilitaetsroute fuer altes Frontend.
+      deprecated: true
+  /v1/documents/{document_id}/actions/remove_adverbs:
+    post:
+      summary: 'Legacy: Remove Adverbs'
+      operationId: legacy_remove_adverbs_v1_documents__document_id__actions_remove_adverbs_post
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyRemoveAdverbsResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Legacy
+      description: Kompatibilitaetsroute. Verwendet intern `POST /v1/versions/{version_id}/actions/remove_adverbs`.
+      deprecated: true
+  /v1/documents/{document_id}/descriptions:
+    get:
+      summary: 'Legacy: Beschreibungsgruppen'
+      operationId: legacy_descriptions_v1_documents__document_id__descriptions_get
+      parameters:
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Document Id
+          minimum: 1
+        description: Interne Dokument-ID.
+        example: 42
+      - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyDescriptionsResponse'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+        '404':
+          description: Ressource nicht gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                default:
+                  value:
+                    detail: Document not found
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - Legacy
+      description: Kompatibilitaetsroute fuer altes Frontend.
+      deprecated: true
+  /health:
+    get:
+      summary: Healthcheck
+      operationId: healthcheck_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                ok:
+                  value:
+                    status: ok
+                    service: writer-mvp
+          headers:
+            X-Request-ID:
+              description: Korrelations-ID des Requests; wird auch in Logs verwendet.
+              schema:
+                type: string
+      tags:
+      - System
+      description: Prueft, ob der Dienst erreichbar ist.
+      parameters:
+      - $ref: '#/components/parameters/RequestIdHeader'
+components:
+  schemas:
+    ActionConstraints:
+      properties:
+        voice_lock:
+          type: boolean
+          title: Voice Lock
+          default: false
+        no_new_facts:
+          type: boolean
+          title: No New Facts
+          default: false
+      type: object
+      title: ActionConstraints
+    AdverbToolItem:
+      properties:
+        token_i:
+          type: integer
+          title: Token I
+        text:
+          type: string
+          title: Text
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        kind:
+          type: string
+          title: Kind
+        finding_id:
+          type: integer
+          title: Finding Id
+      type: object
+      required:
+      - token_i
+      - text
+      - start
+      - end
+      - kind
+      - finding_id
+      title: AdverbToolItem
+    AdverbToolResponse:
+      properties:
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        items:
+          items:
+            $ref: '#/components/schemas/AdverbToolItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - analysis_id
+      - items
+      title: AdverbToolResponse
+    AnalysisReadResponse:
+      properties:
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        document_version_id:
+          type: integer
+          title: Document Version Id
+        engine_version:
+          type: string
+          title: Engine Version
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - analysis_id
+      - document_version_id
+      - engine_version
+      - created_at
+      - payload
+      title: AnalysisReadResponse
+    AnalyzeVersionResponse:
+      properties:
+        analysis_id:
+          type: integer
+          title: Analysis Id
+      type: object
+      required:
+      - analysis_id
+      title: AnalyzeVersionResponse
+    DeleteSpanPatchOp:
+      properties:
+        op:
+          type: string
+          const: delete_span
+          title: Op
+        start:
+          type: integer
+          minimum: 0.0
+          title: Start
+        end:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: End
+      type: object
+      required:
+      - op
+      - start
+      - end
+      title: DeleteSpanPatchOp
+      description: Loescht einen Zeichenbereich aus dem Text. `start` ist inklusiv, `end` exklusiv (Python-Slice-Semantik).
+      examples:
+      - op: delete_span
+        start: 6
+        end: 12
+    DescriptionToolItem:
+      properties:
+        kind:
+          type: string
+          title: Kind
+        sentence_i:
+          type: integer
+          title: Sentence I
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        text:
+          type: string
+          title: Text
+        finding_id:
+          type: integer
+          title: Finding Id
+      type: object
+      required:
+      - kind
+      - sentence_i
+      - start
+      - end
+      - text
+      - finding_id
+      title: DescriptionToolItem
+    DescriptionToolResponse:
+      properties:
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        items:
+          items:
+            $ref: '#/components/schemas/DescriptionToolItem'
+          type: array
+          title: Items
+      type: object
+      required:
+      - analysis_id
+      - items
+      title: DescriptionToolResponse
+    DocumentCreateRequest:
+      properties:
+        text:
+          type: string
+          minLength: 1
+          title: Text
+        lang:
+          anyOf:
+          - type: string
+            maxLength: 16
+            minLength: 2
+          - type: 'null'
+          title: Lang
+      type: object
+      required:
+      - text
+      title: DocumentCreateRequest
+      description: Erzeugt ein Dokument und dessen erste Version in einem Schritt. Wenn `lang` fehlt,
+        wird Sprache automatisch erkannt.
+      examples:
+      - text: Alice really quickly moved to town.
+        lang: en
+      - text: Alice lief gestern schnell nach Hause.
+        lang: de
+    DocumentCreateResponse:
+      properties:
+        document_id:
+          type: integer
+          title: Document Id
+        version_id:
+          type: integer
+          title: Version Id
+      type: object
+      required:
+      - document_id
+      - version_id
+      title: DocumentCreateResponse
+    DocumentMetadataResponse:
+      properties:
+        document_id:
+          type: integer
+          title: Document Id
+        owner_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Owner Id
+        lang:
+          type: string
+          title: Lang
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        latest_version_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Latest Version Id
+      type: object
+      required:
+      - document_id
+      - owner_id
+      - lang
+      - created_at
+      - latest_version_id
+      title: DocumentMetadataResponse
+    DocumentVersionCreateRequest:
+      title: DocumentVersionCreateRequest
+      type: object
+      description: 'Erzeugt eine neue Version. Genau eine der beiden Varianten verwenden: vollstaendiger
+        `text` oder `patch` gegen die aktuelle Version.'
+      properties:
+        text:
+          type: string
+          description: Vollstaendiger Zieltext der neuen Version.
+        patch:
+          type: array
+          description: Liste von Delete-Operationen (wird serverseitig normalisiert).
+          items:
+            $ref: '#/components/schemas/DeleteSpanPatchOp'
+      oneOf:
+      - required:
+        - text
+      - required:
+        - patch
+      examples:
+      - text: Alice moved to town.
+      - patch:
+        - op: delete_span
+          start: 6
+          end: 19
+    DocumentVersionCreateResponse:
+      properties:
+        version_id:
+          type: integer
+          title: Version Id
+      type: object
+      required:
+      - version_id
+      title: DocumentVersionCreateResponse
+    FindingResponse:
+      properties:
+        finding_id:
+          type: integer
+          title: Finding Id
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        pass:
+          type: string
+          title: Pass
+          enum: *id001
+          description: Analyse-Pass, in dem der Fund erzeugt wurde.
+        type:
+          type: string
+          title: Type
+        severity:
+          type: string
+          title: Severity
+          enum:
+          - info
+          - warn
+          - error
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        payload_json:
+          additionalProperties: true
+          type: object
+          title: Payload Json
+      type: object
+      required:
+      - finding_id
+      - analysis_id
+      - pass
+      - type
+      - severity
+      - start
+      - end
+      - payload_json
+      title: FindingResponse
+    FindingsListResponse:
+      properties:
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        pass:
+          type: string
+          title: Pass
+          enum: *id001
+        items:
+          items:
+            $ref: '#/components/schemas/FindingResponse'
+          type: array
+          title: Items
+      type: object
+      required:
+      - analysis_id
+      - pass
+      - items
+      title: FindingsListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    KwicMatch:
+      properties:
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        left:
+          type: string
+          title: Left
+        match:
+          type: string
+          title: Match
+        right:
+          type: string
+          title: Right
+        sentence_i:
+          type: integer
+          title: Sentence I
+        context_window:
+          type: integer
+          title: Context Window
+      type: object
+      required:
+      - start
+      - end
+      - left
+      - match
+      - right
+      - sentence_i
+      - context_window
+      title: KwicMatch
+    KwicResponse:
+      properties:
+        term:
+          type: string
+          title: Term
+        matches:
+          items:
+            $ref: '#/components/schemas/KwicMatch'
+          type: array
+          title: Matches
+      type: object
+      required:
+      - term
+      - matches
+      title: KwicResponse
+    LoreEntitiesResponse:
+      properties:
+        document_id:
+          type: integer
+          title: Document Id
+        items:
+          items:
+            $ref: '#/components/schemas/LoreEntityResponse'
+          type: array
+          title: Items
+      type: object
+      required:
+      - document_id
+      - items
+      title: LoreEntitiesResponse
+    LoreEntityResponse:
+      properties:
+        entity_id:
+          type: integer
+          title: Entity Id
+        document_id:
+          type: integer
+          title: Document Id
+        kind:
+          type: string
+          title: Kind
+        canonical:
+          type: string
+          title: Canonical
+        variants:
+          items:
+            type: string
+          type: array
+          title: Variants
+        first_seen_at:
+          type: string
+          format: date-time
+          title: First Seen At
+        last_seen_at:
+          type: string
+          format: date-time
+          title: Last Seen At
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+      type: object
+      required:
+      - entity_id
+      - document_id
+      - kind
+      - canonical
+      - variants
+      - first_seen_at
+      - last_seen_at
+      - payload_json
+      title: LoreEntityResponse
+    RemoveAdverbsActionRequest:
+      properties:
+        constraints:
+          $ref: '#/components/schemas/ActionConstraints'
+      type: object
+      title: RemoveAdverbsActionRequest
+    RemoveAdverbsActionResponse:
+      properties:
+        action_id:
+          type: integer
+          title: Action Id
+        type:
+          type: string
+          title: Type
+        constraints:
+          additionalProperties: true
+          type: object
+          title: Constraints
+        patch:
+          items:
+            $ref: '#/components/schemas/DeleteSpanPatchOp'
+          type: array
+          title: Patch
+        diff:
+          type: string
+          title: Diff
+        new_version_id:
+          type: integer
+          title: New Version Id
+      type: object
+      required:
+      - action_id
+      - type
+      - constraints
+      - patch
+      - diff
+      - new_version_id
+      title: RemoveAdverbsActionResponse
+    TensePovDistanceResponse:
+      properties:
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        dominant_tense:
+          type: string
+          title: Dominant Tense
+        dominant_pov:
+          type: string
+          title: Dominant Pov
+        markers:
+          items:
+            $ref: '#/components/schemas/TensePovSentenceMarker'
+          type: array
+          title: Markers
+      type: object
+      required:
+      - analysis_id
+      - dominant_tense
+      - dominant_pov
+      - markers
+      title: TensePovDistanceResponse
+    TensePovSentenceMarker:
+      properties:
+        sentence_i:
+          type: integer
+          title: Sentence I
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        text:
+          type: string
+          title: Text
+        sentence_tense:
+          type: string
+          title: Sentence Tense
+        sentence_pov:
+          type: string
+          title: Sentence Pov
+        reasons:
+          items:
+            type: string
+          type: array
+          title: Reasons
+        finding_id:
+          type: integer
+          title: Finding Id
+      type: object
+      required:
+      - sentence_i
+      - start
+      - end
+      - text
+      - sentence_tense
+      - sentence_pov
+      - reasons
+      - finding_id
+      title: TensePovSentenceMarker
+    TimelineMarkResponse:
+      properties:
+        mark_id:
+          type: integer
+          title: Mark Id
+        document_id:
+          type: integer
+          title: Document Id
+        label:
+          type: string
+          title: Label
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        normalized_hint_json:
+          additionalProperties: true
+          type: object
+          title: Normalized Hint Json
+        payload_json:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Payload Json
+      type: object
+      required:
+      - mark_id
+      - document_id
+      - label
+      - start
+      - end
+      - normalized_hint_json
+      - payload_json
+      title: TimelineMarkResponse
+    TimelineResponse:
+      properties:
+        document_id:
+          type: integer
+          title: Document Id
+        items:
+          items:
+            $ref: '#/components/schemas/TimelineMarkResponse'
+          type: array
+          title: Items
+      type: object
+      required:
+      - document_id
+      - items
+      title: TimelineResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VersionReadResponse:
+      properties:
+        version_id:
+          type: integer
+          title: Version Id
+        document_id:
+          type: integer
+          title: Document Id
+        parent_version_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Parent Version Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        lang:
+          type: string
+          title: Lang
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - version_id
+      - document_id
+      - parent_version_id
+      - created_at
+      - lang
+      - text
+      title: VersionReadResponse
+    VoiceCheckFindingResponse:
+      properties:
+        finding_id:
+          type: integer
+          title: Finding Id
+        start:
+          type: integer
+          title: Start
+        end:
+          type: integer
+          title: End
+        pass:
+          type: string
+          title: Pass
+          enum: *id001
+        payload_json:
+          additionalProperties: true
+          type: object
+          title: Payload Json
+      type: object
+      required:
+      - finding_id
+      - start
+      - end
+      - pass
+      - payload_json
+      title: VoiceCheckFindingResponse
+    VoiceCheckResponse:
+      properties:
+        profile_id:
+          type: integer
+          title: Profile Id
+        analysis_id:
+          type: integer
+          title: Analysis Id
+        findings:
+          items:
+            $ref: '#/components/schemas/VoiceCheckFindingResponse'
+          type: array
+          title: Findings
+      type: object
+      required:
+      - profile_id
+      - analysis_id
+      - findings
+      title: VoiceCheckResponse
+    VoiceProfileRequest:
+      properties:
+        taboo_words:
+          items:
+            type: string
+          type: array
+          title: Taboo Words
+        preferred_words:
+          items:
+            type: string
+          type: array
+          title: Preferred Words
+      type: object
+      title: VoiceProfileRequest
+    VoiceProfileResponse:
+      properties:
+        profile_id:
+          type: integer
+          title: Profile Id
+        document_id:
+          type: integer
+          title: Document Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        payload_json:
+          additionalProperties: true
+          type: object
+          title: Payload Json
+      type: object
+      required:
+      - profile_id
+      - document_id
+      - created_at
+      - payload_json
+      title: VoiceProfileResponse
+    ErrorResponse:
+      title: ErrorResponse
+      type: object
+      required:
+      - detail
+      properties:
+        detail:
+          type: string
+          description: Technische Fehlerbeschreibung fuer den Client.
+    HealthResponse:
+      title: HealthResponse
+      type: object
+      required:
+      - status
+      - service
+      properties:
+        status:
+          type: string
+          const: ok
+        service:
+          type: string
+          example: writer-mvp
+    LegacyAnalysisResponse:
+      title: LegacyAnalysisResponse
+      type: object
+      required:
+      - document_id
+      - language
+      - token_count
+      - word_count
+      - sentence_count
+      - adverb_count
+      properties:
+        document_id:
+          type: integer
+        language:
+          type: string
+          example: en
+        token_count:
+          type: integer
+        word_count:
+          type: integer
+        sentence_count:
+          type: integer
+        adverb_count:
+          type: integer
+    LegacyAdverbsResponse:
+      title: LegacyAdverbsResponse
+      type: object
+      required:
+      - document_id
+      - language
+      - count
+      - items
+      properties:
+        document_id:
+          type: integer
+        language:
+          type: string
+          example: en
+        count:
+          type: integer
+        items:
+          type: array
+          items:
+            type: string
+    LegacyRemoveAdverbsResponse:
+      title: LegacyRemoveAdverbsResponse
+      type: object
+      required:
+      - document_id
+      - language
+      - removed_count
+      - updated_text
+      properties:
+        document_id:
+          type: integer
+        language:
+          type: string
+          example: en
+        removed_count:
+          type: integer
+        updated_text:
+          type: string
+    LegacyDescriptionsBucket:
+      title: LegacyDescriptionsBucket
+      type: object
+      required:
+      - sentence
+      - descriptors
+      properties:
+        sentence:
+          type: string
+        descriptors:
+          type: array
+          items:
+            type: string
+    LegacyDescriptionsResponse:
+      title: LegacyDescriptionsResponse
+      type: object
+      required:
+      - document_id
+      - language
+      - items
+      properties:
+        document_id:
+          type: integer
+        language:
+          type: string
+          example: en
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegacyDescriptionsBucket'
+  parameters:
+    RequestIdHeader:
+      name: X-Request-ID
+      in: header
+      required: false
+      description: Optionale Korrelations-ID. Wenn nicht gesetzt, wird serverseitig eine UUID erzeugt
+        und im Response-Header zurueckgegeben.
+      schema:
+        type: string
+      example: 4f4eab1f-9d9d-4a69-9850-aa8dcb1cc3fc
+servers:
+- url: http://localhost:8000
+  description: Lokale Entwicklung
+- url: https://api.example.com
+  description: Produktion (Platzhalter, im Deployment ersetzen)
+tags:
+- name: System
+  description: System- und Betriebsendpunkte
+- name: Documents
+  description: Dokument-Lifecycle
+- name: Versions
+  description: Versionierte Texte
+- name: Analysis
+  description: Analyse-Lifecycle und Findings
+- name: Tools
+  description: Analyse-Hilfen fuer UI-Workflows
+- name: Actions
+  description: Textaenderungen als reproduzierbare Aktionen
+- name: Lore
+  description: Wissens-/Konsistenzansichten ueber Versionen
+- name: Voice
+  description: Voice-Profil und Constraint-Checks
+- name: Legacy
+  description: Kompatibilitaetsendpunkte (deprecated)
+externalDocs:
+  description: Frontend-Handbuch
+  url: ./docs/frontend-api.md

@@ -16,18 +16,27 @@ import {
   GitCompare,
 } from 'lucide-react';
 
-import type { AnalysisRun, Finding, Note, Session } from '@/lib/api/types';
+import type { Finding, Note, Session } from '@/lib/api/types';
 import {
-  createAnalysisRun,
   createEdit,
   createNote,
   deleteNote,
   getDocumentVersions,
-  getFindings,
   getNotes,
   getSession,
   updateNote,
 } from '@/lib/api/typewriterClient';
+import {
+  analyzeNlpVersion,
+  createNlpDocument,
+  createNlpDocumentVersion,
+  getNlpAdverbTool,
+  getNlpDescriptionTool,
+  getNlpKwic,
+  getNlpTensePovTool,
+  getNlpVersion,
+  runRemoveAdverbsAction,
+} from '@/lib/api/nlpClient';
 
 import type { Block, BlockType, SessionVersion } from '@/lib/session-editor/types';
 import {
@@ -46,8 +55,26 @@ import {
   saveLocalVersion,
 } from '@/lib/session-editor/versionStore';
 
-const ANALYSIS_ENGINE_VERSION = 'deterministic-v1';
-const ANALYSIS_CONFIG: Record<string, unknown> = {};
+type WorkshopPresetId =
+  | 'spelling'
+  | 'style_tighten'
+  | 'consistency_pov_tense'
+  | 'repetitions_kwic'
+  | 'dramaturgy';
+
+type WorkshopCategory = 'adverb' | 'description' | 'tense_pov' | 'kwic';
+
+type WorkshopPreset = {
+  id: WorkshopPresetId;
+  label: string;
+  enabled: boolean;
+  goal: string;
+  description: string;
+  categories: WorkshopCategory[];
+  needsTerm?: boolean;
+  supportsAdverbAction?: boolean;
+  nextSteps: string[];
+};
 
 const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   paragraph: 'Absatz',
@@ -55,6 +82,105 @@ const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   heading: 'Überschrift',
   free: 'Freitext',
 };
+
+const WORKSHOP_PRESETS: WorkshopPreset[] = [
+  {
+    id: 'spelling',
+    label: 'Rechtschreibung',
+    enabled: false,
+    goal: 'Kommt bald.',
+    description: 'Orthografie-Checks folgen im nächsten Schritt.',
+    categories: [],
+    nextSteps: [],
+  },
+  {
+    id: 'style_tighten',
+    label: 'Stil - Straffen',
+    enabled: true,
+    goal: 'Macht Sätze klarer und direkter.',
+    description:
+      'Ein Modus = ein Auftrag: Adverbien und beschreibende Stellen gezielt prüfen.',
+    categories: ['adverb', 'description'],
+    supportsAdverbAction: true,
+    nextSteps: [
+      'Review Adverbien',
+      'Review Beschreibungen',
+      'Optional straffen (Vorschau)',
+      'Als Version speichern',
+    ],
+  },
+  {
+    id: 'consistency_pov_tense',
+    label: 'Konsistenz - POV/Tempus',
+    enabled: true,
+    goal: 'Findet Sprünge in Perspektive und Tempus.',
+    description:
+      'Ein Modus = ein Auftrag: Satz für Satz auf POV- und Tempus-Konsistenz prüfen.',
+    categories: ['tense_pov'],
+    nextSteps: ['Sprünge durchgehen', 'Anpassen', 'Als Version speichern'],
+  },
+  {
+    id: 'repetitions_kwic',
+    label: 'Wiederholungen - Begriffe',
+    enabled: true,
+    goal: 'Zeigt Treffer eines Begriffs im Kontext.',
+    description:
+      'Ein Modus = ein Auftrag: Begriff eingeben und Fundstellen nacheinander prüfen.',
+    categories: ['kwic'],
+    needsTerm: true,
+    nextSteps: ['Begriff eingeben', 'Treffer reviewen', 'Optional umstellen/straffen'],
+  },
+  {
+    id: 'dramaturgy',
+    label: 'Dramaturgie',
+    enabled: false,
+    goal: 'Kommt bald.',
+    description: 'Dramaturgie-Werkzeuge folgen.',
+    categories: [],
+    nextSteps: [],
+  },
+];
+
+const CATEGORY_STYLE: Record<
+  WorkshopCategory,
+  { label: string; badge: string; markClass: string; dotClass: string }
+> = {
+  adverb: {
+    label: 'Adverbien',
+    badge: 'ADV',
+    markClass: 'bg-[#6f2f39]/80 text-[#fff1f3]',
+    dotClass: 'bg-[#d46a7a]',
+  },
+  description: {
+    label: 'Beschreibungen',
+    badge: 'DESC',
+    markClass: 'bg-[#6b4c1d]/80 text-[#fff6dc]',
+    dotClass: 'bg-[#f0b35d]',
+  },
+  tense_pov: {
+    label: 'POV/Tempus',
+    badge: 'POV',
+    markClass: 'bg-[#174b4b]/85 text-[#defefe]',
+    dotClass: 'bg-[#63c7c2]',
+  },
+  kwic: {
+    label: 'Begriffe',
+    badge: 'KWIC',
+    markClass: 'bg-[#2f3f69]/85 text-[#eef3ff]',
+    dotClass: 'bg-[#89a6ff]',
+  },
+};
+
+const FINDING_HINTS: Record<WorkshopCategory, string> = {
+  adverb:
+    'Adverb entfernen macht den Satz oft pointierter - prüfe, ob ein stärkeres Verb reicht.',
+  description: 'Prüfe, ob diese Stelle Handlung trägt oder gekürzt werden kann.',
+  tense_pov:
+    'Hier weicht der Satz vom dominanten Muster ab - prüfe, ob der Sprung gewollt ist.',
+  kwic: 'Prüfe, ob die Wiederholung rhythmisch oder redundant wirkt.',
+};
+
+const PARKED_LABEL = '__ablage__';
 
 type DiffLine = { type: 'equal' | 'insert' | 'delete'; text: string };
 
@@ -227,7 +353,18 @@ export default function SessionEditorPage() {
     null,
   );
 
-  const [analysisRun, setAnalysisRun] = useState<AnalysisRun | null>(null);
+  const [workshopPreset, setWorkshopPreset] = useState<WorkshopPresetId | ''>('');
+  const [kwicTerm, setKwicTerm] = useState('');
+  const [nlpDocumentId, setNlpDocumentId] = useState<number | null>(null);
+  const [scanMeta, setScanMeta] = useState<{
+    documentId: number;
+    versionId: number;
+    analysisId: number;
+    scannedText: string;
+    preset: WorkshopPresetId;
+    kwicTerm?: string;
+  } | null>(null);
+
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [findings, setFindings] = useState<Finding[]>([]);
@@ -235,6 +372,27 @@ export default function SessionEditorPage() {
   const [findingToggles, setFindingToggles] = useState<Record<string, boolean>>(
     {},
   );
+  const [ignoredFindingIds, setIgnoredFindingIds] = useState<Set<number>>(
+    new Set(),
+  );
+  const [activeFindingIndex, setActiveFindingIndex] = useState(0);
+  const [previewAction, setPreviewAction] = useState<{
+    open: boolean;
+    loading: boolean;
+    saving: boolean;
+    error: string | null;
+    diff: string;
+    afterText: string;
+    nlpVersionId: number | null;
+  }>({
+    open: false,
+    loading: false,
+    saving: false,
+    error: null,
+    diff: '',
+    afterText: '',
+    nlpVersionId: null,
+  });
 
   const [activeTab, setActiveTab] = useState<
     'versions' | 'notes' | 'analysis' | 'diff'
@@ -346,9 +504,21 @@ export default function SessionEditorPage() {
         setSelectedBlockIds(new Set());
         resetHistory({ text: rawText, blocks: nextBlocks, blocksSynced: true });
         setFindings([]);
-        setAnalysisRun(null);
+        setScanMeta(null);
+        setNlpDocumentId(null);
         setAnalysisStale(false);
         setFindingToggles({});
+        setIgnoredFindingIds(new Set());
+        setActiveFindingIndex(0);
+        setPreviewAction({
+          open: false,
+          loading: false,
+          saving: false,
+          error: null,
+          diff: '',
+          afterText: '',
+          nlpVersionId: null,
+        });
         await Promise.all([loadVersions(data), loadNotes(data, rawText)]);
       } catch (err) {
         setError(
@@ -372,12 +542,30 @@ export default function SessionEditorPage() {
   }, [activeId, activeParam, loadSession]);
 
   useEffect(() => {
-    if (!session) return;
-    const dirty = text !== (session.text ?? '');
-    if (analysisRun && dirty) {
+    if (!scanMeta) return;
+    if (text !== scanMeta.scannedText) {
       setAnalysisStale(true);
+      return;
     }
-  }, [analysisRun, session, text]);
+    setAnalysisStale(false);
+  }, [scanMeta, text]);
+
+  useEffect(() => {
+    if (!scanMeta) return;
+    const presetMismatch =
+      scanMeta.preset !== workshopPreset ||
+      (
+      scanMeta.preset === 'repetitions_kwic' &&
+      (scanMeta.kwicTerm ?? '') !== kwicTerm.trim()
+      );
+    if (presetMismatch) {
+      setAnalysisStale(true);
+      return;
+    }
+    if (text === scanMeta.scannedText) {
+      setAnalysisStale(false);
+    }
+  }, [kwicTerm, scanMeta, text, workshopPreset]);
 
   useEffect(() => {
     if (editorMode === 'blocks') {
@@ -454,19 +642,44 @@ export default function SessionEditorPage() {
     return map;
   }, [blockMatchGroups]);
 
+  const selectedPreset = useMemo(
+    () => WORKSHOP_PRESETS.find((preset) => preset.id === workshopPreset) ?? null,
+    [workshopPreset],
+  );
+
   const visibleFindings = useMemo(() => {
+    const filteredByIgnore = findings.filter(
+      (finding) => !ignoredFindingIds.has(finding.id),
+    );
+    const relevantCategories = new Set(selectedPreset?.categories ?? []);
+    const presetFiltered =
+      relevantCategories.size > 0
+        ? filteredByIgnore.filter((finding) =>
+            relevantCategories.has(finding.finding_type as WorkshopCategory),
+          )
+        : filteredByIgnore;
+
     const enabledTypes = Object.keys(findingToggles).filter(
       (key) => findingToggles[key],
     );
-    if (Object.keys(findingToggles).length === 0) return findings;
+    if (Object.keys(findingToggles).length === 0) return presetFiltered;
     if (enabledTypes.length === 0) return [];
-    return findings.filter((finding) => findingToggles[finding.finding_type]);
-  }, [findingToggles, findings]);
+    return presetFiltered.filter((finding) => findingToggles[finding.finding_type]);
+  }, [findingToggles, findings, ignoredFindingIds, selectedPreset]);
 
   const highlightedSegments = useMemo(
     () => buildHighlightSegments(text, visibleFindings),
     [text, visibleFindings],
   );
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    findings.forEach((finding) => {
+      if (ignoredFindingIds.has(finding.id)) return;
+      counts[finding.finding_type] = (counts[finding.finding_type] ?? 0) + 1;
+    });
+    return counts;
+  }, [findings, ignoredFindingIds]);
 
   const diffData = useMemo(() => {
     if (activeTab !== 'diff') return null;
@@ -505,7 +718,10 @@ export default function SessionEditorPage() {
   const commitBlocksChange = useCallback(
     (nextBlocks: Block[]) => {
       const ordered = updateBlockOrder(nextBlocks);
-      const nextText = serializeBlocksToText(ordered);
+      const activeBlocks = ordered.filter(
+        (block) => !block.labels.includes(PARKED_LABEL),
+      );
+      const nextText = serializeBlocksToText(activeBlocks);
       setBlocks(ordered);
       setText(nextText);
       setBlocksSynced(true);
@@ -603,9 +819,11 @@ export default function SessionEditorPage() {
       setSelectedBlockIds(new Set());
       resetHistory({ text: savedText, blocks: alignedBlocks, blocksSynced: true });
       setFindings([]);
-      setAnalysisRun(null);
+      setScanMeta(null);
       setAnalysisStale(false);
       setFindingToggles({});
+      setIgnoredFindingIds(new Set());
+      setActiveFindingIndex(0);
       setNotes([]);
       if (!Number.isNaN(created.id)) {
         router.replace(`/session/edit?active=${created.id}`);
@@ -882,21 +1100,161 @@ export default function SessionEditorPage() {
 
   const handleRunAnalysis = useCallback(async () => {
     if (!session) return;
+    const preset = WORKSHOP_PRESETS.find((entry) => entry.id === workshopPreset);
+    if (!preset || !preset.enabled) {
+      setAnalysisError('Bitte zuerst ein aktives Werkstatt-Preset wählen.');
+      return;
+    }
+    if (preset.needsTerm && !kwicTerm.trim()) {
+      setAnalysisError('Für dieses Preset bitte einen Begriff eingeben.');
+      return;
+    }
+
     setAnalysisLoading(true);
     setAnalysisError(null);
     try {
-      const run = await createAnalysisRun(
-        session.id,
-        ANALYSIS_ENGINE_VERSION,
-        ANALYSIS_CONFIG,
-      );
-      setAnalysisRun(run);
+      const sourceText = text.trim();
+      if (!sourceText) {
+        throw new Error('Leerer Text kann nicht gescannt werden.');
+      }
+
+      let documentId = nlpDocumentId;
+      let versionId: number;
+
+      if (!documentId) {
+        const created = await createNlpDocument(sourceText);
+        documentId = created.document_id;
+        versionId = created.version_id;
+        setNlpDocumentId(created.document_id);
+      } else {
+        try {
+          const createdVersion = await createNlpDocumentVersion(documentId, sourceText);
+          versionId = createdVersion.version_id;
+        } catch (versionError) {
+          const message =
+            versionError instanceof Error ? versionError.message : String(versionError);
+          if (!message.includes('404')) {
+            throw versionError;
+          }
+          const recreated = await createNlpDocument(sourceText);
+          documentId = recreated.document_id;
+          versionId = recreated.version_id;
+          setNlpDocumentId(recreated.document_id);
+        }
+      }
+
+      const analysis = await analyzeNlpVersion(versionId);
+      const mappedFindings: Finding[] = [];
+      let syntheticId = 1;
+
+      if (preset.id === 'style_tighten') {
+        const [adverbResponse, descriptionResponse] = await Promise.all([
+          getNlpAdverbTool(analysis.analysis_id),
+          getNlpDescriptionTool(analysis.analysis_id),
+        ]);
+        adverbResponse.items.forEach((item) => {
+          mappedFindings.push({
+            id: syntheticId,
+            analysis_run_id: analysis.analysis_id,
+            session_id: session.id,
+            finding_type: 'adverb',
+            severity: 'warn',
+            start_offset: item.start,
+            end_offset: item.end,
+            explanation: FINDING_HINTS.adverb,
+            metrics: {
+              token: item.text,
+              kind: item.kind,
+              finding_id: item.finding_id,
+            },
+          });
+          syntheticId += 1;
+        });
+        descriptionResponse.items.forEach((item) => {
+          mappedFindings.push({
+            id: syntheticId,
+            analysis_run_id: analysis.analysis_id,
+            session_id: session.id,
+            finding_type: 'description',
+            severity: 'info',
+            start_offset: item.start,
+            end_offset: item.end,
+            explanation: FINDING_HINTS.description,
+            metrics: {
+              token: item.text,
+              kind: item.kind,
+              sentence_i: item.sentence_i,
+              finding_id: item.finding_id,
+            },
+          });
+          syntheticId += 1;
+        });
+      }
+
+      if (preset.id === 'consistency_pov_tense') {
+        const tenseResponse = await getNlpTensePovTool(analysis.analysis_id);
+        tenseResponse.markers.forEach((marker) => {
+          mappedFindings.push({
+            id: syntheticId,
+            analysis_run_id: analysis.analysis_id,
+            session_id: session.id,
+            finding_type: 'tense_pov',
+            severity: 'warn',
+            start_offset: marker.start,
+            end_offset: marker.end,
+            explanation: FINDING_HINTS.tense_pov,
+            metrics: {
+              sentence_i: marker.sentence_i,
+              sentence_tense: marker.sentence_tense,
+              sentence_pov: marker.sentence_pov,
+              reasons: marker.reasons,
+              finding_id: marker.finding_id,
+            },
+          });
+          syntheticId += 1;
+        });
+      }
+
+      if (preset.id === 'repetitions_kwic') {
+        const term = kwicTerm.trim();
+        const kwicResponse = await getNlpKwic(analysis.analysis_id, term);
+        kwicResponse.matches.forEach((match) => {
+          mappedFindings.push({
+            id: syntheticId,
+            analysis_run_id: analysis.analysis_id,
+            session_id: session.id,
+            finding_type: 'kwic',
+            severity: 'info',
+            start_offset: match.start,
+            end_offset: match.end,
+            explanation: FINDING_HINTS.kwic,
+            metrics: {
+              sentence_i: match.sentence_i,
+              left: match.left,
+              match: match.match,
+              right: match.right,
+              term,
+            },
+          });
+          syntheticId += 1;
+        });
+      }
+
+      setScanMeta({
+        documentId,
+        versionId,
+        analysisId: analysis.analysis_id,
+        scannedText: text,
+        preset: preset.id,
+        kwicTerm: preset.needsTerm ? kwicTerm.trim() : undefined,
+      });
       setAnalysisStale(false);
-      const data = await getFindings(run.id, 0, text.length);
-      setFindings(data);
+      setFindings(mappedFindings);
+      setIgnoredFindingIds(new Set());
+      setActiveFindingIndex(0);
       const nextToggles: Record<string, boolean> = {};
-      data.forEach((finding) => {
-        nextToggles[finding.finding_type] = true;
+      preset.categories.forEach((category) => {
+        nextToggles[category] = true;
       });
       setFindingToggles(nextToggles);
     } catch (err) {
@@ -906,7 +1264,171 @@ export default function SessionEditorPage() {
     } finally {
       setAnalysisLoading(false);
     }
-  }, [session, text.length]);
+  }, [kwicTerm, nlpDocumentId, session, text, workshopPreset]);
+
+  useEffect(() => {
+    if (visibleFindings.length === 0) {
+      setActiveFindingIndex(0);
+      return;
+    }
+    setActiveFindingIndex((prev) => Math.min(prev, visibleFindings.length - 1));
+  }, [visibleFindings]);
+
+  const activeReviewFinding =
+    visibleFindings.length > 0 ? visibleFindings[activeFindingIndex] : null;
+
+  const jumpToFinding = useCallback(
+    (finding: Finding) => {
+      setActiveTab('analysis');
+      if (editorMode === 'blocks') {
+        let cursor = 0;
+        let target: Block | null = null;
+        for (const block of blocks) {
+          const start = cursor;
+          const end = start + block.text.length;
+          if (finding.start_offset < end && finding.end_offset > start) {
+            target = block;
+            break;
+          }
+          cursor = end + 2;
+        }
+        if (target) {
+          scrollToBlock(target.id);
+          return;
+        }
+      }
+      handleJumpToRange(finding.start_offset, finding.end_offset);
+    },
+    [blocks, editorMode, handleJumpToRange, scrollToBlock],
+  );
+
+  const handlePrevFinding = useCallback(() => {
+    if (visibleFindings.length === 0) return;
+    setActiveFindingIndex((prev) =>
+      prev <= 0 ? visibleFindings.length - 1 : prev - 1,
+    );
+  }, [visibleFindings.length]);
+
+  const handleNextFinding = useCallback(() => {
+    if (visibleFindings.length === 0) return;
+    setActiveFindingIndex((prev) =>
+      prev >= visibleFindings.length - 1 ? 0 : prev + 1,
+    );
+  }, [visibleFindings.length]);
+
+  const handleOpenAdverbPreview = useCallback(async () => {
+    if (!scanMeta) return;
+    if (analysisStale) {
+      setAnalysisError('Bitte zuerst erneut scannen, damit die Vorschau aktuell ist.');
+      return;
+    }
+    setPreviewAction({
+      open: true,
+      loading: true,
+      saving: false,
+      error: null,
+      diff: '',
+      afterText: '',
+      nlpVersionId: null,
+    });
+    try {
+      const action = await runRemoveAdverbsAction(scanMeta.versionId, {
+        voice_lock: false,
+        no_new_facts: false,
+      });
+      const resultVersion = await getNlpVersion(action.new_version_id);
+      setPreviewAction({
+        open: true,
+        loading: false,
+        saving: false,
+        error: null,
+        diff: action.diff,
+        afterText: resultVersion.text,
+        nlpVersionId: action.new_version_id,
+      });
+    } catch (err) {
+      setPreviewAction((prev) => ({
+        ...prev,
+        loading: false,
+        error:
+          err instanceof Error
+            ? err.message
+            : 'Vorschau konnte nicht geladen werden.',
+      }));
+    }
+  }, [analysisStale, scanMeta]);
+
+  const closePreview = useCallback(() => {
+    setPreviewAction({
+      open: false,
+      loading: false,
+      saving: false,
+      error: null,
+      diff: '',
+      afterText: '',
+      nlpVersionId: null,
+    });
+  }, []);
+
+  const handleSavePreviewAsVersion = useCallback(async () => {
+    if (!previewAction.afterText || !session) return;
+    setPreviewAction((prev) => ({ ...prev, saving: true, error: null }));
+    try {
+      const created = await createEdit(session.id, previewAction.afterText);
+      const savedText = created.text ?? '';
+      const alignedBlocks = parseTextToBlocks(savedText, blocks);
+      const versionPayload: SessionVersion = {
+        id: String(created.id),
+        sessionId: String(created.id),
+        createdAt: created.created_at,
+        rawText: savedText,
+        blocks: alignedBlocks,
+        hints: [],
+      };
+      const storeKey = getVersionStoreKey(created);
+      saveLocalVersion(storeKey, versionPayload);
+      setLocalVersions((prev) => ({ ...prev, [versionPayload.id]: versionPayload }));
+
+      setSession(created);
+      suppressHistoryRef.current = true;
+      setText(savedText);
+      setBlocks(alignedBlocks);
+      setBlocksSynced(true);
+      setSelectedBlockIds(new Set());
+      resetHistory({ text: savedText, blocks: alignedBlocks, blocksSynced: true });
+      setFindings([]);
+      setScanMeta(null);
+      setAnalysisStale(false);
+      setFindingToggles({});
+      setIgnoredFindingIds(new Set());
+      setNotes([]);
+      closePreview();
+      if (!Number.isNaN(created.id)) {
+        router.replace(`/session/edit?active=${created.id}`);
+      }
+      await Promise.all([loadVersions(created), loadNotes(created, savedText)]);
+    } catch (err) {
+      setPreviewAction((prev) => ({
+        ...prev,
+        saving: false,
+        error:
+          err instanceof Error
+            ? err.message
+            : 'Neue Version aus Vorschau konnte nicht gespeichert werden.',
+      }));
+    } finally {
+      suppressHistoryRef.current = false;
+    }
+  }, [
+    blocks,
+    closePreview,
+    loadNotes,
+    loadVersions,
+    previewAction.afterText,
+    resetHistory,
+    router,
+    session,
+  ]);
 
   if (!activeParam) {
     return (
@@ -978,6 +1500,52 @@ export default function SessionEditorPage() {
                 Bausteine
               </button>
             </div>
+            <div className="min-w-[220px]">
+              <select
+                value={workshopPreset}
+                onChange={(event) =>
+                  setWorkshopPreset(event.target.value as WorkshopPresetId | '')
+                }
+                disabled={editorMode !== 'blocks'}
+                className="w-full rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-2 text-xs text-[#f7f4ed] disabled:opacity-40"
+              >
+                <option value="">Werkstatt-Preset wählen...</option>
+                {WORKSHOP_PRESETS.map((preset) => (
+                  <option
+                    key={preset.id}
+                    value={preset.id}
+                    disabled={!preset.enabled}
+                  >
+                    {preset.enabled
+                      ? preset.label
+                      : `${preset.label} (kommt bald)`}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {workshopPreset === 'repetitions_kwic' && (
+              <input
+                value={kwicTerm}
+                onChange={(event) => setKwicTerm(event.target.value)}
+                placeholder="Begriff..."
+                className="w-40 rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-2 text-xs text-[#f7f4ed] focus:outline-none"
+              />
+            )}
+            <button
+              type="button"
+              onClick={handleRunAnalysis}
+              disabled={
+                analysisLoading ||
+                editorMode !== 'blocks' ||
+                !workshopPreset ||
+                !WORKSHOP_PRESETS.find((preset) => preset.id === workshopPreset)
+                  ?.enabled
+              }
+              className="inline-flex items-center gap-2 rounded-lg border border-[#3a3129] bg-[#2b2218] px-3 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#33281d] disabled:opacity-40"
+            >
+              <Sparkles size={13} />
+              {analysisLoading ? 'Scan läuft...' : analysisStale ? 'Erneut scannen' : 'Scan starten'}
+            </button>
             <button
               type="button"
               onClick={handleUndo}
@@ -993,6 +1561,13 @@ export default function SessionEditorPage() {
               className="inline-flex items-center gap-2 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-sm text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
             >
               <Redo2 size={16} /> Redo
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('diff')}
+              className="inline-flex items-center gap-2 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-sm text-[#f7f4ed] hover:bg-[#211a13]"
+            >
+              <GitCompare size={16} /> Diff
             </button>
             <button
               type="button"
@@ -1027,6 +1602,62 @@ export default function SessionEditorPage() {
                 <span>Zeichen: {text.length}</span>
                 <span>Bausteine: {blocks.length}</span>
               </div>
+            </div>
+
+            <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-3">
+              <div className="text-xs text-[#cbbfb0]">Werkstatt & Legende</div>
+              {selectedPreset ? (
+                <>
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-xs text-[#d6c9ba]">
+                    <div className="text-sm font-semibold text-[#f7f4ed]">
+                      {selectedPreset.label}
+                    </div>
+                    <p className="mt-1">{selectedPreset.description}</p>
+                    <p className="mt-2 text-[#cbbfb0]">
+                      Ziel: {selectedPreset.goal}
+                    </p>
+                    {selectedPreset.nextSteps.length > 0 && (
+                      <ol className="mt-2 list-decimal pl-4 space-y-1 text-[11px] text-[#cbbfb0]">
+                        {selectedPreset.nextSteps.map((step) => (
+                          <li key={step}>{step}</li>
+                        ))}
+                      </ol>
+                    )}
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                    {selectedPreset.categories.map((category) => (
+                      <div
+                        key={category}
+                        className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-2 py-2 text-[11px] text-[#d6c9ba]"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="inline-flex items-center gap-2">
+                            <span
+                              className={`inline-block h-2.5 w-2.5 rounded-full ${CATEGORY_STYLE[category].dotClass}`}
+                            />
+                            {CATEGORY_STYLE[category].label}
+                          </span>
+                          <span>{categoryCounts[category] ?? 0}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
+                  Noch keine Werkzeuge ausgeführt. Wähle ein Preset und starte den Scan.
+                </div>
+              )}
+              {analysisLoading && (
+                <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
+                  Scan läuft... Ergebnisse werden gleich eingeblendet.
+                </div>
+              )}
+              {analysisStale && (
+                <div className="rounded-lg border border-[#5f4a31] bg-[#2f2316] px-3 py-2 text-[11px] text-[#f7d9a6]">
+                  Änderungen erkannt - Scan empfohlen.
+                </div>
+              )}
             </div>
 
             <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4">
@@ -1397,75 +2028,126 @@ export default function SessionEditorPage() {
             {activeTab === 'analysis' && (
               <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-4">
                 <div className="flex items-center justify-between text-xs text-[#cbbfb0]">
-                  <span>Textdiagnose (Hinweise)</span>
+                  <span>Hinweise</span>
                   <button
                     type="button"
                     onClick={handleRunAnalysis}
-                    disabled={analysisLoading || !session}
+                    disabled={analysisLoading || !session || !workshopPreset}
                     className="inline-flex items-center gap-2 rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
                   >
-                    <Sparkles size={12} />{' '}
-                    {analysisLoading
-                      ? 'Erstelle Hinweise...'
-                      : 'Hinweise aktualisieren'}
+                    <Sparkles size={12} />
+                    {analysisLoading ? 'Scan läuft...' : 'Scan starten'}
                   </button>
                 </div>
-                {analysisStale && (
-                  <div className="rounded-lg border border-[#4a3d2b] bg-[#2b2218] px-3 py-2 text-[11px] text-[#f7f4ed]">
-                    Hinweise veraltet – Text wurde geändert. Bitte neu starten.
+
+                {!workshopPreset && (
+                  <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
+                    Noch keine Werkzeuge ausgeführt. Wähle ein Preset und starte den Scan.
                   </div>
                 )}
+
+                {analysisStale && (
+                  <div className="rounded-lg border border-[#5f4a31] bg-[#2f2316] px-3 py-2 text-[11px] text-[#f7d9a6]">
+                    Änderungen erkannt – Scan empfohlen.
+                  </div>
+                )}
+
                 {analysisError && (
                   <div className="rounded-lg border border-red-900/60 bg-red-950/60 text-red-100 px-3 py-2 text-[11px]">
                     {analysisError}
                   </div>
                 )}
+
+                <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 space-y-2">
+                  <div className="text-[11px] text-[#cbbfb0]">Legend</div>
+                  <div className="space-y-2 text-[11px] text-[#d6c9ba]">
+                    {(selectedPreset?.categories ?? []).map((category) => {
+                      const style = CATEGORY_STYLE[category];
+                      return (
+                        <label
+                          key={category}
+                          className="flex items-center justify-between gap-2 rounded-md border border-[#2f2822] px-2 py-1"
+                        >
+                          <span className="inline-flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={findingToggles[category] ?? false}
+                              disabled={findings.length === 0}
+                              onChange={(event) =>
+                                setFindingToggles((prev) => ({
+                                  ...prev,
+                                  [category]: event.target.checked,
+                                }))
+                              }
+                            />
+                            <span
+                              className={`inline-block h-2.5 w-2.5 rounded-full ${style.dotClass}`}
+                            />
+                            <span>{style.label}</span>
+                            <span className="rounded border border-[#3a2f24] px-1 text-[10px] text-[#f7f4ed]">
+                              {style.badge}
+                            </span>
+                          </span>
+                          <span className="text-[#cbbfb0]">
+                            {categoryCounts[category] ?? 0}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handlePrevFinding}
+                    disabled={visibleFindings.length === 0}
+                    className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                  >
+                    Vorheriger
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextFinding}
+                    disabled={visibleFindings.length === 0}
+                    className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                  >
+                    Nächster
+                  </button>
+                  <span className="text-[11px] text-[#cbbfb0]">
+                    {visibleFindings.length > 0
+                      ? `${activeFindingIndex + 1}/${visibleFindings.length}`
+                      : '0/0'}
+                  </span>
+                </div>
+
                 {findings.length === 0 ? (
                   <p className="text-xs text-[#cbbfb0]">
-                    Noch keine Hinweise. Hinweise aktualisieren, um Ergebnisse zu sehen.
+                    Noch keine Ergebnisse. Scan starten, um Hinweise zu sehen.
                   </p>
                 ) : (
                   <>
-                    <div className="flex flex-wrap gap-2 text-[11px] text-[#cbbfb0]">
-                      {Object.keys(findingToggles).map((type) => (
-                        <label
-                          key={type}
-                          className="inline-flex items-center gap-2 rounded-full border border-[#2f2822] px-3 py-1"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={findingToggles[type]}
-                            onChange={(event) =>
-                              setFindingToggles((prev) => ({
-                                ...prev,
-                                [type]: event.target.checked,
-                              }))
-                            }
-                          />
-                          <span>{type}</span>
-                          <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[9px] uppercase tracking-wide text-[#f7f4ed]">
-                            Heuristik
-                          </span>
-                        </label>
-                      ))}
-                    </div>
                     <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba] space-y-2 max-h-[240px] overflow-auto">
-                      {visibleFindings.map((finding) => (
+                      {visibleFindings.map((finding, index) => (
                         <button
                           key={finding.id}
                           type="button"
-                          onClick={() =>
-                            handleJumpToRange(
-                              finding.start_offset,
-                              finding.end_offset,
-                            )
-                          }
-                          className="w-full text-left rounded-md border border-[#2f2822] bg-[#120f0c] px-2 py-2 hover:bg-[#191511]"
+                          onClick={() => {
+                            setActiveFindingIndex(index);
+                            jumpToFinding(finding);
+                          }}
+                          className={`w-full text-left rounded-md border px-2 py-2 ${
+                            index === activeFindingIndex
+                              ? 'border-[#c9b18a] bg-[#201911]'
+                              : 'border-[#2f2822] bg-[#120f0c] hover:bg-[#191511]'
+                          }`}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="font-semibold">
-                                {finding.finding_type}
+                                {CATEGORY_STYLE[
+                                  finding.finding_type as WorkshopCategory
+                                ]?.label ?? finding.finding_type}
                               </span>
                               <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[9px] uppercase tracking-wide text-[#f7f4ed]">
                                 Heuristik
@@ -1496,6 +2178,50 @@ export default function SessionEditorPage() {
                         </button>
                       ))}
                     </div>
+
+                    {activeReviewFinding && (
+                      <div className="rounded-lg border border-[#3a3129] bg-[#1a140f] p-3 text-[11px] text-[#e6d8c8] space-y-2">
+                        <div className="font-semibold text-[#f7f4ed]">
+                          {CATEGORY_STYLE[
+                            activeReviewFinding.finding_type as WorkshopCategory
+                          ]?.label ?? activeReviewFinding.finding_type}
+                        </div>
+                        <div>{activeReviewFinding.explanation}</div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => jumpToFinding(activeReviewFinding)}
+                            className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                          >
+                            Zur Stelle
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setIgnoredFindingIds((prev) => {
+                                const next = new Set(prev);
+                                next.add(activeReviewFinding.id);
+                                return next;
+                              })
+                            }
+                            className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                          >
+                            Ignorieren
+                          </button>
+                          {selectedPreset?.supportsAdverbAction && (
+                            <button
+                              type="button"
+                              onClick={handleOpenAdverbPreview}
+                              disabled={analysisStale || analysisLoading}
+                              className="rounded-md border border-[#3a3129] bg-[#2b2218] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                            >
+                              Adverbien straffen (Vorschau)
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3">
                       <div className="text-[11px] text-[#cbbfb0] mb-2">
                         Vorschau (Inline-Hinweise)
@@ -1506,9 +2232,9 @@ export default function SessionEditorPage() {
                             <mark
                               key={`${segment.finding.id}-${idx}`}
                               className={`rounded-sm px-0.5 ${
-                                segment.finding.severity === 'warn'
-                                  ? 'bg-[#5a3e1b] text-[#fef4d1]'
-                                  : 'bg-[#204f2b] text-[#f6ffe5]'
+                                CATEGORY_STYLE[
+                                  segment.finding.finding_type as WorkshopCategory
+                                ]?.markClass ?? 'bg-[#5a3e1b] text-[#fef4d1]'
                               }`}
                             >
                               {segment.text}
@@ -1517,30 +2243,6 @@ export default function SessionEditorPage() {
                             <span key={`plain-${idx}`}>{segment.text}</span>
                           ),
                         )}
-                      </div>
-                    </div>
-                    <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3">
-                      <div className="text-[11px] text-[#cbbfb0] mb-2">
-                        Minimap (Hinweise)
-                      </div>
-                      <div className="relative h-24 rounded bg-[#120f0c]">
-                        {visibleFindings.map((finding) => {
-                          const top =
-                            text.length > 0
-                              ? (finding.start_offset / text.length) * 100
-                              : 0;
-                          return (
-                            <span
-                              key={`minimap-${finding.id}`}
-                              className={`absolute left-0 right-0 h-1 ${
-                                finding.severity === 'warn'
-                                  ? 'bg-[#f6c177]'
-                                  : 'bg-[#a6da95]'
-                              }`}
-                              style={{ top: `${top}%` }}
-                            />
-                          );
-                        })}
                       </div>
                     </div>
                   </>
@@ -1653,6 +2355,68 @@ export default function SessionEditorPage() {
           </aside>
         </div>
       </div>
+
+      {previewAction.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-3xl rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 shadow-2xl">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-[#f7f4ed]">
+                Adverbien straffen – Vorschau
+              </h3>
+              <button
+                type="button"
+                onClick={closePreview}
+                className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-xs text-[#f7f4ed]"
+              >
+                Schließen
+              </button>
+            </div>
+
+            {previewAction.loading ? (
+              <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-4 text-sm text-[#cbbfb0]">
+                Lade Vorschau...
+              </div>
+            ) : previewAction.error ? (
+              <div className="rounded-lg border border-red-900/60 bg-red-950/60 px-3 py-2 text-sm text-red-100">
+                {previewAction.error}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3">
+                  <div className="text-[11px] text-[#cbbfb0] mb-2">Diff</div>
+                  <pre className="max-h-[240px] overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed text-[#f7f4ed]">
+                    {previewAction.diff || 'Kein Diff verfügbar.'}
+                  </pre>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-4 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={closePreview}
+                disabled={previewAction.saving}
+                className="rounded border border-[#2f2822] bg-[#18130f] px-3 py-2 text-sm text-[#f7f4ed] disabled:opacity-40"
+              >
+                Abbrechen
+              </button>
+              <button
+                type="button"
+                onClick={handleSavePreviewAsVersion}
+                disabled={
+                  previewAction.loading ||
+                  previewAction.saving ||
+                  !previewAction.afterText
+                }
+                className="inline-flex items-center gap-2 rounded border border-[#3a3129] bg-[#2b2218] px-3 py-2 text-sm font-semibold text-[#f7f4ed] disabled:opacity-40"
+              >
+                {previewAction.saving ? 'Speichere...' : 'Als neue Version speichern'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
+

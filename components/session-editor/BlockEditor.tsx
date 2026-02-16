@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   DndContext,
   PointerSensor,
@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Copy, GripVertical, Trash2 } from 'lucide-react';
+import { Archive, ArrowUp, GripVertical, Trash2 } from 'lucide-react';
 
 import type { Block, BlockType } from '@/lib/session-editor/types';
 import {
@@ -35,6 +35,15 @@ const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   dialog: 'Dialog',
   heading: 'Überschrift',
   free: 'Freitext',
+};
+
+const PARKED_LABEL = '__ablage__';
+
+const isParked = (block: Block) => block.labels.includes(PARKED_LABEL);
+
+const toggleParkLabel = (block: Block, parked: boolean): Block => {
+  const labels = block.labels.filter((label) => label !== PARKED_LABEL);
+  return parked ? { ...block, labels: [...labels, PARKED_LABEL] } : { ...block, labels };
 };
 
 type BlockEditorProps = {
@@ -58,20 +67,36 @@ export function BlockEditor({
 }: BlockEditorProps) {
   const [labelDraft, setLabelDraft] = useState('');
   const [cursorMap, setCursorMap] = useState<Record<string, number>>({});
+  const [liveMessage, setLiveMessage] = useState('');
+
+  useEffect(() => {
+    if (!liveMessage) return;
+    const timer = window.setTimeout(() => setLiveMessage(''), 900);
+    return () => window.clearTimeout(timer);
+  }, [liveMessage]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
+  const activeBlocks = useMemo(
+    () => blocks.filter((block) => !isParked(block)),
+    [blocks],
+  );
+  const parkedBlocks = useMemo(
+    () => blocks.filter((block) => isParked(block)),
+    [blocks],
+  );
+
   const selectedCount = selectedIds.size;
-  const allSelected = blocks.length > 0 && selectedCount === blocks.length;
+  const allSelected = activeBlocks.length > 0 && selectedCount === activeBlocks.length;
 
   const handleSelectAll = () => {
     if (allSelected) {
       onSelectedIdsChange(new Set());
       return;
     }
-    onSelectedIdsChange(new Set(blocks.map((block) => block.id)));
+    onSelectedIdsChange(new Set(activeBlocks.map((block) => block.id)));
   };
 
   const handleToggleSelection = (blockId: string) => {
@@ -87,10 +112,11 @@ export function BlockEditor({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const oldIndex = blocks.findIndex((block) => block.id === active.id);
-    const newIndex = blocks.findIndex((block) => block.id === over.id);
+    const oldIndex = activeBlocks.findIndex((block) => block.id === active.id);
+    const newIndex = activeBlocks.findIndex((block) => block.id === over.id);
     if (oldIndex === -1 || newIndex === -1) return;
-    const next = updateBlockOrder(arrayMove(blocks, oldIndex, newIndex));
+    const reorderedActive = arrayMove(activeBlocks, oldIndex, newIndex);
+    const next = updateBlockOrder([...reorderedActive, ...parkedBlocks]);
     onBlocksChange(next);
   };
 
@@ -165,6 +191,43 @@ export function BlockEditor({
       nextSelected.delete(blockId);
       onSelectedIdsChange(nextSelected);
     }
+  };
+
+  const handleTogglePark = (blockId: string) => {
+    const toggled = blocks.map((block) => {
+      if (block.id !== blockId) return block;
+      return toggleParkLabel(block, !isParked(block));
+    });
+    const reordered = [
+      ...toggled.filter((block) => !isParked(block)),
+      ...toggled.filter((block) => isParked(block)),
+    ];
+    onBlocksChange(updateBlockOrder(reordered));
+  };
+
+  const handleMoveByKey = (blockId: string, direction: 'up' | 'down') => {
+    const sourceBlock = blocks.find((block) => block.id === blockId);
+    if (!sourceBlock) return;
+    const parked = isParked(sourceBlock);
+    const bucket = parked ? [...parkedBlocks] : [...activeBlocks];
+    const index = bucket.findIndex((block) => block.id === blockId);
+    if (index === -1) return;
+    const nextIndex = direction === 'up' ? index - 1 : index + 1;
+    if (nextIndex < 0 || nextIndex >= bucket.length) return;
+    const moved = arrayMove(bucket, index, nextIndex);
+    if (parked) {
+      onBlocksChange(updateBlockOrder([...activeBlocks, ...moved]));
+    } else {
+      onBlocksChange(updateBlockOrder([...moved, ...parkedBlocks]));
+    }
+    requestAnimationFrame(() => {
+      blockRefs.current[blockId]?.focus();
+    });
+    setLiveMessage(
+      direction === 'up'
+        ? 'Satz nach oben verschoben'
+        : 'Satz nach unten verschoben',
+    );
   };
 
   const handleBatchDelete = () => {
@@ -250,11 +313,11 @@ export function BlockEditor({
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
-          items={blocks.map((block) => block.id)}
+          items={activeBlocks.map((block) => block.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-3">
-            {blocks.map((block, index) => (
+            {activeBlocks.map((block, index) => (
               <BlockCard
                 key={block.id}
                 block={block}
@@ -268,11 +331,13 @@ export function BlockEditor({
                 onMergeNext={handleMergeNext}
                 onDuplicate={handleDuplicate}
                 onDelete={handleDelete}
+                onTogglePark={handleTogglePark}
+                onMoveByKey={handleMoveByKey}
                 onCursorChange={(value) =>
                   setCursorMap((prev) => ({ ...prev, [block.id]: value }))
                 }
                 canMergePrev={index > 0}
-                canMergeNext={index < blocks.length - 1}
+                canMergeNext={index < activeBlocks.length - 1}
                 matchCount={matchCountMap[block.id] ?? 0}
                 isActiveMatch={activeMatchBlockId === block.id}
                 blockRefs={blockRefs}
@@ -281,6 +346,37 @@ export function BlockEditor({
           </div>
         </SortableContext>
       </DndContext>
+
+      <div className="rounded-xl border border-dashed border-[#4a3d2b] bg-[#0f0c0a] p-3 space-y-2">
+        <div className="text-xs text-[#cbbfb0]">
+          Ablage ({parkedBlocks.length})
+        </div>
+        {parkedBlocks.length === 0 ? (
+          <p className="text-[11px] text-[#cbbfb0]">
+            Parke Sätze hier, um sie aus der Reihenfolge zu nehmen.
+          </p>
+        ) : (
+          parkedBlocks.map((block) => (
+            <div
+              key={`parked-${block.id}`}
+              className="rounded-lg border border-[#2f2822] bg-[#120f0c] px-3 py-2 text-xs text-[#d6c9ba] space-y-2"
+            >
+              <div className="line-clamp-3 whitespace-pre-wrap">{block.text}</div>
+              <button
+                type="button"
+                onClick={() => handleTogglePark(block.id)}
+                className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+              >
+                <ArrowUp size={11} />
+                Zurück in Text
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+      <div className="sr-only" aria-live="polite">
+        {liveMessage}
+      </div>
     </div>
   );
 }
@@ -297,6 +393,8 @@ type BlockCardProps = {
   onMergeNext: (blockId: string) => void;
   onDuplicate: (blockId: string) => void;
   onDelete: (blockId: string) => void;
+  onTogglePark: (blockId: string) => void;
+  onMoveByKey: (blockId: string, direction: 'up' | 'down') => void;
   onCursorChange: (cursor: number) => void;
   canMergePrev: boolean;
   canMergeNext: boolean;
@@ -317,6 +415,8 @@ function BlockCard({
   onMergeNext,
   onDuplicate,
   onDelete,
+  onTogglePark,
+  onMoveByKey,
   onCursorChange,
   canMergePrev,
   canMergeNext,
@@ -343,6 +443,18 @@ function BlockCard({
     <div
       ref={setRefs}
       style={style}
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.altKey && event.key === 'ArrowUp') {
+          event.preventDefault();
+          onMoveByKey(block.id, 'up');
+          return;
+        }
+        if (event.altKey && event.key === 'ArrowDown') {
+          event.preventDefault();
+          onMoveByKey(block.id, 'down');
+        }
+      }}
       className={`rounded-2xl border bg-[#0f0c0a] p-4 space-y-3 transition shadow-sm ${
         isActiveMatch ? 'border-[#c9b18a] ring-1 ring-[#c9b18a]' : 'border-[#2f2822]'
       } ${isDragging ? 'opacity-60' : ''}`}
@@ -437,10 +549,11 @@ function BlockCard({
         </button>
         <button
           type="button"
-          onClick={() => onDuplicate(block.id)}
+          onClick={() => onTogglePark(block.id)}
           className="inline-flex items-center gap-1 rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13]"
+          title="In Ablage"
         >
-          <Copy size={12} /> Duplizieren
+          <Archive size={12} /> Parken
         </button>
         <button
           type="button"
