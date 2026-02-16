@@ -13,7 +13,6 @@ import {
   RefreshCcw,
   ClipboardList,
   Sparkles,
-  GitCompare,
 } from 'lucide-react';
 
 import type { Finding, Note, Session } from '@/lib/api/types';
@@ -340,7 +339,7 @@ export default function SessionEditorPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [editorMode, setEditorMode] = useState<EditorMode>('text');
+  const [editorMode, setEditorMode] = useState<EditorMode>('blocks');
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [parkedBlockIds, setParkedBlockIds] = useState<Set<string>>(new Set());
   const [blocksSynced, setBlocksSynced] = useState(true);
@@ -428,6 +427,9 @@ export default function SessionEditorPage() {
   >('analysis');
   const [diffA, setDiffA] = useState<number | null>(null);
   const [diffB, setDiffB] = useState<number | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [reviewStarted, setReviewStarted] = useState(false);
+  const [findingListOpen, setFindingListOpen] = useState(false);
 
   useEffect(() => {
     historyRef.current = history;
@@ -555,6 +557,9 @@ export default function SessionEditorPage() {
         setFindingToggles({});
         setIgnoredFindingIds(new Set());
         setActiveFindingIndex(0);
+        setReviewStarted(false);
+        setFindingListOpen(false);
+        setDrawerOpen(false);
         setPreviewAction({
           open: false,
           loading: false,
@@ -852,17 +857,6 @@ export default function SessionEditorPage() {
     return counts;
   }, [findingSpansByBlock]);
 
-  const findingsByCategory = useMemo(() => {
-    const grouped: Record<string, Finding[]> = {};
-    visibleFindings.forEach((finding) => {
-      const key = finding.finding_type;
-      const list = grouped[key] ?? [];
-      list.push(finding);
-      grouped[key] = list;
-    });
-    return grouped;
-  }, [visibleFindings]);
-
   const diffData = useMemo(() => {
     if (activeTab !== 'diff') return null;
     const left = versions.find((v) => v.id === diffA);
@@ -1041,6 +1035,8 @@ export default function SessionEditorPage() {
       setFindingToggles({});
       setIgnoredFindingIds(new Set());
       setActiveFindingIndex(0);
+      setReviewStarted(false);
+      setFindingListOpen(false);
       setNotes([]);
       if (!Number.isNaN(created.id)) {
         router.replace(`/session/edit?active=${created.id}`);
@@ -1482,6 +1478,9 @@ export default function SessionEditorPage() {
       setFindings(mappedFindings);
       setIgnoredFindingIds(new Set());
       setActiveFindingIndex(0);
+      setReviewStarted(false);
+      setFindingListOpen(false);
+      setDrawerOpen(true);
       const nextToggles: Record<string, boolean> = {};
       preset.categories.forEach((category) => {
         nextToggles[category] = true;
@@ -1499,6 +1498,7 @@ export default function SessionEditorPage() {
   useEffect(() => {
     if (visibleFindings.length === 0) {
       setActiveFindingIndex(0);
+      setReviewStarted(false);
       return;
     }
     setActiveFindingIndex((prev) => Math.min(prev, visibleFindings.length - 1));
@@ -1679,6 +1679,8 @@ export default function SessionEditorPage() {
       setAnalysisStale(false);
       setFindingToggles({});
       setIgnoredFindingIds(new Set());
+      setReviewStarted(false);
+      setFindingListOpen(false);
       setNotes([]);
       closePreview();
       if (!Number.isNaN(created.id)) {
@@ -1733,6 +1735,8 @@ export default function SessionEditorPage() {
 
   const totalMatches =
     editorMode === 'blocks' ? flatBlockMatches.length : textMatchPositions.length;
+  const hasScanResults = findings.length > 0;
+  const chipsEnabled = hasScanResults && !analysisLoading;
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
@@ -1842,10 +1846,11 @@ export default function SessionEditorPage() {
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('diff')}
+              onClick={() => setDrawerOpen((prev) => !prev)}
               className="inline-flex items-center gap-2 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-sm text-[#f7f4ed] hover:bg-[#211a13]"
             >
-              <GitCompare size={16} /> Diff
+              <ClipboardList size={16} />
+              {drawerOpen ? 'Drawer schließen' : 'Drawer öffnen'}
             </button>
             <button
               type="button"
@@ -1864,7 +1869,7 @@ export default function SessionEditorPage() {
           </div>
         )}
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="flex flex-col gap-6 xl:flex-row">
           <section className="space-y-4">
             <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4">
               <div className="flex flex-wrap items-center gap-4 text-xs text-[#cbbfb0]">
@@ -1883,94 +1888,68 @@ export default function SessionEditorPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#cbbfb0]">
-                <span>Brille (Hinweise)</span>
-                {analysisStale && (
-                  <span className="rounded-full border border-[#5f4a31] bg-[#2f2316] px-2 py-0.5 text-[10px] text-[#f7d9a6]">
-                    Scan empfohlen
-                  </span>
-                )}
-              </div>
-              {selectedPreset ? (
-                <>
-                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-xs text-[#d6c9ba]">
-                    <div className="text-sm font-semibold text-[#f7f4ed]">
-                      {selectedPreset.label}
-                    </div>
-                    <p className="mt-1 text-[11px]">{selectedPreset.goal}</p>
+            <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4">
+              {editorMode === 'blocks' && (
+                <div className="mb-3 rounded-xl border border-[#2f2822] bg-[#0f0c0a] px-3 py-2.5">
+                  <div className="flex items-center justify-between text-xs text-[#cbbfb0]">
+                    <span>Brille</span>
+                    {analysisStale && (
+                      <span className="rounded-full border border-[#5f4a31] bg-[#2f2316] px-2 py-0.5 text-[10px] text-[#f7d9a6]">
+                        Scan empfohlen
+                      </span>
+                    )}
                   </div>
-                  <div className="space-y-2">
-                    {selectedPreset.categories.map((category) => {
+
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    {selectedPreset?.categories.map((category) => {
                       const enabled = findingToggles[category] ?? false;
+                      const disabled = !chipsEnabled;
                       return (
-                        <div
-                          key={category}
-                          className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-2 py-2 text-[11px] text-[#d6c9ba]"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="inline-flex items-center gap-2">
-                              <span
-                                className={`inline-block h-2.5 w-2.5 rounded-full ${CATEGORY_STYLE[category].dotClass}`}
-                              />
-                              {CATEGORY_STYLE[category].label}
-                              <span className="rounded border border-[#3a2f24] px-1 text-[10px] text-[#f7f4ed]">
-                                {CATEGORY_STYLE[category].badge}
-                              </span>
-                            </span>
-                            <span>{categoryCounts[category] ?? 0}</span>
-                          </div>
-                          <div className="mt-2 flex items-center justify-end gap-1">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setFindingToggles((prev) => ({
-                                  ...prev,
-                                  [category]: !enabled,
-                                }))
-                              }
-                              disabled={findings.length === 0}
-                              className={`rounded border px-2 py-0.5 text-[10px] ${
-                                enabled
-                                  ? 'border-[#5c4a34] bg-[#2f2316] text-[#f7d9a6]'
-                                  : 'border-[#2f2822] bg-[#18130f] text-[#f7f4ed]'
-                              } disabled:opacity-40`}
-                            >
-                              {enabled ? 'An' : 'Aus'}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const next: Record<string, boolean> = {};
-                                selectedPreset.categories.forEach((entry) => {
-                                  next[entry] = entry === category;
-                                });
-                                setFindingToggles(next);
-                              }}
-                              disabled={findings.length === 0}
-                              className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-0.5 text-[10px] text-[#f7f4ed] disabled:opacity-40"
-                            >
-                              Solo
-                            </button>
-                          </div>
+                        <div key={`chip-${category}`} className="inline-flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={disabled}
+                            onClick={() =>
+                              setFindingToggles((prev) => ({
+                                ...prev,
+                                [category]: !enabled,
+                              }))
+                            }
+                            className={`rounded-full border px-2 py-1 text-[11px] disabled:opacity-40 ${
+                              enabled
+                                ? 'border-[#5c4a34] bg-[#2f2316] text-[#f7d9a6]'
+                                : 'border-[#2f2822] bg-[#18130f] text-[#f7f4ed]'
+                            }`}
+                          >
+                            {CATEGORY_STYLE[category].badge} ({categoryCounts[category] ?? 0})
+                          </button>
+                          <button
+                            type="button"
+                            disabled={disabled}
+                            onClick={() => {
+                              const next: Record<string, boolean> = {};
+                              selectedPreset.categories.forEach((entry) => {
+                                next[entry] = entry === category;
+                              });
+                              setFindingToggles(next);
+                            }}
+                            className="rounded-full border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[10px] text-[#f7f4ed] disabled:opacity-40"
+                          >
+                            Solo
+                          </button>
                         </div>
                       );
                     })}
                   </div>
-                </>
-              ) : (
-                <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
-                  Noch keine Werkzeuge ausgeführt. Wähle ein Preset und starte den Scan.
-                </div>
-              )}
-              {analysisLoading && (
-                <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
-                  Scan läuft... Ergebnisse werden gleich eingeblendet.
-                </div>
-              )}
-            </div>
 
-            <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4">
+                  {!chipsEnabled && (
+                    <div className="mt-2 text-[11px] text-[#cbbfb0]">
+                      Noch kein Scan - starte Werkzeuge.
+                    </div>
+                  )}
+                </div>
+              )}
+
               {editorMode === 'text' ? (
                 <textarea
                   ref={textareaRef}
@@ -2119,53 +2098,72 @@ export default function SessionEditorPage() {
             </div>
           </section>
 
-          <aside className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveTab('analysis')}
-                className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  activeTab === 'analysis'
-                    ? 'border-[#c9b18a] bg-[#211a13]'
-                    : 'border-[#2f2822] bg-[#120f0c]'
-                }`}
-              >
-                <Sparkles size={14} /> Hinweise
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('notes')}
-                className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  activeTab === 'notes'
-                    ? 'border-[#c9b18a] bg-[#211a13]'
-                    : 'border-[#2f2822] bg-[#120f0c]'
-                }`}
-              >
-                <ClipboardList size={14} /> Notizen
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('versions')}
-                className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  activeTab === 'versions'
-                    ? 'border-[#c9b18a] bg-[#211a13]'
-                    : 'border-[#2f2822] bg-[#120f0c]'
-                }`}
-              >
-                <ClipboardList size={14} /> Versionen
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('diff')}
-                className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
-                  activeTab === 'diff'
-                    ? 'border-[#c9b18a] bg-[#211a13]'
-                    : 'border-[#2f2822] bg-[#120f0c]'
-                }`}
-              >
-                <GitCompare size={14} /> Diff
-              </button>
-            </div>
+          <aside
+            className={`w-full shrink-0 transition-all duration-200 ${
+              drawerOpen ? 'xl:w-[360px]' : 'xl:w-[76px]'
+            }`}
+          >
+            <div className="overflow-hidden rounded-2xl border border-[#2f2822] bg-[#120f0c]">
+              <div className="flex flex-row items-center gap-1 border-b border-[#2f2822] p-2 xl:flex-col xl:items-stretch">
+                <button
+                  type="button"
+                  onClick={() => setDrawerOpen((prev) => !prev)}
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-[#2f2822] bg-[#18130f] px-2 text-xs text-[#f7f4ed] hover:bg-[#211a13]"
+                >
+                  {drawerOpen ? '<<' : '>>'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDrawerOpen(true);
+                    setActiveTab('analysis');
+                  }}
+                  className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border px-2 text-xs ${
+                    activeTab === 'analysis'
+                      ? 'border-[#c9b18a] bg-[#211a13] text-[#f7f4ed]'
+                      : 'border-[#2f2822] bg-[#120f0c] text-[#cbbfb0]'
+                  }`}
+                  title="Hinweise"
+                >
+                  <Sparkles size={14} />
+                  {drawerOpen && <span>Hinweise</span>}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDrawerOpen(true);
+                    setActiveTab('notes');
+                  }}
+                  className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border px-2 text-xs ${
+                    activeTab === 'notes'
+                      ? 'border-[#c9b18a] bg-[#211a13] text-[#f7f4ed]'
+                      : 'border-[#2f2822] bg-[#120f0c] text-[#cbbfb0]'
+                  }`}
+                  title="Notizen"
+                >
+                  <ClipboardList size={14} />
+                  {drawerOpen && <span>Notizen</span>}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDrawerOpen(true);
+                    setActiveTab('versions');
+                  }}
+                  className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border px-2 text-xs ${
+                    activeTab === 'versions'
+                      ? 'border-[#c9b18a] bg-[#211a13] text-[#f7f4ed]'
+                      : 'border-[#2f2822] bg-[#120f0c] text-[#cbbfb0]'
+                  }`}
+                  title="Versionen"
+                >
+                  <RefreshCcw size={14} />
+                  {drawerOpen && <span>Versionen</span>}
+                </button>
+              </div>
+
+              {drawerOpen ? (
+                <div className="max-h-[70vh] space-y-4 overflow-auto p-4 xl:max-h-[calc(100vh-10rem)]">
 
             {activeTab === 'versions' && (
               <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-3">
@@ -2349,188 +2347,186 @@ export default function SessionEditorPage() {
             )}
 
             {activeTab === 'analysis' && (
-              <div className="rounded-2xl border border-[#2f2822] bg-[#120f0c] p-4 space-y-4">
-                <div className="flex items-center justify-between text-xs text-[#cbbfb0]">
-                  <span>Hinweise</span>
-                  <button
-                    type="button"
-                    onClick={handleRunAnalysis}
-                    disabled={analysisLoading || !session || !workshopPreset}
-                    className="inline-flex items-center gap-2 rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
-                  >
-                    <Sparkles size={12} />
-                    {analysisLoading ? 'Scan läuft...' : 'Scan starten'}
-                  </button>
-                </div>
-
-                {!selectedPreset && (
-                  <div className="rounded-lg border border-[#3a3129] bg-[#1b150f] px-3 py-2 text-[11px] text-[#d8c8b8]">
-                    <div className="font-semibold text-[#f7f4ed]">
-                      Noch keine Werkzeuge ausgeführt
-                    </div>
-                    <div className="mt-1">
-                      Wähle ein Preset und starte den Scan. Danach: Review, optional
-                      Vorschau, dann als Version speichern.
-                    </div>
-                    <ol className="mt-2 list-decimal pl-4 space-y-1 text-[10px] text-[#cbbfb0]">
-                      <li>Preset wählen</li>
-                      <li>Scan starten</li>
-                      <li>Hinweise prüfen</li>
-                      <li>Optional Vorschau nutzen</li>
-                      <li>Version speichern</li>
-                    </ol>
-                  </div>
-                )}
-
-                {selectedPreset && (
-                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba]">
-                    <div className="font-semibold text-[#f7f4ed]">{selectedPreset.label}</div>
-                    <div className="mt-1">
-                      Scan:{' '}
-                      {scanMeta ? formatDateTime(scanMeta.scannedAt) : 'Noch kein Scan'}
-                    </div>
-                    <div className="mt-1">
-                      Status:{' '}
-                      {scanMeta
-                        ? analysisStale
-                          ? 'veraltet'
-                          : 'frisch'
-                        : 'ausstehend'}
-                    </div>
-                  </div>
-                )}
-
-                {analysisStale && (
-                  <div className="rounded-lg border border-[#5f4a31] bg-[#2f2316] px-3 py-2 text-[11px] text-[#f7d9a6]">
-                    Änderungen erkannt – Scan empfohlen.
-                  </div>
-                )}
-
-                {analysisError && (
-                  <div className="rounded-lg border border-red-900/60 bg-red-950/60 text-red-100 px-3 py-2 text-[11px]">
-                    {analysisError}
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+              <div className="space-y-3">
+                <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-[#f7f4ed]">Hinweise</span>
                     <button
                       type="button"
-                      onClick={handlePrevFinding}
-                      disabled={visibleFindings.length === 0}
-                      className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                      onClick={handleRunAnalysis}
+                      disabled={analysisLoading || !session || !workshopPreset}
+                      className="inline-flex items-center gap-2 rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
                     >
-                      Vorheriger
+                      <Sparkles size={12} />
+                      {analysisLoading
+                        ? 'Scan läuft...'
+                        : analysisStale
+                          ? 'Erneut scannen'
+                          : 'Scan starten'}
                     </button>
-                    <button
-                      type="button"
-                      onClick={handleNextFinding}
-                      disabled={visibleFindings.length === 0}
-                      className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
-                    >
-                      Nächster
-                    </button>
-                    <span className="text-[11px] text-[#cbbfb0]">
-                      {visibleFindings.length > 0
-                        ? `${activeFindingIndex + 1}/${visibleFindings.length}`
-                        : '0/0'}
-                    </span>
                   </div>
-                  {selectedPreset?.supportsAdverbAction && (
-                    <button
-                      type="button"
-                      onClick={handleOpenAdverbPreview}
-                      disabled={analysisStale || analysisLoading}
-                      className="rounded-md border border-[#3a3129] bg-[#2b2218] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
-                    >
-                      Adverbien straffen (Vorschau)
-                    </button>
+
+                  {!selectedPreset ? (
+                    <div className="text-[#cbbfb0]">
+                      Noch kein Preset aktiv. Wähle ein Preset und starte den Scan.
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <div className="text-[#f7f4ed]">{selectedPreset.label}</div>
+                      <div>
+                        Scan: {scanMeta ? formatDateTime(scanMeta.scannedAt) : 'Noch kein Scan'}
+                      </div>
+                      <div>
+                        Status:{' '}
+                        {scanMeta ? (analysisStale ? 'veraltet' : 'frisch') : 'ausstehend'}
+                      </div>
+                      <div>
+                        Aktiv: {visibleFindings.length} · Ignoriert: {ignoredFindings.length}
+                      </div>
+                    </div>
+                  )}
+
+                  {analysisError && (
+                    <div className="rounded border border-red-900/60 bg-red-950/60 px-2 py-1 text-red-100">
+                      {analysisError}
+                    </div>
                   )}
                 </div>
 
                 {findings.length === 0 ? (
                   <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-3 text-xs text-[#cbbfb0]">
-                    Noch keine Ergebnisse. Starte einen Scan, um Hinweise zu sehen.
+                    Noch kein Scan - starte Werkzeuge.
                   </div>
                 ) : visibleFindings.length === 0 ? (
                   <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-3 text-xs text-[#cbbfb0]">
-                    Keine aktiven Hinweise sichtbar. Prüfe die Brille-Toggles oder
-                    setze ignorierte Hinweise zurück.
+                    Keine aktiven Hinweise sichtbar. Passe die Brille-Chips an.
                   </div>
-                ) : (
-                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3 text-[11px] text-[#d6c9ba] space-y-3 max-h-[360px] overflow-auto">
-                    {Object.entries(findingsByCategory).map(([category, entries]) => (
-                      <div key={`group-${category}`} className="space-y-2">
-                        <div className="sticky top-0 z-10 flex items-center justify-between rounded bg-[#0f0c0a]/95 px-1 py-1">
-                          <span className="inline-flex items-center gap-2 font-semibold">
-                            <span
-                              className={`inline-block h-2.5 w-2.5 rounded-full ${
-                                CATEGORY_STYLE[category as WorkshopCategory]?.dotClass ??
-                                'bg-[#cbbfb0]'
-                              }`}
-                            />
-                            {CATEGORY_STYLE[category as WorkshopCategory]?.label ?? category}
-                          </span>
-                          <span className="text-[10px] text-[#cbbfb0]">{entries.length}</span>
-                        </div>
-                        {entries.map((finding) => {
-                          const visibleIndex = visibleFindings.findIndex(
-                            (entry) => entry.id === finding.id,
-                          );
-                          return (
-                            <div
-                              key={finding.id}
-                              className={`rounded-md border px-2 py-2 ${
-                                visibleIndex === activeFindingIndex
-                                  ? 'border-[#c9b18a] bg-[#201911]'
-                                  : 'border-[#2f2822] bg-[#120f0c]'
-                              }`}
-                            >
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (visibleIndex >= 0) {
-                                    setActiveFindingIndex(visibleIndex);
-                                  }
-                                  jumpToFinding(finding);
-                                }}
-                                className="w-full text-left"
-                              >
-                                <div className="text-[#cbbfb0]">
-                                  {buildSnippet(
-                                    text,
-                                    finding.start_offset,
-                                    finding.end_offset,
-                                  )}
-                                </div>
-                                {finding.explanation && (
-                                  <div className="mt-1 text-[#f7f4ed]">
-                                    {finding.explanation}
-                                  </div>
-                                )}
-                              </button>
-                              <div className="mt-2 flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => jumpToFinding(finding)}
-                                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[10px] text-[#f7f4ed]"
-                                >
-                                  Zur Stelle
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleIgnoreFinding(finding.id)}
-                                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[10px] text-[#f7f4ed]"
-                                >
-                                  Ignorieren
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
+                ) : !reviewStarted ? (
+                  <div className="rounded-lg border border-[#3a3129] bg-[#1a140f] p-3 text-[12px] text-[#e6d8c8] space-y-2">
+                    <div className="font-semibold text-[#f7f4ed]">
+                      {visibleFindings.length} Hinweise bereit
+                    </div>
+                    <div>
+                      Review läuft linear: immer ein Hinweis, klare Aktionen, kein
+                      Kartenlärm.
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReviewStarted(true);
+                        setActiveFindingIndex(0);
+                        const firstFinding = visibleFindings[0];
+                        if (firstFinding) {
+                          jumpToFinding(firstFinding);
+                        }
+                      }}
+                      className="rounded-md border border-[#3a3129] bg-[#2b2218] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                    >
+                      Review starten
+                    </button>
                   </div>
+                ) : activeReviewFinding ? (
+                  <div className="rounded-lg border border-[#3a3129] bg-[#1a140f] p-3 text-[12px] text-[#e6d8c8] space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-[#f7f4ed]">
+                        Review {activeFindingIndex + 1}/{visibleFindings.length}
+                      </span>
+                      <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[10px] text-[#f7d8b1]">
+                        {CATEGORY_STYLE[
+                          activeReviewFinding.finding_type as WorkshopCategory
+                        ]?.badge ?? activeReviewFinding.finding_type}
+                      </span>
+                    </div>
+
+                    <div className="rounded-md border border-[#2f2822] bg-[#0f0c0a] px-2 py-2 text-[#cbbfb0]">
+                      {buildSnippet(
+                        text,
+                        activeReviewFinding.start_offset,
+                        activeReviewFinding.end_offset,
+                      )}
+                    </div>
+
+                    <div>
+                      {activeReviewFinding.explanation ??
+                        FINDING_HINTS[
+                          activeReviewFinding.finding_type as WorkshopCategory
+                        ] ??
+                        'Prüfe diese Stelle im Kontext.'}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handlePrevFinding}
+                        className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                      >
+                        Vorheriger
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleNextFinding}
+                        className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                      >
+                        Nächster
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => jumpToFinding(activeReviewFinding)}
+                        className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                      >
+                        Zur Stelle
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleIgnoreFinding(activeReviewFinding.id)}
+                        className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
+                      >
+                        Ignorieren
+                      </button>
+                      {selectedPreset?.supportsAdverbAction && (
+                        <button
+                          type="button"
+                          onClick={handleOpenAdverbPreview}
+                          disabled={analysisStale || analysisLoading}
+                          className="rounded-md border border-[#3a3129] bg-[#2b2218] px-2 py-1 text-[11px] text-[#f7f4ed] disabled:opacity-40"
+                        >
+                          Vorschau...
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+
+                {findings.length > 0 && (
+                  <details
+                    open={findingListOpen}
+                    onToggle={(event) => setFindingListOpen(event.currentTarget.open)}
+                    className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-3"
+                  >
+                    <summary className="cursor-pointer text-[11px] text-[#cbbfb0]">
+                      Liste anzeigen
+                    </summary>
+                    <div className="mt-2 max-h-[220px] space-y-2 overflow-auto text-[11px] text-[#d6c9ba]">
+                      {visibleFindings.map((finding, index) => (
+                        <button
+                          key={`review-list-${finding.id}`}
+                          type="button"
+                          onClick={() => {
+                            setReviewStarted(true);
+                            setActiveFindingIndex(index);
+                            jumpToFinding(finding);
+                          }}
+                          className={`w-full rounded-md border px-2 py-2 text-left ${
+                            index === activeFindingIndex
+                              ? 'border-[#c9b18a] bg-[#201911]'
+                              : 'border-[#2f2822] bg-[#120f0c]'
+                          }`}
+                        >
+                          {buildSnippet(text, finding.start_offset, finding.end_offset)}
+                        </button>
+                      ))}
+                    </div>
+                  </details>
                 )}
 
                 {ignoredFindings.length > 0 && (
@@ -2561,24 +2557,6 @@ export default function SessionEditorPage() {
                         </div>
                       ))}
                     </div>
-                  </div>
-                )}
-
-                {activeReviewFinding && (
-                  <div className="rounded-lg border border-[#3a3129] bg-[#1a140f] p-3 text-[11px] text-[#e6d8c8] space-y-2">
-                    <div className="font-semibold text-[#f7f4ed]">
-                      {CATEGORY_STYLE[
-                        activeReviewFinding.finding_type as WorkshopCategory
-                      ]?.label ?? activeReviewFinding.finding_type}
-                    </div>
-                    <div>{activeReviewFinding.explanation}</div>
-                    <button
-                      type="button"
-                      onClick={() => jumpToFinding(activeReviewFinding)}
-                      className="rounded-md border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed]"
-                    >
-                      Zur Stelle
-                    </button>
                   </div>
                 )}
               </div>
@@ -2686,6 +2664,13 @@ export default function SessionEditorPage() {
                 )}
               </div>
             )}
+                </div>
+              ) : (
+                <div className="p-3 text-[11px] text-[#cbbfb0]">
+                  Drawer geschlossen - öffne rechts für Hinweise, Notizen und Versionen.
+                </div>
+              )}
+            </div>
           </aside>
         </div>
       </div>

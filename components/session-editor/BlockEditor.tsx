@@ -23,30 +23,20 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import {
   Archive,
+  ArrowDown,
   ArrowUp,
-  ChevronDown,
-  ChevronRight,
   GripVertical,
   Scissors,
   Trash2,
 } from 'lucide-react';
 
-import type { Block, BlockType } from '@/lib/session-editor/types';
+import type { Block } from '@/lib/session-editor/types';
 import {
   computeBlockStats,
-  duplicateBlock,
-  groupBlocksByParagraph,
   mergeBlocks,
   splitBlockAt,
   updateBlockOrder,
 } from '@/lib/session-editor/blocks';
-
-const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
-  paragraph: 'Absatz',
-  dialog: 'Dialog',
-  heading: 'Überschrift',
-  free: 'Freitext',
-};
 
 const CONTAINER_ACTIVE = 'active-zone';
 const CONTAINER_ARCHIVE = 'archive-zone';
@@ -141,9 +131,6 @@ export function BlockEditor({
 }: BlockEditorProps) {
   const [cursorMap, setCursorMap] = useState<Record<string, number>>({});
   const [liveMessage, setLiveMessage] = useState('');
-  const [collapsedParagraphIds, setCollapsedParagraphIds] = useState<Set<string>>(
-    new Set(),
-  );
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dropMarker, setDropMarker] = useState<DropMarkerState>(EMPTY_DROP_MARKER);
 
@@ -166,29 +153,6 @@ export function BlockEditor({
     () => blocks.filter((block) => parkedIds.has(block.id)),
     [blocks, parkedIds],
   );
-
-  const paragraphGroups = useMemo(
-    () => groupBlocksByParagraph(activeBlocks),
-    [activeBlocks],
-  );
-  const activeIndexMap = useMemo(() => {
-    const map: Record<string, number> = {};
-    activeBlocks.forEach((block, index) => {
-      map[block.id] = index;
-    });
-    return map;
-  }, [activeBlocks]);
-
-  useEffect(() => {
-    const available = new Set(paragraphGroups.map((group) => group.id));
-    setCollapsedParagraphIds((prev) => {
-      const next = new Set<string>();
-      prev.forEach((id) => {
-        if (available.has(id)) next.add(id);
-      });
-      return next;
-    });
-  }, [paragraphGroups]);
 
   const emitChange = useCallback(
     (nextActive: Block[], nextParked: Block[]) => {
@@ -217,27 +181,6 @@ export function BlockEditor({
     [onExpandedBlockIdChange, onSelectedIdsChange],
   );
 
-  const handleToggleSelection = useCallback(
-    (blockId: string) => {
-      const next = new Set(selectedIds);
-      if (next.has(blockId)) {
-        next.delete(blockId);
-      } else {
-        next.add(blockId);
-      }
-      onSelectedIdsChange(next);
-    },
-    [onSelectedIdsChange, selectedIds],
-  );
-
-  const handleSelectAll = useCallback(() => {
-    if (selectedIds.size === activeBlocks.length) {
-      onSelectedIdsChange(new Set());
-      return;
-    }
-    onSelectedIdsChange(new Set(activeBlocks.map((block) => block.id)));
-  }, [activeBlocks, onSelectedIdsChange, selectedIds.size]);
-
   const handleBlockTextChange = useCallback(
     (blockId: string, nextText: string) => {
       const next = blocks.map((block) =>
@@ -254,20 +197,6 @@ export function BlockEditor({
     [blocks, onChange, parkedIds],
   );
 
-  const handleBlockTypeChange = useCallback(
-    (blockId: string, nextType: BlockType) => {
-      const next = blocks.map((block) =>
-        block.id === blockId
-          ? {
-              ...block,
-              type: nextType,
-            }
-          : block,
-      );
-      onChange(updateBlockOrder(next), new Set(parkedIds));
-    },
-    [blocks, onChange, parkedIds],
-  );
 
   const parkBlock = useCallback(
     (blockId: string, insertIndex?: number) => {
@@ -417,21 +346,6 @@ export function BlockEditor({
     [activeBlocks, emitChange, focusBlock, parkedBlocks, selectOnly],
   );
 
-  const handleDuplicate = useCallback(
-    (blockId: string) => {
-      const index = activeBlocks.findIndex((block) => block.id === blockId);
-      if (index === -1) return;
-      const nextActive = [...activeBlocks];
-      const copy = duplicateBlock(activeBlocks[index]);
-      copy.paragraphId = activeBlocks[index].paragraphId;
-      nextActive.splice(index + 1, 0, copy);
-      emitChange(nextActive, parkedBlocks);
-      selectOnly(copy.id);
-      focusBlock(copy.id);
-    },
-    [activeBlocks, emitChange, focusBlock, parkedBlocks, selectOnly],
-  );
-
   const handleMoveByKey = useCallback(
     (blockId: string, direction: 'up' | 'down') => {
       const sourceIsParked = parkedIds.has(blockId);
@@ -453,37 +367,6 @@ export function BlockEditor({
     },
     [activeBlocks, emitChange, focusBlock, parkedBlocks, parkedIds],
   );
-
-  const handleDeleteSelection = useCallback(() => {
-    if (selectedIds.size === 0) return;
-    const nextActive = activeBlocks.filter((block) => !selectedIds.has(block.id));
-    const nextParked = parkedBlocks.filter((block) => !selectedIds.has(block.id));
-    emitChange(nextActive, nextParked);
-    onSelectedIdsChange(new Set());
-    if (expandedBlockId && selectedIds.has(expandedBlockId)) {
-      onExpandedBlockIdChange(nextActive[0]?.id ?? null);
-    }
-  }, [
-    activeBlocks,
-    emitChange,
-    expandedBlockId,
-    onExpandedBlockIdChange,
-    onSelectedIdsChange,
-    parkedBlocks,
-    selectedIds,
-  ]);
-
-  const handleToggleParagraph = useCallback((paragraphId: string) => {
-    setCollapsedParagraphIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(paragraphId)) {
-        next.delete(paragraphId);
-      } else {
-        next.add(paragraphId);
-      }
-      return next;
-    });
-  }, []);
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setDraggingId(String(event.active.id));
@@ -619,7 +502,6 @@ export function BlockEditor({
     [findingCountsByBlock],
   );
   const selectedCount = selectedIds.size;
-  const allSelected = activeBlocks.length > 0 && selectedCount === activeBlocks.length;
 
   const { setNodeRef: setActiveDropRef, isOver: isOverActiveZone } = useDroppable({
     id: CONTAINER_ACTIVE,
@@ -631,43 +513,24 @@ export function BlockEditor({
   if (blocks.length === 0) {
     return (
       <div className="rounded-xl border border-[#2f2822] bg-[#0f0c0a] px-4 py-6 text-sm text-[#cbbfb0]">
-        Noch keine Bausteine. Wechsel in den Fließtext und zurück, um Absätze zu
+        Noch keine Bausteine. Wechsel in den Fliestext und zurueck, um Saetze zu
         erzeugen.
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-xl border border-[#2f2822] bg-[#0f0c0a] px-3 py-2">
+    <div className="space-y-3">
+      <div className="rounded-xl border border-[#2f2822] bg-[#0f0c0a] px-3 py-2.5">
         <div className="flex flex-wrap items-center gap-2 text-xs text-[#cbbfb0]">
-          <span>{activeBlocks.length} Sätze</span>
-          <span>·</span>
-          <span>{paragraphGroups.length} Absätze</span>
-          <span className="ml-auto">
-            {selectedCount > 0 ? `${selectedCount} ausgewählt` : 'Keine Auswahl'}
-          </span>
-          <button
-            type="button"
-            onClick={handleSelectAll}
-            className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#221a13]"
-          >
-            {allSelected ? 'Auswahl lösen' : 'Alle wählen'}
-          </button>
-          <button
-            type="button"
-            onClick={handleDeleteSelection}
-            disabled={selectedCount === 0}
-            className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#221a13] disabled:opacity-40"
-          >
-            Auswahl löschen
-          </button>
+          <span>{activeBlocks.length} Saetze</span>
+          {selectedCount > 0 && <span>{selectedCount} aktiv</span>}
+          {analysisStale && (
+            <span className="rounded-full border border-[#4f3b24] bg-[#20160d] px-2 py-0.5 text-[10px] text-[#e9c69c]">
+              Markierungen veraltet
+            </span>
+          )}
         </div>
-        {analysisStale && (
-          <div className="mt-2 rounded border border-[#4f3b24] bg-[#20160d] px-2 py-1 text-[11px] text-[#e9c69c]">
-            Markierungen sind veraltet. Für verlässliche Hinweise erneut scannen.
-          </div>
-        )}
       </div>
 
       <DndContext
@@ -680,7 +543,7 @@ export function BlockEditor({
       >
         <div
           ref={setActiveDropRef}
-          className={`rounded-2xl border bg-[#0f0c0a] p-3 ${
+          className={`rounded-xl border bg-[#0f0c0a] p-2 ${
             isOverActiveZone && draggingId && parkedIds.has(draggingId)
               ? 'border-[#c9b18a]'
               : 'border-[#2f2822]'
@@ -690,104 +553,72 @@ export function BlockEditor({
             items={activeBlocks.map((block) => block.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-3">
-              {paragraphGroups.map((group) => {
-                const collapsed = collapsedParagraphIds.has(group.id);
-                const firstText = group.blocks[0]?.text ?? '';
+            <div className="space-y-1.5">
+              {activeBlocks.map((block, index) => {
+                const showDropMarker = dropMarker.targetId === block.id;
+                const findingSpans = spansByBlock[block.id] ?? [];
+                const findingCounts = countsByBlock[block.id] ?? {};
                 return (
-                  <section
-                    key={group.id}
-                    className="rounded-xl border border-[#2f2822] bg-[#120f0c]"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleToggleParagraph(group.id)}
-                      className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-xs text-[#cbbfb0]"
-                    >
-                      <span className="inline-flex items-center gap-2">
-                        {collapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
-                        Absatz {group.index + 1}
-                        <span className="rounded-full border border-[#3b3128] px-2 py-0.5 text-[10px] text-[#f7f4ed]">
-                          {group.blocks.length}
-                        </span>
-                      </span>
-                      {collapsed && (
-                        <span className="line-clamp-1 max-w-[70%] text-[11px] text-[#ad9f90]">
-                          {firstText}
-                        </span>
-                      )}
-                    </button>
-
-                    {!collapsed && (
-                      <div className="space-y-2 px-2 pb-2">
-                        {group.blocks.map((block) => {
-                          const globalIndex = activeIndexMap[block.id] ?? 0;
-                          const showDropMarker = dropMarker.targetId === block.id;
-                          const findingSpans = spansByBlock[block.id] ?? [];
-                          const findingCounts = countsByBlock[block.id] ?? {};
-                          return (
-                            <MemoBlockCard
-                              key={block.id}
-                              block={block}
-                              index={globalIndex}
-                              selected={selectedIds.has(block.id)}
-                              expanded={expandedBlockId === block.id}
-                              onSelectOnly={selectOnly}
-                              onToggleSelect={handleToggleSelection}
-                              onTextChange={handleBlockTextChange}
-                              onTypeChange={handleBlockTypeChange}
-                              onSplit={handleSplit}
-                              onMergePrev={handleMergePrev}
-                              onMergeNext={handleMergeNext}
-                              onDuplicate={handleDuplicate}
-                              onDelete={handleDelete}
-                              onTogglePark={handleTogglePark}
-                              onMoveByKey={handleMoveByKey}
-                              onCursorChange={(value) =>
-                                setCursorMap((prev) => ({ ...prev, [block.id]: value }))
-                              }
-                              canMergePrev={globalIndex > 0}
-                              canMergeNext={globalIndex < activeBlocks.length - 1}
-                              matchCount={matchCountMap[block.id] ?? 0}
-                              isActiveMatch={activeMatchBlockId === block.id}
-                              blockRefs={blockRefs}
-                              findingSpans={findingSpans}
-                              findingCounts={findingCounts}
-                              findingStyles={findingStyles}
-                              activeFindingId={activeFindingId ?? null}
-                              analysisStale={analysisStale}
-                              allowInlinePreviewAction={allowInlinePreviewAction}
-                              onRequestPreview={onRequestPreview}
-                              onIgnoreFinding={onIgnoreFinding}
-                              showDropMarker={showDropMarker}
-                              dropMarkerLabel={
-                                dropMarker.fromArchive
-                                  ? 'Einfügen aus Ablage'
-                                  : dropMarker.crossParagraph
-                                    ? 'Einfügen hier (Absatzgrenze)'
-                                    : 'Einfügen hier'
-                              }
-                            />
-                          );
-                        })}
-                      </div>
-                    )}
-                  </section>
+                  <MemoBlockCard
+                    key={block.id}
+                    block={block}
+                    index={index}
+                    selected={selectedIds.has(block.id)}
+                    expanded={expandedBlockId === block.id}
+                    onSelectOnly={selectOnly}
+                    onTextChange={handleBlockTextChange}
+                    onSplit={handleSplit}
+                    onMergePrev={handleMergePrev}
+                    onMergeNext={handleMergeNext}
+                    onDelete={handleDelete}
+                    onTogglePark={handleTogglePark}
+                    onMoveByKey={handleMoveByKey}
+                    onCursorChange={(value) =>
+                      setCursorMap((prev) => ({ ...prev, [block.id]: value }))
+                    }
+                    canMergePrev={index > 0}
+                    canMergeNext={index < activeBlocks.length - 1}
+                    matchCount={matchCountMap[block.id] ?? 0}
+                    isActiveMatch={activeMatchBlockId === block.id}
+                    blockRefs={blockRefs}
+                    findingSpans={findingSpans}
+                    findingCounts={findingCounts}
+                    findingStyles={findingStyles}
+                    activeFindingId={activeFindingId ?? null}
+                    analysisStale={analysisStale}
+                    allowInlinePreviewAction={allowInlinePreviewAction}
+                    onRequestPreview={onRequestPreview}
+                    onIgnoreFinding={onIgnoreFinding}
+                    showDropMarker={showDropMarker}
+                    dropMarkerLabel={
+                      dropMarker.fromArchive
+                        ? 'Einfuegen aus Ablage'
+                        : dropMarker.crossParagraph
+                          ? 'Einfuegen hier (Absatzgrenze)'
+                          : 'Einfuegen hier'
+                    }
+                  />
                 );
               })}
             </div>
           </SortableContext>
 
+          {activeBlocks.length === 0 && (
+            <div className="rounded-lg border border-dashed border-[#4a3d2b] bg-[#120f0c] px-3 py-6 text-center text-xs text-[#cbbfb0]">
+              Alle Saetze liegen in der Ablage.
+            </div>
+          )}
+
           {dropMarker.targetId === DROP_END_MARKER_ID && (
-            <div className="mt-3 rounded border border-dashed border-[#c9b18a] bg-[#23190f] px-3 py-2 text-xs text-[#f5d7ab]">
-              Einfügen am Ende der Bausteinliste
+            <div className="mt-2 rounded border border-dashed border-[#c9b18a] bg-[#23190f] px-3 py-2 text-xs text-[#f5d7ab]">
+              Einfuegen am Ende der Satzliste
             </div>
           )}
         </div>
 
         <div
           ref={setArchiveDropRef}
-          className={`rounded-xl border border-dashed bg-[#0f0c0a] p-3 ${
+          className={`rounded-xl border border-dashed bg-[#0f0c0a] px-3 py-2 ${
             isOverArchiveZone && draggingId && !parkedIds.has(draggingId)
               ? 'border-[#d8a96d] ring-1 ring-[#d8a96d]/60'
               : 'border-[#4a3d2b]'
@@ -804,20 +635,19 @@ export function BlockEditor({
 
           {parkedBlocks.length === 0 ? (
             <p className="text-[11px] text-[#cbbfb0]">
-              Ziehe Sätze hierhin, um sie temporär aus dem Text zu nehmen.
+              Ziehe Saetze hierhin, um sie temporaer aus dem Text zu nehmen.
             </p>
           ) : (
             <SortableContext
               items={parkedBlocks.map((block) => block.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {parkedBlocks.map((block) => (
                   <MemoParkedItem
                     key={`parked-${block.id}`}
                     block={block}
                     selected={selectedIds.has(block.id)}
-                    onToggleSelect={handleToggleSelection}
                     onRestore={() => unparkBlock(block.id)}
                     onDelete={handleDelete}
                     onMoveByKey={handleMoveByKey}
@@ -842,13 +672,10 @@ type BlockCardProps = {
   selected: boolean;
   expanded: boolean;
   onSelectOnly: (blockId: string) => void;
-  onToggleSelect: (blockId: string) => void;
   onTextChange: (blockId: string, text: string) => void;
-  onTypeChange: (blockId: string, type: BlockType) => void;
   onSplit: (blockId: string) => void;
   onMergePrev: (blockId: string) => void;
   onMergeNext: (blockId: string) => void;
-  onDuplicate: (blockId: string) => void;
   onDelete: (blockId: string) => void;
   onTogglePark: (blockId: string) => void;
   onMoveByKey: (blockId: string, direction: 'up' | 'down') => void;
@@ -876,13 +703,10 @@ function BlockCard({
   selected,
   expanded,
   onSelectOnly,
-  onToggleSelect,
   onTextChange,
-  onTypeChange,
   onSplit,
   onMergePrev,
   onMergeNext,
-  onDuplicate,
   onDelete,
   onTogglePark,
   onMoveByKey,
@@ -907,8 +731,6 @@ function BlockCard({
     useSortable({ id: block.id });
   const [hovered, setHovered] = useState(false);
   const stats = block.stats ?? computeBlockStats(block.text);
-  const commaCount = (block.text.match(/,/g) ?? []).length;
-  const commaDensity = stats.words > 0 ? Math.round((commaCount / stats.words) * 100) : 0;
 
   const setRefs = (node: HTMLDivElement | null) => {
     setNodeRef(node);
@@ -920,9 +742,24 @@ function BlockCard({
     transition,
   };
 
-  const findingBadgeEntries = Object.entries(findingCounts)
-    .sort(([, leftCount], [, rightCount]) => rightCount - leftCount)
-    .slice(0, 2);
+  const primaryBadge = useMemo(() => {
+    const [topType, topCount] = Object.entries(findingCounts).sort(
+      ([, leftCount], [, rightCount]) => rightCount - leftCount,
+    )[0] ?? [null, null];
+
+    if (topType && typeof topCount === 'number') {
+      const styleToken = findingStyles?.[topType] ?? DEFAULT_FINDING_STYLE;
+      return `${styleToken.badge} ${topCount}`;
+    }
+
+    if (matchCount > 0) {
+      return `${matchCount} Treffer`;
+    }
+
+    return stats.words >= 24 ? 'lang' : null;
+  }, [findingCounts, findingStyles, matchCount, stats.words]);
+
+  const showActions = hovered || selected || expanded;
 
   return (
     <div
@@ -949,62 +786,46 @@ function BlockCard({
           onSelectOnly(block.id);
         }
       }}
-      className={`group relative rounded-xl border bg-[#0f0c0a] px-3 py-3 transition ${
+      className={`group relative rounded-lg border bg-[#0f0c0a] px-2.5 py-2 transition ${
         expanded ? 'border-[#c9b18a]' : 'border-[#2f2822]'
       } ${selected ? 'ring-1 ring-[#a88960]/70' : ''} ${
         isActiveMatch ? 'ring-1 ring-[#d1b487]' : ''
       } ${isDragging ? 'opacity-60' : ''}`}
     >
       {showDropMarker && (
-        <div className="pointer-events-none absolute -top-3 left-8 rounded border border-[#c9b18a] bg-[#20160e] px-2 py-0.5 text-[10px] text-[#f7ddb7]">
+        <div className="pointer-events-none absolute -top-3 left-7 rounded border border-[#c9b18a] bg-[#20160e] px-2 py-0.5 text-[10px] text-[#f7ddb7]">
           {dropMarkerLabel}
         </div>
       )}
 
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2">
         <button
           type="button"
           {...attributes}
           {...listeners}
           onClick={(event) => event.stopPropagation()}
-          className="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded border border-[#2f2822] bg-[#18130f] text-[#f7f4ed]"
+          className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded border border-[#2f2822] bg-[#18130f] text-[#f7f4ed]"
           aria-label="Satz verschieben"
         >
-          <GripVertical size={14} />
+          <GripVertical size={13} />
         </button>
 
-        <div className="min-w-0 flex-1 space-y-2">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#cbbfb0]">
-              <label className="inline-flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={selected}
-                  onChange={() => onToggleSelect(block.id)}
-                  onClick={(event) => event.stopPropagation()}
-                />
-                Auswahl
-              </label>
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="flex items-center justify-between gap-2 text-[11px]">
+            <div className="flex items-center gap-2 text-[#cbbfb0]">
               <span className="rounded-full border border-[#2f2822] px-2 py-0.5 text-[#f7f4ed]">
                 #{index + 1}
               </span>
-              {findingSpans.length > 0 && (
+              {primaryBadge && (
                 <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[10px] text-[#f7d8b1]">
-                  Werkzeug
-                </span>
-              )}
-              {matchCount > 0 && (
-                <span className="rounded-full border border-[#4a3d2b] bg-[#2b2218] px-2 py-0.5 text-[10px] text-[#f7f4ed]">
-                  {matchCount} Treffer
+                  {primaryBadge}
                 </span>
               )}
             </div>
 
             <div
-              className={`flex flex-wrap items-center justify-end gap-1 text-[11px] transition ${
-                expanded || hovered || selected
-                  ? 'opacity-100'
-                  : 'pointer-events-none opacity-0'
+              className={`flex items-center gap-1 transition ${
+                showActions ? 'opacity-100' : 'pointer-events-none opacity-0'
               }`}
             >
               <button
@@ -1013,9 +834,9 @@ function BlockCard({
                   event.stopPropagation();
                   onTogglePark(block.id);
                 }}
-                className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13]"
+                className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-1.5 py-0.5 text-[10px] text-[#f7f4ed] hover:bg-[#211a13]"
               >
-                <Archive size={12} /> Parken
+                <Archive size={11} /> Parken
               </button>
               <button
                 type="button"
@@ -1023,64 +844,31 @@ function BlockCard({
                   event.stopPropagation();
                   onDelete(block.id);
                 }}
-                className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13]"
+                className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-1.5 py-0.5 text-[10px] text-[#f7f4ed] hover:bg-[#211a13]"
               >
-                <Trash2 size={12} /> Löschen
+                <Trash2 size={11} /> Loeschen
               </button>
             </div>
           </div>
 
-          {!expanded && (
-            <div className="flex flex-wrap items-center gap-1 text-[10px]">
-              {findingBadgeEntries.map(([findingType, count]) => {
-                const styleToken = findingStyles?.[findingType] ?? DEFAULT_FINDING_STYLE;
-                return (
-                  <span
-                    key={`${block.id}-${findingType}`}
-                    className="rounded-full border border-[#3c3024] bg-[#20170f] px-2 py-0.5 text-[#f0ddc9]"
-                  >
-                    {styleToken.label} x{count}
-                  </span>
-                );
-              })}
-              {findingBadgeEntries.length < 2 && stats.words >= 22 && (
-                <span className="rounded-full border border-[#3c3024] bg-[#20170f] px-2 py-0.5 text-[#f0ddc9]">
-                  lang
-                </span>
-              )}
-            </div>
-          )}
-
           {expanded ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <textarea
                 value={block.text}
                 onChange={(event) => onTextChange(block.id, event.target.value)}
                 onSelect={(event) => onCursorChange(event.currentTarget.selectionStart ?? 0)}
                 onKeyUp={(event) => onCursorChange(event.currentTarget.selectionStart ?? 0)}
                 onClick={(event) => onCursorChange(event.currentTarget.selectionStart ?? 0)}
-                className="min-h-[110px] w-full resize-y rounded-lg border border-[#2f2822] bg-[#120f0c] p-3 text-sm leading-relaxed text-[#f7f4ed] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+                className="min-h-[96px] w-full resize-y rounded-md border border-[#2f2822] bg-[#120f0c] p-2.5 text-sm leading-relaxed text-[#f7f4ed] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
                 spellCheck
               />
 
-              <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#cbbfb0]">
-                <select
-                  value={block.type}
-                  onChange={(event) => onTypeChange(block.id, event.target.value as BlockType)}
-                  className="rounded border border-[#2f2822] bg-[#120f0c] px-2 py-1 text-[11px] text-[#f7f4ed]"
-                >
-                  {Object.entries(BLOCK_TYPE_LABELS).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-                <span>{stats.words} Wörter</span>
-                <span>{stats.chars} Zeichen</span>
-                <span>Komma-Dichte {commaDensity}%</span>
+              <div className="flex flex-wrap items-center gap-1 text-[10px] text-[#cbbfb0]">
+                <span>{stats.words} W</span>
+                <span>{stats.chars} Z</span>
               </div>
 
-              <div className="flex flex-wrap items-center gap-1 text-[11px] text-[#cbbfb0]">
+              <div className="flex flex-wrap items-center gap-1 text-[11px]">
                 <button
                   type="button"
                   onClick={() => onSplit(block.id)}
@@ -1092,29 +880,22 @@ function BlockCard({
                   type="button"
                   onClick={() => onMergePrev(block.id)}
                   disabled={!canMergePrev}
-                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
+                  className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
                 >
-                  Merge ↑
+                  <ArrowUp size={12} /> Merge
                 </button>
                 <button
                   type="button"
                   onClick={() => onMergeNext(block.id)}
                   disabled={!canMergeNext}
-                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
+                  className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13] disabled:opacity-40"
                 >
-                  Merge ↓
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onDuplicate(block.id)}
-                  className="rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[#f7f4ed] hover:bg-[#211a13]"
-                >
-                  Duplizieren
+                  <ArrowDown size={12} /> Merge
                 </button>
               </div>
 
               {findingSpans.length > 0 && !analysisStale && (
-                <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] p-2 text-xs text-[#f7f4ed]">
+                <div className="rounded-md border border-[#2f2822] bg-[#0f0c0a] p-2 text-xs text-[#f7f4ed]">
                   <InlineFindingText
                     text={block.text}
                     spans={findingSpans}
@@ -1128,22 +909,8 @@ function BlockCard({
               )}
             </div>
           ) : (
-            <div className="rounded-lg border border-[#2f2822] bg-[#120f0c] px-3 py-2 text-sm leading-relaxed text-[#f7f4ed]">
-              {findingSpans.length > 0 && !analysisStale ? (
-                <div className="line-clamp-3">
-                  <InlineFindingText
-                    text={block.text}
-                    spans={findingSpans}
-                    findingStyles={findingStyles}
-                    activeFindingId={activeFindingId}
-                    allowInlinePreviewAction={allowInlinePreviewAction}
-                    onRequestPreview={onRequestPreview}
-                    onIgnoreFinding={onIgnoreFinding}
-                  />
-                </div>
-              ) : (
-                <div className="line-clamp-3 whitespace-pre-wrap">{block.text}</div>
-              )}
+            <div className="rounded-md border border-[#2f2822] bg-[#120f0c] px-2.5 py-2 text-sm leading-relaxed text-[#f7f4ed]">
+              <div className="line-clamp-2 whitespace-pre-wrap">{block.text}</div>
             </div>
           )}
         </div>
@@ -1157,7 +924,6 @@ const MemoBlockCard = memo(BlockCard);
 type ParkedItemProps = {
   block: Block;
   selected: boolean;
-  onToggleSelect: (blockId: string) => void;
   onRestore: () => void;
   onDelete: (blockId: string) => void;
   onMoveByKey: (blockId: string, direction: 'up' | 'down') => void;
@@ -1166,7 +932,6 @@ type ParkedItemProps = {
 function ParkedItem({
   block,
   selected,
-  onToggleSelect,
   onRestore,
   onDelete,
   onMoveByKey,
@@ -1195,46 +960,36 @@ function ParkedItem({
         }
       }}
       className={`rounded-lg border border-[#2f2822] bg-[#120f0c] px-3 py-2 text-xs text-[#d6c9ba] ${
-        isDragging ? 'opacity-60' : ''
-      }`}
+        selected ? 'ring-1 ring-[#a88960]/60' : ''
+      } ${isDragging ? 'opacity-60' : ''}`}
     >
       <div className="mb-2 flex items-center justify-between gap-2">
-        <div className="inline-flex items-center gap-2">
-          <button
-            type="button"
-            {...attributes}
-            {...listeners}
-            className="inline-flex h-6 w-6 items-center justify-center rounded border border-[#2f2822] bg-[#18130f] text-[#f7f4ed]"
-          >
-            <GripVertical size={12} />
-          </button>
-          <label className="inline-flex items-center gap-1 text-[11px] text-[#cbbfb0]">
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={() => onToggleSelect(block.id)}
-            />
-            Auswahl
-          </label>
-        </div>
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="inline-flex h-6 w-6 items-center justify-center rounded border border-[#2f2822] bg-[#18130f] text-[#f7f4ed]"
+        >
+          <GripVertical size={12} />
+        </button>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={onRestore}
             className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#211a13]"
           >
-            <ArrowUp size={11} /> Zurück
+            <ArrowUp size={11} /> Zurueck
           </button>
           <button
             type="button"
             onClick={() => onDelete(block.id)}
             className="inline-flex items-center gap-1 rounded border border-[#2f2822] bg-[#18130f] px-2 py-1 text-[11px] text-[#f7f4ed] hover:bg-[#211a13]"
           >
-            <Trash2 size={11} /> Löschen
+            <Trash2 size={11} /> Loeschen
           </button>
         </div>
       </div>
-      <div className="line-clamp-3 whitespace-pre-wrap">{block.text}</div>
+      <div className="line-clamp-2 whitespace-pre-wrap">{block.text}</div>
     </div>
   );
 }
@@ -1466,3 +1221,7 @@ function InlineFindingText({
     </div>
   );
 }
+
+
+
+
