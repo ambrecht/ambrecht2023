@@ -26,7 +26,17 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env*
 .env*.local
+
+# local exports and dumps
+gptagenten.htm
+gptagenten.html
+*.htm
+*.html
+*.dump
+*.sqlite
+*.sqlite3
 
 # vercel
 .vercel
