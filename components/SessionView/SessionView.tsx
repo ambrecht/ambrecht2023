@@ -249,7 +249,8 @@ export function SessionView() {
               }}
               placeholder="Neue Session schreiben..."
               rows={4}
-              className="min-h-[120px] resize-y rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-3 text-sm leading-6 text-[#fdfbf7] outline-none placeholder:text-[#6f6259] focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+              className="min-h-[120px] resize-y rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-3 font-serif text-[18px] leading-[1.75] text-[#fdfbf7] outline-none placeholder:text-[#6f6259] focus-visible:ring-2 focus-visible:ring-[#c9b18a] md:text-[19px]"
+              style={{ fontFeatureSettings: '"liga","kern"' }}
             />
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-h-5 text-sm">
