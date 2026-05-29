@@ -8,7 +8,7 @@ import React, {
   useEffect,
 } from 'react';
 
-import { Search, Filter, MoreHorizontal } from 'lucide-react';
+import { FilePlus2, Filter, MoreHorizontal, Search, X } from 'lucide-react';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
 import type { Session } from './types';
@@ -21,6 +21,10 @@ export function SessionView() {
     'newest' | 'oldest' | 'words' | 'letters' | 'random'
   >('newest');
   const [randomSeed, setRandomSeed] = useState(() => Date.now());
+  const [newTitle, setNewTitle] = useState('');
+  const [newText, setNewText] = useState('');
+  const [newTags, setNewTags] = useState('');
+  const [createError, setCreateError] = useState<string | null>(null);
   const randomKeyRef = useRef(new Map<number, number>());
 
   useEffect(() => {
@@ -45,12 +49,14 @@ export function SessionView() {
     searchPage,
     isLoading,
     isLoadingMore,
+    isCreating,
     isPending,
     isUpdating,
     hasMore,
     error,
     refreshSessions,
     loadMore,
+    createSession,
     updateSession,
   } = useSessionData({
     pageSize: 50,
@@ -89,7 +95,45 @@ export function SessionView() {
     });
 
     return sorted;
-  }, [getRandomKey, sessions, sortBy, randomSeed]);
+  }, [getRandomKey, sessions, sortBy]);
+
+  const resetCreateForm = () => {
+    setNewTitle('');
+    setNewText('');
+    setNewTags('');
+    setCreateError(null);
+  };
+
+  const handleCreateSession = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const text = newText.trim();
+    if (!text) {
+      setCreateError('Bitte erst einen Sessiontext schreiben.');
+      return;
+    }
+
+    const tags = newTags
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    const result = await createSession({
+      text,
+      title: newTitle.trim() || undefined,
+      status: 'draft',
+      tags,
+    });
+
+    if (!result.success) {
+      setCreateError(result.error ?? 'Session konnte nicht erstellt werden.');
+      return;
+    }
+
+    resetCreateForm();
+    if (search.trim()) {
+      setSearch('');
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#0b0a09] text-[#f7f4ed]">
@@ -165,6 +209,75 @@ export function SessionView() {
             </div>
           </div>
         </header>
+
+        <form
+          onSubmit={handleCreateSession}
+          className="mb-8 rounded-lg border border-[#2f2822] bg-[#100d0a] p-4"
+        >
+          <div className="flex flex-col gap-3">
+            <div className="grid gap-3 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+              <label className="sr-only" htmlFor="new-session-title">
+                Titel
+              </label>
+              <input
+                id="new-session-title"
+                value={newTitle}
+                onChange={(event) => setNewTitle(event.target.value)}
+                placeholder="Neuer Sessiontitel"
+                className="min-h-10 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 text-sm text-[#fdfbf7] outline-none placeholder:text-[#6f6259] focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+              />
+              <label className="sr-only" htmlFor="new-session-tags">
+                Tags
+              </label>
+              <input
+                id="new-session-tags"
+                value={newTags}
+                onChange={(event) => setNewTags(event.target.value)}
+                placeholder="Tags, durch Komma getrennt"
+                className="min-h-10 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 text-sm text-[#fdfbf7] outline-none placeholder:text-[#6f6259] focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+              />
+            </div>
+            <label className="sr-only" htmlFor="new-session-text">
+              Sessiontext
+            </label>
+            <textarea
+              id="new-session-text"
+              value={newText}
+              onChange={(event) => {
+                setNewText(event.target.value);
+                if (createError) setCreateError(null);
+              }}
+              placeholder="Neue Session schreiben..."
+              rows={4}
+              className="min-h-[120px] resize-y rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-3 text-sm leading-6 text-[#fdfbf7] outline-none placeholder:text-[#6f6259] focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+            />
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-h-5 text-sm">
+                {createError && <span className="text-red-300">{createError}</span>}
+              </div>
+              <div className="flex items-center gap-2 self-end">
+                {(newTitle || newText || newTags) && (
+                  <button
+                    type="button"
+                    onClick={resetCreateForm}
+                    className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#2f2822] px-3 text-sm text-[#f7f4ed] hover:bg-[#191511] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a]"
+                  >
+                    <X size={16} />
+                    Leeren
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  disabled={isCreating || !newText.trim()}
+                  className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#6f5431] bg-[#c9b18a] px-4 text-sm font-semibold text-[#120f0c] hover:bg-[#dbc397] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f7f4ed] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <FilePlus2 size={16} />
+                  {isCreating ? 'Erstelle...' : 'Session erstellen'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
 
         <div className="flex items-center gap-3 mb-6">
           <button

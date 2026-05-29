@@ -30,6 +30,9 @@ type UpdateSessionPayload = Partial<
   Pick<Session, 'title' | 'status' | 'tags'>
 >;
 
+type CreateSessionPayload = Pick<Session, 'text'> &
+  Partial<Pick<Session, 'title' | 'status' | 'tags'>>;
+
 type UseSessionDataOptions = {
   pageSize?: number;
   prefetchDelayMs?: number;
@@ -86,6 +89,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
@@ -369,6 +373,62 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     [startTransition],
   );
 
+  const createSession = useCallback(
+    async (payload: CreateSessionPayload) => {
+      const text = payload.text.trim();
+      if (!text) {
+        return { success: false as const, error: 'Text darf nicht leer sein.' };
+      }
+
+      const body: Record<string, unknown> = { text };
+      const title = payload.title?.trim();
+      if (title) body.title = title;
+      if (payload.status) body.status = payload.status;
+      if (payload.tags) body.tags = payload.tags;
+
+      setIsCreating(true);
+      setError(null);
+      try {
+        const res = await fetch(buildApiUrl('/sessions'), {
+          method: 'POST',
+          headers: API_HEADERS,
+          body: JSON.stringify(body),
+        });
+        const json = (await res.json()) as {
+          success: boolean;
+          data?: Session;
+          error?: string;
+          message?: string;
+        };
+        if (!res.ok || !json.success || !json.data) {
+          throw new Error(
+            json.error || json.message || 'Session konnte nicht erstellt werden.',
+          );
+        }
+        const created = normalizeSession(json.data as SessionPayload);
+        byIdRef.current.set(created.id, created);
+        startTransition(() => {
+          setSessions(Array.from(byIdRef.current.values()));
+          setPagination((current) => ({
+            ...current,
+            total: current.total + 1,
+          }));
+        });
+        return { success: true as const, session: created };
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Unbekannter Fehler beim Erstellen.';
+        setError(message);
+        return { success: false as const, error: message };
+      } finally {
+        setIsCreating(false);
+      }
+    },
+    [startTransition],
+  );
+
   useEffect(() => {
     if (searchQuery === lastQueryRef.current) return;
     lastQueryRef.current = searchQuery;
@@ -414,11 +474,13 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     hasMore,
     isLoading,
     isLoadingMore,
+    isCreating,
     isUpdating,
     isPending,
     error,
     refreshSessions,
     loadMore,
+    createSession,
     updateSession,
   };
 }
