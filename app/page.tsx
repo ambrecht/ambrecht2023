@@ -22,10 +22,12 @@ const INTERVAL_MS = 120000;
 
 const hikam = (hikamData as { hikam: Hikma[] }).hikam;
 
+const getRandomIndex = () => Math.floor(Math.random() * hikam.length);
+
 const normalize = (text: string) => text.replace(/\s+/g, ' ').trim();
 
 export default function WisdomPage() {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(getRandomIndex);
   const [isRunning, setIsRunning] = useState(true);
   const [copied, setCopied] = useState(false);
   const [entered, setEntered] = useState(false);
