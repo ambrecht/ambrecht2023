@@ -10,6 +10,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import hikamData from '@/src/json/hikma3.json';
+import sufiCommentData from '@/src/json/sufi-kommentar.json';
 
 type Hikma = {
   nummer: number;
@@ -22,15 +23,28 @@ type Hikma = {
   notiz?: string;
 };
 
+type SufiComment = {
+  nummer: number;
+  kommentar_sufi_de: string;
+};
+
 const INTERVAL_MS = 120000;
 
 const hikam = (hikamData as { hikam: Hikma[] }).hikam;
+const sufiCommentsByNumber = new Map(
+  (sufiCommentData as { hikam: SufiComment[] }).hikam.map((hikma) => [
+    hikma.nummer,
+    hikma.kommentar_sufi_de,
+  ])
+);
 
 const getRandomIndex = () => Math.floor(Math.random() * hikam.length);
 
 const normalize = (text: string) => text.replace(/\s+/g, ' ').trim();
 const displayText = (hikma: Hikma) =>
   hikma.version_lyrisch_de || hikma.version_nah_de || hikma.uebersetzung_de;
+const commentText = (hikma: Hikma) =>
+  sufiCommentsByNumber.get(hikma.nummer) || hikma.kommentar_de;
 
 export default function WisdomPage() {
   const [index, setIndex] = useState(getRandomIndex);
@@ -42,6 +56,7 @@ export default function WisdomPage() {
   const current = hikam[index];
   const count = hikam.length;
   const currentTranslation = displayText(current);
+  const currentComment = commentText(current);
 
   const progressKey = `${index}-${isRunning}`;
 
@@ -136,9 +151,9 @@ export default function WisdomPage() {
         '',
         currentTranslation.trim(),
         '',
-        normalize(current.kommentar_de),
+        normalize(currentComment),
       ].join('\n'),
-    [current, currentTranslation]
+    [current, currentComment, currentTranslation]
   );
 
   const copyWisdom = async () => {
@@ -192,7 +207,7 @@ export default function WisdomPage() {
           </p>
 
           <p className="hikam-comment mx-auto text-pretty leading-relaxed text-[#d9d0bd]/80">
-            {current.kommentar_de}
+            {currentComment}
           </p>
         </article>
 

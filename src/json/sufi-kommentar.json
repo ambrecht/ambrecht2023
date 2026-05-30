@@ -1,0 +1,1608 @@
+{
+  "metadata": {
+    "title": "al-Ḥikam al-ʿAṭāʾiyya – korrigierte Sufi-Kommentare",
+    "beschreibung": "Jede der 264 Hikam erhält einen eigenständigen kurzen Kommentar aus Tasawwuf-/Sufi-Perspektive.",
+    "quelle": "hikam.json / al-Ḥikam al-ʿAṭāʾiyya – 264 Hikam",
+    "anzahl_hikam": 264,
+    "felder": [
+      "nummer",
+      "arabisch",
+      "uebersetzung_de",
+      "kommentar_sufi_de"
+    ],
+    "validierung": {
+      "max_zeichen_erlaubt": 500,
+      "max_zeichen_gefunden": 173,
+      "min_zeichen_gefunden": 91,
+      "anzahl_eindeutiger_kommentare": 264,
+      "duplikate": 0
+    },
+    "hinweis": "Korrigierte Fassung: keine wiederholten Kommentartexte; Kommentare sind bewusst kurz, didaktisch und tasawwuf-orientiert."
+  },
+  "hikam": [
+    {
+      "nummer": 1,
+      "arabisch": "مِنْ عَلامَةِ الِاعْتِمَادِ عَلَى العَمَلِ نُقْصَانُ الرَّجَاءِ عِنْدَ وُجُودِ الزَّلَلِ.",
+      "uebersetzung_de": "Ein Zeichen dafür, dass man sich auf das eigene Tun stützt, ist: Die Hoffnung nimmt ab, sobald ein Fehltritt geschieht.",
+      "kommentar_sufi_de": "Der sālik lernt: Hoffnung ruht nicht auf der Bilanz der Werke, sondern auf Allahs Raḥma. Der Fehltritt bricht den Stolz, nicht die Tür. Kehre mit zerbrochenem Herzen zurück."
+    },
+    {
+      "nummer": 2,
+      "arabisch": "إِرَادَتُكَ التَّجْرِيدَ مَعَ إِقَامَةِ اللهِ إِيَّاكَ فِي الأَسْبَابِ مِنَ الشَّهْوَةِ الخَفِيَّةِ، وَإِرَادَتُكَ الأَسْبَابَ مَعَ إِقَامَةِ اللهِ إِيَّاكَ فِي التَّجْرِيدِ انْحِطَاطٌ عَنِ الهِمَّةِ العَلِيَّةِ.",
+      "uebersetzung_de": "Wenn du Loslösung willst, obwohl Gott dich in äußere Mittel gestellt hat, ist das eine verborgene Begierde. Wenn du aber äußere Mittel willst, obwohl Gott dich in Loslösung gestellt hat, ist das ein Absinken von hoher geistiger Ausrichtung.",
+      "kommentar_sufi_de": "Adab ist, den Ort anzunehmen, in den Allah dich stellt. Ursachen oder Entsagung sind nur Gewänder; gefährlich wird beides, wenn die nafs darin ihr eigenes Bild sucht."
+    },
+    {
+      "nummer": 3,
+      "arabisch": "سَوَابِقُ الهِمَمِ لَا تَخْرِقُ أَسْوَارَ الأَقْدَارِ.",
+      "uebersetzung_de": "Voraus eilende Entschlüsse durchbrechen nicht die Mauern der göttlichen Bestimmungen.",
+      "kommentar_sufi_de": "Hohe Entschlüsse sind Flügel, doch das Qadar ist der Himmel. Der Sufi strengt sich an, ohne die göttliche Bestimmung stürmen zu wollen."
+    },
+    {
+      "nummer": 4,
+      "arabisch": "أَرِحْ نَفْسَكَ مِنَ التَّدْبِيرِ، فَمَا قَامَ بِهِ غَيْرُكَ عَنْكَ لَا تَقُمْ بِهِ لِنَفْسِكَ.",
+      "uebersetzung_de": "Entlaste dich vom übermäßigen Lenken-Wollen; was ein anderer für dich übernommen hat, musst du nicht selbst für dich übernehmen.",
+      "kommentar_sufi_de": "Ruhen bedeutet nicht Trägheit, sondern das Ende des inneren Widerstands. Was Allah für dich trägt, soll die Seele nicht aus Eigensinn noch einmal schultern."
+    },
+    {
+      "nummer": 5,
+      "arabisch": "اجْتِهَادُكَ فِيمَا ضَمِنَ لَكَ، وَتَقْصِيرُكَ فِيمَا طَلَبَ مِنْكَ، دَلِيلٌ عَلَى انْطِمَاسِ البَصِيرَةِ مِنْكَ.",
+      "uebersetzung_de": "Dein Eifer in dem, was Er dir garantiert hat, und deine Nachlässigkeit in dem, was Er von dir verlangt, ist ein Zeichen dafür, dass deine innere Einsicht verdunkelt ist.",
+      "kommentar_sufi_de": "Die verdunkelte baṣīra jagt dem Versorgten nach und vernachlässigt das Befohlene. Der Weg beginnt, wenn Pflicht wichtiger wird als Ergebnis."
+    },
+    {
+      "nummer": 6,
+      "arabisch": "لَا يَكُنْ تَأَخُّرُ أَمَدِ العَطَاءِ مَعَ الإِلْحَاحِ فِي الدُّعَاءِ مُوجِبًا لِيَأْسِكَ، فَهُوَ ضَمِنَ لَكَ الإِجَابَةَ فِيمَا يَخْتَارُهُ لَكَ، لَا فِيمَا تَخْتَارُهُ لِنَفْسِكَ، وَفِي الوَقْتِ الَّذِي يُرِيدُ، لَا فِي الوَقْتِ الَّذِي تُرِيدُ.",
+      "uebersetzung_de": "Dass die Gabe trotz beharrlichen Bittens verzögert wird, soll dich nicht verzweifeln lassen. Er hat dir Erhörung zugesichert in dem, was Er für dich wählt, nicht in dem, was du für dich wählst; und zu der Zeit, die Er will, nicht zu der Zeit, die du willst.",
+      "kommentar_sufi_de": "Verzögerte Antwort ist keine Zurückweisung. Das Duʿāʾ reinigt den Bittenden, bis er die Gabe liebt, die Allah wählt, nicht die Form, die sein Wunsch verlangt."
+    },
+    {
+      "nummer": 7,
+      "arabisch": "لَا يُشَكِّكَنَّكَ فِي الوَعْدِ عَدَمُ وُقُوعِ المَوْعُودِ وَإِنْ تَعَيَّنَ زَمَنُهُ، لِئَلَّا يَكُونَ ذَلِكَ قَدْحًا فِي بَصِيرَتِكَ وَإِخْمَادًا لِنُورِ سَرِيرَتِكَ.",
+      "uebersetzung_de": "Lass dich durch das Ausbleiben des Versprochenen nicht am Versprechen zweifeln, selbst wenn seine Zeit bestimmt schien; sonst wird deine Einsicht verletzt und das Licht deines Inneren gedämpft.",
+      "kommentar_sufi_de": "Ein Versprechen Allahs wird nicht durch wechselnde Zustände entkräftet. Der Sufi hält am Vertrauen fest, auch wenn die sichtbaren Spuren verborgen bleiben."
+    },
+    {
+      "nummer": 8,
+      "arabisch": "إِذَا فَتَحَ لَكَ وِجْهَةً مِنَ التَّعَرُّفِ فَلَا تُبَالِ مَعَهَا إِنْ قَلَّ عَمَلُكَ، فَإِنَّهُ مَا فَتَحَهَا لَكَ إِلَّا وَهُوَ يُرِيدُ أَنْ يَتَعَرَّفَ إِلَيْكَ. أَلَمْ تَعْلَمْ أَنَّ التَّعَرُّفَ هُوَ مُورِدُهُ عَلَيْكَ، وَالأَعْمَالَ أَنْتَ مُهْدِيهَا إِلَيْهِ؟ وَأَيْنَ مَا تُهْدِيهِ إِلَيْهِ مِمَّا هُوَ مُورِدُهُ عَلَيْكَ؟",
+      "uebersetzung_de": "Wenn Er dir eine Richtung der Erkenntnis öffnet, dann kümmere dich nicht darum, dass dein Werk dabei gering erscheint. Er öffnet sie nur, weil Er sich dir bekannt machen will. Die Erkenntnis kommt von Ihm zu dir; die Werke sind deine Gabe an Ihn. Und was ist deine Gabe im Vergleich zu dem, was Er dir schenkt?",
+      "kommentar_sufi_de": "Wird dir ein Tor des Dienstes geöffnet, miss es nicht an deiner Leistung. Ein kleiner Dienst mit göttlicher Einladung ist größer als ein großes Werk aus Eigenwillen."
+    },
+    {
+      "nummer": 9,
+      "arabisch": "تَنَوَّعَتْ أَجْنَاسُ الأَعْمَالِ لِتَنَوُّعِ وَارِدَاتِ الأَحْوَالِ.",
+      "uebersetzung_de": "Die Arten der Werke sind vielfältig, weil die Eingebungen und Zustände vielfältig sind.",
+      "kommentar_sufi_de": "Die Wege der Werke sind verschieden, weil Herzen verschieden atmen. Der Meister sieht nicht nur die Form der Handlung, sondern den inneren Zustand, der sie trägt."
+    },
+    {
+      "nummer": 10,
+      "arabisch": "الأَعْمَالُ صُوَرٌ قَائِمَةٌ، وَأَرْوَاحُهَا وُجُودُ سِرِّ الإِخْلَاصِ فِيهَا.",
+      "uebersetzung_de": "Die Werke sind aufgerichtete Formen; ihre Seelen sind das Vorhandensein des Geheimnisses der Aufrichtigkeit in ihnen.",
+      "kommentar_sufi_de": "Werk ohne ikhlāṣ ist ein Körper ohne Seele. Auf dem Pfad zählt nicht die Bewegung der Glieder, sondern das geheime Leben im Herzen."
+    },
+    {
+      "nummer": 11,
+      "arabisch": "ادْفِنْ وُجُودَكَ فِي أَرْضِ الخُمُولِ، فَمَا نَبَتَ مِمَّا لَمْ يُدْفَنْ لَا يَتِمُّ نَتَاجُهُ.",
+      "uebersetzung_de": "Begrabe dein eigenes Hervortreten im Boden der Unauffälligkeit; was nicht begraben wird, dessen Wachstum reift nicht vollkommen.",
+      "kommentar_sufi_de": "Verbirg dich wie ein Same in der Erde. Wer vor Menschen früh sichtbar werden will, verliert oft die Reife, die nur im Schweigen des Herzens wächst."
+    },
+    {
+      "nummer": 12,
+      "arabisch": "مَا نَفَعَ القَلْبَ شَيْءٌ مِثْلُ عُزْلَةٍ يَدْخُلُ بِهَا مَيْدَانَ فِكْرَةٍ.",
+      "uebersetzung_de": "Nichts nützt dem Herzen so sehr wie eine Zurückgezogenheit, durch die es das Feld des Nachdenkens betritt.",
+      "kommentar_sufi_de": "Khalwa ist kein Fliehen vor Menschen, sondern Eintritt in die Landschaft der murāqaba. Dort hört das Herz, was im Lärm der Gewohnheit verstummt."
+    },
+    {
+      "nummer": 13,
+      "arabisch": "كَيْفَ يُشْرِقُ قَلْبٌ صُوَرُ الأَكْوَانِ مُنْطَبِعَةٌ فِي مِرْآتِهِ؟ أَمْ كَيْفَ يَرْحَلُ إِلَى اللهِ وَهُوَ مُكَبَّلٌ بِشَهَوَاتِهِ؟ أَمْ كَيْفَ يَطْمَعُ أَنْ يَدْخُلَ حَضْرَةَ اللهِ وَهُوَ لَمْ يَتَطَهَّرْ مِنْ جَنَابَةِ غَفَلَاتِهِ؟ أَمْ كَيْفَ يَرْجُو أَنْ يَفْهَمَ دَقَائِقَ الأَسْرَارِ وَهُوَ لَمْ يَتُبْ مِنْ هَفَوَاتِهِ؟",
+      "uebersetzung_de": "Wie soll ein Herz leuchten, wenn die Bilder der Welt in seinem Spiegel eingeprägt sind? Wie soll es zu Gott reisen, während es an seine Begierden gefesselt ist? Wie soll es hoffen, in Gottes Gegenwart einzutreten, wenn es sich nicht von der Unreinheit seiner Achtlosigkeiten gereinigt hat? Wie soll es die Feinheiten der Geheimnisse verstehen, wenn es seine Fehltritte nicht bereut hat?",
+      "kommentar_sufi_de": "Ein mit Weltbildern bedeckter Spiegel fängt das Licht nicht klar. Reise beginnt, wenn Begierde gelöst und das Herz von Fremdbildern gereinigt wird."
+    },
+    {
+      "nummer": 14,
+      "arabisch": "الكَوْنُ كُلُّهُ ظُلْمَةٌ، وَإِنَّمَا أَنَارَهُ ظُهُورُ الحَقِّ فِيهِ؛ فَمَنْ رَأَى الكَوْنَ وَلَمْ يَشْهَدْهُ فِيهِ، أَوْ عِنْدَهُ، أَوْ قَبْلَهُ، أَوْ بَعْدَهُ، فَقَدْ أَعْوَزَهُ وُجُودُ الأَنْوَارِ، وَحُجِبَتْ عَنْهُ شُمُوسُ المَعَارِفِ بِسُحُبِ الآثَارِ.",
+      "uebersetzung_de": "Das ganze Weltsein ist Dunkelheit; erhellt wird es nur durch das Erscheinen des Wahren in ihm. Wer die Welt sieht und Ihn nicht in ihr, bei ihr, vor ihr oder nach ihr bezeugt, dem fehlen die Lichter; die Sonnen der Erkenntnisse sind ihm durch die Wolken der Spuren verdeckt.",
+      "kommentar_sufi_de": "Die Welt ist dunkel, bis der Ḥaqq in ihr erkannt wird. Der Sufi bleibt nicht beim Ding stehen; er sucht den Fingerabdruck des Schöpfers darin."
+    },
+    {
+      "nummer": 15,
+      "arabisch": "مِمَّا يَدُلُّكَ عَلَى وُجُودِ قَهْرِهِ سُبْحَانَهُ أَنْ حَجَبَكَ عَنْهُ بِمَا لَيْسَ بِمَوْجُودٍ مَعَهُ.",
+      "uebersetzung_de": "Zu dem, was dich auf die Macht Seiner Überwältigung hinweist, gehört, dass Er dich durch etwas von Ihm verhüllt, das neben Ihm gar kein eigenständiges Sein hat.",
+      "kommentar_sufi_de": "Der Schleier hat keine eigene Macht. Gerade das Geschaffene, das dich verdeckt, besteht nur durch Ihn; erkennst du das, wird der Schleier zum Hinweis."
+    },
+    {
+      "nummer": 16,
+      "arabisch": "كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي أَظْهَرَ كُلَّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي ظَهَرَ بِكُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي ظَهَرَ فِي كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي ظَهَرَ لِكُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الظَّاهِرُ قَبْلَ وُجُودِ كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ أَظْهَرُ مِنْ كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الوَاحِدُ الَّذِي لَيْسَ مَعَهُ شَيْءٌ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ أَقْرَبُ إِلَيْكَ مِنْ كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَلَوْلَاهُ مَا كَانَ وُجُودُ كُلِّ شَيْءٍ؟ يَا عَجَبًا، كَيْفَ يَظْهَرُ الوُجُودُ فِي العَدَمِ؟ أَمْ كَيْفَ يَثْبُتُ الحَادِثُ مَعَ مَنْ لَهُ وَصْفُ القِدَمِ؟",
+      "uebersetzung_de": "Wie kann man sich vorstellen, dass Ihn etwas verhüllt, wo Er doch alles erscheinen ließ? Wo Er durch alles, in allem und für alles erscheint? Wo Er vor allem ist, offenkundiger als alles, der Eine ohne etwas neben Ihm, dir näher als alles, und ohne Ihn nichts bestehen könnte? Wie erstaunlich: Wie sollte Sein im Nichtsein erscheinen, oder das Entstandene Bestand haben neben Dem, dem die Eigenschaft der Ewigkeit zukommt?",
+      "kommentar_sufi_de": "Nichts kann Allah verhüllen, außer die Blindheit des Blicks. Alles ruft Ihn aus, doch die nafs hört Namen und Formen statt den Einen."
+    },
+    {
+      "nummer": 17,
+      "arabisch": "مَا تَرَكَ مِنَ الجَهْلِ شَيْئًا مَنْ أَرَادَ أَنْ يُحْدِثَ فِي الوَقْتِ غَيْرَ مَا أَظْهَرَهُ اللهُ فِيهِ.",
+      "uebersetzung_de": "Nichts von Unwissenheit hat derjenige ausgelassen, der in einer Zeit etwas anderes hervorbringen will als das, was Gott in ihr erscheinen lässt.",
+      "kommentar_sufi_de": "Unwissenheit will die Zeit nach dem eigenen Plan formen. Weisheit ist, die Aufgabe dieser Stunde zu erkennen und darin gegenwärtig zu dienen."
+    },
+    {
+      "nummer": 18,
+      "arabisch": "إِحَالَتُكَ الأَعْمَالَ عَلَى وُجُودِ الفَرَاغِ مِنْ رُعُونَاتِ النَّفْسِ.",
+      "uebersetzung_de": "Dass du Werke auf eine künftige freie Zeit verschiebst, gehört zu den Torheiten des Ego.",
+      "kommentar_sufi_de": "Aufschieben auf freie Zeit ist eine List der nafs. Der Sufi macht den jetzigen Atem zum Miḥrāb; keine spätere Leere ersetzt verlorene Gegenwart."
+    },
+    {
+      "nummer": 19,
+      "arabisch": "لَا تَطْلُبْ مِنْهُ أَنْ يُخْرِجَكَ مِنْ حَالَةٍ لِيَسْتَعْمِلَكَ فِيمَا سِوَاهَا، فَلَوْ أَرَادَ لَاسْتَعْمَلَكَ مِنْ غَيْرِ إِخْرَاجٍ.",
+      "uebersetzung_de": "Bitte Ihn nicht darum, dich aus einem Zustand herauszunehmen, damit Er dich in einem anderen gebrauche. Wenn Er wollte, würde Er dich gebrauchen, ohne dich herauszunehmen.",
+      "kommentar_sufi_de": "Bitte nicht zuerst um Ortswechsel, sondern um Dienerschaft im gegebenen Ort. Allah kann dich reinigen, ohne deine äußere Lage zu verändern."
+    },
+    {
+      "nummer": 20,
+      "arabisch": "مَا أَرَادَتْ هِمَّةُ سَالِكٍ أَنْ تَقِفَ عِنْدَ مَا كُشِفَ لَهَا إِلَّا وَنَادَتْهُ هَوَاتِفُ الحَقِيقَةِ: الَّذِي تَطْلُبُ أَمَامَكَ. وَلَا تَبَرَّجَتْ ظَوَاهِرُ المُكَوَّنَاتِ إِلَّا وَنَادَتْهُ حَقَائِقُهَا: إِنَّمَا نَحْنُ فِتْنَةٌ فَلَا تَكْفُرْ.",
+      "uebersetzung_de": "Immer wenn die Sehnsucht eines Suchenden bei dem stehen bleiben will, was ihr enthüllt wurde, rufen ihr die Stimmen der Wirklichkeit zu: Was du suchst, liegt vor dir. Und immer wenn die äußeren Erscheinungen der Geschöpfe sich schmücken, rufen ihre inneren Wahrheiten: Wir sind nur eine Prüfung; werde nicht undankbar.",
+      "kommentar_sufi_de": "Jede enthüllte Schönheit ist nur Wegmarke. Die Sehnsucht darf sich nicht am Lichtschein niederlassen, solange der Geliebte selbst ruft."
+    },
+    {
+      "nummer": 21,
+      "arabisch": "طَلَبُكَ مِنْهُ اتِّهَامٌ لَهُ، وَطَلَبُكَ لَهُ غَيْبَةٌ مِنْكَ عَنْهُ، وَطَلَبُكَ لِغَيْرِهِ لِقِلَّةِ حَيَائِكَ مِنْهُ، وَطَلَبُكَ مِنْ غَيْرِهِ لِوُجُودِ بُعْدِكَ عَنْهُ.",
+      "uebersetzung_de": "Dein Fordern von Ihm ist ein Verdächtigen Seiner Fürsorge; dein Suchen nach Ihm zeigt deine Abwesenheit von Ihm; dein Suchen nach anderem als Ihm zeigt geringe Scheu vor Ihm; und dein Fordern von anderem als Ihm zeigt deine Entfernung von Ihm.",
+      "kommentar_sufi_de": "Forderung verrät Misstrauen, Suchen nach Ihm verrät Abwesenheit, Suchen nach anderem Schamlosigkeit des Herzens. Nähe reift zur stillen Genügsamkeit."
+    },
+    {
+      "nummer": 22,
+      "arabisch": "مَا مِنْ نَفَسٍ تُبْدِيهِ إِلَّا وَلَهُ قَدَرٌ فِيكَ يُمْضِيهِ.",
+      "uebersetzung_de": "Kein Atemzug geht von dir aus, ohne dass darin eine Bestimmung an dir vollzogen wird.",
+      "kommentar_sufi_de": "Jeder Atem trägt eine göttliche Verfügung. Wer dies schmeckt, verschwendet keinen Atem im Vergessen, sondern macht ihn zu dhikr und Wachheit."
+    },
+    {
+      "nummer": 23,
+      "arabisch": "لَا تَتَرَقَّبْ فَرَاغَ الأَغْيَارِ، فَإِنَّ ذَلِكَ يَقْطَعُكَ عَنْ وُجُودِ المُرَاقَبَةِ لَهُ فِيمَا هُوَ مُقِيمُكَ فِيهِ.",
+      "uebersetzung_de": "Warte nicht darauf, dass äußere Umstände frei werden; das würde dich von der Achtsamkeit Ihm gegenüber in dem abschneiden, worin Er dich gerade stehen lässt.",
+      "kommentar_sufi_de": "Warte nicht auf ideale Umstände. Der Ort deiner Prüfung ist auch der Ort deiner Begegnung; dort liegt die Tür, die die nafs übersieht."
+    },
+    {
+      "nummer": 24,
+      "arabisch": "لَا تَسْتَغْرِبْ وُقُوعَ الأَكْدَارِ مَا دُمْتَ فِي هَذِهِ الدَّارِ، فَإِنَّهَا مَا أَبْرَزَتْ إِلَّا مَا هُوَ مُسْتَحَقُّ وَصْفِهَا وَوَاجِبُ نَعْتِهَا.",
+      "uebersetzung_de": "Wundere dich nicht über das Auftreten von Trübungen, solange du in dieser Welt bist. Sie bringt nur hervor, was ihrer Beschreibung und ihrem Wesen entspricht.",
+      "kommentar_sufi_de": "Trübung ist der Geruch der Welt. Wer Reinheit von ihr verlangt, hat ihren Charakter nicht erkannt; der Sufi nimmt sie als Schule der Loslösung."
+    },
+    {
+      "nummer": 25,
+      "arabisch": "مَا تَوَقَّفَ مَطْلَبٌ أَنْتَ طَالِبُهُ بِرَبِّكَ، وَلَا تَيَسَّرَ مَطْلَبٌ أَنْتَ طَالِبُهُ بِنَفْسِكَ.",
+      "uebersetzung_de": "Kein Ziel bleibt unerreichbar, wenn du es durch deinen Herrn suchst; und kein Ziel wird wirklich leicht, wenn du es durch dich selbst suchst.",
+      "kommentar_sufi_de": "Mit Allah ist jedes Ziel möglich, ohne Ihn bleibt selbst das Nahe fern. Sulūk ist der Übergang vom Vertrauen auf Kraft zum Vertrauen auf den Kraftgeber."
+    },
+    {
+      "nummer": 26,
+      "arabisch": "مِنْ عَلَامَاتِ النُّجْحِ فِي النِّهَايَاتِ الرُّجُوعُ إِلَى اللهِ فِي البِدَايَاتِ.",
+      "uebersetzung_de": "Zu den Zeichen des Erfolges am Ende gehört die Rückkehr zu Gott am Anfang.",
+      "kommentar_sufi_de": "Ein gesegneter Ausgang beginnt mit tawba am Anfang. Wer früh zu Allah zurückkehrt, findet später Licht auf Wegen, die er noch nicht kennt."
+    },
+    {
+      "nummer": 27,
+      "arabisch": "مَنْ أَشْرَقَتْ بِدَايَتُهُ أَشْرَقَتْ نِهَايَتُهُ.",
+      "uebersetzung_de": "Wessen Anfang erleuchtet ist, dessen Ende wird erleuchtet sein.",
+      "kommentar_sufi_de": "Der leuchtende Anfang ist ein Samen des leuchtenden Endes. Hüte die erste Aufrichtigkeit; in ihr liegt die Form des ganzen Weges verborgen."
+    },
+    {
+      "nummer": 28,
+      "arabisch": "مَا اسْتُودِعَ فِي غَيْبِ السَّرَائِرِ ظَهَرَ فِي شَهَادَةِ الظَّوَاهِرِ.",
+      "uebersetzung_de": "Was im Unsichtbaren der Innerlichkeiten niedergelegt wird, erscheint im Sichtbaren der äußeren Formen.",
+      "kommentar_sufi_de": "Was im sirr abgelegt wird, erscheint in Haltung, Blick und Wort. Der innere Zustand verrät sich, auch wenn die Zunge schweigt."
+    },
+    {
+      "nummer": 29,
+      "arabisch": "شَتَّانَ بَيْنَ مَنْ يَسْتَدِلُّ بِهِ أَوْ يَسْتَدِلُّ عَلَيْهِ. المُسْتَدِلُّ بِهِ عَرَفَ الحَقَّ لِأَهْلِهِ، فَأَثْبَتَ الأَمْرَ مِنْ وُجُودِ أَصْلِهِ. وَالِاسْتِدْلَالُ عَلَيْهِ مِنْ عَدَمِ الوُصُولِ إِلَيْهِ، وَإِلَّا فَمَتَى غَابَ حَتَّى يُسْتَدَلَّ عَلَيْهِ؟ وَمَتَى بَعُدَ حَتَّى تَكُونَ الآثَارُ هِيَ الَّتِي تُوصِلُ إِلَيْهِ؟",
+      "uebersetzung_de": "Welch ein Unterschied zwischen dem, der durch Ihn beweist, und dem, der auf Ihn hin beweist. Wer durch Ihn beweist, erkennt die Wahrheit an ihrem Ort und bestätigt die Dinge aus ihrem Ursprung. Auf Ihn hinzuweisen entsteht aus Nicht-Angekommensein: Wann wäre Er denn abwesend, sodass man auf Ihn hinweisen müsste? Und wann wäre Er fern, sodass die Spuren erst zu Ihm führen müssten?",
+      "kommentar_sufi_de": "Der Erkennende beweist nicht Allah durch die Welt; er sieht die Welt durch Allah. Dies ist der Wechsel von Denken über Ihn zu Schauen durch Ihn."
+    },
+    {
+      "nummer": 30,
+      "arabisch": "لِيُنْفِقْ ذُو سَعَةٍ مِنْ سَعَتِهِ: الوَاصِلُونَ إِلَيْهِ. وَمَنْ قُدِرَ عَلَيْهِ رِزْقُهُ: السَّائِرُونَ إِلَيْهِ.",
+      "uebersetzung_de": "Wer Weite besitzt, soll aus seiner Weite geben: das sind die bei Ihm Angekommenen. Und wem sein Maß eng bemessen ist: das sind die zu Ihm Unterwegsseienden.",
+      "kommentar_sufi_de": "Wer angekommen ist, gibt aus göttlicher Weite; wer unterwegs ist, gibt nach Maß. Beide sind Diener, doch ihre Quelle des Gebens ist verschieden."
+    },
+    {
+      "nummer": 31,
+      "arabisch": "اهْتَدَى الرَّاحِلُونَ إِلَيْهِ بِأَنْوَارِ التَّوَجُّهِ، وَالوَاصِلُونَ لَهُمْ أَنْوَارُ المُوَاجَهَةِ. الأَوَّلُونَ لِلْأَنْوَارِ، وَهَؤُلَاءِ الأَنْوَارُ لَهُمْ، لِأَنَّهُمْ لِلَّهِ لَا لِشَيْءٍ دُونَهُ.",
+      "uebersetzung_de": "Die zu Ihm Reisenden werden durch die Lichter der Hinwendung geleitet; die Angekommenen besitzen die Lichter der Begegnung. Die ersten gehören den Lichtern, die anderen haben die Lichter, denn sie gehören Gott und nichts unter Ihm.",
+      "kommentar_sufi_de": "Der Wanderer wird von Lichtern geführt; der Angekommene ruht beim Lichtgeber. Der Sufi achtet die Station, ohne sie mit dem Ziel zu verwechseln."
+    },
+    {
+      "nummer": 32,
+      "arabisch": "تَشَوُّفُكَ إِلَى مَا بَطَنَ فِيكَ مِنَ العُيُوبِ خَيْرٌ مِنْ تَشَوُّفِكَ إِلَى مَا حُجِبَ عَنْكَ مِنَ الغُيُوبِ.",
+      "uebersetzung_de": "Dein Verlangen, die verborgenen Fehler in dir zu erkennen, ist besser als dein Verlangen nach dem, was dir an Unsichtbarem verborgen ist.",
+      "kommentar_sufi_de": "Fehlererkenntnis ist nützlicher als Neugier auf das Verborgene. Das ungewaschene Herz macht selbst Geheimwissen zu Nahrung der nafs."
+    },
+    {
+      "nummer": 33,
+      "arabisch": "الحَقُّ لَيْسَ بِمَحْجُوبٍ، وَإِنَّمَا المَحْجُوبُ أَنْتَ عَنِ النَّظَرِ إِلَيْهِ، إِذْ لَوْ حَجَبَهُ شَيْءٌ لَسَتَرَهُ مَا حَجَبَهُ، وَلَوْ كَانَ لَهُ سَاتِرٌ لَكَانَ لِوُجُودِهِ حَاصِرًا، وَكُلُّ حَاصِرٍ لِشَيْءٍ فَهُوَ لَهُ قَاهِرٌ، وَهُوَ القَاهِرُ فَوْقَ عِبَادِهِ.",
+      "uebersetzung_de": "Der Wahre ist nicht verhüllt; vielmehr bist du vom Blick auf Ihn verhüllt. Denn wenn Ihn etwas verhüllte, würde dieses Ihn bedecken; und hätte Er einen Bedecker, würde dieser Sein Sein begrenzen. Alles Begrenzende überwältigt das Begrenzte, Er aber ist der Überwältigende über Seinen Dienern.",
+      "kommentar_sufi_de": "Nicht Allah ist verborgen, sondern dein Blick ist verhüllt. Reinigung heißt, den Schleier im Wahrnehmenden zu entfernen, nicht den Ḥaqq zu suchen, als sei Er fern."
+    },
+    {
+      "nummer": 34,
+      "arabisch": "اخْرُجْ مِنْ أَوْصَافِ بَشَرِيَّتِكَ عَنْ كُلِّ وَصْفٍ مُنَاقِضٍ لِعُبُودِيَّتِكَ، لِتَكُونَ لِنِدَاءِ الحَقِّ مُجِيبًا، وَمِنْ حَضْرَتِهِ قَرِيبًا.",
+      "uebersetzung_de": "Tritt aus den Eigenschaften deiner bloßen Menschlichkeit heraus, aus jeder Eigenschaft, die deiner Dienerschaft widerspricht, damit du dem Ruf des Wahren antwortest und Seiner Gegenwart nahe bist.",
+      "kommentar_sufi_de": "Verlasse Eigenschaften, die der ʿubūdiyya widersprechen. Der Ruf des Ḥaqq wird klar, wenn Stolz, Anspruch und Eigenmacht leiser werden."
+    },
+    {
+      "nummer": 35,
+      "arabisch": "أَصْلُ كُلِّ مَعْصِيَةٍ وَغَفْلَةٍ وَشَهْوَةٍ الرِّضَا عَنِ النَّفْسِ، وَأَصْلُ كُلِّ طَاعَةٍ وَيَقَظَةٍ وَعِفَّةٍ عَدَمُ الرِّضَا مِنْكَ عَنْهَا. وَلَأَنْ تَصْحَبَ جَاهِلًا لَا يَرْضَى عَنْ نَفْسِهِ خَيْرٌ لَكَ مِنْ أَنْ تَصْحَبَ عَالِمًا يَرْضَى عَنْ نَفْسِهِ؛ فَأَيُّ عِلْمٍ لِعَالِمٍ يَرْضَى عَنْ نَفْسِهِ؟ وَأَيُّ جَهْلٍ لِجَاهِلٍ لَا يَرْضَى عَنْ نَفْسِهِ؟",
+      "uebersetzung_de": "Die Wurzel jeder Sünde, Achtlosigkeit und Begierde ist die Zufriedenheit mit dem eigenen Selbst. Die Wurzel jeder Gehorsamkeit, Wachheit und Keuschheit ist, dass du mit ihm nicht zufrieden bist. Es ist besser, einen Unwissenden zu begleiten, der mit sich nicht zufrieden ist, als einen Gelehrten, der mit sich zufrieden ist. Was ist das für ein Wissen bei einem Gelehrten, der mit sich zufrieden ist? Und was ist das für eine Unwissenheit bei einem Unwissenden, der mit sich nicht zufrieden ist?",
+      "kommentar_sufi_de": "Zufriedenheit mit der nafs ist die Wurzel des Falls. Heilsam ist heiliger Argwohn gegen sie, denn daraus wachsen Wachheit, Keuschheit und Gehorsam."
+    },
+    {
+      "nummer": 36,
+      "arabisch": "شُعَاعُ البَصِيرَةِ يُشْهِدُكَ قُرْبَهُ مِنْكَ، وَعَيْنُ البَصِيرَةِ يُشْهِدُكَ عَدَمَكَ لِوُجُودِهِ، وَحَقُّ البَصِيرَةِ يُشْهِدُكَ وُجُودَهُ لَا عَدَمَكَ وَلَا وُجُودَكَ.",
+      "uebersetzung_de": "Der Strahl der inneren Einsicht lässt dich Seine Nähe zu dir bezeugen. Das Auge der Einsicht lässt dich dein Nichtsein angesichts Seines Seins bezeugen. Die Wahrheit der Einsicht lässt dich Sein Sein bezeugen – nicht dein Nichtsein und nicht dein Sein.",
+      "kommentar_sufi_de": "Baṣīra hat Stufen: Nähe sehen, eigenes Nichtsein sehen, nur Ihn sehen. Der Weg führt vom Lichtstrahl zur Sonne der Verwirklichung."
+    },
+    {
+      "nummer": 37,
+      "arabisch": "كَانَ اللهُ وَلَا شَيْءَ مَعَهُ، وَهُوَ الآنَ عَلَى مَا عَلَيْهِ كَانَ.",
+      "uebersetzung_de": "Gott war, und nichts war mit Ihm; und Er ist jetzt so, wie Er war.",
+      "kommentar_sufi_de": "Allah war, als nichts mit Ihm war; Er bleibt, wie Er war. Fanāʾ ist das Schmecken, dass die Vielheit keinen Anteil an Seiner Wirklichkeit hat."
+    },
+    {
+      "nummer": 38,
+      "arabisch": "لَا تَتَعَدَّ نِيَّةُ هِمَّتِكَ إِلَى غَيْرِهِ، فَالكَرِيمُ لَا تَتَخَطَّاهُ الآمَالُ.",
+      "uebersetzung_de": "Die Absicht deiner Sehnsucht soll nicht über Ihn hinaus zu anderem gehen; den Großzügigen überschreiten die Hoffnungen nicht.",
+      "kommentar_sufi_de": "Die Sehnsucht soll nicht an den Gaben vorbeiziehen, um dann bei anderem zu enden. Der Großzügige ist das Ende aller Hoffnung."
+    },
+    {
+      "nummer": 39,
+      "arabisch": "لَا تَرْفَعَنَّ إِلَى غَيْرِهِ حَاجَةً هُوَ مُورِدُهَا عَلَيْكَ، فَكَيْفَ يَرْفَعُ غَيْرُهُ مَا كَانَ هُوَ لَهُ وَاضِعًا؟ مَنْ لَا يَسْتَطِيعُ أَنْ يَرْفَعَ حَاجَةً عَنْ نَفْسِهِ فَكَيْفَ يَسْتَطِيعُ أَنْ يَكُونَ لَهَا عَنْ غَيْرِهِ رَافِعًا؟",
+      "uebersetzung_de": "Erhebe kein Bedürfnis zu einem anderen als Ihm, wenn Er selbst es auf dich kommen ließ. Wie sollte ein anderer wegnehmen, was Er gesetzt hat? Wer ein Bedürfnis nicht einmal von sich selbst nehmen kann, wie sollte er es von einem anderen nehmen?",
+      "kommentar_sufi_de": "Trage Bedürftigkeit nicht zuerst zu Geschöpfen. Wer die Wunde setzte, kennt ihre Heilung; Geschöpfe sind nur Gefäße, nicht Quelle."
+    },
+    {
+      "nummer": 40,
+      "arabisch": "إِنْ لَمْ تُحْسِنْ ظَنَّكَ بِهِ لِأَجْلِ حُسْنِ وَصْفِهِ، فَحَسِّنْ ظَنَّكَ بِهِ لِوُجُودِ مُعَامَلَتِهِ مَعَكَ. فَهَلْ عَوَّدَكَ إِلَّا حَسَنًا؟ وَهَلْ أَسْدَى إِلَيْكَ إِلَّا مِنَنًا؟",
+      "uebersetzung_de": "Wenn du deine gute Meinung von Ihm nicht wegen der Schönheit Seiner Eigenschaften stärkst, dann stärke sie wegen Seiner Behandlung dir gegenüber. Hat Er dich an etwas anderes gewöhnt als an Gutes? Hat Er dir anderes erwiesen als Gaben?",
+      "kommentar_sufi_de": "Gute Meinung von Allah wächst aus Seinen Eigenschaften und aus deiner Geschichte mit Ihm. Er hat dich nie ohne verborgene Zuwendung gelassen."
+    },
+    {
+      "nummer": 41,
+      "arabisch": "العَجَبُ كُلُّ العَجَبِ مِمَّنْ يَهْرُبُ مِمَّا لَا انْفِكَاكَ لَهُ عَنْهُ، وَيَطْلُبُ مَا لَا بَقَاءَ لَهُ مَعَهُ: «فَإِنَّهَا لَا تَعْمَى الأَبْصَارُ وَلَكِنْ تَعْمَى القُلُوبُ الَّتِي فِي الصُّدُورِ».",
+      "uebersetzung_de": "Das Erstaunen schlechthin gilt dem, der vor dem flieht, wovon er sich nicht lösen kann, und das sucht, was bei ihm nicht bleiben wird: Nicht die Augen werden blind, sondern die Herzen in den Brüsten.",
+      "kommentar_sufi_de": "Der Blinde flieht vor dem Unvermeidlichen und jagt dem Vergänglichen nach. Sufi-Sehen erkennt: Fluchtpunkt und Ziel müssen neu geordnet werden."
+    },
+    {
+      "nummer": 42,
+      "arabisch": "لَا تَرْحَلْ مِنْ كَوْنٍ إِلَى كَوْنٍ فَتَكُونَ كَحِمَارِ الرَّحَى، يَسِيرُ وَالمَكَانُ الَّذِي ارْتَحَلَ إِلَيْهِ هُوَ الَّذِي ارْتَحَلَ عَنْهُ. وَلَكِنِ ارْحَلْ مِنَ الأَكْوَانِ إِلَى المُكَوِّنِ: «وَأَنَّ إِلَى رَبِّكَ المُنْتَهَى».",
+      "uebersetzung_de": "Reise nicht von einer geschaffenen Sache zu einer anderen, sonst bist du wie der Mühlenesel: Er läuft, und der Ort, zu dem er geht, ist derselbe, von dem er aufbrach. Reise vielmehr von den geschaffenen Dingen zum Schöpfer: Zu deinem Herrn ist das Ende.",
+      "kommentar_sufi_de": "Von Geschöpf zu Geschöpf zu reisen ist Kreisbewegung. Die eigentliche Hijra ist aus den Formen zum Formgeber, aus Besitz zum Besitzer."
+    },
+    {
+      "nummer": 43,
+      "arabisch": "لَا تَصْحَبْ مَنْ لَا يُنْهِضُكَ حَالُهُ، وَلَا يَدُلُّكَ عَلَى اللهِ مَقَالُهُ.",
+      "uebersetzung_de": "Begleite niemanden, dessen Zustand dich nicht erhebt und dessen Rede dich nicht auf Gott hinweist.",
+      "kommentar_sufi_de": "Suche Gefährten, deren Zustand dich erhebt und deren Wort dich zu Allah weist. Ṣuḥba ist eine stille Übertragung des Herzens."
+    },
+    {
+      "nummer": 44,
+      "arabisch": "رُبَّمَا كُنْتَ مُسِيئًا فَأَرَاكَ الإِحْسَانَ مِنْكَ صُحْبَتُكَ مَنْ هُوَ أَسْوَأُ حَالًا مِنْكَ.",
+      "uebersetzung_de": "Vielleicht bist du schlecht handelnd, doch deine Begleitung eines Menschen, der in noch schlechterem Zustand ist als du, lässt dich dich selbst als gut ansehen.",
+      "kommentar_sufi_de": "Schlechtere Gesellschaft kann die nafs scheinbar erhöhen. Der Sufi meidet Vergleiche nach unten, denn sie nähren Selbstzufriedenheit."
+    },
+    {
+      "nummer": 45,
+      "arabisch": "ما قَلَّ عملٌ بَرَزَ من قلبٍ زاهدٍ، ولا كَثُرَ عملٌ بَرَزَ من قلبٍ راغبٍ.",
+      "uebersetzung_de": "Keine Handlung ist klein, wenn sie aus einem entsagenden Herzen hervorgeht; und keine Handlung ist groß, wenn sie aus einem begehrenden Herzen hervorgeht.",
+      "kommentar_sufi_de": "Klein wird groß, wenn es aus zuhd kommt; groß wird klein, wenn Begierde darin wohnt. Gewicht erhält die Tat vom Herzen."
+    },
+    {
+      "nummer": 46,
+      "arabisch": "حُسْنُ الأعمالِ نتائجُ حُسْنِ الأحوالِ، وحُسْنُ الأحوالِ مِنَ التحقُّقِ في مقاماتِ الإنزالِ.",
+      "uebersetzung_de": "Schöne Werke sind Früchte schöner innerer Zustände; und schöne Zustände entstehen aus der Verwirklichung der Stufen göttlicher Herabsendung.",
+      "kommentar_sufi_de": "Schöne Werke sind Früchte schöner Zustände. Der Gärtner des Weges pflegt daher die Wurzel: Aufrichtigkeit, Gegenwart und Ergebung."
+    },
+    {
+      "nummer": 47,
+      "arabisch": "لا تَتْرُكِ الذِّكْرَ لِعَدَمِ حُضُورِكَ مع اللهِ فيه؛ لأنَّ غَفْلَتَكَ عن وجودِ ذِكْرِهِ أشدُّ مِن غَفْلَتِكَ في وجودِ ذِكْرِهِ. فعسى أن يَرْفَعَكَ مِن ذِكْرٍ مع وجودِ غَفْلَةٍ إلى ذِكْرٍ مع وجودِ يَقَظَةٍ، ومِن ذِكْرٍ مع وجودِ يَقَظَةٍ إلى ذِكْرٍ مع وجودِ حُضُورٍ، ومِن ذِكْرٍ مع وجودِ حُضُورٍ إلى ذِكْرٍ مع وجودِ غَيْبَةٍ عمّا سوى المذكورِ. وما ذلك على اللهِ بعزيزٍ.",
+      "uebersetzung_de": "Lass das Gedenken nicht, nur weil du dabei keine Gegenwart mit Gott empfindest; denn deine Unachtsamkeit ohne Gedenken ist schwerer als deine Unachtsamkeit während des Gedenkens. Vielleicht erhebt Er dich vom Gedenken mit Zerstreuung zum Gedenken mit Wachheit, dann zur Gegenwart, und schließlich zur Abwesenheit von allem außer dem Erinnerten. Das ist für Gott nicht schwer.",
+      "kommentar_sufi_de": "Dhikr mit Unachtsamkeit ist besser als Unachtsamkeit ohne dhikr. Bleibe an der Tür; vielleicht führt dich die wiederholte Zunge zum wachen Herzen."
+    },
+    {
+      "nummer": 48,
+      "arabisch": "مِن علاماتِ موتِ القلبِ عَدَمُ الحُزْنِ على ما فاتَكَ مِنَ المُوافَقاتِ، وتَرْكُ النَّدَمِ على ما فَعَلْتَهُ مِن وجودِ الزَّلّاتِ.",
+      "uebersetzung_de": "Zu den Zeichen eines toten Herzens gehört, dass man nicht traurig ist über verpasste Gelegenheiten zum Guten und kein Bedauern empfindet über begangene Fehltritte.",
+      "kommentar_sufi_de": "Ein totes Herz trauert nicht über verpasste Nähe. Leben zeigt sich im Schmerz über Verlust des Guten und in Reue über den Fehltritt."
+    },
+    {
+      "nummer": 49,
+      "arabisch": "لا يَعْظُمِ الذَّنْبُ عندكَ عَظَمَةً تَصُدُّكَ عن حُسْنِ الظَّنِّ باللهِ تعالى؛ فإنَّ مَن عَرَفَ ربَّهُ استصغرَ في جَنْبِ كَرَمِهِ ذَنْبَهُ.",
+      "uebersetzung_de": "Lass die Sünde in deinen Augen nicht so groß werden, dass sie dich vom guten Vertrauen zu Gott abhält; denn wer seinen Herrn kennt, hält seine Sünde im Angesicht Seiner Großzügigkeit für klein.",
+      "kommentar_sufi_de": "Verzweifle nicht wegen Sünde. Wer Allah kennt, sieht die Sünde ernst, aber Seine Großzügigkeit größer; so wird Reue nicht von Hoffnung getrennt."
+    },
+    {
+      "nummer": 50,
+      "arabisch": "لا صغيرةَ إذا قابَلَكَ عَدْلُهُ، ولا كبيرةَ إذا واجَهَكَ فَضْلُهُ.",
+      "uebersetzung_de": "Nichts ist klein, wenn Seine Gerechtigkeit dir begegnet; und nichts ist groß, wenn Seine Gnade dir begegnet.",
+      "kommentar_sufi_de": "Vor göttlicher Gerechtigkeit ist nichts klein; vor göttlicher Gnade nichts zu groß. Der Sufi geht zwischen Ehrfurcht und Hoffnung."
+    },
+    {
+      "nummer": 51,
+      "arabisch": "لا عَمَلَ أَرْجى للقَبولِ مِن عملٍ يَغيبُ عنكَ شهودُهُ، ويُحْتَقَرُ عندكَ وجودُهُ.",
+      "uebersetzung_de": "Keine Handlung ist hoffnungsvoller auf Annahme als eine, deren Ansehen dir entgeht und deren Vorhandensein du bei dir gering achtest.",
+      "kommentar_sufi_de": "Die hoffnungsvollste Tat ist jene, die du nicht bewunderst. Verborgenheit vor dem eigenen Blick schützt sie vor dem Diebstahl der nafs."
+    },
+    {
+      "nummer": 52,
+      "arabisch": "إنما أَوْرَدَ عليكَ الوارِدَ لتكونَ به عليه وارِدًا.",
+      "uebersetzung_de": "Er lässt eine Eingebung über dich kommen, damit du durch sie zu Ihm gelangst.",
+      "kommentar_sufi_de": "Die Eingebung kommt als Bote, nicht als Schmuck. Ihr Sinn ist, dich zu Allah zu führen, nicht dich besonders erscheinen zu lassen."
+    },
+    {
+      "nummer": 53,
+      "arabisch": "أَوْرَدَ عليكَ الوارِدَ لِيَسْتَلِمَكَ مِن يدِ الأغيارِ، ولِيُحَرِّرَكَ مِن رِقِّ الآثارِ.",
+      "uebersetzung_de": "Er sendet dir die Eingebung, um dich aus der Hand der Anderen zu nehmen und dich aus der Knechtschaft der Wirkungen zu befreien.",
+      "kommentar_sufi_de": "Ilhām befreit von der Hand der Anderen und der Knechtschaft der Wirkungen. Es ruft vom Markt der Ursachen zum Herrn der Ursachen."
+    },
+    {
+      "nummer": 54,
+      "arabisch": "أَوْرَدَ عليكَ الوارِدَ لِيُخْرِجَكَ مِن سِجْنِ وُجودِكَ إلى فَضاءِ شُهودِكَ.",
+      "uebersetzung_de": "Er sendet dir die Eingebung, um dich aus dem Gefängnis deines Selbstseins in die Weite deines Schauens zu führen.",
+      "kommentar_sufi_de": "Die Eingebung weitet das Gefängnis des Ichs. Wenn das Herz schaut, wird die enge Selbstgeschichte durch die Gegenwart Allahs aufgebrochen."
+    },
+    {
+      "nummer": 55,
+      "arabisch": "الأنوارُ مَطايا القلوبِ والأسرارِ.",
+      "uebersetzung_de": "Die Lichter sind die Reittiere der Herzen und der inneren Geheimnisse.",
+      "kommentar_sufi_de": "Lichter tragen Herzen wie Reittiere den Reisenden. Doch der Sufi liebt nicht das Reittier mehr als das Ziel."
+    },
+    {
+      "nummer": 56,
+      "arabisch": "النورُ جُنْدُ القلبِ، كما أنَّ الظُّلْمَةَ جُنْدُ النَّفْسِ؛ فإذا أرادَ اللهُ أن يَنْصُرَ عبدَهُ أَمَدَّهُ بجنودِ الأنوارِ، وقَطَعَ عنه مَدَدَ الظُّلَمِ والأغيارِ.",
+      "uebersetzung_de": "Das Licht ist das Heer des Herzens, wie die Dunkelheit das Heer der niederen Seele ist. Wenn Gott Seinem Diener helfen will, stärkt Er ihn mit Heeren von Lichtern und trennt von ihm den Nachschub der Dunkelheiten und der Anderen.",
+      "kommentar_sufi_de": "Licht ist das Heer des qalb, Dunkelheit das Heer der nafs. Sieg kommt, wenn Allah die inneren Truppen ordnet."
+    },
+    {
+      "nummer": 57,
+      "arabisch": "النورُ له الكشفُ، والبصيرةُ لها الحُكْمُ، والقلبُ له الإقبالُ والإدبارُ.",
+      "uebersetzung_de": "Dem Licht gehört das Enthüllen, der inneren Einsicht das Urteil, und dem Herzen das Sich-Zuwenden und Sich-Abwenden.",
+      "kommentar_sufi_de": "Licht enthüllt, baṣīra urteilt, das Herz wendet sich. Der Weg verlangt nicht nur Glanz, sondern richtige Antwort auf den Glanz."
+    },
+    {
+      "nummer": 58,
+      "arabisch": "لا تُفْرِحْكَ الطاعةُ لأنَّها بَرَزَتْ منك، وافرحْ بها لأنَّها بَرَزَتْ مِنَ اللهِ إليكَ.",
+      "uebersetzung_de": "Freue dich nicht über den Gehorsam, weil er von dir hervorgegangen ist; freue dich über ihn, weil er von Gott zu dir hervorgegangen ist.",
+      "kommentar_sufi_de": "Freue dich am Gehorsam, weil Allah ihn dir schenkte. Sobald du ihn dir zuschreibst, wird aus Gabe ein Schleier."
+    },
+    {
+      "nummer": 59,
+      "arabisch": "قَطَعَ السائرينَ له والواصلينَ إليه عن رؤيةِ أعمالِهِم وشهودِ أحوالِهِم. أمّا السائرونَ فلأنَّهم لم يتحقَّقوا الصدقَ مع اللهِ فيها، وأمّا الواصلونَ فغَيَّبَهُم بشهودِهِ عنها.",
+      "uebersetzung_de": "Er schnitt die Wandernden und die Angekommenen davon ab, ihre Werke zu sehen und ihre Zustände zu bezeugen. Die Wandernden, weil sie darin die Wahrhaftigkeit mit Gott noch nicht verwirklicht haben; die Angekommenen, weil Sein Schauen sie davon abwesend macht.",
+      "kommentar_sufi_de": "Wanderer und Angekommene werden vom Blick auf Werke abgeschnitten. Der erste braucht Wahrhaftigkeit, der zweite verschwindet in der Schau des Gebers."
+    },
+    {
+      "nummer": 60,
+      "arabisch": "ما بَسَقَتْ أغصانُ ذُلٍّ إلا على بَذْرِ طَمَعٍ.",
+      "uebersetzung_de": "Keine Zweige der Erniedrigung wachsen, außer aus dem Samen der Begierde.",
+      "kommentar_sufi_de": "Erniedrigung wächst aus Begierde. Wer vom Habenwollen frei wird, richtet sich innerlich auf, auch wenn die Welt ihn niedrig nennt."
+    },
+    {
+      "nummer": 61,
+      "arabisch": "ما قادَكَ شيءٌ مِثْلُ الوَهْمِ.",
+      "uebersetzung_de": "Nichts führt dich so sehr in die Irre wie die Einbildung.",
+      "kommentar_sufi_de": "Die größte Irreführung ist Einbildung. Wahm malt der nafs Paläste; baṣīra zeigt ihr die Zerbrechlichkeit der Mauern."
+    },
+    {
+      "nummer": 62,
+      "arabisch": "أنتَ حُرٌّ ممّا أنتَ عنه آيِسٌ، وعبدٌ لِما أنتَ فيه طامِعٌ.",
+      "uebersetzung_de": "Du bist frei von dem, worauf du keine Hoffnung mehr setzt; und du bist Sklave dessen, wonach du begehrst.",
+      "kommentar_sufi_de": "Frei bist du nur von dem, worauf du nicht hoffst. Jede Begierde bindet eine Kette ans Herz; faqr löst sie."
+    },
+    {
+      "nummer": 63,
+      "arabisch": "مَن لم يُقْبِلْ على اللهِ بمُلاطَفاتِ الإحسانِ قِيدَ إليه بسَلاسِلِ الامتِحانِ.",
+      "uebersetzung_de": "Wer sich Gott nicht durch die zarten Gaben Seiner Güte zuwendet, wird zu Ihm mit den Ketten der Prüfung geführt.",
+      "kommentar_sufi_de": "Wer sanfte Gaben nicht versteht, wird durch Prüfungen heimgeführt. Auch die Kette kann Barmherzigkeit sein, wenn sie zur Tür Allahs zieht."
+    },
+    {
+      "nummer": 64,
+      "arabisch": "مَن لم يَشْكُرِ النِّعَمَ فقد تَعَرَّضَ لِزَوالِها، ومَن شَكَرَها فقد قَيَّدَها بعِقالِها.",
+      "uebersetzung_de": "Wer die Gaben nicht dankt, setzt sie dem Verschwinden aus; wer sie dankt, bindet sie mit ihrem Halfter fest.",
+      "kommentar_sufi_de": "Dank bewahrt Gaben. Schukr ist im Sufi-Sinn nicht bloß Wort, sondern Gebrauch der Gabe im Licht ihres Gebers."
+    },
+    {
+      "nummer": 65,
+      "arabisch": "خَفْ مِن وجودِ إحسانِهِ إليكَ ودوامِ إساءتِكَ معه أن يكونَ ذلك استدراجًا لك: ﴿سَنَسْتَدْرِجُهُم مِنْ حيثُ لا يَعْلَمُونَ﴾.",
+      "uebersetzung_de": "Fürchte, dass Sein fortdauerndes Wohlwollen dir gegenüber trotz deiner fortdauernden Schlechtigkeit ein allmähliches Hineinziehen sein könnte: „Wir werden sie stufenweise heranführen, von wo sie es nicht wissen.“",
+      "kommentar_sufi_de": "Fortdauernde Wohltat trotz Schlechtigkeit kann Istidrāj sein. Der Sufi fürchtet nicht nur Entzug, sondern auch unbewachten Überfluss."
+    },
+    {
+      "nummer": 66,
+      "arabisch": "مِن جَهْلِ المُريدِ أن يُسيءَ الأدبَ فتُؤَخَّرَ العقوبةُ عنه، فيقولَ: لو كان هذا سوءَ أدبٍ لَقُطِعَ الإمدادُ وأُوجِبَ الإبعادُ. فقد يُقْطَعُ المَدَدُ عنه مِن حيثُ لا يَشْعُرُ، ولو لم يكن إلا مَنْعَ المزيدِ. وقد يُقامُ مقامَ البُعْدِ وهو لا يدري، ولو لم يكن إلا أن يُخَلِّيَكَ وما تريدُ.",
+      "uebersetzung_de": "Zur Unwissenheit des Suchenden gehört, dass er sich schlecht benimmt, die Strafe aber aufgeschoben wird, und er sagt: Wäre das wirklich schlechte Haltung, wäre der Beistand abgeschnitten und die Entfernung eingetreten. Doch der Beistand kann ihm unbemerkt abgeschnitten werden, und sei es nur durch das Ausbleiben von Mehrung; und er kann im Stand der Ferne stehen, ohne es zu wissen, und sei es nur dadurch, dass Er dich dir und deinem Wollen überlässt.",
+      "kommentar_sufi_de": "Aufgeschobene Strafe ist keine Bestätigung. Adab heißt, aus jeder Schonung Scham zu lernen, nicht Freibrief für Nachlässigkeit."
+    },
+    {
+      "nummer": 67,
+      "arabisch": "إذا رأيتَ عبدًا أقامَهُ اللهُ تعالى بوجودِ الأورادِ، وأدامَهُ عليها مع طولِ الإمدادِ، فلا تَسْتَحْقِرَنَّ ما مَنَحَهُ مولاهُ لأنَّكَ لم تَرَ عليه سيما العارفينَ ولا بهجةَ المُحبّينَ؛ فلولا وارِدٌ ما كان وِرْدٌ.",
+      "uebersetzung_de": "Wenn du einen Diener siehst, den Gott in regelmäßige Andachten gestellt und lange darin erhalten hat, dann verachte nicht, was sein Herr ihm gewährt hat, nur weil du an ihm nicht das Kennzeichen der Erkennenden und den Glanz der Liebenden siehst; denn ohne innere Eingebung gäbe es keine regelmäßige Übung.",
+      "kommentar_sufi_de": "Verachte keine regelmäßige Andacht. Auch ohne sichtbare Ekstase kann ein Wird ein geheimes Band sein, das Allah selbst geknüpft hat."
+    },
+    {
+      "nummer": 68,
+      "arabisch": "قومٌ أقامَهُمُ الحقُّ لخِدْمَتِهِ، وقومٌ اخْتَصَّهُم بمَحَبَّتِهِ: ﴿كُلًّا نُمِدُّ هؤلاءِ وهؤلاءِ مِن عطاءِ ربِّكَ وما كان عطاءُ ربِّكَ محظورًا﴾.",
+      "uebersetzung_de": "Manche stellt der Wahrhaftige in Seinen Dienst, andere zeichnet Er mit Seiner Liebe aus: „Alle unterstützen Wir, diese und jene, aus der Gabe deines Herrn; und die Gabe deines Herrn ist nicht verwehrt.“",
+      "kommentar_sufi_de": "Dienst und Liebe sind beide Gaben. Der eine steht im Tor des Gehorsams, der andere im Garten der Nähe; beides kommt aus derselben Großzügigkeit."
+    },
+    {
+      "nummer": 69,
+      "arabisch": "قَلَّما تكونُ الوارِداتُ الإلهيَّةُ إلا بَغْتَةً؛ لئلا يَدَّعيَها العبادُ بوجودِ الاستعدادِ.",
+      "uebersetzung_de": "Die göttlichen Eingebungen kommen meist plötzlich, damit die Diener sie nicht aufgrund vorhandener Bereitschaft für sich beanspruchen.",
+      "kommentar_sufi_de": "Eingebungen kommen plötzlich, damit die nafs sie nicht als eigenen Besitz verbucht. Das Unerwartete schützt den sālik vor Anspruch."
+    },
+    {
+      "nummer": 70,
+      "arabisch": "مَن رأيتَهُ مُجيبًا عن كلِّ ما سُئِلَ، ومُعَبِّرًا عن كلِّ ما شَهِدَ، وذاكِرًا كلَّ ما عَلِمَ، فاستَدِلَّ بذلك على وجودِ جَهْلِهِ.",
+      "uebersetzung_de": "Wenn du jemanden siehst, der auf alles antwortet, wonach er gefragt wird, alles ausspricht, was er geschaut hat, und alles erwähnt, was er weiß, dann erkenne daran sein Unwissen.",
+      "kommentar_sufi_de": "Wer alles beantwortet und alles ausspricht, kennt die Würde des Schweigens nicht. Geheimnisse brauchen Siegel, sonst werden sie von der nafs entwertet."
+    },
+    {
+      "nummer": 71,
+      "arabisch": "إنما جَعَلَ الدارَ الآخرةَ مَحَلًّا لجزاءِ عبادِهِ المؤمنينَ؛ لأنَّ هذه الدارَ لا تَسَعُ ما يريدُ أن يُعْطِيَهُم، ولأنَّهُ أَجَلَّ أقدارَهُم عن أن يُجازِيَهُم في دارٍ لا بقاءَ لها.",
+      "uebersetzung_de": "Er machte das Jenseits zum Ort der Vergeltung für Seine gläubigen Diener, weil diese Welt nicht fasst, was Er ihnen geben will, und weil Er ihren Rang zu erhaben machte, um sie in einer vergänglichen Wohnstätte zu belohnen.",
+      "kommentar_sufi_de": "Das Jenseits ist der Raum für Gaben, die diese Welt nicht fassen kann. Der Sufi nimmt die Welt nicht als Endmaß der Barmherzigkeit."
+    },
+    {
+      "nummer": 72,
+      "arabisch": "مَن وَجَدَ ثَمَرَةَ عَمَلِهِ عاجِلًا فهو دليلٌ على وجودِ القَبولِ آجِلًا.",
+      "uebersetzung_de": "Wer die Frucht seiner Handlung schon jetzt findet, für den ist das ein Hinweis auf Annahme später.",
+      "kommentar_sufi_de": "Eine Frucht im Diesseits kann Vorzeichen der Annahme sein. Doch der Sufi kostet sie dankbar, ohne daraus Anspruch zu machen."
+    },
+    {
+      "nummer": 73,
+      "arabisch": "إذا أردتَ أن تَعْرِفَ قَدْرَكَ عندَهُ، فانْظُرْ فيما يُقيمُكَ.",
+      "uebersetzung_de": "Wenn du deinen Rang bei Ihm erkennen willst, dann schau, worin Er dich stehen lässt.",
+      "kommentar_sufi_de": "Dein Rang zeigt sich daran, worin Allah dich stehen lässt. Nicht Selbsterzählung, sondern göttliche Einsetzung enthüllt die Station."
+    },
+    {
+      "nummer": 74,
+      "arabisch": "متى رَزَقَكَ الطاعةَ والغِنى به عنها، فاعلمْ أنَّهُ قد أَسْبَغَ عليكَ نِعَمَهُ ظاهرةً وباطنةً.",
+      "uebersetzung_de": "Wenn Er dir Gehorsam schenkt und dich durch Ihn von ihr unabhängig macht, dann wisse: Er hat Seine Gaben äußerlich und innerlich über dich ausgegossen.",
+      "kommentar_sufi_de": "Gehorsam und Unabhängigkeit von der nafs sind doppelte Gabe. Äußere Handlung und inneres Freiwerden gehören zusammen."
+    },
+    {
+      "nummer": 75,
+      "arabisch": "خيرُ ما تَطْلُبُهُ منه ما هو طالِبُهُ منك.",
+      "uebersetzung_de": "Das Beste, was du von Ihm erbitten kannst, ist das, was Er von dir verlangt.",
+      "kommentar_sufi_de": "Bitte um das, was Allah von dir verlangt. Der höchste Wunsch ist nicht Besitz, sondern Erfüllung der Dienerschaft."
+    },
+    {
+      "nummer": 76,
+      "arabisch": "الحُزْنُ على فُقْدانِ الطاعةِ مع عدمِ النُّهوضِ إليها مِن علاماتِ الاغترارِ.",
+      "uebersetzung_de": "Traurigkeit über das Fehlen von Gehorsam, verbunden mit dem Nicht-Aufstehen zu ihr, gehört zu den Zeichen der Selbsttäuschung.",
+      "kommentar_sufi_de": "Traurigkeit ohne Aufstehen ist Selbsttäuschung. Echte Reue bewegt die Füße, nicht nur die Gefühle."
+    },
+    {
+      "nummer": 77,
+      "arabisch": "ما العارفُ مَن إذا أشارَ وَجَدَ الحقَّ أقربَ إليه مِن إشارتِهِ، بل العارفُ مَن لا إشارةَ له؛ لِفَنائِهِ في وجودِهِ وانطوائِهِ في شُهودِهِ.",
+      "uebersetzung_de": "Der Erkennende ist nicht der, der beim Zeigen den Wahren näher findet als seine eigene Geste; vielmehr ist der Erkennende der, der keine Geste mehr hat, weil er in Seinem Sein vergeht und in Seinem Schauen eingehüllt ist.",
+      "kommentar_sufi_de": "Der ʿārif hat keine Geste mehr neben dem Bezeugten. Zeichen verschwinden, wenn der Bezeichnete das Herz überwältigt."
+    },
+    {
+      "nummer": 78,
+      "arabisch": "الرَّجاءُ ما قارَنَهُ عَمَلٌ، وإلا فهو أُمْنِيَّةٌ.",
+      "uebersetzung_de": "Hoffnung ist das, was von Handlung begleitet wird; andernfalls ist sie bloßer Wunsch.",
+      "kommentar_sufi_de": "Hoffnung ohne Handlung ist Wunschbild. Rajāʾ im Sufi-Weg ist ein grüner Zweig, dessen Wurzel Gehorsam ist."
+    },
+    {
+      "nummer": 79,
+      "arabisch": "مَطْلَبُ العارفينَ مِنَ اللهِ تعالى الصِّدْقُ في العبوديَّةِ والقيامُ بحُقوقِ الربوبيَّةِ.",
+      "uebersetzung_de": "Das Begehren der Erkennenden von Gott ist Wahrhaftigkeit in der Dienerschaft und das Erfüllen der Rechte der Herrschaft Gottes.",
+      "kommentar_sufi_de": "Die Erkennenden begehren Wahrhaftigkeit im Dienen. Ihr Wunsch ist nicht Gabe, Rang oder Zustand, sondern adab vor der Herrschaft Allahs."
+    },
+    {
+      "nummer": 80,
+      "arabisch": "بَسَطَكَ كي لا يُبْقِيَكَ مع القَبْضِ، وقَبَضَكَ كي لا يَتْرُكَكَ مع البَسْطِ، وأخرجَكَ عنهما كي لا تكونَ لشيءٍ دونَهُ.",
+      "uebersetzung_de": "Er weitet dich, damit du nicht beim Zusammenziehen bleibst; Er zieht dich zusammen, damit du nicht bei der Weite stehenbleibst; und Er führt dich aus beiden heraus, damit du keinem außer Ihm gehörst.",
+      "kommentar_sufi_de": "Weite und Enge sind beide Erzieher. Der Meister hält sich an keinen Zustand; er lässt sich durch beide zum Zustandsgeber führen."
+    },
+    {
+      "nummer": 81,
+      "arabisch": "العارفونَ إذا بُسِطوا أخوفُ منهم إذا قُبِضوا، ولا يَقِفُ على حدودِ الأدبِ في البَسْطِ إلا قليلٌ.",
+      "uebersetzung_de": "Die Erkennenden sind bei Weite ängstlicher als bei Enge; denn nur wenige halten in der Weite die Grenzen der rechten Haltung ein.",
+      "kommentar_sufi_de": "Weite ist gefährlicher, weil die nafs dort Nahrung findet. Darum bewacht der Sufi Freude stärker als Schmerz."
+    },
+    {
+      "nummer": 82,
+      "arabisch": "البَسْطُ تأخذُ النَّفْسُ منه حَظَّها بوجودِ الفَرَحِ، والقَبْضُ لا حَظَّ للنَّفْسِ فيه.",
+      "uebersetzung_de": "Aus der Weite nimmt die niedere Seele ihren Anteil durch die Freude; in der Enge hat sie keinen Anteil.",
+      "kommentar_sufi_de": "In der Enge hat die nafs wenig Anteil; darum kann sie reiner lehren. Qabḍ ist manchmal ein schmaler, aber sicherer Pfad."
+    },
+    {
+      "nummer": 83,
+      "arabisch": "رُبَّما أعطاكَ فَمَنَعَكَ، ورُبَّما مَنَعَكَ فأعطاكَ.",
+      "uebersetzung_de": "Vielleicht gibt Er dir und entzieht dir dadurch; vielleicht entzieht Er dir und gibt dir dadurch.",
+      "kommentar_sufi_de": "Gabe kann Entzug sein, wenn sie ablenkt; Entzug kann Gabe sein, wenn er reinigt. Der Sufi liest nicht die Form, sondern die Richtung."
+    },
+    {
+      "nummer": 84,
+      "arabisch": "متى فَتَحَ لكَ بابَ الفَهْمِ في المَنْعِ عادَ المَنْعُ عَيْنَ العَطاءِ.",
+      "uebersetzung_de": "Wenn Er dir im Entzug die Tür des Verstehens öffnet, wird der Entzug selbst zur Gabe.",
+      "kommentar_sufi_de": "Wenn Verständnis im Entzug aufgeht, verwandelt sich Bitterkeit in Medizin. Dann wird die Hand, die nimmt, als Hand der Fürsorge erkannt."
+    },
+    {
+      "nummer": 85,
+      "arabisch": "الأكوانُ ظاهرُها غِرَّةٌ وباطنُها عِبْرَةٌ؛ فالنَّفْسُ تنظرُ إلى ظاهرِ غِرَّتِها، والقلبُ ينظرُ إلى باطنِ عِبْرَتِها.",
+      "uebersetzung_de": "Die geschaffenen Dinge haben außen Täuschung und innen Lehre: Die Seele blickt auf den äußeren Reiz ihrer Täuschung, das Herz auf die innere Lehre.",
+      "kommentar_sufi_de": "Das Äußere der Dinge täuscht, ihr Inneres belehrt. Die nafs greift nach Reiz, das Herz sammelt ʿibra."
+    },
+    {
+      "nummer": 86,
+      "arabisch": "إن أردتَ أن يكونَ لكَ عِزٌّ لا يَفْنى، فلا تَسْتَعِزَّ بعِزٍّ يَفْنى.",
+      "uebersetzung_de": "Wenn du eine Würde willst, die nicht vergeht, dann suche deine Würde nicht in einer Würde, die vergeht.",
+      "kommentar_sufi_de": "Suche Würde im Ewigen. Wer sie im Vergänglichen sucht, bindet seine Ehre an Staub und Wind."
+    },
+    {
+      "nummer": 87,
+      "arabisch": "الطَّيُّ الحقيقيُّ أن تَطْوِيَ مَسافَةَ الدُّنيا عنكَ، حتّى ترى الآخرةَ أقربَ إليكَ منك.",
+      "uebersetzung_de": "Das wirkliche Zusammenfalten der Entfernung besteht darin, die Distanz der Welt von dir wegzufalten, bis du das Jenseits dir näher siehst als dich selbst.",
+      "kommentar_sufi_de": "Wahre Wegverkürzung ist nicht Wunderreise, sondern Entweltlichung. Wenn Dunyā zurücktritt, rückt Ākhira dem Herzen nah."
+    },
+    {
+      "nummer": 88,
+      "arabisch": "العطاءُ مِنَ الخَلْقِ حِرمانٌ، والمَنْعُ مِنَ اللهِ إحسانٌ.",
+      "uebersetzung_de": "Die Gabe von den Geschöpfen kann Entbehrung sein, und der Entzug von Gott ist Güte.",
+      "kommentar_sufi_de": "Gabe von Menschen kann Beraubung sein; Entzug von Allah kann Güte sein. Die Quelle entscheidet den Geschmack."
+    },
+    {
+      "nummer": 89,
+      "arabisch": "جَلَّ رَبُّنا أن يُعامِلَهُ العبدُ نقدًا فيُجازِيَهُ نَسيئَةً.",
+      "uebersetzung_de": "Erhaben ist unser Herr darüber, dass der Diener Ihn sofort behandelt und Er ihn erst später belohnt.",
+      "kommentar_sufi_de": "Allahs Belohnung ist nicht verspäteter Handel. Schon dass Er dich dienen lässt, ist eine gegenwärtige Huld."
+    },
+    {
+      "nummer": 90,
+      "arabisch": "كَفَى مِن جَزائِهِ إيّاكَ على الطاعةِ أن رَضِيَكَ لها أهلًا.",
+      "uebersetzung_de": "Als Lohn für deinen Gehorsam genügt es, dass Er dich überhaupt dafür geeignet und würdig gemacht hat.",
+      "kommentar_sufi_de": "Als Lohn für Gehorsam genügt die Tauglichkeit zum Gehorsam. Der Sufi erkennt die Tat selbst als Geschenk vor jedem späteren Lohn."
+    },
+    {
+      "nummer": 91,
+      "arabisch": "كَفَى العاملينَ جَزاءً ما هو فاتِحُهُ على قلوبِهم في طاعَتِهِ، وما هو مُورِدُهُ عليهم مِن وجودِ مُؤانَسَتِهِ.",
+      "uebersetzung_de": "Den Handelnden genügt als Lohn, was Er ihren Herzen in Seinem Dienst öffnet und was Er ihnen an Vertrautheit mit Ihm zuströmen lässt.",
+      "kommentar_sufi_de": "Der Dienst öffnet dem Herzen Vertrautheit. Diese innere Uns ist wertvoller als äußerer Applaus und süßer als berechneter Lohn."
+    },
+    {
+      "nummer": 92,
+      "arabisch": "مَن عَبَدَهُ لشيءٍ يَرجوهُ منه، أو لِيَدفَعَ بطاعَتِهِ ورودَ العقوبةِ عنه، فما قامَ بحقِّ أوصافِهِ.",
+      "uebersetzung_de": "Wer Ihn nur um etwas anbetet, das er von Ihm erhofft, oder um durch Gehorsam Strafe abzuwehren, hat dem Recht Seiner Eigenschaften nicht entsprochen.",
+      "kommentar_sufi_de": "Wer Allah nur wegen Nutzen oder Angst dient, bleibt beim eigenen Anteil. Die Würde Seiner Eigenschaften verlangt Liebe jenseits des Handels."
+    },
+    {
+      "nummer": 93,
+      "arabisch": "متى أعطاكَ أشهَدَكَ بِرَّهُ، ومتى مَنَعَكَ أشهَدَكَ قَهْرَهُ؛ فهو في كلِّ ذلك مُتَعَرِّفٌ إليكَ، ومُقْبِلٌ بوجودِ لُطفِهِ عليكَ.",
+      "uebersetzung_de": "Wenn Er dir gibt, zeigt Er dir Seine Güte; wenn Er dir vorenthält, zeigt Er dir Seine Macht. In allem macht Er Sich dir bekannt und wendet Sich dir mit Seiner Güte zu.",
+      "kommentar_sufi_de": "Gabe zeigt Jamāl, Entzug zeigt Jalāl. In beiden macht Allah Sich bekannt; der Liebende lernt, beide Gesichter zu lesen."
+    },
+    {
+      "nummer": 94,
+      "arabisch": "إنّما يُؤلِمُكَ المَنْعُ لِعَدَمِ فَهْمِكَ عن اللهِ فيه.",
+      "uebersetzung_de": "Der Entzug schmerzt dich nur deshalb so, weil du Gottes Sinn darin nicht verstehst.",
+      "kommentar_sufi_de": "Entzug schmerzt, weil sein Sinn verborgen bleibt. Wenn der Blick reift, erkennt er unter der Härte eine verborgene Erziehung."
+    },
+    {
+      "nummer": 95,
+      "arabisch": "رُبَّما فَتَحَ لكَ بابَ الطاعةِ وما فَتَحَ لكَ بابَ القَبولِ، ورُبَّما قَضى عليكَ بالذَّنبِ فكانَ سببًا في الوصولِ.",
+      "uebersetzung_de": "Vielleicht öffnet Er dir die Tür des Gehorsams, ohne dir die Tür der Annahme zu öffnen; und vielleicht bestimmt Er über dich eine Sünde, die zum Grund des Ankommens wird.",
+      "kommentar_sufi_de": "Gehorsam ohne Annahme und Sünde als Rückkehrtor zeigen: Die äußere Form allein entscheidet nicht. Allah erzieht durch verborgene Wendungen."
+    },
+    {
+      "nummer": 96,
+      "arabisch": "مَعصِيَةٌ أورَثَتْ ذُلًّا وافتِقارًا خيرٌ مِن طاعةٍ أورَثَتْ عِزًّا واستِكبارًا.",
+      "uebersetzung_de": "Eine Sünde, die Demut und Bedürftigkeit hervorbringt, ist besser als ein Gehorsam, der Selbstgröße und Hochmut hervorbringt.",
+      "kommentar_sufi_de": "Eine Sünde, die dich bricht, kann heilsamer sein als Gehorsam, der dich aufbläht. Der Weg misst an Demut, nicht am Selbstbild."
+    },
+    {
+      "nummer": 97,
+      "arabisch": "نِعمَتانِ ما خَرَجَ موجودٌ عنهما، ولا بُدَّ لكلِّ مُكَوَّنٍ منهما: نِعمَةُ الإيجادِ، ونِعمَةُ الإمدادِ.",
+      "uebersetzung_de": "Zwei Gaben gibt es, denen kein Seiendes entkommt und die jedes Geschaffene braucht: die Gabe des Hervorbringens und die Gabe des fortwährenden Erhaltens.",
+      "kommentar_sufi_de": "Existenz und Erhaltung sind universelle Gaben. Jeder Atem bezeugt, dass du nicht Besitzer deines Seins bist."
+    },
+    {
+      "nummer": 98,
+      "arabisch": "أنعَمَ عليكَ أوّلًا بالإيجادِ، وثانيًا بتَوالي الإمدادِ.",
+      "uebersetzung_de": "Er hat dich zuerst durch das Ins-Dasein-Bringen beschenkt und dann durch die fortlaufende Versorgung.",
+      "kommentar_sufi_de": "Zuerst gab Er Sein, dann fortdauernde Versorgung. Der Sufi liest in jeder Sekunde ein erneutes 'Sei' der Barmherzigkeit."
+    },
+    {
+      "nummer": 99,
+      "arabisch": "فاقَتُكَ لكَ ذاتيَّةٌ، ووُرودُ الأسبابِ مُذَكِّراتٌ لكَ بما خَفِيَ عليكَ منها، والفاقةُ الذاتيَّةُ لا تَرفَعُها العَوارِضُ.",
+      "uebersetzung_de": "Deine Bedürftigkeit gehört zu deinem Wesen; die eintretenden Ursachen erinnern dich nur an das, was dir davon verborgen war. Wesentliche Bedürftigkeit heben äußere Umstände nicht auf.",
+      "kommentar_sufi_de": "Fakr ist dein Wesen, nicht ein vorübergehender Zustand. Ursachen erinnern nur daran, dass du in jeder Lage abhängig bleibst."
+    },
+    {
+      "nummer": 100,
+      "arabisch": "خيرُ أوقاتِكَ وقتٌ تَشهَدُ فيه وجودَ فاقَتِكَ، وتُرَدُّ فيه إلى وجودِ ذِلَّتِكَ.",
+      "uebersetzung_de": "Die beste deiner Zeiten ist eine Zeit, in der du deine Bedürftigkeit erkennst und zu deiner Demut zurückgeführt wirst.",
+      "kommentar_sufi_de": "Die beste Zeit ist die, in der Bedürftigkeit sichtbar wird. Dort fällt die Krone des Ichs, und das Herz lernt Bitten."
+    },
+    {
+      "nummer": 101,
+      "arabisch": "متى أوحَشَكَ مِن خَلْقِهِ فاعلَمْ أنَّهُ يريدُ أن يَفتَحَ لكَ بابَ الأُنسِ به.",
+      "uebersetzung_de": "Wenn Er dich von Seinen Geschöpfen entfremdet, wisse: Er will dir die Tür der Vertrautheit mit Ihm öffnen.",
+      "kommentar_sufi_de": "Entfremdung von Geschöpfen kann Vorbereitung auf Uns mit Allah sein. Wenn Türen außen leiser werden, öffnet sich innen eine vertraute Nähe."
+    },
+    {
+      "nummer": 102,
+      "arabisch": "متى أطلَقَ لِسانَكَ بالطَّلَبِ فاعلَمْ أنَّهُ يريدُ أن يُعطيَكَ.",
+      "uebersetzung_de": "Wenn Er deine Zunge zum Bitten löst, wisse: Er will dir geben.",
+      "kommentar_sufi_de": "Wenn Allah die Zunge zum Bitten löst, liegt darin schon Nähe zur Gabe. Duʿāʾ ist oft der erste Teil der Antwort."
+    },
+    {
+      "nummer": 103,
+      "arabisch": "العارفُ لا يَزولُ اضطرارُهُ، ولا يكونُ مع غيرِ اللهِ قَرارُهُ.",
+      "uebersetzung_de": "Der Gotteserkennende verliert seine Bedürftigkeit nie, und bei etwas anderem als Gott findet er keinen endgültigen Ruheort.",
+      "kommentar_sufi_de": "Der ʿārif bleibt bedürftig und findet Ruhe nur bei Allah. Seine Armut ist keine Schwäche, sondern der Duft seiner Erkenntnis."
+    },
+    {
+      "nummer": 104,
+      "arabisch": "أنارَ الظواهرَ بأنوارِ آثارِهِ، وأنارَ السرائرَ بأنوارِ أوصافِهِ؛ لأجلِ ذلكَ أفَلَتْ أنوارُ الظواهرِ، ولم تَأفُلْ أنوارُ القلوبِ والسرائرِ. ولذلك قيلَ: إنَّ شمسَ النهارِ تَغيبُ بالليلِ، وشمسَ القلوبِ ليست تَغيبُ.",
+      "uebersetzung_de": "Er erleuchtete die äußeren Dinge mit den Lichtern Seiner Wirkungen und die inneren Geheimnisse mit den Lichtern Seiner Eigenschaften. Darum gehen die Lichter des Äußeren unter, während die Lichter der Herzen und inneren Geheimnisse nicht untergehen. Deshalb heißt es: Die Sonne des Tages verschwindet in der Nacht, die Sonne der Herzen aber verschwindet nicht.",
+      "kommentar_sufi_de": "Äußere Lichter gehen unter, innere Lichter bleiben. Die Dinge glänzen durch Wirkungen, die Geheimnisse durch Eigenschaften."
+    },
+    {
+      "nummer": 105,
+      "arabisch": "لِيُخَفِّفْ ألمَ البلاءِ عليكَ عِلمُكَ بأنَّهُ سبحانَهُ هو المُبلي لكَ؛ فالذي واجَهَتْكَ منه الأقدارُ هو الذي عَوَّدَكَ حُسنَ الاختيارِ.",
+      "uebersetzung_de": "Das Wissen, dass Er selbst dich prüft, soll den Schmerz der Prüfung für dich erleichtern. Denn Der, von dem dir die Schicksale begegnen, ist derselbe, der dich an Seine gute Wahl gewöhnt hat.",
+      "kommentar_sufi_de": "Prüfung wird leichter, wenn du den Prüfenden kennst. Das Schicksal kommt nicht aus blinder Härte, sondern aus Seiner weisen Wahl."
+    },
+    {
+      "nummer": 106,
+      "arabisch": "مَن ظَنَّ انفِكاكَ لُطفِهِ عن قَدَرِهِ فذلكَ لِقُصورِ نَظَرِهِ.",
+      "uebersetzung_de": "Wer meint, Seine Güte sei von Seiner Vorsehung getrennt, dessen Blick ist kurz.",
+      "kommentar_sufi_de": "Wer Güte von Vorsehung trennt, sieht kurz. Auch das Schwierige steht unter der Barmherzigkeit, die tiefer reicht als der Augenblick."
+    },
+    {
+      "nummer": 107,
+      "arabisch": "لا يُخافُ عليكَ أن تَلتَبِسَ الطُّرُقُ عليكَ، وإنّما يُخافُ عليكَ مِن غَلَبَةِ الهوى عليكَ.",
+      "uebersetzung_de": "Nicht ist vor allem zu fürchten, dass dir die Wege unklar werden; zu fürchten ist vielmehr, dass die Begierde dich überwältigt.",
+      "kommentar_sufi_de": "Gefahr ist weniger die Unklarheit des Weges als die Herrschaft der Begierde. Nebel schadet weniger als ein Herz, das ihm folgen will."
+    },
+    {
+      "nummer": 108,
+      "arabisch": "سبحانَ مَن سَتَرَ سرَّ الخصوصيَّةِ بظهورِ البشريَّةِ، وظهرَ بعَظَمَةِ الربوبيَّةِ في إظهارِ العبوديَّةِ.",
+      "uebersetzung_de": "Gepriesen sei Der, der das Geheimnis besonderer Nähe unter der Erscheinung der Menschlichkeit verbarg und die Größe der Herrschaft gerade im Erscheinen der Dienerschaft zeigte.",
+      "kommentar_sufi_de": "Allah verbirgt Nähe im Gewand gewöhnlicher Menschlichkeit. Dienerschaft ist kein Gegensatz zur Herrschaft, sondern ihr Spiegel im Geschöpf."
+    },
+    {
+      "nummer": 109,
+      "arabisch": "لا تُطالِبْ ربَّكَ بتأخُّرِ مَطلوبِكَ، ولكن طالِبْ نفسَكَ بتأخُّرِ أدَبِكَ.",
+      "uebersetzung_de": "Tadle deinen Herrn nicht wegen der Verzögerung dessen, was du erbittest; tadle vielmehr dich selbst wegen der Verzögerung deiner inneren Höflichkeit.",
+      "kommentar_sufi_de": "Tadle nicht die Verzögerung der Bitte, sondern die Verzögerung deines adab. Oft wartet die Gabe auf die Reifung des Gefäßes."
+    },
+    {
+      "nummer": 110,
+      "arabisch": "متى جَعَلَكَ في الظاهرِ مُمتَثِلًا لأمرِهِ، ورَزَقَكَ في الباطنِ الاستسلامَ لقَهرِهِ، فقد أعظَمَ المِنَّةَ عليكَ.",
+      "uebersetzung_de": "Wenn Er dich äußerlich Seinem Befehl folgen lässt und dir innerlich Ergebung unter Seine Macht schenkt, dann hat Er dir die Gabe groß gemacht.",
+      "kommentar_sufi_de": "Äußere Befolgung und innere Ergebung sind zusammen eine große Gabe. Sharīʿa und taslīm werden im Herzen eins."
+    },
+    {
+      "nummer": 111,
+      "arabisch": "ليس كلُّ مَن ثَبَتَ تخصيصُهُ كَمُلَ تخليصُهُ.",
+      "uebersetzung_de": "Nicht jeder, dessen besondere Zuwendung feststeht, ist schon vollkommen geläutert.",
+      "kommentar_sufi_de": "Besondere Zuwendung bedeutet nicht vollendete Läuterung. Ein Lichtbesuch macht noch keinen klaren Spiegel."
+    },
+    {
+      "nummer": 112,
+      "arabisch": "لا يَستَحقِرُ الوِردَ إلا جَهولٌ. الواردُ يُوجَدُ في الدارِ الآخرةِ، والوِردُ يَنطَوي بانطواءِ هذه الدارِ. وأولى ما يُعتَنى به: ما لا يَخلُفُ وجودُهُ. الوِردُ هو طالِبُهُ منك، والواردُ أنتَ تَطلُبُهُ منه، وأينَ ما هو طالِبُهُ منك ممّا هو مَطلبُكَ منه؟",
+      "uebersetzung_de": "Nur ein Unwissender verachtet die regelmäßige Übung. Die Eingebung findet man auch im Jenseits, die Übung aber endet mit dem Ende dieser Welt. Am meisten Aufmerksamkeit verdient, was nach seinem Verschwinden nicht nachgeholt werden kann. Die Übung ist das, was Er von dir verlangt; die Eingebung ist das, was du von Ihm verlangst. Wie weit ist das, was Er von dir verlangt, von dem entfernt, was du von Ihm verlangst!",
+      "kommentar_sufi_de": "Regelmäßige Übung ist kostbar, weil sie nur in dieser Welt möglich ist. Eingebungen können kommen und gehen; Wird baut Treue."
+    },
+    {
+      "nummer": 113,
+      "arabisch": "وُرودُ الإمدادِ بحَسَبِ الاستعدادِ، وشُروقُ الأنوارِ على حَسَبِ صَفاءِ الأسرارِ.",
+      "uebersetzung_de": "Das Zuströmen der Hilfe geschieht gemäß der Bereitschaft, und das Aufgehen der Lichter gemäß der Reinheit der inneren Geheimnisse.",
+      "kommentar_sufi_de": "Hilfe fließt nach Bereitschaft, Licht nach Reinheit. Der Sufi poliert nicht den Himmel, sondern das Gefäß."
+    },
+    {
+      "nummer": 114,
+      "arabisch": "الغافِلُ إذا أصبَحَ يَنظُرُ ماذا يَفعَلُ، والعاقِلُ يَنظُرُ ماذا يَفعَلُ اللهُ به.",
+      "uebersetzung_de": "Der Unachtsame schaut am Morgen, was er tun wird; der Verständige schaut, was Gott mit ihm tun wird.",
+      "kommentar_sufi_de": "Der Unachtsame plant seinen Tag; der Verständige fragt, was Allah heute mit ihm will. Das ist Wachheit im Qadar."
+    },
+    {
+      "nummer": 115,
+      "arabisch": "إنّما استَوحَشَ العُبّادُ والزُّهّادُ مِن كلِّ شيءٍ لِغَيْبَتِهم عن اللهِ في كلِّ شيءٍ؛ فلو شَهِدوهُ في كلِّ شيءٍ لم يَستَوحِشوا مِن شيءٍ.",
+      "uebersetzung_de": "Die Dienenden und Entsagenden fühlen sich nur deshalb von allem entfremdet, weil sie Gott nicht in allem wahrnehmen; sähen sie Ihn in allem, wären sie von nichts entfremdet.",
+      "kommentar_sufi_de": "Entfremdung entsteht, wenn man Allah nicht in den Dingen erkennt. Wer Ihn in allem bezeugt, ist nicht von Formen gefangen."
+    },
+    {
+      "nummer": 116,
+      "arabisch": "عَلِمَ مِنكَ أنَّكَ لا تَصبِرُ عنهُ، فأشهَدَكَ ما بَرَزَ منهُ.",
+      "uebersetzung_de": "Er wusste von dir, dass du ohne Ihn nicht bestehen kannst; darum ließ Er dich schauen, was von Ihm hervorgeht.",
+      "kommentar_sufi_de": "Weil du ohne Ihn nicht bestehen kannst, zeigt Er dir Seine Spuren. Jede Abhängigkeit ist Unterricht in tawḥīd."
+    },
+    {
+      "nummer": 117,
+      "arabisch": "عَلِمَ الحقُّ مِنكَ وجودَ المَلَلِ، فَلَوَّنَ لكَ الطاعاتِ؛ وعَلِمَ ما فيكَ مِن وجودِ الشَّرَهِ، فحَجَرَها عليكَ في بعضِ الأوقاتِ؛ ليكونَ هَمُّكَ إقامةَ الصلاةِ لا وجودَ الصلاةِ، فما كلُّ مُصَلٍّ مُقيمٌ.",
+      "uebersetzung_de": "Der Wahre wusste um deine Neigung zur Ermüdung und machte dir die Formen des Gehorsams vielfältig. Er wusste auch um deine Gier und begrenzte sie für bestimmte Zeiten, damit dein Anliegen das Aufrichten des Gebets sei, nicht bloß das Vorhandensein von Gebet; denn nicht jeder Betende richtet das Gebet wirklich auf.",
+      "kommentar_sufi_de": "Vielfalt der Anbetung schützt vor Müdigkeit; Begrenzung der Zeiten schützt vor Gier. Der Weg ist Barmherzigkeit in Form."
+    },
+    {
+      "nummer": 118,
+      "arabisch": "الصلاةُ طُهرَةٌ للقلوبِ مِن أدناسِ الذنوبِ، واستِفتاحٌ لِبابِ الغُيوبِ.",
+      "uebersetzung_de": "Das Gebet ist Reinigung der Herzen von den Verschmutzungen der Sünden und Öffnung der Tür zum Verborgenen.",
+      "kommentar_sufi_de": "Gebet wäscht das Herz und öffnet das Verborgene. Ṣalāh ist nicht nur Pflicht, sondern Quelle innerer Durchsicht."
+    },
+    {
+      "nummer": 119,
+      "arabisch": "الصلاةُ محلُّ المُناجاةِ ومَعدِنُ المُصافاةِ؛ تتَّسِعُ فيها ميادينُ الأسرارِ، وتُشرِقُ فيها شوارِقُ الأنوارِ. عَلِمَ وجودَ الضَّعفِ منك فقلَّلَ أعدادَها، وعَلِمَ احتياجَكَ إلى فضلِهِ فكثَّرَ أمدادَها.",
+      "uebersetzung_de": "Das Gebet ist Ort vertraulicher Zwiesprache und Quelle der Läuterung; in ihm weiten sich die Felder der Geheimnisse und leuchten die Aufgänge der Lichter. Er wusste um deine Schwäche und verringerte seine Anzahl; Er wusste um deine Bedürftigkeit nach Seiner Huld und vermehrte seine Hilfen.",
+      "kommentar_sufi_de": "Im Gebet weitet sich das Geheimnisfeld. Allah kennt unsere Schwäche und ruft uns wiederholt in die Zwiesprache zurück."
+    },
+    {
+      "nummer": 120,
+      "arabisch": "لا تَطلُبْ عِوَضًا على عَمَلٍ أنتَ لهُ فاعِلٌ. يَكفي مِن الجزاءِ لكَ على العملِ أن كانَ لهُ قابِلًا.",
+      "uebersetzung_de": "Verlange keinen Gegenwert für eine Tat, deren Ausführender du bist. Als Lohn genügt dir, dass Er sie überhaupt angenommen hat.",
+      "kommentar_sufi_de": "Fordere keinen Gegenwert für eine Tat, die Er in dir wirkt. Annahme selbst ist die größere Gabe."
+    },
+    {
+      "nummer": 121,
+      "arabisch": "إذا أرادَ أن يُظهِرَ فضلَهُ عليكَ خَلَقَ ونَسَبَ إليكَ.",
+      "uebersetzung_de": "Wenn Er Seine Huld an dir zeigen will, erschafft Er und schreibt es dir zu.",
+      "kommentar_sufi_de": "Wenn Allah Seine Huld zeigen will, erschafft Er das Werk und schreibt es dir zu. Der Sufi staunt über diese zarte Verbergung."
+    },
+    {
+      "nummer": 122,
+      "arabisch": "لا نهايةَ لِمَذامِّكَ إن أرجَعَكَ إليكَ، ولا تَفرُغُ مَدائِحُكَ إن أظهَرَ جودَهُ عليكَ.",
+      "uebersetzung_de": "Deine Tadelwürdigkeit nimmt kein Ende, wenn Er dich auf dich selbst zurückwirft; und dein Lob erschöpft sich nicht, wenn Er Seine Großzügigkeit an dir erscheinen lässt.",
+      "kommentar_sufi_de": "Auf dich selbst zurückgeworfen bist du tadelwürdig; durch Seine Großzügigkeit unerschöpflich lobenswert. So stirbt Selbstvertrauen und lebt Dank."
+    },
+    {
+      "nummer": 123,
+      "arabisch": "كُنْ بأوصافِ رُبوبيَّتِهِ مُتعلِّقًا، وبأوصافِ عبوديَّتِكَ مُتحقِّقًا.",
+      "uebersetzung_de": "Halte dich an die Eigenschaften Seiner Herrschaft und verwirkliche die Eigenschaften deiner Dienerschaft.",
+      "kommentar_sufi_de": "Halte fest an Seiner Herrschaft und deiner Dienerschaft. Der Weg wird klar, wenn der Herr Herr bleibt und der Diener Diener."
+    },
+    {
+      "nummer": 124,
+      "arabisch": "مَنَعَكَ أن تَدَّعيَ ما ليسَ لكَ ممّا للمخلوقينَ، أفيُبيحُ لكَ أن تَدَّعيَ وصفَهُ وهو ربُّ العالمينَ؟",
+      "uebersetzung_de": "Er hat dir verboten, etwas zu beanspruchen, was nicht dir, sondern Geschöpfen gehört; sollte Er dir dann erlauben, Seine eigene Eigenschaft zu beanspruchen, wo Er doch der Herr der Welten ist?",
+      "kommentar_sufi_de": "Wenn du nicht einmal fremden Besitz beanspruchen darfst, wie könntest du göttliche Eigenschaften beanspruchen? Anspruch ist Diebstahl im Bereich des Herzens."
+    },
+    {
+      "nummer": 125,
+      "arabisch": "كيفَ تُخرَقُ لكَ العوائدُ وأنتَ لم تَخرِقْ مِن نفسِكَ العوائدَ؟",
+      "uebersetzung_de": "Wie sollen für dich die Gewohnheiten durchbrochen werden, wenn du nicht zuerst deine eigenen Gewohnheiten durchbrochen hast?",
+      "kommentar_sufi_de": "Wunder an dir beginnen mit dem Bruch deiner Gewohnheiten. Wer seine nafs nicht durchquert, sucht Karāma vor Reinigung."
+    },
+    {
+      "nummer": 126,
+      "arabisch": "ما الشأنُ وجودُ الطَّلَبِ، إنّما الشأنُ أن تُرزَقَ حُسنَ الأدَبِ.",
+      "uebersetzung_de": "Nicht das Vorhandensein der Bitte ist entscheidend; entscheidend ist, dass dir gute innere Haltung geschenkt wird.",
+      "kommentar_sufi_de": "Nicht die Bitte selbst zählt, sondern der adab darin. Eine arme, höfliche Bitte ist höher als ein lautes Fordern."
+    },
+    {
+      "nummer": 127,
+      "arabisch": "ما طَلَبَ لكَ شيءٌ مثلُ الاضطرارِ، ولا أسرَعَ بالمواهِبِ إليكَ مثلُ الذِّلَّةِ والافتِقارِ.",
+      "uebersetzung_de": "Nichts bittet so sehr für dich wie deine Not, und nichts bringt die Gaben so schnell zu dir wie Demut und Bedürftigkeit.",
+      "kommentar_sufi_de": "Not bittet beredter als die Zunge. Demut und Bedürftigkeit sind die schnellsten Boten zu den Gaben."
+    },
+    {
+      "nummer": 128,
+      "arabisch": "لو أنَّكَ لا تَصِلُ إليهِ إلا بعدَ فَناءِ مَساويكَ ومَحوِ دَعاويكَ لم تَصِلْ إليهِ أبدًا. ولكن إذا أرادَ أن يُوصِلَكَ إليهِ سَتَرَ وصفَكَ بوصفِهِ، وغَطّى نَعتَكَ بنَعتِهِ، فوصَلَكَ إليهِ بما منهُ إليكَ لا بما منكَ إليهِ.",
+      "uebersetzung_de": "Müsstest du erst nach dem Verschwinden deiner Fehler und dem Auslöschen deiner Ansprüche zu Ihm gelangen, würdest du Ihn niemals erreichen. Wenn Er dich aber zu Sich bringen will, bedeckt Er deine Eigenschaft mit Seiner Eigenschaft und deine Beschreibung mit Seiner Beschreibung; so bringt Er dich durch das, was von Ihm zu dir kommt, nicht durch das, was von dir zu Ihm kommt.",
+      "kommentar_sufi_de": "Würdest du erst vollkommen rein kommen dürfen, käme niemand an. Allah bringt den Diener zu Sich, indem Er ihn mit Seinem Licht bedeckt."
+    },
+    {
+      "nummer": 129,
+      "arabisch": "لولا جميلُ سترِهِ لم يكنْ عملٌ أهلًا للقبولِ.",
+      "uebersetzung_de": "Wäre nicht die Schönheit Seines Verbergens, wäre keine Tat der Annahme würdig.",
+      "kommentar_sufi_de": "Ohne Sein schönes Verbergen wäre keine Tat annehmbar. Satr ist die stille Decke, unter der der Diener überhaupt dienen kann."
+    },
+    {
+      "nummer": 130,
+      "arabisch": "أنتَ إلى حِلْمِهِ إذا أطعتَهُ أحوَجُ منكَ إلى حِلْمِهِ إذا عصيتَهُ.",
+      "uebersetzung_de": "Du brauchst Seine Nachsicht, wenn du Ihm gehorchst, noch mehr als du Seine Nachsicht brauchst, wenn du Ihm ungehorsam bist.",
+      "kommentar_sufi_de": "Du brauchst Nachsicht im Gehorsam mehr als in der Sünde, weil im Gehorsam feiner Anspruch lauert. Der fromme Stolz ist schwerer zu sehen."
+    },
+    {
+      "nummer": 131,
+      "arabisch": "السَّتْرُ على قسمينِ: سَتْرٌ عنِ المعصيةِ، وسَتْرٌ فيها. فالعامةُ يَطلُبونَ مِن اللهِ السَّترَ فيها خَشيَةَ سقوطِ مَرتَبَتِهِم عندَ الخَلقِ، والخاصّةُ يَطلُبونَ مِن اللهِ السَّترَ عنها خَشيَةَ سقوطِهِم مِن نَظَرِ المَلِكِ الحقِّ.",
+      "uebersetzung_de": "Das Verbergen ist zweifach: ein Verbergen vor der Sünde und ein Verbergen innerhalb der Sünde. Die Allgemeinheit bittet Gott um Verbergen in der Sünde, aus Angst, ihren Rang bei den Menschen zu verlieren; die Besonderen bitten Gott um Verbergen vor der Sünde, aus Angst, aus dem Blick des wahren Königs zu fallen.",
+      "kommentar_sufi_de": "Satr vor Sünde ist höher als Satr in Sünde. Die Besonderen bitten nicht um Rufschutz, sondern um Bewahrung des Herzens vor dem Fall."
+    },
+    {
+      "nummer": 132,
+      "arabisch": "مَن أكرَمَكَ إنّما أكرَمَ فيكَ جميلَ سترِهِ؛ فالحمدُ لِمَن سَتَرَكَ، ليسَ الحمدُ لِمَن أكرَمَكَ وشَكَرَكَ.",
+      "uebersetzung_de": "Wer dich ehrt, ehrt in dir nur die Schönheit von Gottes Verbergen. Darum gehört der Dank Dem, der dich bedeckt hat, nicht dem, der dich geehrt und gelobt hat.",
+      "kommentar_sufi_de": "Wer dich ehrt, sieht nur, was Allah bedeckt hat. Richte Dank nicht auf den Lobenden, sondern auf den Verberger deiner Blöße."
+    },
+    {
+      "nummer": 133,
+      "arabisch": "ما صَحِبَكَ إلا مَنْ صَحِبَكَ وهو بعيبِكَ عليمٌ، وليس ذلك إلا مولاكَ الكريمُ.",
+      "uebersetzung_de": "Dich begleitet wahrhaft nur der, der dich begleitet, obwohl er deine Fehler kennt; und das ist allein dein großzügiger Herr.",
+      "kommentar_sufi_de": "Der wahre Gefährte kennt deine Fehler und bleibt. Vollkommen ist das nur Allah; Seine Nähe überlebt jede Enthüllung."
+    },
+    {
+      "nummer": 134,
+      "arabisch": "خيرُ مَنْ تصحبُ مَنْ يطلبُكَ لكَ، لا لشيءٍ يعودُ منك إليه.",
+      "uebersetzung_de": "Der beste Gefährte ist der, der dich um deinetwillen sucht, nicht wegen eines Nutzens, der von dir zu ihm zurückkehrt.",
+      "kommentar_sufi_de": "Der beste Gefährte sucht dich nicht als Nutzen, sondern als Seele. Solche Ṣuḥba erinnert an die reine Zuwendung Allahs."
+    },
+    {
+      "nummer": 135,
+      "arabisch": "لو أشرقَ لكَ نورُ اليقينِ لرأيتَ الآخرةَ أقربَ إليكَ من أن ترحلَ إليها، ولرأيتَ محاسنَ الدنيا قد ظهرتْ كِسفةُ الفناءِ عليها.",
+      "uebersetzung_de": "Würde dir das Licht der Gewissheit aufgehen, sähest du das Jenseits näher, als dass man erst dorthin reisen müsste, und sähest die Schönheit der Welt vom Schatten der Vergänglichkeit gezeichnet.",
+      "kommentar_sufi_de": "Yaqīn macht Ākhira nah und Dunyā schattig. Wenn das Licht aufgeht, verliert Vergänglichkeit ihre Zauberkraft."
+    },
+    {
+      "nummer": 136,
+      "arabisch": "ما حجبَكَ عن اللهِ وجودُ موجودٍ معه، إذ لا شيءَ معه، ولكن حجبَكَ عنه توهُّمُ موجودٍ معه.",
+      "uebersetzung_de": "Nicht das Vorhandensein eines Dinges neben Gott verhüllt Ihn vor dir - denn nichts besteht mit Ihm -, sondern deine Einbildung, dass etwas mit Ihm bestehe.",
+      "kommentar_sufi_de": "Nicht Dinge verhüllen Allah, sondern die Einbildung ihrer Eigenständigkeit. Tawḥīd löst den falschen Mitbewerber aus dem Blick."
+    },
+    {
+      "nummer": 137,
+      "arabisch": "لولا ظهورُه في المكوَّناتِ ما وقعَ عليها وجودُ إبصارٍ، ولو ظهرتْ صفاتُه اضمحلَّتْ مكوَّناتُه.",
+      "uebersetzung_de": "Wäre Sein Erscheinen in den geschaffenen Dingen nicht, fiele kein Blick auf sie; und würden Seine Eigenschaften unverhüllt erscheinen, zerfielen die geschaffenen Dinge.",
+      "kommentar_sufi_de": "Ohne Sein Erscheinen sähe man nichts; ohne Verhüllung hielte nichts stand. Die Schöpfung lebt zwischen tajallī und Schonung."
+    },
+    {
+      "nummer": 138,
+      "arabisch": "أظهرَ كلَّ شيءٍ بأنَّه الباطنُ، وطوى وجودَ كلِّ شيءٍ بأنَّه الظاهرُ.",
+      "uebersetzung_de": "Er ließ jedes Ding erscheinen, weil Er der Verborgene ist; und Er faltete die Existenz jedes Dinges ein, weil Er der Offenbare ist.",
+      "kommentar_sufi_de": "Er ist al-Bāṭin, daher erscheinen Dinge; Er ist aẓ-Ẓāhir, daher vergehen sie vor Ihm. Erscheinung und Auslöschung lehren dieselbe Einheit."
+    },
+    {
+      "nummer": 139,
+      "arabisch": "أباحَ لكَ أن تنظرَ ما في المكوَّناتِ، وما أذنَ لكَ أن تقفَ مع ذواتِ المكوَّناتِ.",
+      "uebersetzung_de": "Er erlaubte dir, zu betrachten, was in den Geschöpfen liegt; Er erlaubte dir aber nicht, bei den Wesen der Geschöpfe stehenzubleiben.",
+      "kommentar_sufi_de": "Du darfst in Geschöpfen Zeichen betrachten, aber nicht bei ihrer Eigenheit stehenbleiben. Schau durch sie hindurch, nicht an ihnen fest."
+    },
+    {
+      "nummer": 140,
+      "arabisch": "الأكوانُ ثابتةٌ بإثباتِه، وممحوةٌ بأحديَّةِ ذاتِه.",
+      "uebersetzung_de": "Die Welten sind fest durch Sein Feststellen, und ausgelöscht vor der Einzigkeit Seines Wesens.",
+      "kommentar_sufi_de": "Die Welten stehen durch Seine Feststellung und verschwinden vor Seiner Einzigkeit. Der Sufi sieht Bestand und Nichtsein zugleich."
+    },
+    {
+      "nummer": 141,
+      "arabisch": "الناسُ يمدحونكَ لما يظنُّونَه فيكَ، فكنْ أنتَ ذامًّا لنفسكَ لما تعلمُه منها.",
+      "uebersetzung_de": "Die Menschen loben dich für das, was sie in dir vermuten; du aber tadle dich für das, was du von dir selbst weißt.",
+      "kommentar_sufi_de": "Lob der Menschen beruht auf Vermutung; Selbsttadel auf Kenntnis deiner verborgenen Mängel. So schützt der Weg vor berauschendem Applaus."
+    },
+    {
+      "nummer": 142,
+      "arabisch": "المؤمنُ إذا مُدِحَ استحيا من اللهِ أن يُثنى عليه بوصفٍ لا يشهدُه من نفسِه.",
+      "uebersetzung_de": "Der Gläubige schämt sich vor Gott, wenn er gelobt wird für eine Eigenschaft, die er in sich selbst nicht bezeugt.",
+      "kommentar_sufi_de": "Wer für Unbezeugtes gelobt wird, schämt sich vor Allah. Diese Scham ist Licht, denn sie bewahrt das Herz vor Lüge."
+    },
+    {
+      "nummer": 143,
+      "arabisch": "أجهلُ الناسِ مَنْ تركَ يقينَ ما عندَه لظنِّ ما عندَ الناسِ.",
+      "uebersetzung_de": "Der unwissendste Mensch ist, wer die Gewissheit dessen aufgibt, was er bei sich weiß, wegen der bloßen Vermutung dessen, was bei den Menschen ist.",
+      "kommentar_sufi_de": "Unwissen ist, eigene Gewissheit zugunsten fremder Vermutung zu verlassen. Der Sufi kennt seinen inneren Zustand besser als den Ruf."
+    },
+    {
+      "nummer": 144,
+      "arabisch": "إذا أطلقَ الثناءَ عليكَ ولستَ بأهلٍ، فأثنِ عليه بما هو أهلُه.",
+      "uebersetzung_de": "Wenn Er Lob über dich freisetzt, obwohl du dessen nicht würdig bist, dann lobe Ihn mit dem, was Ihm gebührt.",
+      "kommentar_sufi_de": "Wenn unverdientes Lob kommt, antworte mit Lobpreis Allahs. So wird fremdes Lob in tawḥīd verwandelt."
+    },
+    {
+      "nummer": 145,
+      "arabisch": "الزُّهَّادُ إذا مُدِحوا انقبضوا لشهودِهم الثناءَ من الخلقِ، والعارفونَ إذا مُدِحوا انبسطوا لشهودِهم ذلك من الملكِ الحقِّ.",
+      "uebersetzung_de": "Die Asketen ziehen sich zusammen, wenn sie gelobt werden, weil sie das Lob von den Geschöpfen sehen; die Erkennenden weiten sich, weil sie darin den wahren König sehen.",
+      "kommentar_sufi_de": "Der Asket sieht im Lob die Geschöpfe und fürchtet; der ʿārif sieht den König und wird weit. Beide schützen sich, doch auf verschiedenen Ebenen."
+    },
+    {
+      "nummer": 146,
+      "arabisch": "متى كنتَ إذا أُعطيتَ بسطكَ العطاءُ، وإذا مُنعتَ قبضكَ المنعُ، فاستدلَّ بذلك على ثبوتِ طفوليَّتِكَ وعدمِ صدقِكَ في عبوديَّتِكَ.",
+      "uebersetzung_de": "Wenn dich Gabe weit macht und Entzug eng macht, dann erkenne daran deine geistliche Unreife und die Unaufrichtigkeit deiner Dienerschaft.",
+      "kommentar_sufi_de": "Wenn Gabe dich weitet und Entzug dich eng macht, bist du noch Diener deiner Zustände. Reife dient Allah in beiden."
+    },
+    {
+      "nummer": 147,
+      "arabisch": "إذا وقعَ منك ذنبٌ فلا يكنْ سببًا ليأسِكَ من حصولِ الاستقامةِ مع ربِّكَ، فقد يكونُ ذلك آخرَ ذنبٍ قُدِّرَ عليك.",
+      "uebersetzung_de": "Wenn dir eine Sünde widerfährt, soll sie kein Grund sein, an der Aufrichtung mit deinem Herrn zu verzweifeln; vielleicht ist sie die letzte Sünde, die dir bestimmt war.",
+      "kommentar_sufi_de": "Eine Sünde darf nicht zum Tor der Verzweiflung werden. Vielleicht ist sie der letzte Schatten vor einer aufrichtigen Rückkehr."
+    },
+    {
+      "nummer": 148,
+      "arabisch": "إذا أردتَ أن يفتحَ لكَ بابَ الرجاءِ فاشهدْ ما منه إليكَ، وإذا أردتَ أن يفتحَ لكَ بابَ الخوفِ فاشهدْ ما منك إليه.",
+      "uebersetzung_de": "Willst du, dass dir das Tor der Hoffnung geöffnet wird, dann schau auf das, was von Ihm zu dir kommt; willst du das Tor der Furcht, dann schau auf das, was von dir zu Ihm kommt.",
+      "kommentar_sufi_de": "Hoffnung wächst beim Blick auf Seine Güte; Furcht beim Blick auf deine Antwort. Der Sufi braucht beide Augen."
+    },
+    {
+      "nummer": 149,
+      "arabisch": "ربما أفادكَ في ليلِ القبضِ ما لم تستفدْه في إشراقِ نهارِ البسطِ.",
+      "uebersetzung_de": "Vielleicht schenkt Er dir in der Nacht der Enge, was du im hellen Tag der Weite nicht gewonnen hast.",
+      "kommentar_sufi_de": "In der Nacht der Enge werden manchmal Gaben geboren, die der Tag der Weite nicht trägt. Qabḍ kann heimliche Reife schenken."
+    },
+    {
+      "nummer": 150,
+      "arabisch": "مطالعُ الأنوارِ: القلوبُ والأسرارُ.",
+      "uebersetzung_de": "Die Aufgangsorte der Lichter sind die Herzen und die innersten Geheimnisse.",
+      "kommentar_sufi_de": "Die Aufgänge der Lichter sind Herzen und Geheimnisse. Reinige den inneren Horizont, damit der Morgen eintreten kann."
+    },
+    {
+      "nummer": 151,
+      "arabisch": "نورٌ مستودَعٌ في القلوبِ مددُه من النورِ الواردِ من خزائنِ الغيوبِ.",
+      "uebersetzung_de": "Ein Licht ist in die Herzen gelegt; seine Versorgung kommt von dem Licht, das aus den Schatzkammern des Verborgenen herabkommt.",
+      "kommentar_sufi_de": "Das Herzlicht wird aus Schatzkammern des Verborgenen ernährt. Pflege die Lampe, doch erkenne die Ölquelle nicht als dein Eigentum."
+    },
+    {
+      "nummer": 152,
+      "arabisch": "نورٌ يكشفُ لكَ به عن آثارِه، ونورٌ يكشفُ لكَ به عن أوصافِه.",
+      "uebersetzung_de": "Es gibt ein Licht, durch das Er dir Seine Spuren enthüllt, und ein Licht, durch das Er dir Seine Eigenschaften enthüllt.",
+      "kommentar_sufi_de": "Ein Licht zeigt Spuren, ein tieferes Licht Eigenschaften. Der Weg steigt vom Lesen der Zeichen zur Erkenntnis des Bezeichneten."
+    },
+    {
+      "nummer": 153,
+      "arabisch": "ربما وقفتِ القلوبُ مع الأنوارِ كما حُجِبَتِ النفوسُ بكثائفِ الأغيارِ.",
+      "uebersetzung_de": "Manchmal bleiben Herzen bei den Lichtern stehen, so wie die Seelen durch die dichten Schleier der anderen Dinge verhüllt werden.",
+      "kommentar_sufi_de": "Auch Lichter können Schleier werden, wenn das Herz bei ihnen stehenbleibt. Der Liebende sucht nicht Licht, sondern den Lichtgeber."
+    },
+    {
+      "nummer": 154,
+      "arabisch": "سترَ أنوارَ السرائرِ بكثائفِ الظواهرِ إجلالًا لها أن تُبتذَلَ بوجودِ الإظهارِ، وأن يُنادى عليها بلسانِ الاشتهارِ.",
+      "uebersetzung_de": "Er verhüllte die Lichter der innersten Geheimnisse mit der Dichte äußerer Erscheinungen, aus Ehrung dafür, dass sie nicht durch öffentliche Sichtbarkeit gewöhnlich gemacht werden.",
+      "kommentar_sufi_de": "Geheimnislichter sind unter äußerer Dichte verhüllt, damit sie nicht gewöhnlich werden. Allah schützt das Kostbare vor dem Markt der Blicke."
+    },
+    {
+      "nummer": 155,
+      "arabisch": "سبحانَ مَنْ لم يجعلِ الدليلَ على أوليائِه إلا من حيثُ الدليلُ عليه، ولم يوصِلْ إليهم إلا مَنْ أرادَ أن يوصِلَه إليه.",
+      "uebersetzung_de": "Gepriesen sei der, der den Hinweis auf Seine Freunde nur dort setzte, wo auch der Hinweis auf Ihn selbst liegt, und der nur den zu ihnen führt, den Er zu Sich führen will.",
+      "kommentar_sufi_de": "Der Hinweis auf Freunde Allahs liegt dort, wo der Hinweis auf Ihn liegt. Wer zu ihnen geführt wird, wird eigentlich zu Ihm gerufen."
+    },
+    {
+      "nummer": 156,
+      "arabisch": "ربما أطلعكَ على غيبِ ملكوتِه، وحجبَ عنكَ الاستشرافَ على أسرارِ العبادِ.",
+      "uebersetzung_de": "Vielleicht lässt Er dich das Verborgene Seines Reiches schauen und verwehrt dir zugleich das Ausspähen der Geheimnisse der Diener.",
+      "kommentar_sufi_de": "Das Reichsgeheimnis zu schauen gibt kein Recht auf Ausspähen von Herzen. Maʿrifa macht ehrfürchtig, nicht neugierig."
+    },
+    {
+      "nummer": 157,
+      "arabisch": "مَنْ اطَّلعَ على أسرارِ العبادِ ولم يتخلَّقْ بالرحمةِ الإلهيَّةِ كان اطِّلاعُه فتنةً عليه وسببًا لجرِّ الوبالِ إليه.",
+      "uebersetzung_de": "Wer Einblick in die Geheimnisse der Diener erhält, ohne von göttlicher Barmherzigkeit geprägt zu sein, für den wird dieser Einblick zur Versuchung und zum Unheil.",
+      "kommentar_sufi_de": "Einblick ohne Barmherzigkeit wird Versuchung. Wer Geheimnisse anderer sieht, muss mehr mitdecken als enthüllen."
+    },
+    {
+      "nummer": 158,
+      "arabisch": "حظُّ النفسِ في المعصيةِ ظاهرٌ جليٌّ، وحظُّها في الطاعةِ باطنٌ خفيٌّ، ومداواةُ ما يخفى صعبٌ علاجُه.",
+      "uebersetzung_de": "Der Anteil der Seele an der Sünde ist sichtbar und deutlich; ihr Anteil an der Frömmigkeit ist verborgen und fein. Das Verborgene zu heilen ist schwerer.",
+      "kommentar_sufi_de": "Der Anteil der nafs an Frömmigkeit ist feiner als an Sünde. Deshalb braucht der Fromme schärfere Wachsamkeit als der offenkundig Fehlende."
+    },
+    {
+      "nummer": 159,
+      "arabisch": "ربما دخلَ الرياءُ عليكَ من حيثُ لا ينظرُ الخلقُ إليكَ.",
+      "uebersetzung_de": "Vielleicht tritt die Geltungssucht bei dir ein, gerade dort, wo die Menschen gar nicht auf dich schauen.",
+      "kommentar_sufi_de": "Riyāʾ kann auch ohne Zuschauer wachsen. Die nafs erfindet ein Publikum im Inneren, wenn außen niemand hinsieht."
+    },
+    {
+      "nummer": 160,
+      "arabisch": "استشرافُكَ أن يعلمَ الخلقُ بخصوصيَّتِكَ دليلٌ على عدمِ صدقِكَ في عبوديَّتِكَ.",
+      "uebersetzung_de": "Dein Verlangen, dass die Geschöpfe von deiner Besonderheit wissen, ist ein Zeichen mangelnder Wahrhaftigkeit in deiner Dienerschaft.",
+      "kommentar_sufi_de": "Verlangen nach Bekanntheit deiner Besonderheit verrät schwache Dienerschaft. Das Geheimnis des Freundes Allahs liebt Verborgenheit."
+    },
+    {
+      "nummer": 161,
+      "arabisch": "غيِّبْ نظرَ الخلقِ إليكَ بنظرِ اللهِ إليكَ، وغِبْ عن إقبالِهم عليكَ بشهودِ إقبالِه عليك.",
+      "uebersetzung_de": "Lass den Blick der Menschen auf dich verschwinden durch den Blick Gottes auf dich; und werde abwesend von ihrer Hinwendung durch das Bezeugen Seiner Hinwendung zu dir.",
+      "kommentar_sufi_de": "Lass Menschenblicke im Blick Allahs verschwinden. Wer von Seiner Hinwendung erfüllt ist, bettelt nicht um Aufmerksamkeit der Geschöpfe."
+    },
+    {
+      "nummer": 162,
+      "arabisch": "مَنْ عرفَ الحقَّ شهدَه في كلِّ شيءٍ، ومَنْ فنيَ به غابَ عن كلِّ شيءٍ، ومَنْ أحبَّه لم يؤثرْ عليه شيئًا.",
+      "uebersetzung_de": "Wer den Wahren erkennt, bezeugt Ihn in allem; wer in Ihm vergeht, ist von allem abwesend; wer Ihn liebt, zieht nichts Ihm vor.",
+      "kommentar_sufi_de": "Erkenntnis sieht Ihn in allem; fanāʾ vergisst alles in Ihm; Liebe zieht nichts Ihm vor. Das sind Tiefen desselben Meeres."
+    },
+    {
+      "nummer": 163,
+      "arabisch": "إنما حجبَ الحقُّ عنكَ شدَّةُ قربِه منك.",
+      "uebersetzung_de": "Der Wahre ist dir nur durch die Heftigkeit Seiner Nähe verhüllt.",
+      "kommentar_sufi_de": "Der Ḥaqq ist durch Nähe verhüllt, wie die Pupille das Sehen nicht sieht. Entfernung wäre leichter zu begreifen als überwältigende Nähe."
+    },
+    {
+      "nummer": 164,
+      "arabisch": "إنما احتجبَ لشدةِ ظهورِه، وخفيَ عن الأبصارِ لعظمِ نورِه.",
+      "uebersetzung_de": "Er ist nur wegen der Fülle Seines Erscheinens verhüllt, und vor den Blicken verborgen wegen der Größe Seines Lichts.",
+      "kommentar_sufi_de": "Sein Licht verbirgt durch Überfülle. Die Augen schwächeln nicht wegen Dunkelheit, sondern weil die Sonne zu hell ist."
+    },
+    {
+      "nummer": 165,
+      "arabisch": "لا يكنْ طلبُكَ تسبُّبًا إلى العطاءِ منه، فيقلَّ فهمُكَ عنه، وليكنْ طلبُكَ لإظهارِ العبوديَّةِ وقيامًا بحقوقِ الربوبيَّةِ.",
+      "uebersetzung_de": "Dein Bitten soll nicht der Versuch sein, Seine Gabe zu verursachen - sonst ist dein Verständnis gering -, sondern Ausdruck der Dienerschaft und Erfüllung der Rechte Seiner Herrschaft.",
+      "kommentar_sufi_de": "Bitte nicht, um Gabe zu erzwingen, sondern um Dienerschaft zu erfüllen. Duʿāʾ ist adab vor Rubūbiyya."
+    },
+    {
+      "nummer": 166,
+      "arabisch": "كيف يكونُ طلبُكَ اللاحقُ سببًا في عطائِه السابقِ؟",
+      "uebersetzung_de": "Wie könnte deine spätere Bitte Ursache Seiner vorausgehenden Gabe sein?",
+      "kommentar_sufi_de": "Deine spätere Bitte kann nicht Ursache Seiner ewigen Gabe sein. Das Bitten enthüllt Bedürftigkeit, nicht den Ursprung der Barmherzigkeit."
+    },
+    {
+      "nummer": 167,
+      "arabisch": "جلَّ حكمُ الأزلِ أن يُضافَ إلى العِلَلِ.",
+      "uebersetzung_de": "Erhaben ist das Urteil der Ewigkeit darüber, bloßen Ursachen zugeschrieben zu werden.",
+      "kommentar_sufi_de": "Das ewige Urteil steht über Ursachen. Der Sufi nutzt Mittel, ohne die Mittel auf den Thron zu setzen."
+    },
+    {
+      "nummer": 168,
+      "arabisch": "عنايتُه فيكَ لا لشيءٍ منكَ، وأينَ كنتَ حين واجهتكَ عنايتُه وقابلتكَ رعايتُه؟",
+      "uebersetzung_de": "Seine Fürsorge für dich geschah nicht wegen etwas von dir. Wo warst du, als Seine Fürsorge dir entgegenkam und Seine Pflege dich erreichte?",
+      "kommentar_sufi_de": "Seine Fürsorge ging deinem Sein voraus. Vor jedem Verdienst war schon eine Zuwendung, die dich suchte."
+    },
+    {
+      "nummer": 169,
+      "arabisch": "علمَ أنَّ العبادَ يتشوَّفونَ إلى ظهورِ سرِّ العنايةِ، فقال: يختصُّ برحمتِهِ مَنْ يشاء.",
+      "uebersetzung_de": "Er wusste, dass die Diener danach verlangen, das Geheimnis der Fürsorge zu sehen; darum sagte Er: Er zeichnet mit Seiner Barmherzigkeit aus, wen Er will.",
+      "kommentar_sufi_de": "Das Geheimnis der Fürsorge wird nur durch Barmherzigkeit verstanden. Erwählung ist nicht Besitz des Dieners, sondern reine Auszeichnung."
+    },
+    {
+      "nummer": 170,
+      "arabisch": "إلى المشيئةِ يستندُ كلُّ شيءٍ، ولا تستندُ هي إلى شيءٍ.",
+      "uebersetzung_de": "Auf den göttlichen Willen stützt sich alles; er selbst stützt sich auf nichts.",
+      "kommentar_sufi_de": "Alles ruht auf dem göttlichen Willen; er ruht auf nichts. Hier endet die Kette der Erklärungen im Schweigen."
+    },
+    {
+      "nummer": 171,
+      "arabisch": "ربما دلَّهُمُ الأدبُ على تركِ الطلبِ اعتمادًا على قسمتِه واشتغالًا بذكرِه عن مسألتِه.",
+      "uebersetzung_de": "Manchmal führt sie die rechte innere Haltung dazu, das Bitten zu lassen: im Vertrauen auf Seine Zuteilung und weil das Gedenken sie von der Bitte beschäftigt.",
+      "kommentar_sufi_de": "Manchmal lässt rechte Haltung das Bitten ruhen. Nicht aus Stolz, sondern weil dhikr und Vertrauen das Herz ganz ausfüllen."
+    },
+    {
+      "nummer": 172,
+      "arabisch": "إنما يُذكَّرُ مَنْ يجوزُ عليه الإغفالُ.",
+      "uebersetzung_de": "Erinnert wird nur, wer der Vergesslichkeit unterliegt.",
+      "kommentar_sufi_de": "Gedenken richtet sich an den, der Vergessen kennt. Dhikr ist Heilmittel unserer Abwesenheit, nicht Mehrung Seiner Gegenwart."
+    },
+    {
+      "nummer": 173,
+      "arabisch": "وإنما يُنبَّهُ مَنْ يمكنُ منه الإهمالُ.",
+      "uebersetzung_de": "Ermahnt wird nur, von wem Nachlässigkeit möglich ist.",
+      "kommentar_sufi_de": "Ermahnung gilt dem, der fallen kann. Wer dies begreift, nimmt jede Mahnung als Barmherzigkeit, nicht als Kränkung."
+    },
+    {
+      "nummer": 174,
+      "arabisch": "ورودُ الفاقاتِ أعيادُ المريدينَ.",
+      "uebersetzung_de": "Das Eintreffen von Bedürftigkeiten sind Festtage der Suchenden.",
+      "kommentar_sufi_de": "Bedürftigkeiten sind Festtage der Suchenden, weil dort die falsche Selbstgenügsamkeit zerbricht und die Tür des faqr aufgeht."
+    },
+    {
+      "nummer": 175,
+      "arabisch": "ربما وجدتَ من المزيدِ في الفاقاتِ ما لا تجدُه في الصومِ والصلاةِ.",
+      "uebersetzung_de": "Vielleicht findest du in den Bedürftigkeiten an Zuwachs, was du in Fasten und Gebet nicht findest.",
+      "kommentar_sufi_de": "In Bedürftigkeit findest du Zuwachs, den bloße Übungen nicht geben. Not lehrt eine Aufrichtigkeit, die Bequemlichkeit selten kennt."
+    },
+    {
+      "nummer": 176,
+      "arabisch": "الفاقاتُ بُسُطُ المواهبِ.",
+      "uebersetzung_de": "Bedürftigkeiten sind Teppiche, auf denen die Gaben ausgebreitet werden.",
+      "kommentar_sufi_de": "Bedürftigkeiten sind Teppiche der Gaben. Breite deine Armut aus, und warte nicht mit gekreuzten Armen, sondern mit offenem Herzen."
+    },
+    {
+      "nummer": 177,
+      "arabisch": "إن أردت ورود المواهب عليك، صحح الفقر والفاقة لديك، إنما الصدقات للفقراء.",
+      "uebersetzung_de": "Wenn du möchtest, dass die Gaben über dich kommen, dann verwirkliche in dir Armut und Bedürftigkeit; denn die Almosen sind für die Armen.",
+      "kommentar_sufi_de": "Gaben kommen zu den Armen. Verwirkliche faqr nicht als Pose, sondern als Wahrheit: nichts besitzen vor Dem, dem alles gehört."
+    },
+    {
+      "nummer": 178,
+      "arabisch": "تحقق بأوصافك يمدك بأوصافه، تحقق بذلّك يمدك بعزه، تحقق بعجزك يمدك بقدرته، تحقق بضعفك يمدك بحوله وقوته.",
+      "uebersetzung_de": "Verwirkliche deine eigenen Eigenschaften, dann unterstützt Er dich mit Seinen Eigenschaften: verwirkliche deine Niedrigkeit, dann stärkt Er dich mit Seiner Ehre; verwirkliche deine Ohnmacht, dann stärkt Er dich mit Seiner Macht; verwirkliche deine Schwäche, dann stärkt Er dich mit Seiner Kraft.",
+      "kommentar_sufi_de": "Zeige deine Niedrigkeit, und Seine Ehre stützt dich; erkenne Ohnmacht, und Seine Macht trägt. Dienerische Wahrheit zieht göttliche Hilfe."
+    },
+    {
+      "nummer": 179,
+      "arabisch": "ربما رزقت الكرامة من لم تكمل له الاستقامة.",
+      "uebersetzung_de": "Vielleicht wird eine außerordentliche Gabe jemandem zuteil, dessen Standhaftigkeit noch nicht vollendet ist.",
+      "kommentar_sufi_de": "Eine außergewöhnliche Gabe beweist nicht vollendete Standhaftigkeit. Der Sufi prüft Karāma an Istiqāma."
+    },
+    {
+      "nummer": 180,
+      "arabisch": "من علامات إقامة الحق لك في الشيء إدامته إياك فيه مع حصول النتائج.",
+      "uebersetzung_de": "Zu den Zeichen, dass der Wahre dich in einer Sache eingesetzt hat, gehört, dass Er dich darin bestehen lässt und zugleich Ergebnisse daraus hervorgehen.",
+      "kommentar_sufi_de": "Einsetzung erkennt man an Beständigkeit und Frucht. Wo Allah dich hinstellt, schenkt Er Dauer und Wirkung ohne lauten Anspruch."
+    },
+    {
+      "nummer": 181,
+      "arabisch": "من عبّر من بساط إحسانه أصمته الإساءة، ومن عبّر من بساط إحسان الله إليه لم يصمت إذا أساء.",
+      "uebersetzung_de": "Wer von der Ebene seiner eigenen Güte spricht, den bringt eine Verfehlung zum Schweigen; wer aber von der Ebene der Güte Gottes zu ihm spricht, den bringt sein Fehltritt nicht zum Verstummen.",
+      "kommentar_sufi_de": "Wer aus eigener Güte spricht, verstummt beim Fehltritt; wer aus Allahs Güte spricht, findet selbst nach dem Fall Rückkehrsprache."
+    },
+    {
+      "nummer": 182,
+      "arabisch": "تسبق أنوار الحكماء أقوالهم، فحيث صار التنوير وصل التعبير.",
+      "uebersetzung_de": "Die Lichter der Weisen gehen ihren Worten voraus; wo Erleuchtung angekommen ist, dort erreicht auch der Ausdruck sein Ziel.",
+      "kommentar_sufi_de": "Die Lichter der Weisen erreichen vor den Worten. Wenn das Herz erleuchtet ist, findet die Rede ihren Weg."
+    },
+    {
+      "nummer": 183,
+      "arabisch": "كل كلام يبرز وعليه كسوة القلب الذي منه برز.",
+      "uebersetzung_de": "Jedes Wort tritt hervor in dem Gewand des Herzens, aus dem es hervorgegangen ist.",
+      "kommentar_sufi_de": "Jedes Wort trägt das Kleid seines Herzens. Darum schmeckt der Hörende, ob es aus nafs, Wissen oder Licht kommt."
+    },
+    {
+      "nummer": 184,
+      "arabisch": "من أذن له في التعبير فهمت في مسامع الخلق عبارته، وجليت إليهم إشارته.",
+      "uebersetzung_de": "Wem Er erlaubt hat zu sprechen, dessen Worte werden in den Ohren der Geschöpfe verstanden, und seine Hinweise werden ihnen deutlich.",
+      "kommentar_sufi_de": "Erlaubte Rede wird verstanden und trifft. Nicht Beredsamkeit öffnet Ohren, sondern idhn, die göttliche Erlaubnis."
+    },
+    {
+      "nummer": 185,
+      "arabisch": "ربما برزت الحقائق مكسوفة الأنوار إذا لم يؤذن لك فيها بالإظهار.",
+      "uebersetzung_de": "Manchmal treten Wahrheiten hervor, deren Lichter verdunkelt sind, wenn dir nicht erlaubt wurde, sie sichtbar zu machen.",
+      "kommentar_sufi_de": "Wahrheiten können verdunkelt erscheinen, wenn die Erlaubnis zum Zeigen fehlt. Nicht jede Wahrheit ist zu jeder Stunde ein Dienst."
+    },
+    {
+      "nummer": 186,
+      "arabisch": "عباراتهم إما لفيضان وجد، أو لقصد هداية مريد؛ فالأول حال السالكين، والثاني حال أرباب المكنة والمحققين.",
+      "uebersetzung_de": "Ihre Äußerungen entstehen entweder aus dem Überfließen eines inneren Zustands oder mit der Absicht, einen Suchenden zu leiten. Das Erste ist der Zustand der Wandernden, das Zweite der Zustand der Gefestigten und Verwirklichten.",
+      "kommentar_sufi_de": "Ausdruck kommt aus Überfluss des Zustands oder aus Leitung des Suchenden. Der Ungefestigte sprudelt, der Gefestigte reicht gezielt Wasser."
+    },
+    {
+      "nummer": 187,
+      "arabisch": "العبارات قوت لعائلة المستمعين، وليس لك إلا ما أنت له آكل.",
+      "uebersetzung_de": "Die Worte sind Nahrung für die Bedürftigen unter den Hörenden; dir gehört davon nur das, was du wirklich essen kannst.",
+      "kommentar_sufi_de": "Worte sind Nahrung für Bedürftige. Iss nur, was du verdauen kannst; zu viel spirituelle Rede belastet das ungeübte Herz."
+    },
+    {
+      "nummer": 188,
+      "arabisch": "ربما عبّر عن المقام من استشرف عليه، وربما عبّر عنه من وصل إليه، وذلك ملتبس إلا على صاحب بصيرة.",
+      "uebersetzung_de": "Manchmal spricht jemand über einen Rang, weil er ihn von weitem erblickt; und manchmal spricht jemand darüber, weil er ihn erreicht hat. Das ist nur für einen Menschen mit Einsicht unterscheidbar.",
+      "kommentar_sufi_de": "Über einen Rang kann man aus Ferne oder aus Ankunft sprechen. Nur baṣīra unterscheidet Beschreibung vom Geschmack."
+    },
+    {
+      "nummer": 189,
+      "arabisch": "لا ينبغي للسالك أن يعبر عن وارداته؛ فإن ذلك يقل عملها في قلبه، ويمنع وجود الصدق مع ربه.",
+      "uebersetzung_de": "Der Wandernde soll seine inneren Eingebungen nicht aussprechen; denn das mindert ihre Wirkung in seinem Herzen und verhindert die Gegenwart der Aufrichtigkeit mit seinem Herrn.",
+      "kommentar_sufi_de": "Der Wanderer soll Eingebungen hüten. Zu frühes Aussprechen lässt Wärme entweichen und schwächt die Aufrichtigkeit im Geheimen."
+    },
+    {
+      "nummer": 190,
+      "arabisch": "لا تمدن يدك إلى الأخذ من الخلائق إلا أن ترى أن المعطي فيهم مولاك؛ فإن كنت كذلك فخذ ما وافق العلم.",
+      "uebersetzung_de": "Strecke deine Hand nicht aus, um von den Geschöpfen zu nehmen, außer du siehst, dass der Gebende in ihnen dein Herr ist. Wenn du so stehst, dann nimm, was dem Wissen entspricht.",
+      "kommentar_sufi_de": "Nimm von Geschöpfen nur, wenn du den eigentlichen Geber in ihnen schaust. Dann bleibt die Hand frei von Erniedrigung vor Mitteln."
+    },
+    {
+      "nummer": 191,
+      "arabisch": "ربما استحيا العارف أن يرفع حاجته إلى مولاه اكتفاء بمشيئته؛ فكيف لا يستحي أن يرفعها إلى خليقته؟",
+      "uebersetzung_de": "Vielleicht schämt sich der Erkennende, seine Bedürftigkeit zu seinem Herrn zu erheben, weil er sich mit dessen Willen begnügt. Wie sollte er sich dann nicht schämen, sie zu einem Geschöpf zu erheben?",
+      "kommentar_sufi_de": "Der ʿārif schämt sich, Bedürftigkeit zu Geschöpfen zu tragen, nachdem er sich beim Herrn mit Seinem Willen begnügt."
+    },
+    {
+      "nummer": 192,
+      "arabisch": "إذا التبس عليك أمران فانظر أثقلهما على النفس فاتبعه، فإنه لا يثقل عليها إلا ما كان حقاً.",
+      "uebersetzung_de": "Wenn dir zwei Angelegenheiten unklar werden, dann schau, welche von beiden schwerer für die Seele ist, und folge ihr; denn schwer wird ihr nur, was wahrhaftig ist.",
+      "kommentar_sufi_de": "Wenn zwei Wege unklar sind, prüfe die nafs. Oft liegt Wahrheit dort, wo sie weniger Bequemlichkeit findet."
+    },
+    {
+      "nummer": 193,
+      "arabisch": "من علامات اتباع الهوى المسارعة إلى نوافل الخيرات والتكاسل عن القيام بالواجبات.",
+      "uebersetzung_de": "Zu den Zeichen der Befolgung der Begierde gehört, sich zu freiwilligen guten Werken zu beeilen, aber bei den Pflichten träge zu sein.",
+      "kommentar_sufi_de": "Freiwilliges eilig tun und Pflichten träge behandeln ist Begierde im Gewand der Frömmigkeit. Der Sufi beginnt beim Verbindlichen."
+    },
+    {
+      "nummer": 194,
+      "arabisch": "قيد الطاعات بأعيان الأوقات كي لا يمنعك عنها وجود التسويف، ووسع عليك الوقت كي تبقى لك حصة الاختيار.",
+      "uebersetzung_de": "Er band die Gehorsamshandlungen an bestimmte Zeiten, damit das Aufschieben dich nicht von ihnen abhält; und Er weitete dir die Zeit, damit dir ein Anteil an freier Wahl bleibt.",
+      "kommentar_sufi_de": "Gebundene Zeiten schützen vor Aufschub; geweitete Zeiten geben Wahl. In beidem ist Pädagogik der Barmherzigkeit."
+    },
+    {
+      "nummer": 195,
+      "arabisch": "علم قلة نهوض العباد إلى معاملته، فأوجب عليهم وجود طاعته، فساقهم إليه بسلاسل الإيجاب؛ عجب ربك من قوم يساقون إلى الجنة بالسلاسل.",
+      "uebersetzung_de": "Er wusste, wie gering das Aufstehen der Diener zu Seiner Behandlung ist; darum verpflichtete Er sie zur Gehorsamkeit und führte sie zu sich mit den Ketten der Verpflichtung: Dein Herr wundert sich über Menschen, die an Ketten ins Paradies geführt werden.",
+      "kommentar_sufi_de": "Pflicht ist eine Kette zur Freiheit. Allah führt schwache Diener mit Bindung zu Sich, bis Zwang zu Liebe reift."
+    },
+    {
+      "nummer": 196,
+      "arabisch": "أوجب عليك وجود خدمته، وما أوجب عليك إلا دخول جنته.",
+      "uebersetzung_de": "Er verpflichtete dich zu Seinem Dienst; und Er verpflichtete dich damit zu nichts anderem als zum Eintritt in Sein Paradies.",
+      "kommentar_sufi_de": "Dienst an Allah ist in Wahrheit Einladung ins Paradies. Der Befehl belastet nicht den Herrn, sondern erhebt den Diener."
+    },
+    {
+      "nummer": 197,
+      "arabisch": "من استغرب أن ينقذه الله من شهوته، وأن يخرجه من وجود غفلته، فقد استعجز القدرة الإلهية، وكان الله على كل شيء مقتدراً.",
+      "uebersetzung_de": "Wer es für erstaunlich hält, dass Gott ihn aus seiner Begierde rettet und aus seiner Unachtsamkeit herausführt, der hat die göttliche Macht für unfähig gehalten; und Gott ist zu allem mächtig.",
+      "kommentar_sufi_de": "Wer Allahs Rettung für unwahrscheinlich hält, verkleinert Seine Macht. Kein Schleier der nafs ist stärker als der Befehl 'Sei'."
+    },
+    {
+      "nummer": 198,
+      "arabisch": "ربما وردت الظلم عليك ليعرفك قدر ما من به عليك.",
+      "uebersetzung_de": "Vielleicht kommen Dunkelheiten über dich, damit Er dich den Wert dessen erkennen lässt, womit Er dich beschenkt hat.",
+      "kommentar_sufi_de": "Dunkelheiten zeigen den Wert früherer Lichter. Verlust kann zum Lehrer der Dankbarkeit werden."
+    },
+    {
+      "nummer": 199,
+      "arabisch": "من لم يعرف قدر النعم بوجدانها عرفها بوجود فقدانها.",
+      "uebersetzung_de": "Wer den Wert der Gnaden nicht durch ihr Vorhandensein erkennt, erkennt ihn durch ihren Verlust.",
+      "kommentar_sufi_de": "Wer Gnaden im Besitz nicht erkennt, lernt sie im Entzug. Der Sufi versucht, vor dem Verlust wach zu werden."
+    },
+    {
+      "nummer": 200,
+      "arabisch": "لا تدهشك واردات النعم عن القيام بحقوق شكرك، فإن ذلك مما يحط من وجود قدرك.",
+      "uebersetzung_de": "Lass dich von den ankommenden Gnaden nicht so erstaunen, dass du die Rechte des Dankes vernachlässigst; denn das mindert deinen Rang.",
+      "kommentar_sufi_de": "Staune nicht so über Gaben, dass du den Dank vergisst. Jede Gabe bringt ein Recht mit sich; Schukr bewahrt ihren Sinn."
+    },
+    {
+      "nummer": 201,
+      "arabisch": "تمكن حلاوة الهوى من القلب هو الداء العضال.",
+      "uebersetzung_de": "Dass die Süße der Begierde im Herzen festen Sitz gewinnt, ist die schwer heilbare Krankheit.",
+      "kommentar_sufi_de": "Festsitzende Begierdesüße ist eine tiefe Krankheit. Heilung verlangt nicht bloß Verbot, sondern einen stärkeren Geschmack an Allah."
+    },
+    {
+      "nummer": 202,
+      "arabisch": "لا يخرج الشهوة من القلب إلا خوف مزعج أو شوق مقلق.",
+      "uebersetzung_de": "Die Begierde verlässt das Herz nur durch eine aufrüttelnde Furcht oder eine beunruhigende Sehnsucht.",
+      "kommentar_sufi_de": "Begierde verlässt das Herz durch erschütternde Furcht oder brennende Sehnsucht. Khauf und shawq sind zwei Feuer der Reinigung."
+    },
+    {
+      "nummer": 203,
+      "arabisch": "كما لا يحب العمل المشترك، لا يحب القلب المشترك؛ العمل المشترك لا يقبله، والقلب المشترك لا يقبل عليه.",
+      "uebersetzung_de": "Wie Er keine geteilte Handlung liebt, so liebt Er kein geteiltes Herz: die geteilte Handlung nimmt Er nicht an, und dem geteilten Herzen wendet Er sich nicht zu.",
+      "kommentar_sufi_de": "Allah liebt keine geteilte Handlung und kein geteiltes Herz. Ikhlāṣ ist Einung der Richtung, bis kein heimlicher Nebenempfänger bleibt."
+    },
+    {
+      "nummer": 204,
+      "arabisch": "أنوار أذن لها في الوصول، وأنوار أذن لها في الدخول.",
+      "uebersetzung_de": "Es gibt Lichter, denen der Zugang bis zum Ankommen erlaubt ist, und Lichter, denen der Eintritt erlaubt ist.",
+      "kommentar_sufi_de": "Manche Lichter erreichen nur den Rand, andere treten ein. Das Herz muss offen und leer genug sein, damit Licht Wohnung findet."
+    },
+    {
+      "nummer": 205,
+      "arabisch": "ربما وردت عليك الأنوار، فوجدت القلب محشواً بصور الآثار، فارتحلت من حيث نزلت.",
+      "uebersetzung_de": "Vielleicht kommen Lichter zu dir; finden sie aber das Herz vollgestopft mit Bildern der Spuren, reisen sie wieder ab, von wo sie herabkamen.",
+      "kommentar_sufi_de": "Lichter kehren um, wenn sie ein mit Bildern vollgestopftes Herz finden. Entleere die Kammer, bevor der Gast kommt."
+    },
+    {
+      "nummer": 206,
+      "arabisch": "فرغ قلبك من الأغيار يملأه بالمعارف والأسرار.",
+      "uebersetzung_de": "Leere dein Herz von allem Anderen, dann füllt Er es mit Erkenntnissen und Geheimnissen.",
+      "kommentar_sufi_de": "Leere das Herz von anderem; dann füllt Allah es mit maʿārif und asrār. Entleerung ist nicht Verlust, sondern Vorbereitung."
+    },
+    {
+      "nummer": 207,
+      "arabisch": "لا تستبطئ منه النوال، ولكن استبطئ من نفسك وجود الإقبال.",
+      "uebersetzung_de": "Halte Seine Gabe nicht für verspätet; halte vielmehr dein eigenes Zuwenden für verspätet.",
+      "kommentar_sufi_de": "Halte die Gabe nicht für verspätet; prüfe dein Zuwenden. Oft wartet nicht Allah, sondern das Herz kommt zu spät."
+    },
+    {
+      "nummer": 208,
+      "arabisch": "حقوق في الأوقات يمكن قضاؤها، وحقوق الأوقات لا يمكن قضاؤها؛ إذ ما من وقت يرد إلا ولله عليك فيه حق جديد وأمر أكيد، فكيف تقضي فيه حق غيره وأنت لم تقض حق الله فيه؟",
+      "uebersetzung_de": "Es gibt Rechte innerhalb der Zeiten, die nachgeholt werden können; und es gibt Rechte der Zeiten, die nicht nachgeholt werden können. Denn keine Zeit kommt, ohne dass Gott darin ein neues Recht und einen festen Auftrag an dich hat. Wie willst du darin das Recht eines anderen nachholen, wenn du Gottes Recht in ihr noch nicht erfüllt hast?",
+      "kommentar_sufi_de": "Jede Zeit hat ein unwiederholbares Recht. Der Sufi ehrt den Augenblick, weil Allah darin einen besonderen Auftrag verbirgt."
+    },
+    {
+      "nummer": 209,
+      "arabisch": "ما فاتك من عمرك لا عوض له، وما حصل لك منه لا قيمة له.",
+      "uebersetzung_de": "Was dir von deinem Leben entgangen ist, hat keinen Ersatz; und was dir davon geblieben ist, hat keinen Preis.",
+      "kommentar_sufi_de": "Verlorene Lebenszeit hat keinen Ersatz; verbleibende Zeit keinen Preis. Der jetzige Atem ist ein kostbarer Besucher."
+    },
+    {
+      "nummer": 210,
+      "arabisch": "ما أحببت شيئاً إلا كنت له عبداً، وهو لا يحب أن تكون لغيره عبداً.",
+      "uebersetzung_de": "Nichts liebst du, ohne sein Diener zu werden; und Er liebt nicht, dass du Diener von etwas anderem bist als Ihm.",
+      "kommentar_sufi_de": "Was du liebst, dem dienst du. Darum reinigt der Weg die Liebe, bis Knechtschaft nur Allah gehört."
+    },
+    {
+      "nummer": 211,
+      "arabisch": "لا تنفعه طاعتك ولا تضره معصيتك، وإنما أمرك بهذه ونهاك عن هذه لما يعود عليك.",
+      "uebersetzung_de": "Dein Gehorsam nützt Ihm nicht, und deine Sünde schadet Ihm nicht; Er befahl dir nur dieses und verbot dir jenes wegen dessen, was zu dir zurückkehrt.",
+      "kommentar_sufi_de": "Gehorsam nützt Ihm nicht, Sünde schadet Ihm nicht. Befehle und Verbote sind Medizin für dich."
+    },
+    {
+      "nummer": 212,
+      "arabisch": "لا يزيد في عزه إقبال من أقبل عليه، ولا ينقص من عزه إدبار من أدبر عنه.",
+      "uebersetzung_de": "Die Zuwendung dessen, der sich Ihm zuwendet, vermehrt Seine Ehre nicht; und die Abwendung dessen, der sich abwendet, vermindert Seine Ehre nicht.",
+      "kommentar_sufi_de": "Zuwendung mehrt Seine Ehre nicht, Abwendung mindert sie nicht. Sulūk ist nicht Gottes Bedürfnis, sondern deine Rettung."
+    },
+    {
+      "nummer": 213,
+      "arabisch": "وصولك إلى الله وصولك إلى العلم به، وإلا فجل ربنا أن يتصل به شيء أو يتصل هو بشيء.",
+      "uebersetzung_de": "Dein Ankommen bei Gott ist dein Ankommen zur Erkenntnis Seiner; andernfalls ist unser Herr erhaben darüber, dass sich etwas mit Ihm verbindet oder Er sich mit etwas verbindet.",
+      "kommentar_sufi_de": "Ankommen ist Erkenntnis Allahs, nicht räumliche Verbindung. Der Weg endet nicht in Nähe des Ortes, sondern in Aufhebung der Unwissenheit."
+    },
+    {
+      "nummer": 214,
+      "arabisch": "قربك منه أن تكون مشاهداً لقربه، وإلا فمن أين أنت ووجود قربه؟",
+      "uebersetzung_de": "Deine Nähe zu Ihm besteht darin, dass du Seine Nähe schaust; andernfalls: Wo bist du, und wo ist das Bestehen Seiner Nähe?",
+      "kommentar_sufi_de": "Deine Nähe ist das Schauen Seiner Nähe zu dir. Wo der Diener sich Nähe zuschreibt, hat er den Abstand noch nicht verstanden."
+    },
+    {
+      "nummer": 215,
+      "arabisch": "الحقائق ترد في حال التجلي مجملة، وبعد الوعي يكون البيان: فَإِذَا قَرَأْنَاهُ فَاتَّبِعْ قُرْآنَهُ، ثُمَّ إِنَّ عَلَيْنَا بَيَانَهُ.",
+      "uebersetzung_de": "Die Wirklichkeiten kommen im Zustand der Offenbarung zusammengefasst; nach dem Aufnehmen kommt die Erläuterung: „Wenn Wir ihn vorgetragen haben, dann folge seinem Vortrag; dann obliegt Uns seine Erklärung.“",
+      "kommentar_sufi_de": "Wahrheiten kommen zuerst verdichtet, dann entfaltet. Das Herz empfängt einen Blitz; die Erklärung folgt, wenn es tragen kann."
+    },
+    {
+      "nummer": 216,
+      "arabisch": "متى وردت الواردات الإلهية عليك هدمت العوائد عليك: إِنَّ الْمُلُوكَ إِذَا دَخَلُوا قَرْيَةً أَفْسَدُوهَا.",
+      "uebersetzung_de": "Wenn die göttlichen Eingebungen über dich kommen, zerstören sie deine Gewohnheiten: „Wenn Könige eine Stadt betreten, verderben sie sie.“",
+      "kommentar_sufi_de": "Göttliche Eingebungen zerstören Gewohnheiten. Wenn der König eintritt, wird die Stadt der nafs neu geordnet."
+    },
+    {
+      "nummer": 217,
+      "arabisch": "الوارد يأتي من حضرة قهار، لأجل ذلك لا يصادمه شيء إلا دمغه: بَلْ نَقْذِفُ بِالْحَقِّ عَلَى الْبَاطِلِ فَيَدْمَغُهُ فَإِذَا هُوَ زَاهِقٌ.",
+      "uebersetzung_de": "Der innere Anstoß kommt aus der Gegenwart des Überwältigenden; deshalb stößt nichts mit ihm zusammen, ohne dass er es zerschmettert: „Vielmehr schleudern Wir die Wahrheit gegen das Falsche, und sie zerschmettert es, da vergeht es.“",
+      "kommentar_sufi_de": "Der innere Anstoß kommt aus überwältigender Gegenwart. Wahre واردات zerbrechen falsche Ordnungen, statt sich ihnen anzupassen."
+    },
+    {
+      "nummer": 218,
+      "arabisch": "كيف يحتجب الحق بشيء، والذي يحتجب به هو فيه ظاهر وموجود حاضر؟",
+      "uebersetzung_de": "Wie könnte der Wahre durch etwas verhüllt werden, wo Er doch in dem, wodurch Er verhüllt sein soll, offenbar und gegenwärtig vorhanden ist?",
+      "kommentar_sufi_de": "Der Ḥaqq kann nicht durch das verhüllt sein, worin Er gegenwärtig ist. Der Schleier liegt in der Lesart, nicht in der Wirklichkeit."
+    },
+    {
+      "nummer": 219,
+      "arabisch": "لا تيأس من قبول عمل لم تجد فيه وجود الحضور؛ فربما قبل من العمل ما لم تدرك ثمرته عاجلاً.",
+      "uebersetzung_de": "Verzweifle nicht an der Annahme einer Handlung, in der du keine Gegenwart des Herzens gefunden hast; vielleicht wird eine Handlung angenommen, deren Frucht du nicht sofort erkennst.",
+      "kommentar_sufi_de": "Eine Tat ohne spürbare Gegenwart kann dennoch angenommen sein. Manche Früchte reifen unter der Erde des Unsichtbaren."
+    },
+    {
+      "nummer": 220,
+      "arabisch": "لا تزكين وارداً لا تعلم ثمرته، فليس المراد من السحابة الإمطار، وإنما المراد منها وجود الإثمار.",
+      "uebersetzung_de": "Erkläre einen inneren Anstoß nicht vorschnell für rein, solange du seine Frucht nicht kennst; denn das Ziel der Wolke ist nicht der Regen selbst, sondern das Hervorbringen von Frucht.",
+      "kommentar_sufi_de": "Prüfe Eingebungen an ihrer Frucht. Eine Wolke zählt nicht durch Donner, sondern durch das Grün, das nach ihr wächst."
+    },
+    {
+      "nummer": 221,
+      "arabisch": "لا تطلبن بقاء الواردات بعد أن بسطت أنوارها وأودعت أسرارها؛ فلك في الله غنى عن كل شيء، وليس يغنيك عنه شيء.",
+      "uebersetzung_de": "Verlange nicht das Bleiben der Eingebungen, nachdem sie ihre Lichter ausgebreitet und ihre Geheimnisse in dir niedergelegt haben. In Gott hast du Genüge gegenüber allem, und nichts kann dich an Seiner Stelle genügen lassen.",
+      "kommentar_sufi_de": "Verlange nicht das Bleiben eines Zustands nach erfülltem Sinn. Allah genügt; Zustände sind Boten, nicht Heimat."
+    },
+    {
+      "nummer": 222,
+      "arabisch": "تطلّعك إلى بقاء غيره دليل على عدم وجدانك له، واستيحاشك لفقدان ما سواه دليل على عدم وصلتك به.",
+      "uebersetzung_de": "Dein Verlangen nach dem Fortbestehen von etwas anderem als Ihm zeigt, dass du Ihn noch nicht wirklich gefunden hast; und dein Erschrecken über den Verlust dessen, was außer Ihm ist, zeigt, dass deine Verbindung zu Ihm noch nicht gefestigt ist.",
+      "kommentar_sufi_de": "Wer Dauer von anderem als Allah verlangt, hat Ihn noch nicht gefunden. Verlustangst verrät, woran das Herz heimlich hängt."
+    },
+    {
+      "nummer": 223,
+      "arabisch": "النعيم وإن تنوعت مظاهره إنما هو بشهوده واقترابه، والعذاب وإن تنوعت مظاهره إنما هو لوجود حجابه؛ فسبب العذاب وجود الحجاب، وتمام النعيم النظر إلى وجه الله الكريم.",
+      "uebersetzung_de": "Die Seligkeit, so verschieden ihre Erscheinungen auch sind, besteht im Schauen Seiner und in Seiner Nähe. Die Qual, so verschieden ihre Erscheinungen auch sind, besteht im Vorhandensein des Schleiers. Ursache der Qual ist der Schleier, und die Vollendung der Seligkeit ist der Blick auf das edle Angesicht Gottes.",
+      "kommentar_sufi_de": "Seligkeit ist Schau und Nähe; Qual ist Schleier. Alle Paradiese und Schmerzen ordnen sich um dieses eine Geheimnis."
+    },
+    {
+      "nummer": 224,
+      "arabisch": "ما وجدت القلوب من الهموم والأحزان فلأجل ما مُنعت من وجود العيان.",
+      "uebersetzung_de": "Was die Herzen an Sorgen und Traurigkeiten erfahren, geschieht, weil ihnen die unmittelbare Schau verwehrt ist.",
+      "kommentar_sufi_de": "Sorgen des Herzens entstehen aus Verhinderung der unmittelbaren Schau. Der Schmerz zeigt, wofür das Herz geschaffen ist."
+    },
+    {
+      "nummer": 225,
+      "arabisch": "من تمام النعمة عليك أن يرزقك ما يكفيك ويمنعك ما يطغيك.",
+      "uebersetzung_de": "Zur Vollkommenheit der Gnade an dir gehört, dass Er dir gibt, was dir genügt, und dir vorenthält, was dich übermütig machen würde.",
+      "kommentar_sufi_de": "Vollkommene Gnade gibt dir Genuges und hält Übermut fern. Nicht jede Vermehrung ist Barmherzigkeit."
+    },
+    {
+      "nummer": 226,
+      "arabisch": "ليقلّ ما تفرح به، يقلّ ما تحزن عليه.",
+      "uebersetzung_de": "Je weniger das ist, worüber du dich freust, desto weniger ist das, worüber du traurig wirst.",
+      "kommentar_sufi_de": "Je kleiner der Besitz deiner Freude, desto kleiner die Angriffsfläche der Trauer. Loslösung macht das Herz leicht."
+    },
+    {
+      "nummer": 227,
+      "arabisch": "إن أردت أن لا تُعزل، فلا تتولَّ ولايةً لا تدوم لك.",
+      "uebersetzung_de": "Wenn du nicht abgesetzt werden willst, dann übernimm keine Herrschaft, die dir nicht dauerhaft gehört.",
+      "kommentar_sufi_de": "Übernimm keine Herrschaft, die dir nicht bleibt. Wer sich auf geliehene Macht setzt, wird beim Entzug stürzen."
+    },
+    {
+      "nummer": 228,
+      "arabisch": "إن رغّبتك البدايات، زهّدتك النهايات؛ إن دعاك إليها ظاهرٌ، نهاك عنها باطنٌ.",
+      "uebersetzung_de": "Wenn dich die Anfänge locken, machen dich die Enden ernüchtert; wenn dich ihr Äußeres ruft, warnt dich ihr Inneres.",
+      "kommentar_sufi_de": "Anfänge locken, Enden ernüchtern. Der Sufi fragt bei jeder Sache nach ihrem letzten Geschmack."
+    },
+    {
+      "nummer": 229,
+      "arabisch": "إنما جعلها محلاً للأغيار ومعدناً لوجود الأكدار تزهيداً لك فيها.",
+      "uebersetzung_de": "Er machte sie zum Ort der Veränderungen und zur Mine der Trübungen, damit du dich von ihr löst.",
+      "kommentar_sufi_de": "Die Welt ist Ort des Wandels und der Trübung, damit du dich nicht in ihr niederlässt. Ihre Unruhe ist Predigt."
+    },
+    {
+      "nummer": 230,
+      "arabisch": "علم أنك لا تقبل النصح المجرد، فذوّقك من ذواقها ما يسهّل عليك وجود فراقها.",
+      "uebersetzung_de": "Er wusste, dass du bloßen Rat nicht annimmst; darum ließ Er dich von ihrem Geschmack kosten, damit dir die Trennung von ihr leichter werde.",
+      "kommentar_sufi_de": "Weil Rat allein oft nicht genügt, lässt Allah dich den Geschmack der Welt kosten. Bitterkeit macht Trennung leichter."
+    },
+    {
+      "nummer": 231,
+      "arabisch": "العلم النافع هو الذي ينبسط في الصدر شعاعه، وينكشف به عن القلب قناعه.",
+      "uebersetzung_de": "Nützliches Wissen ist das, dessen Strahl sich in der Brust ausbreitet und durch das der Schleier vom Herzen weggenommen wird.",
+      "kommentar_sufi_de": "Nützliches Wissen leuchtet in der Brust und hebt Schleier. Was nur Zunge und Gedächtnis füllt, ist noch nicht maʿrifa."
+    },
+    {
+      "nummer": 232,
+      "arabisch": "خير علم ما كانت الخشية معه.",
+      "uebersetzung_de": "Das beste Wissen ist jenes, mit dem Ehrfurcht verbunden ist.",
+      "kommentar_sufi_de": "Das beste Wissen trägt khashya. Wo Ehrfurcht fehlt, ist Wissen eine Lampe in der Hand der nafs."
+    },
+    {
+      "nummer": 233,
+      "arabisch": "العلم إن قارنته الخشية فلك، وإلا فعليك.",
+      "uebersetzung_de": "Wissen, wenn es von Ehrfurcht begleitet ist, ist für dich; andernfalls ist es gegen dich.",
+      "kommentar_sufi_de": "Wissen mit Ehrfurcht dient dir; ohne Ehrfurcht wird es Zeuge gegen dich. Licht verlangt Demut."
+    },
+    {
+      "nummer": 234,
+      "arabisch": "متى آلمك عدم إقبال الناس عليك أو توجههم بالذم إليك، فارجع إلى علم الله فيك؛ فإن كان لا يقنعك علمه، فمصيبتك بعدم قناعتك بعلمه أشد من مصيبتك بوجود الأذى منهم.",
+      "uebersetzung_de": "Wenn es dich schmerzt, dass die Menschen sich dir nicht zuwenden, oder dass sie dich tadeln, dann kehre zurück zu Gottes Wissen über dich. Wenn Sein Wissen dir nicht genügt, dann ist dein Unglück darüber größer als das Unglück, das im Schaden der Menschen liegt.",
+      "kommentar_sufi_de": "Wenn Tadel oder fehlende Zuwendung dich schmerzen, kehre zu Allahs Wissen über dich zurück. Genügt dir das nicht, ist die Wunde tiefer als der Tadel."
+    },
+    {
+      "nummer": 235,
+      "arabisch": "إنما أجرى الأذى على أيديهم كي لا تكون ساكناً إليهم؛ أراد أن يزعجك عن كل شيء حتى لا يشغلك عنه شيء.",
+      "uebersetzung_de": "Er ließ den Schaden durch ihre Hände geschehen, damit du nicht bei ihnen Ruhe suchst. Er wollte dich von allem aufschrecken, damit dich nichts von Ihm ablenkt.",
+      "kommentar_sufi_de": "Schaden durch Menschenhände soll dich von Ruhe bei ihnen lösen. Jeder Stich kann ein Ruf zurück zum Einen sein."
+    },
+    {
+      "nummer": 236,
+      "arabisch": "إذا علمت أن الشيطان لا يغفل عنك، فلا تغفل أنت عمّن ناصيتك بيده.",
+      "uebersetzung_de": "Wenn du weißt, dass der Satan nicht unachtsam dir gegenüber ist, dann sei du nicht unachtsam gegenüber Dem, in dessen Hand deine Stirnlocke liegt.",
+      "kommentar_sufi_de": "Satan vergisst dich nicht; vergiss du nicht Den, der über dich verfügt. Wachsamkeit ohne Zuflucht bleibt unvollständig."
+    },
+    {
+      "nummer": 237,
+      "arabisch": "جعله لك عدواً ليحوشك به إليه، وحرّك عليك النفس ليدوم إقبالك عليه.",
+      "uebersetzung_de": "Er machte ihn dir zum Feind, damit Er dich durch ihn zu Sich treibt; und Er ließ die Seele gegen dich in Bewegung sein, damit deine Hinwendung zu Ihm andauert.",
+      "kommentar_sufi_de": "Feind und nafs treiben dich zu Allah, wenn du richtig liest. Der Widerstand wird zum Rückenwind der Zuflucht."
+    },
+    {
+      "nummer": 238,
+      "arabisch": "من أثبت لنفسه تواضعاً فهو المتكبر حقاً؛ إذ ليس التواضع إلا عن رفعة، فمتى أثبت لنفسك تواضعاً فأنت المتكبر حقاً.",
+      "uebersetzung_de": "Wer sich selbst Demut zuschreibt, der ist in Wahrheit hochmütig; denn Demut setzt voraus, dass man sich eigentlich erhöht sieht. Sobald du dir Demut zuschreibst, bist du in Wahrheit hochmütig.",
+      "kommentar_sufi_de": "Wer sich Demut zuschreibt, hat sie schon beschädigt. Wahre Demut sieht sich nicht demütig, sondern sieht Allah groß."
+    },
+    {
+      "nummer": 239,
+      "arabisch": "ليس المتواضع الذي إذا تواضع رأى أنه فوق ما صنع، ولكن المتواضع الذي إذا تواضع رأى أنه دون ما صنع.",
+      "uebersetzung_de": "Demütig ist nicht, wer sich erniedrigt und dabei meint, er stehe über dem, was er getan hat. Demütig ist, wer sich erniedrigt und sieht, dass er noch unter dem steht, was er getan hat.",
+      "kommentar_sufi_de": "Demütig ist, wer sich unter seine eigene Erniedrigung stellt. Er hält selbst seine Demut nicht für genügend."
+    },
+    {
+      "nummer": 240,
+      "arabisch": "التواضع الحقيقي هو ما كان ناشئاً عن شهود عظمته وتجلي صفته.",
+      "uebersetzung_de": "Wahre Demut ist die, die aus der Schau Seiner Größe und dem Aufleuchten Seiner Eigenschaft entsteht.",
+      "kommentar_sufi_de": "Wahre Demut entsteht aus Schau Seiner Größe. Nicht Selbstverachtung formt sie, sondern überwältigte Ehrfurcht."
+    },
+    {
+      "nummer": 241,
+      "arabisch": "لا يخرجك عن الوصف إلا شهود الوصف.",
+      "uebersetzung_de": "Nichts bringt dich aus deiner Eigenschaft heraus außer die Schau der Eigenschaft.",
+      "kommentar_sufi_de": "Nichts löst dich aus deinen Eigenschaften außer Schau Seiner Eigenschaften. Tajallī verwandelt tiefer als Selbstdisziplin allein."
+    },
+    {
+      "nummer": 242,
+      "arabisch": "المؤمن يشغله الثناء على الله عن أن يكون لنفسه شاكراً، وتشغله حقوق الله عن أن يكون لحظوظه ذاكراً.",
+      "uebersetzung_de": "Den Gläubigen beschäftigt das Lob Gottes so sehr, dass er nicht damit beschäftigt ist, sich selbst zu danken; und die Rechte Gottes beschäftigen ihn so sehr, dass er nicht mit seinen eigenen Anteilen beschäftigt ist.",
+      "kommentar_sufi_de": "Der Gläubige ist mit Allahs Lob beschäftigt und vergisst Selbstbeifall. Rechte Gottes lassen die eigenen Anteile klein werden."
+    },
+    {
+      "nummer": 243,
+      "arabisch": "ليس المحب الذي يرجو من محبوبه عوضاً أو يطلب منه غرضاً؛ فإن المحب من يبذل لك، ليس المحب من تبذل له.",
+      "uebersetzung_de": "Nicht der ist Liebender, der von seinem Geliebten einen Ersatz erhofft oder von ihm einen Zweck verlangt. Der Liebende ist der, der für dich gibt, nicht der, dem du gibst.",
+      "kommentar_sufi_de": "Liebe sucht keinen Ersatz vom Geliebten. Sie gibt, weil Liebe überfließt; sobald sie abrechnet, ist sie Handel."
+    },
+    {
+      "nummer": 244,
+      "arabisch": "جلّ ربنا أن تكون له ميادين النفوس ما تتحقق فيه سير السائرين؛ إذ لا مسافة بينك وبينه حتى تطويها رحلتك، ولا قطيعة بينك وبينه حتى تمحوها وصلتك.",
+      "uebersetzung_de": "Erhaben ist unser Herr darüber, dass die Felder der Seelen ein Ort wären, auf dem der Weg der Wandernden zu Ihm wirklich gemessen würde. Denn zwischen dir und Ihm gibt es keine Entfernung, die deine Reise zurücklegen müsste, und keine Trennung, die deine Verbindung aufheben müsste.",
+      "kommentar_sufi_de": "Der Weg misst keine räumliche Entfernung, denn zwischen dir und Allah liegt kein Ort. Die Reise ist Enthüllung, nicht Bewegung."
+    },
+    {
+      "nummer": 245,
+      "arabisch": "جعلك في العالم المتوسط بين ملكه وملكوته ليعلّمك جلالة قدرك بين مخلوقاته، وأنك جوهرة تنطوي عليك أصداف مكوناته.",
+      "uebersetzung_de": "Er setzte dich in die mittlere Welt zwischen Seinem Reich und Seinem unsichtbaren Königreich, damit Er dich die Erhabenheit deines Ranges unter Seinen Geschöpfen lehrt: Du bist eine Perle, die von den Muscheln Seiner Schöpfungen umschlossen wird.",
+      "kommentar_sufi_de": "Du stehst zwischen sichtbarem Reich und Verborgenen als Perle. Menschsein ist Würde und Verantwortung, nicht bloß Körperlast."
+    },
+    {
+      "nummer": 246,
+      "arabisch": "إنما وسعك الكون من حيث جثمانيتك، ولم يسعك من حيث ثبوت روحانيتك.",
+      "uebersetzung_de": "Der Kosmos umfasst dich nur hinsichtlich deiner Körperlichkeit; hinsichtlich der Festigkeit deiner Geistigkeit kann er dich nicht umfassen.",
+      "kommentar_sufi_de": "Der Kosmos umfasst deinen Körper, nicht die Festigkeit deines Geistes. Das Herz hat eine Weite, die keine Welt umschließt."
+    },
+    {
+      "nummer": 247,
+      "arabisch": "الكائن في الكون ولم تُفتح له ميادين الغيوب مسجون بمحيطاته، ومحصور في هيكل ذاته.",
+      "uebersetzung_de": "Wer im Kosmos lebt, dem aber die Felder des Verborgenen nicht geöffnet wurden, ist in seinen Umgebungen gefangen und im Gehäuse seines Selbst eingeschlossen.",
+      "kommentar_sufi_de": "Ohne Öffnung zum Verborgenen bleibt der Mensch im Gehäuse seines Selbst. Äußere Weltweite ersetzt keine innere Befreiung."
+    },
+    {
+      "nummer": 248,
+      "arabisch": "أنت مع الأكوان ما لم تشهد المكوّن؛ فإذا شهدته كانت الأكوان معك.",
+      "uebersetzung_de": "Du bist mit den Welten, solange du den Bildner der Welten nicht schaust. Wenn du Ihn aber schaust, sind die Welten mit dir.",
+      "kommentar_sufi_de": "Solange du den Bildner nicht schaust, bist du bei den Welten. Schaust du Ihn, ordnen sich die Welten um dein Herz."
+    },
+    {
+      "nummer": 249,
+      "arabisch": "لا يلزم من ثبوت الخصوصية عدم وصف البشرية؛ إنما مثل الخصوصية كإشراق شمس النهار ظهرت في الأفق وليست منه: تارة تشرق شموس أوصافه على ليل وجودك، وتارة يقبض ذلك عنك فيردك إلى حدودك؛ فالنهار ليس منك وإليك، ولكنه وارد عليك.",
+      "uebersetzung_de": "Aus dem Vorhandensein besonderer Erwählung folgt nicht, dass die Eigenschaften der Menschlichkeit verschwinden. Die Besonderheit gleicht dem Aufgang der Tagessonne: sie erscheint am Horizont, ist aber nicht aus ihm. Mal scheinen die Sonnen Seiner Eigenschaften über die Nacht deines Daseins, mal nimmt Er dies zurück und bringt dich zu deinen Grenzen zurück. Der Tag ist weder von dir noch zu dir gehörig; er kommt nur zu dir.",
+      "kommentar_sufi_de": "Erwählung hebt Menschlichkeit nicht auf. Selbst bei Sonnenaufgang bleibt der Horizont; Licht und Geschöpflichkeit bestehen in rechter Ordnung."
+    },
+    {
+      "nummer": 250,
+      "arabisch": "دلّ بوجود آثاره على وجود أسمائه، وبوجود أسمائه على ثبوت أوصافه، وبثبوت أوصافه على وجود ذاته؛ إذ محال أن يقوم الوصف بنفسه. فأرباب الجذب يكشف لهم عن كمال ذاته، ثم يردّهم إلى شهود صفاته، ثم يرجعهم إلى التعلّق بأسمائه، ثم يردّهم إلى شهود آثاره. والسالكون على عكس هذا؛ فنهاية السالكين بداية المجذوبين، وبداية السالكين نهاية المجذوبين، لكن لا بمعنى واحد، فربما التقيا في الطريق: هذا في ترقيه، وهذا في تدلّيه.",
+      "uebersetzung_de": "Durch das Vorhandensein Seiner Wirkungen weist Er auf das Vorhandensein Seiner Namen; durch Seine Namen auf die Festigkeit Seiner Eigenschaften; durch Seine Eigenschaften auf das Dasein Seines Wesens, denn es ist unmöglich, dass eine Eigenschaft für sich selbst besteht. Den Menschen der Anziehung wird die Vollkommenheit Seines Wesens enthüllt; dann werden sie zur Schau Seiner Eigenschaften zurückgeführt, dann zur Bindung an Seine Namen, dann zur Schau Seiner Wirkungen. Die Wandernden gehen den umgekehrten Weg: Das Ende der Wandernden ist der Anfang der Angezogenen, und der Anfang der Wandernden ist das Ende der Angezogenen, doch nicht in einem einzigen Sinn. So können sie sich auf dem Weg treffen: der eine im Aufstieg, der andere im Herabkommen.",
+      "kommentar_sufi_de": "Wirkungen weisen auf Namen, Namen auf Eigenschaften, Eigenschaften auf das Wesen. Der Sufi steigt von Spur zu Quelle."
+    },
+    {
+      "nummer": 251,
+      "arabisch": "لا يعرف قدر أنوار القلوب والأسرار إلا في غيب الملكوت، كما لا تظهر أنوار السماء إلا في شهادة الملك.",
+      "uebersetzung_de": "Der Wert der Lichter der Herzen und Geheimnisse wird nur im Verborgenen des Königreichs erkannt, so wie die Lichter des Himmels nur im sichtbaren Reich erscheinen.",
+      "kommentar_sufi_de": "Die Lichter der Herzen werden im Verborgenen erkannt. Manche Kostbarkeit zeigt sich nicht am Markt der sichtbaren Welt."
+    },
+    {
+      "nummer": 252,
+      "arabisch": "وجدان ثمرات الطاعات عاجلاً بشائر العاملين بوجود الجزاء عليها آجلاً.",
+      "uebersetzung_de": "Das unmittelbare Finden der Früchte der Gehorsamshandlungen ist für die Handelnden eine frohe Botschaft, dass ihr Lohn später vorhanden sein wird.",
+      "kommentar_sufi_de": "Früchte des Gehorsams sind frohe Botschaft späteren Lohns. Der Geschmack hier ist ein Duft aus dem kommenden Garten."
+    },
+    {
+      "nummer": 253,
+      "arabisch": "كيف تطلب العوض على عمل هو متصدّق به عليك؟ أم كيف تطلب الجزاء على صدق هو مهديه إليك؟",
+      "uebersetzung_de": "Wie kannst du Ersatz für eine Tat verlangen, die Er dir als Gabe geschenkt hat? Oder wie kannst du Lohn für eine Aufrichtigkeit verlangen, die Er dir selbst gewidmet hat?",
+      "kommentar_sufi_de": "Wie Lohn fordern für eine Tat, die Er schenkte? Wie Ersatz für Aufrichtigkeit, die Er wirkte? Alles ist Gabe vor Anspruch."
+    },
+    {
+      "nummer": 254,
+      "arabisch": "قوم سبقت أنوارهم أذكارهم، وقوم سبقت أذكارهم أنوارهم، وقوم تساوت أذكارهم وأنوارهم، وقوم لا أذكار ولا أنوار، نعوذ بالله من ذلك.",
+      "uebersetzung_de": "Bei manchen gehen ihre Lichter ihren Gedenken voraus; bei manchen geht ihr Gedenken ihren Lichtern voraus; bei manchen sind Gedenken und Lichter gleich; und bei manchen gibt es weder Gedenken noch Lichter — davor suchen wir Zuflucht bei Gott.",
+      "kommentar_sufi_de": "Bei manchen eilen Lichter dem dhikr voraus, bei anderen dhikr den Lichtern. Allah erzieht jedes Herz nach eigener Ordnung."
+    },
+    {
+      "nummer": 255,
+      "arabisch": "ذاكرٌ ذكر ليستنير قلبه فكان ذاكرًا، وذاكرٌ استنار قلبه فكان ذاكرًا، والذي استوت أذكاره وأنواره فبذكره يُهتدى وبنوره يُقتدى.",
+      "uebersetzung_de": "Ein Gedenkender gedenkt, damit sein Herz erleuchtet werde — so ist er Gedenkender. Ein anderer gedenkt, weil sein Herz erleuchtet wurde — so ist er Gedenkender. Und der, dessen Gedenken und Lichter gleich geworden sind: durch sein Gedenken wird man geleitet und durch sein Licht nimmt man sich ein Vorbild.",
+      "kommentar_sufi_de": "Man gedenkt, damit das Herz leuchtet; oder weil es schon leuchtet. Vollendung ist, wenn Gedenken und Licht einander nicht mehr trennen."
+    },
+    {
+      "nummer": 256,
+      "arabisch": "ما كان ظاهر ذكر إلا عن باطن شهود وفكر.",
+      "uebersetzung_de": "Kein äußeres Gedenken entsteht, außer aus innerer Schau und innerem Denken.",
+      "kommentar_sufi_de": "Äußeres dhikr entspringt innerer Schau und Besinnung. Die Zunge ist dann nur die sichtbare Welle eines verborgenen Meeres."
+    },
+    {
+      "nummer": 257,
+      "arabisch": "أشهدك من قبل أن يستشهدك، فنطقت بإلهيته الظواهر، وتحققت بأحديته القلوب والسرائر.",
+      "uebersetzung_de": "Er ließ dich schauen, bevor Er dich zum Zeugnis rief; so sprachen die sichtbaren Dinge von Seiner Göttlichkeit, und Herzen und Geheimnisse erkannten Seine Einheit.",
+      "kommentar_sufi_de": "Er ließ dich zuerst schauen, dann bezeugen. Die Dinge sprachen, die Herzen erkannten; tawḥīd ist Antwort auf eine vorausgehende Enthüllung."
+    },
+    {
+      "nummer": 258,
+      "arabisch": "أكرمك الله بكرامات ثلاث: جعلك ذاكراً له، ولولا فضله لم تكن أهلاً لجريان ذكره عليك؛ وجعلك مذكوراً به، إذ حقق نسبته لديك؛ وجعلك مذكوراً عنده، فتمّم نعمته عليك.",
+      "uebersetzung_de": "Gott ehrte dich mit drei Ehren: Er machte dich zu einem, der Seiner gedenkt — ohne Seine Gunst wärst du nicht würdig, dass Sein Gedenken über dich läuft. Er machte dich zu einem, der durch Ihn erwähnt wird, da Er deine Zugehörigkeit zu Ihm verwirklichte. Und Er machte dich zu einem, der bei Ihm erwähnt wird; so vollendete Er Seine Gnade an dir.",
+      "kommentar_sufi_de": "Drei Ehren: Er macht dich zum Gedenkenden, erwähnt dich bei Sich und lässt dich durch Ihn genannt werden. Dhikr ist vor allem Seine Gunst."
+    },
+    {
+      "nummer": 259,
+      "arabisch": "ربّ عمرٍ اتسعت آماده وقلّت أمداده، وربّ عمرٍ قليلة آماده كثيرة أمداده.",
+      "uebersetzung_de": "Manches Leben hat eine weite Zeitspanne und geringe Unterstützungen; und manches Leben hat eine kurze Zeitspanne und viele Unterstützungen.",
+      "kommentar_sufi_de": "Langes Leben kann arm an Unterstützung sein, kurzes reich an Baraka. Maß des Lebens ist nicht Dauer, sondern göttliche Fruchtbarkeit."
+    },
+    {
+      "nummer": 260,
+      "arabisch": "من بورك له في عمره أدرك في يسير من الزمن من منن الله تعالى ما لا يدخل تحت دوائر العبارة ولا تلحقه الإشارة.",
+      "uebersetzung_de": "Wem in seinem Leben Segen gegeben wurde, der erreicht in wenig Zeit von den Gnadengaben Gottes, was nicht in die Kreise der Worte eingeht und was keine Andeutung einholen kann.",
+      "kommentar_sufi_de": "Baraka lässt in wenig Zeit Unaussprechliches wachsen. Wo Allah segnet, wird der kleine Augenblick zum weiten Meer."
+    },
+    {
+      "nummer": 261,
+      "arabisch": "الخذلان كل الخذلان أن تتفرغ من الشواغل ثم لا تتوجه إليه، وتقل عوائقك ثم لا ترحل إليه.",
+      "uebersetzung_de": "Wahre Verlassenheit ist, dass du von Beschäftigungen frei wirst und dich dennoch nicht Ihm zuwendest; dass deine Hindernisse weniger werden und du dennoch nicht zu Ihm aufbrichst.",
+      "kommentar_sufi_de": "Wahre Verlassenheit ist freie Zeit ohne Hinwendung. Hindernisse fallen, doch das Herz bleibt sitzen; das ist tiefere Armut."
+    },
+    {
+      "nummer": 262,
+      "arabisch": "الفكرة سير القلب في ميادين الأغيار.",
+      "uebersetzung_de": "Das Nachdenken ist das Wandern des Herzens in den Feldern der Andersheiten.",
+      "kommentar_sufi_de": "Nachdenken ist Wanderung des Herzens durch Andersheiten. Der Sufi reist im Sinn, bis jedes Andere zum Hinweis wird."
+    },
+    {
+      "nummer": 263,
+      "arabisch": "الفكرة سراج القلب؛ فإذا ذهبت فلا إضاءة له.",
+      "uebersetzung_de": "Das Nachdenken ist die Lampe des Herzens; wenn sie erlischt, hat es kein Licht mehr.",
+      "kommentar_sufi_de": "Fikr ist die Lampe des Herzens. Erlischt sie, bleibt Wissen äußerlich und die innere Nacht unbeleuchtet."
+    },
+    {
+      "nummer": 264,
+      "arabisch": "الفكرة فكرتان: فكرة تصديق وإيمان، وفكرة شهود وعيان؛ فالأولى لأرباب الاعتبار، والثانية لأرباب الشهود والاستبصار.",
+      "uebersetzung_de": "Das Nachdenken ist zweierlei: ein Denken der Bestätigung und des Glaubens, und ein Denken der Schau und der unmittelbaren Wahrnehmung. Das erste gehört den Menschen der Betrachtung, das zweite den Menschen der Schau und Einsicht.",
+      "kommentar_sufi_de": "Es gibt Denken des Glaubens und Denken der Schau. Das erste festigt, das zweite enthüllt; beide sind Stufen auf dem Weg zum Ḥaqq."
+    }
+  ]
+}
