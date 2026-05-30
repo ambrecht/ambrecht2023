@@ -9,13 +9,17 @@ import {
   Play,
   RotateCcw,
 } from 'lucide-react';
-import hikamData from '@/src/json/hikam.json';
+import hikamData from '@/src/json/hikma3.json';
 
 type Hikma = {
   nummer: number;
   arabisch: string;
   uebersetzung_de: string;
   kommentar_de: string;
+  sinnkern_de: string;
+  version_nah_de: string;
+  version_lyrisch_de: string;
+  notiz?: string;
 };
 
 const INTERVAL_MS = 120000;
@@ -25,6 +29,8 @@ const hikam = (hikamData as { hikam: Hikma[] }).hikam;
 const getRandomIndex = () => Math.floor(Math.random() * hikam.length);
 
 const normalize = (text: string) => text.replace(/\s+/g, ' ').trim();
+const displayText = (hikma: Hikma) =>
+  hikma.version_lyrisch_de || hikma.version_nah_de || hikma.uebersetzung_de;
 
 export default function WisdomPage() {
   const [index, setIndex] = useState(getRandomIndex);
@@ -35,6 +41,7 @@ export default function WisdomPage() {
 
   const current = hikam[index];
   const count = hikam.length;
+  const currentTranslation = displayText(current);
 
   const progressKey = `${index}-${isRunning}`;
 
@@ -127,11 +134,11 @@ export default function WisdomPage() {
         '',
         normalize(current.arabisch),
         '',
-        normalize(current.uebersetzung_de),
+        currentTranslation.trim(),
         '',
         normalize(current.kommentar_de),
       ].join('\n'),
-    [current]
+    [current, currentTranslation]
   );
 
   const copyWisdom = async () => {
@@ -181,7 +188,7 @@ export default function WisdomPage() {
           <div className="mx-auto h-px w-28 bg-gradient-to-r from-transparent via-[#d6b66f] to-transparent" />
 
           <p className="hikam-translation mx-auto text-balance font-serif text-[#f5ead2] [font-family:Georgia,'Times_New_Roman',serif]">
-            {current.uebersetzung_de}
+            {currentTranslation}
           </p>
 
           <p className="hikam-comment mx-auto text-pretty leading-relaxed text-[#d9d0bd]/80">
@@ -276,6 +283,7 @@ export default function WisdomPage() {
           max-width: 52rem;
           font-size: 1.35rem;
           line-height: 1.24;
+          white-space: pre-line;
         }
 
         .hikam-comment {
