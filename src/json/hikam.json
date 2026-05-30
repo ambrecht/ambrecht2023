@@ -1,0 +1,1601 @@
+{
+  "metadata": {
+    "title": "al-Ḥikam al-ʿAṭāʾiyya – 264 Hikam",
+    "beschreibung": "Arabischer Text, deutsche Übersetzung und kurzer deutscher Kommentar.",
+    "quelle": "al_hikam_264_komplett_arabisch_deutsch_kommentar.docx",
+    "anzahl_hikam": 264,
+    "felder": [
+      "nummer",
+      "arabisch",
+      "uebersetzung_de",
+      "kommentar_de"
+    ],
+    "hinweis": "Aus dem zuvor zusammengeführten DOCX extrahiert; Struktur und Texte entsprechen dem Word-Dokument."
+  },
+  "hikam": [
+    {
+      "nummer": 1,
+      "arabisch": "مِنْ عَلامَةِ الِاعْتِمَادِ عَلَى العَمَلِ نُقْصَانُ الرَّجَاءِ عِنْدَ وُجُودِ الزَّلَلِ.",
+      "uebersetzung_de": "Ein Zeichen dafür, dass man sich auf das eigene Tun stützt, ist: Die Hoffnung nimmt ab, sobald ein Fehltritt geschieht.",
+      "kommentar_de": "Die Hikma lenkt den Blick weg von Selbstvertrauen im religiösen Sinn hin zu Vertrauen auf Gottes Barmherzigkeit. Gute Werke sind wichtig, doch sie sind nicht die letzte Stütze des Herzens."
+    },
+    {
+      "nummer": 2,
+      "arabisch": "إِرَادَتُكَ التَّجْرِيدَ مَعَ إِقَامَةِ اللهِ إِيَّاكَ فِي الأَسْبَابِ مِنَ الشَّهْوَةِ الخَفِيَّةِ، وَإِرَادَتُكَ الأَسْبَابَ مَعَ إِقَامَةِ اللهِ إِيَّاكَ فِي التَّجْرِيدِ انْحِطَاطٌ عَنِ الهِمَّةِ العَلِيَّةِ.",
+      "uebersetzung_de": "Wenn du Loslösung willst, obwohl Gott dich in äußere Mittel gestellt hat, ist das eine verborgene Begierde. Wenn du aber äußere Mittel willst, obwohl Gott dich in Loslösung gestellt hat, ist das ein Absinken von hoher geistiger Ausrichtung.",
+      "kommentar_de": "Nicht jede spirituell klingende Entscheidung ist wirklich rein. Die Frage ist, in welche Lage Gott dich tatsächlich gestellt hat und ob du darin treu bist."
+    },
+    {
+      "nummer": 3,
+      "arabisch": "سَوَابِقُ الهِمَمِ لَا تَخْرِقُ أَسْوَارَ الأَقْدَارِ.",
+      "uebersetzung_de": "Voraus eilende Entschlüsse durchbrechen nicht die Mauern der göttlichen Bestimmungen.",
+      "kommentar_de": "Starker Wille ist wertvoll, aber er ist nicht absolut. Die Weisheit lehrt Gelassenheit: Plane, handle, aber erkenne die Grenze des eigenen Zugriffes."
+    },
+    {
+      "nummer": 4,
+      "arabisch": "أَرِحْ نَفْسَكَ مِنَ التَّدْبِيرِ، فَمَا قَامَ بِهِ غَيْرُكَ عَنْكَ لَا تَقُمْ بِهِ لِنَفْسِكَ.",
+      "uebersetzung_de": "Entlaste dich vom übermäßigen Lenken-Wollen; was ein anderer für dich übernommen hat, musst du nicht selbst für dich übernehmen.",
+      "kommentar_de": "Gemeint ist nicht Passivität, sondern das Loslassen der inneren Verkrampfung. Der Mensch tut, was ihm zukommt, und überlässt Gott das, was nicht in seiner Hand liegt."
+    },
+    {
+      "nummer": 5,
+      "arabisch": "اجْتِهَادُكَ فِيمَا ضَمِنَ لَكَ، وَتَقْصِيرُكَ فِيمَا طَلَبَ مِنْكَ، دَلِيلٌ عَلَى انْطِمَاسِ البَصِيرَةِ مِنْكَ.",
+      "uebersetzung_de": "Dein Eifer in dem, was Er dir garantiert hat, und deine Nachlässigkeit in dem, was Er von dir verlangt, ist ein Zeichen dafür, dass deine innere Einsicht verdunkelt ist.",
+      "kommentar_de": "Lebensunterhalt, Ansehen und Ergebnisse beschäftigen uns oft mehr als Pflicht, Charakter und Aufrichtigkeit. Die Hikma ordnet die Prioritäten."
+    },
+    {
+      "nummer": 6,
+      "arabisch": "لَا يَكُنْ تَأَخُّرُ أَمَدِ العَطَاءِ مَعَ الإِلْحَاحِ فِي الدُّعَاءِ مُوجِبًا لِيَأْسِكَ، فَهُوَ ضَمِنَ لَكَ الإِجَابَةَ فِيمَا يَخْتَارُهُ لَكَ، لَا فِيمَا تَخْتَارُهُ لِنَفْسِكَ، وَفِي الوَقْتِ الَّذِي يُرِيدُ، لَا فِي الوَقْتِ الَّذِي تُرِيدُ.",
+      "uebersetzung_de": "Dass die Gabe trotz beharrlichen Bittens verzögert wird, soll dich nicht verzweifeln lassen. Er hat dir Erhörung zugesichert in dem, was Er für dich wählt, nicht in dem, was du für dich wählst; und zu der Zeit, die Er will, nicht zu der Zeit, die du willst.",
+      "kommentar_de": "Bittgebet ist Beziehung, nicht Kontrolle. Verzögerung kann selbst eine Form von Führung und Schutz sein."
+    },
+    {
+      "nummer": 7,
+      "arabisch": "لَا يُشَكِّكَنَّكَ فِي الوَعْدِ عَدَمُ وُقُوعِ المَوْعُودِ وَإِنْ تَعَيَّنَ زَمَنُهُ، لِئَلَّا يَكُونَ ذَلِكَ قَدْحًا فِي بَصِيرَتِكَ وَإِخْمَادًا لِنُورِ سَرِيرَتِكَ.",
+      "uebersetzung_de": "Lass dich durch das Ausbleiben des Versprochenen nicht am Versprechen zweifeln, selbst wenn seine Zeit bestimmt schien; sonst wird deine Einsicht verletzt und das Licht deines Inneren gedämpft.",
+      "kommentar_de": "Die Hikma schützt vor vorschnellem Urteil über Gottes Zusage. Wenn Erwartung und Wirklichkeit auseinanderfallen, braucht das Herz Geduld statt Misstrauen."
+    },
+    {
+      "nummer": 8,
+      "arabisch": "إِذَا فَتَحَ لَكَ وِجْهَةً مِنَ التَّعَرُّفِ فَلَا تُبَالِ مَعَهَا إِنْ قَلَّ عَمَلُكَ، فَإِنَّهُ مَا فَتَحَهَا لَكَ إِلَّا وَهُوَ يُرِيدُ أَنْ يَتَعَرَّفَ إِلَيْكَ. أَلَمْ تَعْلَمْ أَنَّ التَّعَرُّفَ هُوَ مُورِدُهُ عَلَيْكَ، وَالأَعْمَالَ أَنْتَ مُهْدِيهَا إِلَيْهِ؟ وَأَيْنَ مَا تُهْدِيهِ إِلَيْهِ مِمَّا هُوَ مُورِدُهُ عَلَيْكَ؟",
+      "uebersetzung_de": "Wenn Er dir eine Richtung der Erkenntnis öffnet, dann kümmere dich nicht darum, dass dein Werk dabei gering erscheint. Er öffnet sie nur, weil Er sich dir bekannt machen will. Die Erkenntnis kommt von Ihm zu dir; die Werke sind deine Gabe an Ihn. Und was ist deine Gabe im Vergleich zu dem, was Er dir schenkt?",
+      "kommentar_de": "Eine echte Öffnung des Herzens ist nicht das Produkt eigener Leistung. Sie ist Gnade, die den Menschen demütig und dankbar macht."
+    },
+    {
+      "nummer": 9,
+      "arabisch": "تَنَوَّعَتْ أَجْنَاسُ الأَعْمَالِ لِتَنَوُّعِ وَارِدَاتِ الأَحْوَالِ.",
+      "uebersetzung_de": "Die Arten der Werke sind vielfältig, weil die Eingebungen und Zustände vielfältig sind.",
+      "kommentar_de": "Nicht jeder Weg sieht gleich aus. Je nach innerem Zustand kann Dienst, Schweigen, Gebet, Lernen oder Geduld die passende Form sein."
+    },
+    {
+      "nummer": 10,
+      "arabisch": "الأَعْمَالُ صُوَرٌ قَائِمَةٌ، وَأَرْوَاحُهَا وُجُودُ سِرِّ الإِخْلَاصِ فِيهَا.",
+      "uebersetzung_de": "Die Werke sind aufgerichtete Formen; ihre Seelen sind das Vorhandensein des Geheimnisses der Aufrichtigkeit in ihnen.",
+      "kommentar_de": "Äußerlich gleiche Handlungen können innerlich sehr verschieden sein. Aufrichtigkeit gibt der Handlung Leben."
+    },
+    {
+      "nummer": 11,
+      "arabisch": "ادْفِنْ وُجُودَكَ فِي أَرْضِ الخُمُولِ، فَمَا نَبَتَ مِمَّا لَمْ يُدْفَنْ لَا يَتِمُّ نَتَاجُهُ.",
+      "uebersetzung_de": "Begrabe dein eigenes Hervortreten im Boden der Unauffälligkeit; was nicht begraben wird, dessen Wachstum reift nicht vollkommen.",
+      "kommentar_de": "Die Hikma warnt vor zu früher Sichtbarkeit. Inneres Wachstum braucht Verborgenheit, Schutz und Zeit."
+    },
+    {
+      "nummer": 12,
+      "arabisch": "مَا نَفَعَ القَلْبَ شَيْءٌ مِثْلُ عُزْلَةٍ يَدْخُلُ بِهَا مَيْدَانَ فِكْرَةٍ.",
+      "uebersetzung_de": "Nichts nützt dem Herzen so sehr wie eine Zurückgezogenheit, durch die es das Feld des Nachdenkens betritt.",
+      "kommentar_de": "Rückzug ist hier nicht Weltflucht, sondern Sammlung. Stille macht sichtbar, was im Lärm verborgen bleibt."
+    },
+    {
+      "nummer": 13,
+      "arabisch": "كَيْفَ يُشْرِقُ قَلْبٌ صُوَرُ الأَكْوَانِ مُنْطَبِعَةٌ فِي مِرْآتِهِ؟ أَمْ كَيْفَ يَرْحَلُ إِلَى اللهِ وَهُوَ مُكَبَّلٌ بِشَهَوَاتِهِ؟ أَمْ كَيْفَ يَطْمَعُ أَنْ يَدْخُلَ حَضْرَةَ اللهِ وَهُوَ لَمْ يَتَطَهَّرْ مِنْ جَنَابَةِ غَفَلَاتِهِ؟ أَمْ كَيْفَ يَرْجُو أَنْ يَفْهَمَ دَقَائِقَ الأَسْرَارِ وَهُوَ لَمْ يَتُبْ مِنْ هَفَوَاتِهِ؟",
+      "uebersetzung_de": "Wie soll ein Herz leuchten, wenn die Bilder der Welt in seinem Spiegel eingeprägt sind? Wie soll es zu Gott reisen, während es an seine Begierden gefesselt ist? Wie soll es hoffen, in Gottes Gegenwart einzutreten, wenn es sich nicht von der Unreinheit seiner Achtlosigkeiten gereinigt hat? Wie soll es die Feinheiten der Geheimnisse verstehen, wenn es seine Fehltritte nicht bereut hat?",
+      "kommentar_de": "Der Weg beginnt mit Reinigung der Wahrnehmung. Nicht die Welt an sich ist das Problem, sondern ihr Abdruck als Besetzung des Herzens."
+    },
+    {
+      "nummer": 14,
+      "arabisch": "الكَوْنُ كُلُّهُ ظُلْمَةٌ، وَإِنَّمَا أَنَارَهُ ظُهُورُ الحَقِّ فِيهِ؛ فَمَنْ رَأَى الكَوْنَ وَلَمْ يَشْهَدْهُ فِيهِ، أَوْ عِنْدَهُ، أَوْ قَبْلَهُ، أَوْ بَعْدَهُ، فَقَدْ أَعْوَزَهُ وُجُودُ الأَنْوَارِ، وَحُجِبَتْ عَنْهُ شُمُوسُ المَعَارِفِ بِسُحُبِ الآثَارِ.",
+      "uebersetzung_de": "Das ganze Weltsein ist Dunkelheit; erhellt wird es nur durch das Erscheinen des Wahren in ihm. Wer die Welt sieht und Ihn nicht in ihr, bei ihr, vor ihr oder nach ihr bezeugt, dem fehlen die Lichter; die Sonnen der Erkenntnisse sind ihm durch die Wolken der Spuren verdeckt.",
+      "kommentar_de": "Die Welt wird als Zeichen gelesen, nicht als selbstständige letzte Wirklichkeit. Erkenntnis heißt, durch die Erscheinungen hindurch auf ihren Ursprung zu schauen."
+    },
+    {
+      "nummer": 15,
+      "arabisch": "مِمَّا يَدُلُّكَ عَلَى وُجُودِ قَهْرِهِ سُبْحَانَهُ أَنْ حَجَبَكَ عَنْهُ بِمَا لَيْسَ بِمَوْجُودٍ مَعَهُ.",
+      "uebersetzung_de": "Zu dem, was dich auf die Macht Seiner Überwältigung hinweist, gehört, dass Er dich durch etwas von Ihm verhüllt, das neben Ihm gar kein eigenständiges Sein hat.",
+      "kommentar_de": "Der Schleier besitzt keine letzte Eigenmacht. Gerade das zeigt, wie sehr der Mensch auf Gottes Öffnung angewiesen ist."
+    },
+    {
+      "nummer": 16,
+      "arabisch": "كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي أَظْهَرَ كُلَّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي ظَهَرَ بِكُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي ظَهَرَ فِي كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الَّذِي ظَهَرَ لِكُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الظَّاهِرُ قَبْلَ وُجُودِ كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ أَظْهَرُ مِنْ كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ الوَاحِدُ الَّذِي لَيْسَ مَعَهُ شَيْءٌ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَهُوَ أَقْرَبُ إِلَيْكَ مِنْ كُلِّ شَيْءٍ؟ كَيْفَ يُتَصَوَّرُ أَنْ يَحْجُبَهُ شَيْءٌ وَلَوْلَاهُ مَا كَانَ وُجُودُ كُلِّ شَيْءٍ؟ يَا عَجَبًا، كَيْفَ يَظْهَرُ الوُجُودُ فِي العَدَمِ؟ أَمْ كَيْفَ يَثْبُتُ الحَادِثُ مَعَ مَنْ لَهُ وَصْفُ القِدَمِ؟",
+      "uebersetzung_de": "Wie kann man sich vorstellen, dass Ihn etwas verhüllt, wo Er doch alles erscheinen ließ? Wo Er durch alles, in allem und für alles erscheint? Wo Er vor allem ist, offenkundiger als alles, der Eine ohne etwas neben Ihm, dir näher als alles, und ohne Ihn nichts bestehen könnte? Wie erstaunlich: Wie sollte Sein im Nichtsein erscheinen, oder das Entstandene Bestand haben neben Dem, dem die Eigenschaft der Ewigkeit zukommt?",
+      "kommentar_de": "Diese lange Fragekette sprengt die Vorstellung, Gott sei ein Gegenstand neben anderen. Der eigentliche Schleier liegt nicht in den Dingen, sondern in der begrenzten Wahrnehmung."
+    },
+    {
+      "nummer": 17,
+      "arabisch": "مَا تَرَكَ مِنَ الجَهْلِ شَيْئًا مَنْ أَرَادَ أَنْ يُحْدِثَ فِي الوَقْتِ غَيْرَ مَا أَظْهَرَهُ اللهُ فِيهِ.",
+      "uebersetzung_de": "Nichts von Unwissenheit hat derjenige ausgelassen, der in einer Zeit etwas anderes hervorbringen will als das, was Gott in ihr erscheinen lässt.",
+      "kommentar_de": "Jede Zeit hat ihre Aufgabe. Weisheit besteht darin, die konkrete Stunde zu erkennen, statt gegen sie zu leben."
+    },
+    {
+      "nummer": 18,
+      "arabisch": "إِحَالَتُكَ الأَعْمَالَ عَلَى وُجُودِ الفَرَاغِ مِنْ رُعُونَاتِ النَّفْسِ.",
+      "uebersetzung_de": "Dass du Werke auf eine künftige freie Zeit verschiebst, gehört zu den Torheiten des Ego.",
+      "kommentar_de": "Das Herz wartet gern auf ideale Bedingungen. Die Hikma ruft dazu auf, das Gute im jetzigen Moment zu tun."
+    },
+    {
+      "nummer": 19,
+      "arabisch": "لَا تَطْلُبْ مِنْهُ أَنْ يُخْرِجَكَ مِنْ حَالَةٍ لِيَسْتَعْمِلَكَ فِيمَا سِوَاهَا، فَلَوْ أَرَادَ لَاسْتَعْمَلَكَ مِنْ غَيْرِ إِخْرَاجٍ.",
+      "uebersetzung_de": "Bitte Ihn nicht darum, dich aus einem Zustand herauszunehmen, damit Er dich in einem anderen gebrauche. Wenn Er wollte, würde Er dich gebrauchen, ohne dich herauszunehmen.",
+      "kommentar_de": "Die spirituelle Aufgabe liegt oft genau in der gegenwärtigen Lage. Nicht jeder Wechsel ist Wachstum."
+    },
+    {
+      "nummer": 20,
+      "arabisch": "مَا أَرَادَتْ هِمَّةُ سَالِكٍ أَنْ تَقِفَ عِنْدَ مَا كُشِفَ لَهَا إِلَّا وَنَادَتْهُ هَوَاتِفُ الحَقِيقَةِ: الَّذِي تَطْلُبُ أَمَامَكَ. وَلَا تَبَرَّجَتْ ظَوَاهِرُ المُكَوَّنَاتِ إِلَّا وَنَادَتْهُ حَقَائِقُهَا: إِنَّمَا نَحْنُ فِتْنَةٌ فَلَا تَكْفُرْ.",
+      "uebersetzung_de": "Immer wenn die Sehnsucht eines Suchenden bei dem stehen bleiben will, was ihr enthüllt wurde, rufen ihr die Stimmen der Wirklichkeit zu: Was du suchst, liegt vor dir. Und immer wenn die äußeren Erscheinungen der Geschöpfe sich schmücken, rufen ihre inneren Wahrheiten: Wir sind nur eine Prüfung; werde nicht undankbar.",
+      "kommentar_de": "Auch spirituelle Erfahrungen können zur Station werden, an der man hängen bleibt. Die Hikma bewahrt vor Stillstand und vor Verwechslung von Zeichen mit Ziel."
+    },
+    {
+      "nummer": 21,
+      "arabisch": "طَلَبُكَ مِنْهُ اتِّهَامٌ لَهُ، وَطَلَبُكَ لَهُ غَيْبَةٌ مِنْكَ عَنْهُ، وَطَلَبُكَ لِغَيْرِهِ لِقِلَّةِ حَيَائِكَ مِنْهُ، وَطَلَبُكَ مِنْ غَيْرِهِ لِوُجُودِ بُعْدِكَ عَنْهُ.",
+      "uebersetzung_de": "Dein Fordern von Ihm ist ein Verdächtigen Seiner Fürsorge; dein Suchen nach Ihm zeigt deine Abwesenheit von Ihm; dein Suchen nach anderem als Ihm zeigt geringe Scheu vor Ihm; und dein Fordern von anderem als Ihm zeigt deine Entfernung von Ihm.",
+      "kommentar_de": "Diese Hikma unterscheidet verschiedene Formen des Begehrens. Sie will das Herz von Anspruch, Zerstreuung und Abhängigkeit reinigen."
+    },
+    {
+      "nummer": 22,
+      "arabisch": "مَا مِنْ نَفَسٍ تُبْدِيهِ إِلَّا وَلَهُ قَدَرٌ فِيكَ يُمْضِيهِ.",
+      "uebersetzung_de": "Kein Atemzug geht von dir aus, ohne dass darin eine Bestimmung an dir vollzogen wird.",
+      "kommentar_de": "Das Leben ist nicht zufällig verteilt. Jeder Atemzug ist ein Ort der Führung, Verantwortung und Rückkehr."
+    },
+    {
+      "nummer": 23,
+      "arabisch": "لَا تَتَرَقَّبْ فَرَاغَ الأَغْيَارِ، فَإِنَّ ذَلِكَ يَقْطَعُكَ عَنْ وُجُودِ المُرَاقَبَةِ لَهُ فِيمَا هُوَ مُقِيمُكَ فِيهِ.",
+      "uebersetzung_de": "Warte nicht darauf, dass äußere Umstände frei werden; das würde dich von der Achtsamkeit Ihm gegenüber in dem abschneiden, worin Er dich gerade stehen lässt.",
+      "kommentar_de": "Der Weg beginnt nicht erst nach der Entlastung. Gerade im Gegebenen zeigt sich, ob Achtsamkeit echt ist."
+    },
+    {
+      "nummer": 24,
+      "arabisch": "لَا تَسْتَغْرِبْ وُقُوعَ الأَكْدَارِ مَا دُمْتَ فِي هَذِهِ الدَّارِ، فَإِنَّهَا مَا أَبْرَزَتْ إِلَّا مَا هُوَ مُسْتَحَقُّ وَصْفِهَا وَوَاجِبُ نَعْتِهَا.",
+      "uebersetzung_de": "Wundere dich nicht über das Auftreten von Trübungen, solange du in dieser Welt bist. Sie bringt nur hervor, was ihrer Beschreibung und ihrem Wesen entspricht.",
+      "kommentar_de": "Die Welt ist kein Ort reiner Beständigkeit. Wer das versteht, wird von Schwierigkeiten weniger innerlich überrascht."
+    },
+    {
+      "nummer": 25,
+      "arabisch": "مَا تَوَقَّفَ مَطْلَبٌ أَنْتَ طَالِبُهُ بِرَبِّكَ، وَلَا تَيَسَّرَ مَطْلَبٌ أَنْتَ طَالِبُهُ بِنَفْسِكَ.",
+      "uebersetzung_de": "Kein Ziel bleibt unerreichbar, wenn du es durch deinen Herrn suchst; und kein Ziel wird wirklich leicht, wenn du es durch dich selbst suchst.",
+      "kommentar_de": "Die Frage ist nicht nur, was man sucht, sondern worauf man sich beim Suchen stützt. Gottbezogenheit verwandelt Anstrengung."
+    },
+    {
+      "nummer": 26,
+      "arabisch": "مِنْ عَلَامَاتِ النُّجْحِ فِي النِّهَايَاتِ الرُّجُوعُ إِلَى اللهِ فِي البِدَايَاتِ.",
+      "uebersetzung_de": "Zu den Zeichen des Erfolges am Ende gehört die Rückkehr zu Gott am Anfang.",
+      "kommentar_de": "Wie ein Weg beginnt, prägt seine Richtung. Am Anfang steht nicht Selbstsicherheit, sondern Zuflucht."
+    },
+    {
+      "nummer": 27,
+      "arabisch": "مَنْ أَشْرَقَتْ بِدَايَتُهُ أَشْرَقَتْ نِهَايَتُهُ.",
+      "uebersetzung_de": "Wessen Anfang erleuchtet ist, dessen Ende wird erleuchtet sein.",
+      "kommentar_de": "Ein wahrhaftiger Anfang trägt eine Verheißung in sich. Kleine reine Anfänge sind wichtiger als große unklare Gesten."
+    },
+    {
+      "nummer": 28,
+      "arabisch": "مَا اسْتُودِعَ فِي غَيْبِ السَّرَائِرِ ظَهَرَ فِي شَهَادَةِ الظَّوَاهِرِ.",
+      "uebersetzung_de": "Was im Unsichtbaren der Innerlichkeiten niedergelegt wird, erscheint im Sichtbaren der äußeren Formen.",
+      "kommentar_de": "Das Äußere verrät auf Dauer das Innere. Innere Arbeit bleibt nicht verborgen, sondern prägt Haltung, Blick und Verhalten."
+    },
+    {
+      "nummer": 29,
+      "arabisch": "شَتَّانَ بَيْنَ مَنْ يَسْتَدِلُّ بِهِ أَوْ يَسْتَدِلُّ عَلَيْهِ. المُسْتَدِلُّ بِهِ عَرَفَ الحَقَّ لِأَهْلِهِ، فَأَثْبَتَ الأَمْرَ مِنْ وُجُودِ أَصْلِهِ. وَالِاسْتِدْلَالُ عَلَيْهِ مِنْ عَدَمِ الوُصُولِ إِلَيْهِ، وَإِلَّا فَمَتَى غَابَ حَتَّى يُسْتَدَلَّ عَلَيْهِ؟ وَمَتَى بَعُدَ حَتَّى تَكُونَ الآثَارُ هِيَ الَّتِي تُوصِلُ إِلَيْهِ؟",
+      "uebersetzung_de": "Welch ein Unterschied zwischen dem, der durch Ihn beweist, und dem, der auf Ihn hin beweist. Wer durch Ihn beweist, erkennt die Wahrheit an ihrem Ort und bestätigt die Dinge aus ihrem Ursprung. Auf Ihn hinzuweisen entsteht aus Nicht-Angekommensein: Wann wäre Er denn abwesend, sodass man auf Ihn hinweisen müsste? Und wann wäre Er fern, sodass die Spuren erst zu Ihm führen müssten?",
+      "kommentar_de": "Für den Anfänger führen Zeichen zu Gott; für den Erkennenden werden die Zeichen durch Gott verstanden. Das ist ein Wechsel der Blickrichtung."
+    },
+    {
+      "nummer": 30,
+      "arabisch": "لِيُنْفِقْ ذُو سَعَةٍ مِنْ سَعَتِهِ: الوَاصِلُونَ إِلَيْهِ. وَمَنْ قُدِرَ عَلَيْهِ رِزْقُهُ: السَّائِرُونَ إِلَيْهِ.",
+      "uebersetzung_de": "Wer Weite besitzt, soll aus seiner Weite geben: das sind die bei Ihm Angekommenen. Und wem sein Maß eng bemessen ist: das sind die zu Ihm Unterwegsseienden.",
+      "kommentar_de": "Geistige Menschen stehen nicht alle am gleichen Ort. Manche geben aus unmittelbarer Weite, andere gehen noch im Maß ihrer Suche."
+    },
+    {
+      "nummer": 31,
+      "arabisch": "اهْتَدَى الرَّاحِلُونَ إِلَيْهِ بِأَنْوَارِ التَّوَجُّهِ، وَالوَاصِلُونَ لَهُمْ أَنْوَارُ المُوَاجَهَةِ. الأَوَّلُونَ لِلْأَنْوَارِ، وَهَؤُلَاءِ الأَنْوَارُ لَهُمْ، لِأَنَّهُمْ لِلَّهِ لَا لِشَيْءٍ دُونَهُ.",
+      "uebersetzung_de": "Die zu Ihm Reisenden werden durch die Lichter der Hinwendung geleitet; die Angekommenen besitzen die Lichter der Begegnung. Die ersten gehören den Lichtern, die anderen haben die Lichter, denn sie gehören Gott und nichts unter Ihm.",
+      "kommentar_de": "Am Anfang braucht man Zeichen, Zustände und Stützen. In der Reife wird die Gabe nicht mehr Ziel, sondern Gott selbst."
+    },
+    {
+      "nummer": 32,
+      "arabisch": "تَشَوُّفُكَ إِلَى مَا بَطَنَ فِيكَ مِنَ العُيُوبِ خَيْرٌ مِنْ تَشَوُّفِكَ إِلَى مَا حُجِبَ عَنْكَ مِنَ الغُيُوبِ.",
+      "uebersetzung_de": "Dein Verlangen, die verborgenen Fehler in dir zu erkennen, ist besser als dein Verlangen nach dem, was dir an Unsichtbarem verborgen ist.",
+      "kommentar_de": "Selbsterkenntnis ist nützlicher als Neugier auf Geheimnisse. Der nächste Schritt liegt oft im Erkennen des eigenen Mangels."
+    },
+    {
+      "nummer": 33,
+      "arabisch": "الحَقُّ لَيْسَ بِمَحْجُوبٍ، وَإِنَّمَا المَحْجُوبُ أَنْتَ عَنِ النَّظَرِ إِلَيْهِ، إِذْ لَوْ حَجَبَهُ شَيْءٌ لَسَتَرَهُ مَا حَجَبَهُ، وَلَوْ كَانَ لَهُ سَاتِرٌ لَكَانَ لِوُجُودِهِ حَاصِرًا، وَكُلُّ حَاصِرٍ لِشَيْءٍ فَهُوَ لَهُ قَاهِرٌ، وَهُوَ القَاهِرُ فَوْقَ عِبَادِهِ.",
+      "uebersetzung_de": "Der Wahre ist nicht verhüllt; vielmehr bist du vom Blick auf Ihn verhüllt. Denn wenn Ihn etwas verhüllte, würde dieses Ihn bedecken; und hätte Er einen Bedecker, würde dieser Sein Sein begrenzen. Alles Begrenzende überwältigt das Begrenzte, Er aber ist der Überwältigende über Seinen Dienern.",
+      "kommentar_de": "Der Schleier wird vom Objekt auf das Subjekt verlegt. Nicht Gott fehlt, sondern die Wahrnehmung ist verdeckt."
+    },
+    {
+      "nummer": 34,
+      "arabisch": "اخْرُجْ مِنْ أَوْصَافِ بَشَرِيَّتِكَ عَنْ كُلِّ وَصْفٍ مُنَاقِضٍ لِعُبُودِيَّتِكَ، لِتَكُونَ لِنِدَاءِ الحَقِّ مُجِيبًا، وَمِنْ حَضْرَتِهِ قَرِيبًا.",
+      "uebersetzung_de": "Tritt aus den Eigenschaften deiner bloßen Menschlichkeit heraus, aus jeder Eigenschaft, die deiner Dienerschaft widerspricht, damit du dem Ruf des Wahren antwortest und Seiner Gegenwart nahe bist.",
+      "kommentar_de": "Gemeint ist nicht die Verachtung des Menschseins, sondern die Läuterung von Hochmut, Anspruch und Selbstherrlichkeit. Nähe wächst durch Dienerschaft."
+    },
+    {
+      "nummer": 35,
+      "arabisch": "أَصْلُ كُلِّ مَعْصِيَةٍ وَغَفْلَةٍ وَشَهْوَةٍ الرِّضَا عَنِ النَّفْسِ، وَأَصْلُ كُلِّ طَاعَةٍ وَيَقَظَةٍ وَعِفَّةٍ عَدَمُ الرِّضَا مِنْكَ عَنْهَا. وَلَأَنْ تَصْحَبَ جَاهِلًا لَا يَرْضَى عَنْ نَفْسِهِ خَيْرٌ لَكَ مِنْ أَنْ تَصْحَبَ عَالِمًا يَرْضَى عَنْ نَفْسِهِ؛ فَأَيُّ عِلْمٍ لِعَالِمٍ يَرْضَى عَنْ نَفْسِهِ؟ وَأَيُّ جَهْلٍ لِجَاهِلٍ لَا يَرْضَى عَنْ نَفْسِهِ؟",
+      "uebersetzung_de": "Die Wurzel jeder Sünde, Achtlosigkeit und Begierde ist die Zufriedenheit mit dem eigenen Selbst. Die Wurzel jeder Gehorsamkeit, Wachheit und Keuschheit ist, dass du mit ihm nicht zufrieden bist. Es ist besser, einen Unwissenden zu begleiten, der mit sich nicht zufrieden ist, als einen Gelehrten, der mit sich zufrieden ist. Was ist das für ein Wissen bei einem Gelehrten, der mit sich zufrieden ist? Und was ist das für eine Unwissenheit bei einem Unwissenden, der mit sich nicht zufrieden ist?",
+      "kommentar_de": "Selbstzufriedenheit ist gefährlicher als Unwissenheit. Ein demütiges Herz lernt; ein selbstzufriedenes Herz verschließt sich."
+    },
+    {
+      "nummer": 36,
+      "arabisch": "شُعَاعُ البَصِيرَةِ يُشْهِدُكَ قُرْبَهُ مِنْكَ، وَعَيْنُ البَصِيرَةِ يُشْهِدُكَ عَدَمَكَ لِوُجُودِهِ، وَحَقُّ البَصِيرَةِ يُشْهِدُكَ وُجُودَهُ لَا عَدَمَكَ وَلَا وُجُودَكَ.",
+      "uebersetzung_de": "Der Strahl der inneren Einsicht lässt dich Seine Nähe zu dir bezeugen. Das Auge der Einsicht lässt dich dein Nichtsein angesichts Seines Seins bezeugen. Die Wahrheit der Einsicht lässt dich Sein Sein bezeugen – nicht dein Nichtsein und nicht dein Sein.",
+      "kommentar_de": "Die Hikma beschreibt Stufen der Wahrnehmung: Nähe, Selbstauflösung und schließlich reines Schauen auf Gott. Entscheidend ist die Verlagerung des Zentrums."
+    },
+    {
+      "nummer": 37,
+      "arabisch": "كَانَ اللهُ وَلَا شَيْءَ مَعَهُ، وَهُوَ الآنَ عَلَى مَا عَلَيْهِ كَانَ.",
+      "uebersetzung_de": "Gott war, und nichts war mit Ihm; und Er ist jetzt so, wie Er war.",
+      "kommentar_de": "Die Aussage verdichtet den Gedanken göttlicher Unveränderlichkeit. Die Geschöpfe fügen Gott nichts hinzu und nehmen Ihm nichts."
+    },
+    {
+      "nummer": 38,
+      "arabisch": "لَا تَتَعَدَّ نِيَّةُ هِمَّتِكَ إِلَى غَيْرِهِ، فَالكَرِيمُ لَا تَتَخَطَّاهُ الآمَالُ.",
+      "uebersetzung_de": "Die Absicht deiner Sehnsucht soll nicht über Ihn hinaus zu anderem gehen; den Großzügigen überschreiten die Hoffnungen nicht.",
+      "kommentar_de": "Wer Gott sucht, sucht nicht zu klein. Die höchste Hoffnung endet nicht bei Gaben, sondern beim Geber."
+    },
+    {
+      "nummer": 39,
+      "arabisch": "لَا تَرْفَعَنَّ إِلَى غَيْرِهِ حَاجَةً هُوَ مُورِدُهَا عَلَيْكَ، فَكَيْفَ يَرْفَعُ غَيْرُهُ مَا كَانَ هُوَ لَهُ وَاضِعًا؟ مَنْ لَا يَسْتَطِيعُ أَنْ يَرْفَعَ حَاجَةً عَنْ نَفْسِهِ فَكَيْفَ يَسْتَطِيعُ أَنْ يَكُونَ لَهَا عَنْ غَيْرِهِ رَافِعًا؟",
+      "uebersetzung_de": "Erhebe kein Bedürfnis zu einem anderen als Ihm, wenn Er selbst es auf dich kommen ließ. Wie sollte ein anderer wegnehmen, was Er gesetzt hat? Wer ein Bedürfnis nicht einmal von sich selbst nehmen kann, wie sollte er es von einem anderen nehmen?",
+      "kommentar_de": "Die Hikma kritisiert nicht menschliche Hilfe, sondern Herzensabhängigkeit. Menschen können Mittel sein; der Ursprung der Lösung bleibt Gott."
+    },
+    {
+      "nummer": 40,
+      "arabisch": "إِنْ لَمْ تُحْسِنْ ظَنَّكَ بِهِ لِأَجْلِ حُسْنِ وَصْفِهِ، فَحَسِّنْ ظَنَّكَ بِهِ لِوُجُودِ مُعَامَلَتِهِ مَعَكَ. فَهَلْ عَوَّدَكَ إِلَّا حَسَنًا؟ وَهَلْ أَسْدَى إِلَيْكَ إِلَّا مِنَنًا؟",
+      "uebersetzung_de": "Wenn du deine gute Meinung von Ihm nicht wegen der Schönheit Seiner Eigenschaften stärkst, dann stärke sie wegen Seiner Behandlung dir gegenüber. Hat Er dich an etwas anderes gewöhnt als an Gutes? Hat Er dir anderes erwiesen als Gaben?",
+      "kommentar_de": "Die Erinnerung an erfahrene Güte heilt Misstrauen. Wer die eigene Geschichte mit Gott liest, findet Gründe für Vertrauen."
+    },
+    {
+      "nummer": 41,
+      "arabisch": "العَجَبُ كُلُّ العَجَبِ مِمَّنْ يَهْرُبُ مِمَّا لَا انْفِكَاكَ لَهُ عَنْهُ، وَيَطْلُبُ مَا لَا بَقَاءَ لَهُ مَعَهُ: «فَإِنَّهَا لَا تَعْمَى الأَبْصَارُ وَلَكِنْ تَعْمَى القُلُوبُ الَّتِي فِي الصُّدُورِ».",
+      "uebersetzung_de": "Das Erstaunen schlechthin gilt dem, der vor dem flieht, wovon er sich nicht lösen kann, und das sucht, was bei ihm nicht bleiben wird: Nicht die Augen werden blind, sondern die Herzen in den Brüsten.",
+      "kommentar_de": "Man kann Gott nicht entkommen, aber man jagt Vergänglichem nach. Die Hikma entlarvt diese Verkehrung der Wahrnehmung."
+    },
+    {
+      "nummer": 42,
+      "arabisch": "لَا تَرْحَلْ مِنْ كَوْنٍ إِلَى كَوْنٍ فَتَكُونَ كَحِمَارِ الرَّحَى، يَسِيرُ وَالمَكَانُ الَّذِي ارْتَحَلَ إِلَيْهِ هُوَ الَّذِي ارْتَحَلَ عَنْهُ. وَلَكِنِ ارْحَلْ مِنَ الأَكْوَانِ إِلَى المُكَوِّنِ: «وَأَنَّ إِلَى رَبِّكَ المُنْتَهَى».",
+      "uebersetzung_de": "Reise nicht von einer geschaffenen Sache zu einer anderen, sonst bist du wie der Mühlenesel: Er läuft, und der Ort, zu dem er geht, ist derselbe, von dem er aufbrach. Reise vielmehr von den geschaffenen Dingen zum Schöpfer: Zu deinem Herrn ist das Ende.",
+      "kommentar_de": "Äußerer Wechsel allein befreit nicht. Der entscheidende Aufbruch ist die innere Bewegung vom Ding zum Ursprung."
+    },
+    {
+      "nummer": 43,
+      "arabisch": "لَا تَصْحَبْ مَنْ لَا يُنْهِضُكَ حَالُهُ، وَلَا يَدُلُّكَ عَلَى اللهِ مَقَالُهُ.",
+      "uebersetzung_de": "Begleite niemanden, dessen Zustand dich nicht erhebt und dessen Rede dich nicht auf Gott hinweist.",
+      "kommentar_de": "Nähe prägt. Gute Begleitung ist nicht nur angenehm, sondern richtet das Herz auf."
+    },
+    {
+      "nummer": 44,
+      "arabisch": "رُبَّمَا كُنْتَ مُسِيئًا فَأَرَاكَ الإِحْسَانَ مِنْكَ صُحْبَتُكَ مَنْ هُوَ أَسْوَأُ حَالًا مِنْكَ.",
+      "uebersetzung_de": "Vielleicht bist du schlecht handelnd, doch deine Begleitung eines Menschen, der in noch schlechterem Zustand ist als du, lässt dich dich selbst als gut ansehen.",
+      "kommentar_de": "Vergleich nach unten täuscht. Die Hikma warnt vor einer Selbstzufriedenheit, die nur entsteht, weil man sich an Schwächeren misst."
+    },
+    {
+      "nummer": 45,
+      "arabisch": "ما قَلَّ عملٌ بَرَزَ من قلبٍ زاهدٍ، ولا كَثُرَ عملٌ بَرَزَ من قلبٍ راغبٍ.",
+      "uebersetzung_de": "Keine Handlung ist klein, wenn sie aus einem entsagenden Herzen hervorgeht; und keine Handlung ist groß, wenn sie aus einem begehrenden Herzen hervorgeht.",
+      "kommentar_de": "Der Wert einer Tat liegt nicht zuerst in ihrer äußeren Größe, sondern in der inneren Haltung. Ein kleines Werk mit Freiheit von Besitzanspruch kann schwerer wiegen als große Anstrengung, die vom Begehren nach Wirkung, Lob oder Gewinn getragen wird."
+    },
+    {
+      "nummer": 46,
+      "arabisch": "حُسْنُ الأعمالِ نتائجُ حُسْنِ الأحوالِ، وحُسْنُ الأحوالِ مِنَ التحقُّقِ في مقاماتِ الإنزالِ.",
+      "uebersetzung_de": "Schöne Werke sind Früchte schöner innerer Zustände; und schöne Zustände entstehen aus der Verwirklichung der Stufen göttlicher Herabsendung.",
+      "kommentar_de": "Das Äußere folgt dem Inneren. Wer nur Verhalten korrigiert, ohne das Herz zu reinigen, behandelt die Oberfläche; wer aber den inneren Zustand pflegt, lässt die Handlung natürlicher und aufrichtiger werden."
+    },
+    {
+      "nummer": 47,
+      "arabisch": "لا تَتْرُكِ الذِّكْرَ لِعَدَمِ حُضُورِكَ مع اللهِ فيه؛ لأنَّ غَفْلَتَكَ عن وجودِ ذِكْرِهِ أشدُّ مِن غَفْلَتِكَ في وجودِ ذِكْرِهِ. فعسى أن يَرْفَعَكَ مِن ذِكْرٍ مع وجودِ غَفْلَةٍ إلى ذِكْرٍ مع وجودِ يَقَظَةٍ، ومِن ذِكْرٍ مع وجودِ يَقَظَةٍ إلى ذِكْرٍ مع وجودِ حُضُورٍ، ومِن ذِكْرٍ مع وجودِ حُضُورٍ إلى ذِكْرٍ مع وجودِ غَيْبَةٍ عمّا سوى المذكورِ. وما ذلك على اللهِ بعزيزٍ.",
+      "uebersetzung_de": "Lass das Gedenken nicht, nur weil du dabei keine Gegenwart mit Gott empfindest; denn deine Unachtsamkeit ohne Gedenken ist schwerer als deine Unachtsamkeit während des Gedenkens. Vielleicht erhebt Er dich vom Gedenken mit Zerstreuung zum Gedenken mit Wachheit, dann zur Gegenwart, und schließlich zur Abwesenheit von allem außer dem Erinnerten. Das ist für Gott nicht schwer.",
+      "kommentar_de": "Diese Hikma schützt vor Perfektionismus in der Spiritualität. Man soll nicht warten, bis das Herz ideal gesammelt ist; die Treue zur Übung selbst kann der Weg sein, durch den Gegenwart überhaupt erst wächst."
+    },
+    {
+      "nummer": 48,
+      "arabisch": "مِن علاماتِ موتِ القلبِ عَدَمُ الحُزْنِ على ما فاتَكَ مِنَ المُوافَقاتِ، وتَرْكُ النَّدَمِ على ما فَعَلْتَهُ مِن وجودِ الزَّلّاتِ.",
+      "uebersetzung_de": "Zu den Zeichen eines toten Herzens gehört, dass man nicht traurig ist über verpasste Gelegenheiten zum Guten und kein Bedauern empfindet über begangene Fehltritte.",
+      "kommentar_de": "Gemeint ist kein lähmender Selbsthass, sondern ein lebendiges Gewissen. Das Herz lebt, solange es spürt: Nähe, Wahrheit und Versäumnis sind nicht gleichgültig."
+    },
+    {
+      "nummer": 49,
+      "arabisch": "لا يَعْظُمِ الذَّنْبُ عندكَ عَظَمَةً تَصُدُّكَ عن حُسْنِ الظَّنِّ باللهِ تعالى؛ فإنَّ مَن عَرَفَ ربَّهُ استصغرَ في جَنْبِ كَرَمِهِ ذَنْبَهُ.",
+      "uebersetzung_de": "Lass die Sünde in deinen Augen nicht so groß werden, dass sie dich vom guten Vertrauen zu Gott abhält; denn wer seinen Herrn kennt, hält seine Sünde im Angesicht Seiner Großzügigkeit für klein.",
+      "kommentar_de": "Reue darf die Tür zur Hoffnung nicht schließen. Die Hikma ruft dazu auf, Schuld ernst zu nehmen, aber Gottes Barmherzigkeit nicht kleiner zu machen als die eigene Verfehlung."
+    },
+    {
+      "nummer": 50,
+      "arabisch": "لا صغيرةَ إذا قابَلَكَ عَدْلُهُ، ولا كبيرةَ إذا واجَهَكَ فَضْلُهُ.",
+      "uebersetzung_de": "Nichts ist klein, wenn Seine Gerechtigkeit dir begegnet; und nichts ist groß, wenn Seine Gnade dir begegnet.",
+      "kommentar_de": "Die Perspektive verschiebt sich: Vor Gerechtigkeit ist keine Tat belanglos; vor Gnade ist keine Schuld endgültig. Der Weg liegt zwischen Ehrfurcht und Hoffnung."
+    },
+    {
+      "nummer": 51,
+      "arabisch": "لا عَمَلَ أَرْجى للقَبولِ مِن عملٍ يَغيبُ عنكَ شهودُهُ، ويُحْتَقَرُ عندكَ وجودُهُ.",
+      "uebersetzung_de": "Keine Handlung ist hoffnungsvoller auf Annahme als eine, deren Ansehen dir entgeht und deren Vorhandensein du bei dir gering achtest.",
+      "kommentar_de": "Am reinsten ist ein Werk, wenn das Ego sich nicht daran wärmt. Wer seine Tat vergisst und sie nicht als Besitz betrachtet, ist eher vor Selbstgefälligkeit bewahrt."
+    },
+    {
+      "nummer": 52,
+      "arabisch": "إنما أَوْرَدَ عليكَ الوارِدَ لتكونَ به عليه وارِدًا.",
+      "uebersetzung_de": "Er lässt eine Eingebung über dich kommen, damit du durch sie zu Ihm gelangst.",
+      "kommentar_de": "Innere Regungen, Lichtblicke und spirituelle Öffnungen sind keine Dekoration des Selbst. Sie sind Einladungen zur Rückkehr zu Gott."
+    },
+    {
+      "nummer": 53,
+      "arabisch": "أَوْرَدَ عليكَ الوارِدَ لِيَسْتَلِمَكَ مِن يدِ الأغيارِ، ولِيُحَرِّرَكَ مِن رِقِّ الآثارِ.",
+      "uebersetzung_de": "Er sendet dir die Eingebung, um dich aus der Hand der Anderen zu nehmen und dich aus der Knechtschaft der Wirkungen zu befreien.",
+      "kommentar_de": "Der Mensch hängt leicht an Umständen, Menschen, Erfolgen und Stimmungen. Ein wahrer innerer Impuls löst diese Fesseln und richtet den Blick auf den Ursprung statt auf die Spuren."
+    },
+    {
+      "nummer": 54,
+      "arabisch": "أَوْرَدَ عليكَ الوارِدَ لِيُخْرِجَكَ مِن سِجْنِ وُجودِكَ إلى فَضاءِ شُهودِكَ.",
+      "uebersetzung_de": "Er sendet dir die Eingebung, um dich aus dem Gefängnis deines Selbstseins in die Weite deines Schauens zu führen.",
+      "kommentar_de": "Das eigene Ich kann eng werden: seine Sorgen, Bilder und Ansprüche. Die göttliche Eingebung weitet den Menschen, bis er nicht mehr nur sich selbst sieht."
+    },
+    {
+      "nummer": 55,
+      "arabisch": "الأنوارُ مَطايا القلوبِ والأسرارِ.",
+      "uebersetzung_de": "Die Lichter sind die Reittiere der Herzen und der inneren Geheimnisse.",
+      "kommentar_de": "Licht meint hier Erkenntnis, Klarheit und göttliche Hilfe. Das Herz schreitet nicht nur durch Willenskraft voran, sondern wird von solchen Lichtern getragen."
+    },
+    {
+      "nummer": 56,
+      "arabisch": "النورُ جُنْدُ القلبِ، كما أنَّ الظُّلْمَةَ جُنْدُ النَّفْسِ؛ فإذا أرادَ اللهُ أن يَنْصُرَ عبدَهُ أَمَدَّهُ بجنودِ الأنوارِ، وقَطَعَ عنه مَدَدَ الظُّلَمِ والأغيارِ.",
+      "uebersetzung_de": "Das Licht ist das Heer des Herzens, wie die Dunkelheit das Heer der niederen Seele ist. Wenn Gott Seinem Diener helfen will, stärkt Er ihn mit Heeren von Lichtern und trennt von ihm den Nachschub der Dunkelheiten und der Anderen.",
+      "kommentar_de": "Innere Kämpfe werden nicht nur durch Anstrengung entschieden, sondern durch das, wovon man sich nähren lässt. Lichtvolle Einsicht, gute Erinnerung und aufrichtige Umgebung stärken das Herz."
+    },
+    {
+      "nummer": 57,
+      "arabisch": "النورُ له الكشفُ، والبصيرةُ لها الحُكْمُ، والقلبُ له الإقبالُ والإدبارُ.",
+      "uebersetzung_de": "Dem Licht gehört das Enthüllen, der inneren Einsicht das Urteil, und dem Herzen das Sich-Zuwenden und Sich-Abwenden.",
+      "kommentar_de": "Nicht jede Wahrnehmung ist schon reife Erkenntnis. Licht zeigt, Einsicht unterscheidet, und das Herz muss antworten: sich zuwenden oder abwenden."
+    },
+    {
+      "nummer": 58,
+      "arabisch": "لا تُفْرِحْكَ الطاعةُ لأنَّها بَرَزَتْ منك، وافرحْ بها لأنَّها بَرَزَتْ مِنَ اللهِ إليكَ.",
+      "uebersetzung_de": "Freue dich nicht über den Gehorsam, weil er von dir hervorgegangen ist; freue dich über ihn, weil er von Gott zu dir hervorgegangen ist.",
+      "kommentar_de": "Gute Taten sind nicht Anlass zur Selbstkrönung, sondern Zeichen von Gnade. Dankbarkeit ersetzt Stolz."
+    },
+    {
+      "nummer": 59,
+      "arabisch": "قَطَعَ السائرينَ له والواصلينَ إليه عن رؤيةِ أعمالِهِم وشهودِ أحوالِهِم. أمّا السائرونَ فلأنَّهم لم يتحقَّقوا الصدقَ مع اللهِ فيها، وأمّا الواصلونَ فغَيَّبَهُم بشهودِهِ عنها.",
+      "uebersetzung_de": "Er schnitt die Wandernden und die Angekommenen davon ab, ihre Werke zu sehen und ihre Zustände zu bezeugen. Die Wandernden, weil sie darin die Wahrhaftigkeit mit Gott noch nicht verwirklicht haben; die Angekommenen, weil Sein Schauen sie davon abwesend macht.",
+      "kommentar_de": "Auf dem Weg soll man sich nicht an spirituelle Bilanzen klammern. Am Anfang schützt dies vor Täuschung; am Ende verschwindet das Eigene im Blick auf Gott."
+    },
+    {
+      "nummer": 60,
+      "arabisch": "ما بَسَقَتْ أغصانُ ذُلٍّ إلا على بَذْرِ طَمَعٍ.",
+      "uebersetzung_de": "Keine Zweige der Erniedrigung wachsen, außer aus dem Samen der Begierde.",
+      "kommentar_de": "Abhängigkeit von dem, was andere geben, denken oder versprechen, macht innerlich klein. Freiheit beginnt dort, wo das Herz seinen übermäßigen Anspruch loslässt."
+    },
+    {
+      "nummer": 61,
+      "arabisch": "ما قادَكَ شيءٌ مِثْلُ الوَهْمِ.",
+      "uebersetzung_de": "Nichts führt dich so sehr in die Irre wie die Einbildung.",
+      "kommentar_de": "Viele Sorgen entstehen nicht aus der Wirklichkeit, sondern aus Vorstellungen. Die Hikma lädt ein, zwischen tatsächlicher Lage und innerem Film zu unterscheiden."
+    },
+    {
+      "nummer": 62,
+      "arabisch": "أنتَ حُرٌّ ممّا أنتَ عنه آيِسٌ، وعبدٌ لِما أنتَ فيه طامِعٌ.",
+      "uebersetzung_de": "Du bist frei von dem, worauf du keine Hoffnung mehr setzt; und du bist Sklave dessen, wonach du begehrst.",
+      "kommentar_de": "Hoffnung in der falschen Richtung kann zur Bindung werden. Wer ständig etwas erzwingen will, gehört innerlich bereits diesem Ziel."
+    },
+    {
+      "nummer": 63,
+      "arabisch": "مَن لم يُقْبِلْ على اللهِ بمُلاطَفاتِ الإحسانِ قِيدَ إليه بسَلاسِلِ الامتِحانِ.",
+      "uebersetzung_de": "Wer sich Gott nicht durch die zarten Gaben Seiner Güte zuwendet, wird zu Ihm mit den Ketten der Prüfung geführt.",
+      "kommentar_de": "Sanfte Gaben können rufen, bevor harte Erfahrungen wecken. Die Weisheit mahnt, auf Güte zu antworten, damit nicht erst Schmerz zur Rückkehr führen muss."
+    },
+    {
+      "nummer": 64,
+      "arabisch": "مَن لم يَشْكُرِ النِّعَمَ فقد تَعَرَّضَ لِزَوالِها، ومَن شَكَرَها فقد قَيَّدَها بعِقالِها.",
+      "uebersetzung_de": "Wer die Gaben nicht dankt, setzt sie dem Verschwinden aus; wer sie dankt, bindet sie mit ihrem Halfter fest.",
+      "kommentar_de": "Dankbarkeit ist nicht bloß Höflichkeit, sondern Bewahrung. Was bewusst als Gabe erkannt wird, wird weniger missbraucht und tiefer gehütet."
+    },
+    {
+      "nummer": 65,
+      "arabisch": "خَفْ مِن وجودِ إحسانِهِ إليكَ ودوامِ إساءتِكَ معه أن يكونَ ذلك استدراجًا لك: ﴿سَنَسْتَدْرِجُهُم مِنْ حيثُ لا يَعْلَمُونَ﴾.",
+      "uebersetzung_de": "Fürchte, dass Sein fortdauerndes Wohlwollen dir gegenüber trotz deiner fortdauernden Schlechtigkeit ein allmähliches Hineinziehen sein könnte: „Wir werden sie stufenweise heranführen, von wo sie es nicht wissen.“",
+      "kommentar_de": "Nicht jede angenehme Lage ist ein Zeichen von Zustimmung. Wenn Gaben nicht zu Dank und Umkehr führen, können sie zur Prüfung werden."
+    },
+    {
+      "nummer": 66,
+      "arabisch": "مِن جَهْلِ المُريدِ أن يُسيءَ الأدبَ فتُؤَخَّرَ العقوبةُ عنه، فيقولَ: لو كان هذا سوءَ أدبٍ لَقُطِعَ الإمدادُ وأُوجِبَ الإبعادُ. فقد يُقْطَعُ المَدَدُ عنه مِن حيثُ لا يَشْعُرُ، ولو لم يكن إلا مَنْعَ المزيدِ. وقد يُقامُ مقامَ البُعْدِ وهو لا يدري، ولو لم يكن إلا أن يُخَلِّيَكَ وما تريدُ.",
+      "uebersetzung_de": "Zur Unwissenheit des Suchenden gehört, dass er sich schlecht benimmt, die Strafe aber aufgeschoben wird, und er sagt: Wäre das wirklich schlechte Haltung, wäre der Beistand abgeschnitten und die Entfernung eingetreten. Doch der Beistand kann ihm unbemerkt abgeschnitten werden, und sei es nur durch das Ausbleiben von Mehrung; und er kann im Stand der Ferne stehen, ohne es zu wissen, und sei es nur dadurch, dass Er dich dir und deinem Wollen überlässt.",
+      "kommentar_de": "Verzögerte Folgen sind keine Entlastung. Besonders gefährlich ist der Zustand, in dem man äußerlich weiterfunktioniert, aber innerlich keinen Zuwachs an Nähe, Demut und Wachheit mehr empfängt."
+    },
+    {
+      "nummer": 67,
+      "arabisch": "إذا رأيتَ عبدًا أقامَهُ اللهُ تعالى بوجودِ الأورادِ، وأدامَهُ عليها مع طولِ الإمدادِ، فلا تَسْتَحْقِرَنَّ ما مَنَحَهُ مولاهُ لأنَّكَ لم تَرَ عليه سيما العارفينَ ولا بهجةَ المُحبّينَ؛ فلولا وارِدٌ ما كان وِرْدٌ.",
+      "uebersetzung_de": "Wenn du einen Diener siehst, den Gott in regelmäßige Andachten gestellt und lange darin erhalten hat, dann verachte nicht, was sein Herr ihm gewährt hat, nur weil du an ihm nicht das Kennzeichen der Erkennenden und den Glanz der Liebenden siehst; denn ohne innere Eingebung gäbe es keine regelmäßige Übung.",
+      "kommentar_de": "Die Hikma warnt davor, andere spirituell geringzuschätzen. Beständigkeit in schlichten Übungen kann selbst eine Gabe sein, auch wenn sie äußerlich unspektakulär wirkt."
+    },
+    {
+      "nummer": 68,
+      "arabisch": "قومٌ أقامَهُمُ الحقُّ لخِدْمَتِهِ، وقومٌ اخْتَصَّهُم بمَحَبَّتِهِ: ﴿كُلًّا نُمِدُّ هؤلاءِ وهؤلاءِ مِن عطاءِ ربِّكَ وما كان عطاءُ ربِّكَ محظورًا﴾.",
+      "uebersetzung_de": "Manche stellt der Wahrhaftige in Seinen Dienst, andere zeichnet Er mit Seiner Liebe aus: „Alle unterstützen Wir, diese und jene, aus der Gabe deines Herrn; und die Gabe deines Herrn ist nicht verwehrt.“",
+      "kommentar_de": "Wege sind verschieden: Dienst, Liebe, Erkenntnis, Beständigkeit. Man soll nicht jede Gabe am eigenen Maßstab messen."
+    },
+    {
+      "nummer": 69,
+      "arabisch": "قَلَّما تكونُ الوارِداتُ الإلهيَّةُ إلا بَغْتَةً؛ لئلا يَدَّعيَها العبادُ بوجودِ الاستعدادِ.",
+      "uebersetzung_de": "Die göttlichen Eingebungen kommen meist plötzlich, damit die Diener sie nicht aufgrund vorhandener Bereitschaft für sich beanspruchen.",
+      "kommentar_de": "Das Überraschende der Gnade bricht den Anspruch. Sie kommt nicht als Besitz des Vorbereiteten, sondern als Geschenk des Gebenden."
+    },
+    {
+      "nummer": 70,
+      "arabisch": "مَن رأيتَهُ مُجيبًا عن كلِّ ما سُئِلَ، ومُعَبِّرًا عن كلِّ ما شَهِدَ، وذاكِرًا كلَّ ما عَلِمَ، فاستَدِلَّ بذلك على وجودِ جَهْلِهِ.",
+      "uebersetzung_de": "Wenn du jemanden siehst, der auf alles antwortet, wonach er gefragt wird, alles ausspricht, was er geschaut hat, und alles erwähnt, was er weiß, dann erkenne daran sein Unwissen.",
+      "kommentar_de": "Reife zeigt sich auch im Schweigen. Nicht alles, was gewusst oder erfahren wird, muss gesagt werden; Maß, Schutz und Demut gehören zur Erkenntnis."
+    },
+    {
+      "nummer": 71,
+      "arabisch": "إنما جَعَلَ الدارَ الآخرةَ مَحَلًّا لجزاءِ عبادِهِ المؤمنينَ؛ لأنَّ هذه الدارَ لا تَسَعُ ما يريدُ أن يُعْطِيَهُم، ولأنَّهُ أَجَلَّ أقدارَهُم عن أن يُجازِيَهُم في دارٍ لا بقاءَ لها.",
+      "uebersetzung_de": "Er machte das Jenseits zum Ort der Vergeltung für Seine gläubigen Diener, weil diese Welt nicht fasst, was Er ihnen geben will, und weil Er ihren Rang zu erhaben machte, um sie in einer vergänglichen Wohnstätte zu belohnen.",
+      "kommentar_de": "Nicht jede Treue findet hier ihren sichtbaren Ausgleich. Die Hikma weitet den Blick über unmittelbare Ergebnisse hinaus."
+    },
+    {
+      "nummer": 72,
+      "arabisch": "مَن وَجَدَ ثَمَرَةَ عَمَلِهِ عاجِلًا فهو دليلٌ على وجودِ القَبولِ آجِلًا.",
+      "uebersetzung_de": "Wer die Frucht seiner Handlung schon jetzt findet, für den ist das ein Hinweis auf Annahme später.",
+      "kommentar_de": "Eine innere Frucht kann Ruhe, Demut, Klarheit oder Liebe sein. Sie ist nicht der Lohn selbst, aber ein Zeichen, dass die Handlung lebendig war."
+    },
+    {
+      "nummer": 73,
+      "arabisch": "إذا أردتَ أن تَعْرِفَ قَدْرَكَ عندَهُ، فانْظُرْ فيما يُقيمُكَ.",
+      "uebersetzung_de": "Wenn du deinen Rang bei Ihm erkennen willst, dann schau, worin Er dich stehen lässt.",
+      "kommentar_de": "Der eigene Wert zeigt sich nicht in Wunschbildern, sondern in der Aufgabe und Haltung, in die Gott einen stellt. Was dir dauerhaft anvertraut ist, sagt etwas über deinen Weg."
+    },
+    {
+      "nummer": 74,
+      "arabisch": "متى رَزَقَكَ الطاعةَ والغِنى به عنها، فاعلمْ أنَّهُ قد أَسْبَغَ عليكَ نِعَمَهُ ظاهرةً وباطنةً.",
+      "uebersetzung_de": "Wenn Er dir Gehorsam schenkt und dich durch Ihn von ihr unabhängig macht, dann wisse: Er hat Seine Gaben äußerlich und innerlich über dich ausgegossen.",
+      "kommentar_de": "Die äußere Gabe ist die gute Handlung; die innere Gabe ist, sich nicht auf diese Handlung zu stützen. Beides zusammen schützt vor Trägheit und Stolz."
+    },
+    {
+      "nummer": 75,
+      "arabisch": "خيرُ ما تَطْلُبُهُ منه ما هو طالِبُهُ منك.",
+      "uebersetzung_de": "Das Beste, was du von Ihm erbitten kannst, ist das, was Er von dir verlangt.",
+      "kommentar_de": "Bitte nicht nur um Erleichterung, Erfolg oder besondere Zustände, sondern um Treue zu dem, was jetzt an Wahrheit, Pflicht und Aufrichtigkeit von dir gefordert ist."
+    },
+    {
+      "nummer": 76,
+      "arabisch": "الحُزْنُ على فُقْدانِ الطاعةِ مع عدمِ النُّهوضِ إليها مِن علاماتِ الاغترارِ.",
+      "uebersetzung_de": "Traurigkeit über das Fehlen von Gehorsam, verbunden mit dem Nicht-Aufstehen zu ihr, gehört zu den Zeichen der Selbsttäuschung.",
+      "kommentar_de": "Reue, die nicht in Bewegung kommt, kann zur frommen Ausrede werden. Die Hikma fordert den kleinen nächsten Schritt statt bloßer Stimmung."
+    },
+    {
+      "nummer": 77,
+      "arabisch": "ما العارفُ مَن إذا أشارَ وَجَدَ الحقَّ أقربَ إليه مِن إشارتِهِ، بل العارفُ مَن لا إشارةَ له؛ لِفَنائِهِ في وجودِهِ وانطوائِهِ في شُهودِهِ.",
+      "uebersetzung_de": "Der Erkennende ist nicht der, der beim Zeigen den Wahren näher findet als seine eigene Geste; vielmehr ist der Erkennende der, der keine Geste mehr hat, weil er in Seinem Sein vergeht und in Seinem Schauen eingehüllt ist.",
+      "kommentar_de": "Höchste Erkenntnis zeigt sich nicht im Reden über Nähe. Sie ist so unmittelbar, dass der Hinweis selbst verschwindet."
+    },
+    {
+      "nummer": 78,
+      "arabisch": "الرَّجاءُ ما قارَنَهُ عَمَلٌ، وإلا فهو أُمْنِيَّةٌ.",
+      "uebersetzung_de": "Hoffnung ist das, was von Handlung begleitet wird; andernfalls ist sie bloßer Wunsch.",
+      "kommentar_de": "Echte Hoffnung bewegt. Wer hofft, ohne etwas zu ändern, verwechselt Vertrauen mit Wunschdenken."
+    },
+    {
+      "nummer": 79,
+      "arabisch": "مَطْلَبُ العارفينَ مِنَ اللهِ تعالى الصِّدْقُ في العبوديَّةِ والقيامُ بحُقوقِ الربوبيَّةِ.",
+      "uebersetzung_de": "Das Begehren der Erkennenden von Gott ist Wahrhaftigkeit in der Dienerschaft und das Erfüllen der Rechte der Herrschaft Gottes.",
+      "kommentar_de": "Reife bittet nicht zuerst um außergewöhnliche Erfahrungen, sondern um Wahrhaftigkeit vor Gott: den eigenen Platz als Diener zu erkennen und Gottes Recht ernst zu nehmen."
+    },
+    {
+      "nummer": 80,
+      "arabisch": "بَسَطَكَ كي لا يُبْقِيَكَ مع القَبْضِ، وقَبَضَكَ كي لا يَتْرُكَكَ مع البَسْطِ، وأخرجَكَ عنهما كي لا تكونَ لشيءٍ دونَهُ.",
+      "uebersetzung_de": "Er weitet dich, damit du nicht beim Zusammenziehen bleibst; Er zieht dich zusammen, damit du nicht bei der Weite stehenbleibst; und Er führt dich aus beiden heraus, damit du keinem außer Ihm gehörst.",
+      "kommentar_de": "Spirituelle Zustände wechseln. Weder Trost noch Enge sind das Ziel; beide können Erziehung sein, bis das Herz nicht an Zustände, sondern an Gott gebunden ist."
+    },
+    {
+      "nummer": 81,
+      "arabisch": "العارفونَ إذا بُسِطوا أخوفُ منهم إذا قُبِضوا، ولا يَقِفُ على حدودِ الأدبِ في البَسْطِ إلا قليلٌ.",
+      "uebersetzung_de": "Die Erkennenden sind bei Weite ängstlicher als bei Enge; denn nur wenige halten in der Weite die Grenzen der rechten Haltung ein.",
+      "kommentar_de": "In der Bedrängnis ist Demut oft leichter. Wenn es gut läuft, drohen Selbstsicherheit und Unachtsamkeit."
+    },
+    {
+      "nummer": 82,
+      "arabisch": "البَسْطُ تأخذُ النَّفْسُ منه حَظَّها بوجودِ الفَرَحِ، والقَبْضُ لا حَظَّ للنَّفْسِ فيه.",
+      "uebersetzung_de": "Aus der Weite nimmt die niedere Seele ihren Anteil durch die Freude; in der Enge hat sie keinen Anteil.",
+      "kommentar_de": "Freude ist nicht schlecht, aber sie kann vom Ego vereinnahmt werden. Enge entzieht der Seele oft ihre Nahrung und kann dadurch reinigen."
+    },
+    {
+      "nummer": 83,
+      "arabisch": "رُبَّما أعطاكَ فَمَنَعَكَ، ورُبَّما مَنَعَكَ فأعطاكَ.",
+      "uebersetzung_de": "Vielleicht gibt Er dir und entzieht dir dadurch; vielleicht entzieht Er dir und gibt dir dadurch.",
+      "kommentar_de": "Nicht jedes Erhalten ist gut für das Herz, und nicht jeder Verlust ist Verarmung. Die Bedeutung einer Gabe zeigt sich daran, wohin sie dich führt."
+    },
+    {
+      "nummer": 84,
+      "arabisch": "متى فَتَحَ لكَ بابَ الفَهْمِ في المَنْعِ عادَ المَنْعُ عَيْنَ العَطاءِ.",
+      "uebersetzung_de": "Wenn Er dir im Entzug die Tür des Verstehens öffnet, wird der Entzug selbst zur Gabe.",
+      "kommentar_de": "Schmerzhaftes wird nicht automatisch gut, aber es kann Sinn und Führung enthalten. Verstehen verwandelt die Erfahrung."
+    },
+    {
+      "nummer": 85,
+      "arabisch": "الأكوانُ ظاهرُها غِرَّةٌ وباطنُها عِبْرَةٌ؛ فالنَّفْسُ تنظرُ إلى ظاهرِ غِرَّتِها، والقلبُ ينظرُ إلى باطنِ عِبْرَتِها.",
+      "uebersetzung_de": "Die geschaffenen Dinge haben außen Täuschung und innen Lehre: Die Seele blickt auf den äußeren Reiz ihrer Täuschung, das Herz auf die innere Lehre.",
+      "kommentar_de": "Die Welt kann faszinieren oder unterweisen. Die Seele bleibt am Glanz hängen; das Herz fragt, was jede Sache über Vergänglichkeit, Gabe und Ursprung lehrt."
+    },
+    {
+      "nummer": 86,
+      "arabisch": "إن أردتَ أن يكونَ لكَ عِزٌّ لا يَفْنى، فلا تَسْتَعِزَّ بعِزٍّ يَفْنى.",
+      "uebersetzung_de": "Wenn du eine Würde willst, die nicht vergeht, dann suche deine Würde nicht in einer Würde, die vergeht.",
+      "kommentar_de": "Status, Besitz, Ansehen und Kraft sind vergänglich. Dauerhafte Würde wächst aus der Bindung an das Unvergängliche."
+    },
+    {
+      "nummer": 87,
+      "arabisch": "الطَّيُّ الحقيقيُّ أن تَطْوِيَ مَسافَةَ الدُّنيا عنكَ، حتّى ترى الآخرةَ أقربَ إليكَ منك.",
+      "uebersetzung_de": "Das wirkliche Zusammenfalten der Entfernung besteht darin, die Distanz der Welt von dir wegzufalten, bis du das Jenseits dir näher siehst als dich selbst.",
+      "kommentar_de": "Wahrer Fortschritt ist nicht spektakuläre Überwindung von Raum, sondern eine Umordnung der Wahrnehmung. Das Bleibende wird nah, das Vergängliche verliert seine Herrschaft."
+    },
+    {
+      "nummer": 88,
+      "arabisch": "العطاءُ مِنَ الخَلْقِ حِرمانٌ، والمَنْعُ مِنَ اللهِ إحسانٌ.",
+      "uebersetzung_de": "Die Gabe von den Geschöpfen kann Entbehrung sein, und der Entzug von Gott ist Güte.",
+      "kommentar_de": "Wenn eine Gabe dich von Gott abhängig macht, wird sie zur Verarmung; wenn ein Entzug dich zu Gott zurückführt, ist er in Wahrheit Güte."
+    },
+    {
+      "nummer": 89,
+      "arabisch": "جَلَّ رَبُّنا أن يُعامِلَهُ العبدُ نقدًا فيُجازِيَهُ نَسيئَةً.",
+      "uebersetzung_de": "Erhaben ist unser Herr darüber, dass der Diener Ihn sofort behandelt und Er ihn erst später belohnt.",
+      "kommentar_de": "Die Hikma erinnert daran, dass Gott nicht kleinlich abrechnet. Jede aufrichtige Hinwendung trägt schon jetzt eine Wirkung im Herzen; die spätere Belohnung ist nicht Trennung von der Gegenwart, sondern ihre Vollendung."
+    },
+    {
+      "nummer": 90,
+      "arabisch": "كَفَى مِن جَزائِهِ إيّاكَ على الطاعةِ أن رَضِيَكَ لها أهلًا.",
+      "uebersetzung_de": "Als Lohn für deinen Gehorsam genügt es, dass Er dich überhaupt dafür geeignet und würdig gemacht hat.",
+      "kommentar_de": "Schon dass ein Mensch beten, dienen, danken oder bereuen darf, ist Gnade. Der Blick verschiebt sich: Nicht ich schenke Gott meine Leistung, sondern Er schenkt mir die Möglichkeit zur Nähe."
+    },
+    {
+      "nummer": 91,
+      "arabisch": "كَفَى العاملينَ جَزاءً ما هو فاتِحُهُ على قلوبِهم في طاعَتِهِ، وما هو مُورِدُهُ عليهم مِن وجودِ مُؤانَسَتِهِ.",
+      "uebersetzung_de": "Den Handelnden genügt als Lohn, was Er ihren Herzen in Seinem Dienst öffnet und was Er ihnen an Vertrautheit mit Ihm zuströmen lässt.",
+      "kommentar_de": "Der tiefste Lohn einer guten Tat ist nicht Anerkennung von außen, sondern eine innere Öffnung. Wenn eine Handlung das Herz weicher, klarer und vertrauter mit Gott macht, hat sie ihren Lohn bereits in sich."
+    },
+    {
+      "nummer": 92,
+      "arabisch": "مَن عَبَدَهُ لشيءٍ يَرجوهُ منه، أو لِيَدفَعَ بطاعَتِهِ ورودَ العقوبةِ عنه، فما قامَ بحقِّ أوصافِهِ.",
+      "uebersetzung_de": "Wer Ihn nur um etwas anbetet, das er von Ihm erhofft, oder um durch Gehorsam Strafe abzuwehren, hat dem Recht Seiner Eigenschaften nicht entsprochen.",
+      "kommentar_de": "Die Hikma kritisiert nicht Hoffnung oder Furcht an sich, sondern eine Beziehung, die Gott auf Nutzen reduziert. Reife Anbetung sucht Gott nicht nur wegen der Gabe oder wegen der Sicherheit, sondern weil Er anbetungswürdig ist."
+    },
+    {
+      "nummer": 93,
+      "arabisch": "متى أعطاكَ أشهَدَكَ بِرَّهُ، ومتى مَنَعَكَ أشهَدَكَ قَهْرَهُ؛ فهو في كلِّ ذلك مُتَعَرِّفٌ إليكَ، ومُقْبِلٌ بوجودِ لُطفِهِ عليكَ.",
+      "uebersetzung_de": "Wenn Er dir gibt, zeigt Er dir Seine Güte; wenn Er dir vorenthält, zeigt Er dir Seine Macht. In allem macht Er Sich dir bekannt und wendet Sich dir mit Seiner Güte zu.",
+      "kommentar_de": "Gabe und Entzug werden hier als zwei Formen der göttlichen Ansprache verstanden. Die Frage lautet nicht nur: Was bekomme ich?, sondern: Welche Erkenntnis Gottes öffnet sich mir in dieser Lage?"
+    },
+    {
+      "nummer": 94,
+      "arabisch": "إنّما يُؤلِمُكَ المَنْعُ لِعَدَمِ فَهْمِكَ عن اللهِ فيه.",
+      "uebersetzung_de": "Der Entzug schmerzt dich nur deshalb so, weil du Gottes Sinn darin nicht verstehst.",
+      "kommentar_de": "Das ist kein Verharmlosen von Schmerz. Die Hikma sagt: Wenn der Sinn verborgen bleibt, wird Verzicht zur bloßen Kränkung; wenn Verstehen wächst, kann sogar eine verschlossene Tür Schutz und Führung enthalten."
+    },
+    {
+      "nummer": 95,
+      "arabisch": "رُبَّما فَتَحَ لكَ بابَ الطاعةِ وما فَتَحَ لكَ بابَ القَبولِ، ورُبَّما قَضى عليكَ بالذَّنبِ فكانَ سببًا في الوصولِ.",
+      "uebersetzung_de": "Vielleicht öffnet Er dir die Tür des Gehorsams, ohne dir die Tür der Annahme zu öffnen; und vielleicht bestimmt Er über dich eine Sünde, die zum Grund des Ankommens wird.",
+      "kommentar_de": "Eine äußerlich gute Tat kann Stolz nähren, während ein Fehltritt Demut und Umkehr weckt. Entscheidend ist nicht der äußere Schein, sondern wohin die Erfahrung das Herz führt."
+    },
+    {
+      "nummer": 96,
+      "arabisch": "مَعصِيَةٌ أورَثَتْ ذُلًّا وافتِقارًا خيرٌ مِن طاعةٍ أورَثَتْ عِزًّا واستِكبارًا.",
+      "uebersetzung_de": "Eine Sünde, die Demut und Bedürftigkeit hervorbringt, ist besser als ein Gehorsam, der Selbstgröße und Hochmut hervorbringt.",
+      "kommentar_de": "Diese Weisheit stellt die innere Frucht über die äußere Form. Sie lädt nicht zur Sünde ein, sondern warnt davor, dass selbst Frömmigkeit vergiftet wird, wenn sie das Ich aufbläht."
+    },
+    {
+      "nummer": 97,
+      "arabisch": "نِعمَتانِ ما خَرَجَ موجودٌ عنهما، ولا بُدَّ لكلِّ مُكَوَّنٍ منهما: نِعمَةُ الإيجادِ، ونِعمَةُ الإمدادِ.",
+      "uebersetzung_de": "Zwei Gaben gibt es, denen kein Seiendes entkommt und die jedes Geschaffene braucht: die Gabe des Hervorbringens und die Gabe des fortwährenden Erhaltens.",
+      "kommentar_de": "Existenz ist nicht nur ein Anfangsgeschenk. Jeder Atemzug ist erneute Versorgung; deshalb ist Dank nicht nur Erinnerung an früher, sondern Wahrnehmung des gegenwärtigen Getragenwerdens."
+    },
+    {
+      "nummer": 98,
+      "arabisch": "أنعَمَ عليكَ أوّلًا بالإيجادِ، وثانيًا بتَوالي الإمدادِ.",
+      "uebersetzung_de": "Er hat dich zuerst durch das Ins-Dasein-Bringen beschenkt und dann durch die fortlaufende Versorgung.",
+      "kommentar_de": "Die Hikma verdichtet die vorherige: Du bist nicht nur geschaffen, sondern fortwährend gehalten. Wer das erkennt, sieht das eigene Leben weniger als Besitz und mehr als anvertraute Gabe."
+    },
+    {
+      "nummer": 99,
+      "arabisch": "فاقَتُكَ لكَ ذاتيَّةٌ، ووُرودُ الأسبابِ مُذَكِّراتٌ لكَ بما خَفِيَ عليكَ منها، والفاقةُ الذاتيَّةُ لا تَرفَعُها العَوارِضُ.",
+      "uebersetzung_de": "Deine Bedürftigkeit gehört zu deinem Wesen; die eintretenden Ursachen erinnern dich nur an das, was dir davon verborgen war. Wesentliche Bedürftigkeit heben äußere Umstände nicht auf.",
+      "kommentar_de": "Not macht sichtbar, was immer wahr ist: Der Mensch ist abhängig. Reichtum, Kraft und Kontrolle verdecken diese Armut nur zeitweise; sie beseitigen sie nicht."
+    },
+    {
+      "nummer": 100,
+      "arabisch": "خيرُ أوقاتِكَ وقتٌ تَشهَدُ فيه وجودَ فاقَتِكَ، وتُرَدُّ فيه إلى وجودِ ذِلَّتِكَ.",
+      "uebersetzung_de": "Die beste deiner Zeiten ist eine Zeit, in der du deine Bedürftigkeit erkennst und zu deiner Demut zurückgeführt wirst.",
+      "kommentar_de": "Nicht jeder gute Moment fühlt sich angenehm an. Manchmal ist gerade der Moment der Begrenzung geistlich fruchtbar, weil er die Illusion der Selbstgenügsamkeit löst."
+    },
+    {
+      "nummer": 101,
+      "arabisch": "متى أوحَشَكَ مِن خَلْقِهِ فاعلَمْ أنَّهُ يريدُ أن يَفتَحَ لكَ بابَ الأُنسِ به.",
+      "uebersetzung_de": "Wenn Er dich von Seinen Geschöpfen entfremdet, wisse: Er will dir die Tür der Vertrautheit mit Ihm öffnen.",
+      "kommentar_de": "Einsamkeit kann zerstören, sie kann aber auch sammeln. Die Hikma deutet eine Phase abnehmender äußerer Stützen als mögliche Einladung, eine tiefere innere Nähe zu suchen."
+    },
+    {
+      "nummer": 102,
+      "arabisch": "متى أطلَقَ لِسانَكَ بالطَّلَبِ فاعلَمْ أنَّهُ يريدُ أن يُعطيَكَ.",
+      "uebersetzung_de": "Wenn Er deine Zunge zum Bitten löst, wisse: Er will dir geben.",
+      "kommentar_de": "Schon das ehrliche Bittgebet ist ein Zeichen von Gnade. Wer bitten kann, ist nicht abgeschnitten; die geöffnete Bitte ist oft selbst der Anfang der Antwort."
+    },
+    {
+      "nummer": 103,
+      "arabisch": "العارفُ لا يَزولُ اضطرارُهُ، ولا يكونُ مع غيرِ اللهِ قَرارُهُ.",
+      "uebersetzung_de": "Der Gotteserkennende verliert seine Bedürftigkeit nie, und bei etwas anderem als Gott findet er keinen endgültigen Ruheort.",
+      "kommentar_de": "Reife bedeutet nicht, unabhängig zu werden, sondern die eigene Abhängigkeit bewusst in Gott zu verankern. Das Herz ruht nicht in Mitteln, sondern im Geber der Mittel."
+    },
+    {
+      "nummer": 104,
+      "arabisch": "أنارَ الظواهرَ بأنوارِ آثارِهِ، وأنارَ السرائرَ بأنوارِ أوصافِهِ؛ لأجلِ ذلكَ أفَلَتْ أنوارُ الظواهرِ، ولم تَأفُلْ أنوارُ القلوبِ والسرائرِ. ولذلك قيلَ: إنَّ شمسَ النهارِ تَغيبُ بالليلِ، وشمسَ القلوبِ ليست تَغيبُ.",
+      "uebersetzung_de": "Er erleuchtete die äußeren Dinge mit den Lichtern Seiner Wirkungen und die inneren Geheimnisse mit den Lichtern Seiner Eigenschaften. Darum gehen die Lichter des Äußeren unter, während die Lichter der Herzen und inneren Geheimnisse nicht untergehen. Deshalb heißt es: Die Sonne des Tages verschwindet in der Nacht, die Sonne der Herzen aber verschwindet nicht.",
+      "kommentar_de": "Äußere Helligkeit ist wechselhaft; innere Erkenntnis bleibt tragender. Die Hikma führt von der Faszination des Sichtbaren zur Beständigkeit der Gotteserkenntnis im Herzen."
+    },
+    {
+      "nummer": 105,
+      "arabisch": "لِيُخَفِّفْ ألمَ البلاءِ عليكَ عِلمُكَ بأنَّهُ سبحانَهُ هو المُبلي لكَ؛ فالذي واجَهَتْكَ منه الأقدارُ هو الذي عَوَّدَكَ حُسنَ الاختيارِ.",
+      "uebersetzung_de": "Das Wissen, dass Er selbst dich prüft, soll den Schmerz der Prüfung für dich erleichtern. Denn Der, von dem dir die Schicksale begegnen, ist derselbe, der dich an Seine gute Wahl gewöhnt hat.",
+      "kommentar_de": "Leid wird nicht weggeredet, aber es wird in Beziehung gesetzt. Wer den Prüfenden als den Barmherzigen kennt, verliert nicht jede Orientierung, wenn das Schicksal schwer wird."
+    },
+    {
+      "nummer": 106,
+      "arabisch": "مَن ظَنَّ انفِكاكَ لُطفِهِ عن قَدَرِهِ فذلكَ لِقُصورِ نَظَرِهِ.",
+      "uebersetzung_de": "Wer meint, Seine Güte sei von Seiner Vorsehung getrennt, dessen Blick ist kurz.",
+      "kommentar_de": "Die Hikma ruft dazu auf, göttliche Fügung nicht sofort gegen göttliche Güte auszuspielen. Was im Augenblick hart wirkt, kann dennoch innerhalb eines umfassenderen Erbarmens stehen."
+    },
+    {
+      "nummer": 107,
+      "arabisch": "لا يُخافُ عليكَ أن تَلتَبِسَ الطُّرُقُ عليكَ، وإنّما يُخافُ عليكَ مِن غَلَبَةِ الهوى عليكَ.",
+      "uebersetzung_de": "Nicht ist vor allem zu fürchten, dass dir die Wege unklar werden; zu fürchten ist vielmehr, dass die Begierde dich überwältigt.",
+      "kommentar_de": "Verwirrung ist oft weniger gefährlich als ungebändigtes Wollen. Wer ehrlich sucht, findet Klärung; wer aber dem eigenen Begehren folgt, biegt selbst klare Wege um."
+    },
+    {
+      "nummer": 108,
+      "arabisch": "سبحانَ مَن سَتَرَ سرَّ الخصوصيَّةِ بظهورِ البشريَّةِ، وظهرَ بعَظَمَةِ الربوبيَّةِ في إظهارِ العبوديَّةِ.",
+      "uebersetzung_de": "Gepriesen sei Der, der das Geheimnis besonderer Nähe unter der Erscheinung der Menschlichkeit verbarg und die Größe der Herrschaft gerade im Erscheinen der Dienerschaft zeigte.",
+      "kommentar_de": "Gottes Nähe muss nicht spektakulär aussehen. Das Geheimnis kann in gewöhnlicher Menschlichkeit verborgen sein; wahre Größe zeigt sich in der vollkommenen Dienerschaft."
+    },
+    {
+      "nummer": 109,
+      "arabisch": "لا تُطالِبْ ربَّكَ بتأخُّرِ مَطلوبِكَ، ولكن طالِبْ نفسَكَ بتأخُّرِ أدَبِكَ.",
+      "uebersetzung_de": "Tadle deinen Herrn nicht wegen der Verzögerung dessen, was du erbittest; tadle vielmehr dich selbst wegen der Verzögerung deiner inneren Höflichkeit.",
+      "kommentar_de": "Die Frage wird umgedreht: Nicht zuerst Warum kommt die Antwort nicht?, sondern Bin ich in der Haltung gereift, die zum Empfangen passt? Geduld ist Teil des Bittens."
+    },
+    {
+      "nummer": 110,
+      "arabisch": "متى جَعَلَكَ في الظاهرِ مُمتَثِلًا لأمرِهِ، ورَزَقَكَ في الباطنِ الاستسلامَ لقَهرِهِ، فقد أعظَمَ المِنَّةَ عليكَ.",
+      "uebersetzung_de": "Wenn Er dich äußerlich Seinem Befehl folgen lässt und dir innerlich Ergebung unter Seine Macht schenkt, dann hat Er dir die Gabe groß gemacht.",
+      "kommentar_de": "Vollständigkeit entsteht, wenn äußeres Tun und inneres Annehmen zusammenkommen. Gehorsam ohne Hingabe bleibt hart; Hingabe ohne Handlung bleibt unfertig."
+    },
+    {
+      "nummer": 111,
+      "arabisch": "ليس كلُّ مَن ثَبَتَ تخصيصُهُ كَمُلَ تخليصُهُ.",
+      "uebersetzung_de": "Nicht jeder, dessen besondere Zuwendung feststeht, ist schon vollkommen geläutert.",
+      "kommentar_de": "Eine Gabe bedeutet nicht, dass der Weg beendet ist. Auch wer geführt, begabt oder besonders angesprochen ist, braucht Reinigung, Geduld und Aufrichtigkeit."
+    },
+    {
+      "nummer": 112,
+      "arabisch": "لا يَستَحقِرُ الوِردَ إلا جَهولٌ. الواردُ يُوجَدُ في الدارِ الآخرةِ، والوِردُ يَنطَوي بانطواءِ هذه الدارِ. وأولى ما يُعتَنى به: ما لا يَخلُفُ وجودُهُ. الوِردُ هو طالِبُهُ منك، والواردُ أنتَ تَطلُبُهُ منه، وأينَ ما هو طالِبُهُ منك ممّا هو مَطلبُكَ منه؟",
+      "uebersetzung_de": "Nur ein Unwissender verachtet die regelmäßige Übung. Die Eingebung findet man auch im Jenseits, die Übung aber endet mit dem Ende dieser Welt. Am meisten Aufmerksamkeit verdient, was nach seinem Verschwinden nicht nachgeholt werden kann. Die Übung ist das, was Er von dir verlangt; die Eingebung ist das, was du von Ihm verlangst. Wie weit ist das, was Er von dir verlangt, von dem entfernt, was du von Ihm verlangst!",
+      "kommentar_de": "Die Hikma schützt vor Spiritualität, die nur auf besondere Zustände wartet. Regelmäßigkeit, Gebet und Dienst sind der verlässliche Boden; außergewöhnliche Eingebungen sind Geschenk, nicht Ersatz für Treue."
+    },
+    {
+      "nummer": 113,
+      "arabisch": "وُرودُ الإمدادِ بحَسَبِ الاستعدادِ، وشُروقُ الأنوارِ على حَسَبِ صَفاءِ الأسرارِ.",
+      "uebersetzung_de": "Das Zuströmen der Hilfe geschieht gemäß der Bereitschaft, und das Aufgehen der Lichter gemäß der Reinheit der inneren Geheimnisse.",
+      "kommentar_de": "Empfang braucht Aufnahmefähigkeit. Nicht weil Gott geizt, sondern weil das Gefäß gereinigt und geweitet werden muss, damit es das Licht tragen kann."
+    },
+    {
+      "nummer": 114,
+      "arabisch": "الغافِلُ إذا أصبَحَ يَنظُرُ ماذا يَفعَلُ، والعاقِلُ يَنظُرُ ماذا يَفعَلُ اللهُ به.",
+      "uebersetzung_de": "Der Unachtsame schaut am Morgen, was er tun wird; der Verständige schaut, was Gott mit ihm tun wird.",
+      "kommentar_de": "Planung bleibt wichtig, doch die Hikma verändert die Grundhaltung. Der Weise beginnt den Tag nicht nur mit Kontrolle, sondern mit Empfangsbereitschaft."
+    },
+    {
+      "nummer": 115,
+      "arabisch": "إنّما استَوحَشَ العُبّادُ والزُّهّادُ مِن كلِّ شيءٍ لِغَيْبَتِهم عن اللهِ في كلِّ شيءٍ؛ فلو شَهِدوهُ في كلِّ شيءٍ لم يَستَوحِشوا مِن شيءٍ.",
+      "uebersetzung_de": "Die Dienenden und Entsagenden fühlen sich nur deshalb von allem entfremdet, weil sie Gott nicht in allem wahrnehmen; sähen sie Ihn in allem, wären sie von nichts entfremdet.",
+      "kommentar_de": "Entsagung kann trocken und abweisend werden, wenn sie nur Abstand schafft. Erkenntnis sieht in den Dingen nicht Selbstzweck, sondern Hinweis; dadurch wird die Welt nicht zum Feind, sondern zum Zeichen."
+    },
+    {
+      "nummer": 116,
+      "arabisch": "عَلِمَ مِنكَ أنَّكَ لا تَصبِرُ عنهُ، فأشهَدَكَ ما بَرَزَ منهُ.",
+      "uebersetzung_de": "Er wusste von dir, dass du ohne Ihn nicht bestehen kannst; darum ließ Er dich schauen, was von Ihm hervorgeht.",
+      "kommentar_de": "Die sichtbaren Wirkungen Gottes sind Hilfe für schwache Herzen. Weil der Mensch das Unsichtbare nicht leicht trägt, begegnet ihm göttliche Barmherzigkeit in Spuren, Zeichen und Wirkungen."
+    },
+    {
+      "nummer": 117,
+      "arabisch": "عَلِمَ الحقُّ مِنكَ وجودَ المَلَلِ، فَلَوَّنَ لكَ الطاعاتِ؛ وعَلِمَ ما فيكَ مِن وجودِ الشَّرَهِ، فحَجَرَها عليكَ في بعضِ الأوقاتِ؛ ليكونَ هَمُّكَ إقامةَ الصلاةِ لا وجودَ الصلاةِ، فما كلُّ مُصَلٍّ مُقيمٌ.",
+      "uebersetzung_de": "Der Wahre wusste um deine Neigung zur Ermüdung und machte dir die Formen des Gehorsams vielfältig. Er wusste auch um deine Gier und begrenzte sie für bestimmte Zeiten, damit dein Anliegen das Aufrichten des Gebets sei, nicht bloß das Vorhandensein von Gebet; denn nicht jeder Betende richtet das Gebet wirklich auf.",
+      "kommentar_de": "Die Vielfalt religiöser Praxis ist Barmherzigkeit, die Begrenzung ebenso. Entscheidend ist nicht, möglichst viel zu tun, sondern eine Handlung so zu tun, dass sie innerlich aufgerichtet ist."
+    },
+    {
+      "nummer": 118,
+      "arabisch": "الصلاةُ طُهرَةٌ للقلوبِ مِن أدناسِ الذنوبِ، واستِفتاحٌ لِبابِ الغُيوبِ.",
+      "uebersetzung_de": "Das Gebet ist Reinigung der Herzen von den Verschmutzungen der Sünden und Öffnung der Tür zum Verborgenen.",
+      "kommentar_de": "Gebet ist nicht nur Pflicht, sondern Reinigung und Zugang. Es klärt das Herz und macht es empfänglicher für eine Wirklichkeit, die dem bloßen äußeren Blick verborgen bleibt."
+    },
+    {
+      "nummer": 119,
+      "arabisch": "الصلاةُ محلُّ المُناجاةِ ومَعدِنُ المُصافاةِ؛ تتَّسِعُ فيها ميادينُ الأسرارِ، وتُشرِقُ فيها شوارِقُ الأنوارِ. عَلِمَ وجودَ الضَّعفِ منك فقلَّلَ أعدادَها، وعَلِمَ احتياجَكَ إلى فضلِهِ فكثَّرَ أمدادَها.",
+      "uebersetzung_de": "Das Gebet ist Ort vertraulicher Zwiesprache und Quelle der Läuterung; in ihm weiten sich die Felder der Geheimnisse und leuchten die Aufgänge der Lichter. Er wusste um deine Schwäche und verringerte seine Anzahl; Er wusste um deine Bedürftigkeit nach Seiner Huld und vermehrte seine Hilfen.",
+      "kommentar_de": "Die Pflichtgebete sind begrenzt, damit der Mensch sie tragen kann, und zugleich voller innerer Hilfe. Das Gebet ist klein im Umfang, aber groß im verborgenen Zustrom."
+    },
+    {
+      "nummer": 120,
+      "arabisch": "لا تَطلُبْ عِوَضًا على عَمَلٍ أنتَ لهُ فاعِلٌ. يَكفي مِن الجزاءِ لكَ على العملِ أن كانَ لهُ قابِلًا.",
+      "uebersetzung_de": "Verlange keinen Gegenwert für eine Tat, deren Ausführender du bist. Als Lohn genügt dir, dass Er sie überhaupt angenommen hat.",
+      "kommentar_de": "Wer bei jeder guten Tat auf Belohnung schaut, bleibt beim Handel stehen. Die Annahme selbst ist größer als jeder äußere Gegenwert, denn sie bedeutet Beziehung."
+    },
+    {
+      "nummer": 121,
+      "arabisch": "إذا أرادَ أن يُظهِرَ فضلَهُ عليكَ خَلَقَ ونَسَبَ إليكَ.",
+      "uebersetzung_de": "Wenn Er Seine Huld an dir zeigen will, erschafft Er und schreibt es dir zu.",
+      "kommentar_de": "Selbst das Gute, das uns zugerechnet wird, ist von Ihm geschaffen. Die Hikma löst den Besitzanspruch auf und lässt Dank an die Stelle des Stolzes treten."
+    },
+    {
+      "nummer": 122,
+      "arabisch": "لا نهايةَ لِمَذامِّكَ إن أرجَعَكَ إليكَ، ولا تَفرُغُ مَدائِحُكَ إن أظهَرَ جودَهُ عليكَ.",
+      "uebersetzung_de": "Deine Tadelwürdigkeit nimmt kein Ende, wenn Er dich auf dich selbst zurückwirft; und dein Lob erschöpft sich nicht, wenn Er Seine Großzügigkeit an dir erscheinen lässt.",
+      "kommentar_de": "Der Mensch aus sich selbst bleibt mangelhaft; der Mensch unter göttlicher Großzügigkeit wird zum Ort des Lobes. Darum ist jede gute Eigenschaft letztlich Gabe."
+    },
+    {
+      "nummer": 123,
+      "arabisch": "كُنْ بأوصافِ رُبوبيَّتِهِ مُتعلِّقًا، وبأوصافِ عبوديَّتِكَ مُتحقِّقًا.",
+      "uebersetzung_de": "Halte dich an die Eigenschaften Seiner Herrschaft und verwirkliche die Eigenschaften deiner Dienerschaft.",
+      "kommentar_de": "Spiritualität braucht die richtige Ordnung: Gott ist Herr, der Mensch ist Diener. Wenn der Mensch göttliche Verfügung für sich beansprucht oder seine Bedürftigkeit vergisst, gerät das Herz aus der Wahrheit."
+    },
+    {
+      "nummer": 124,
+      "arabisch": "مَنَعَكَ أن تَدَّعيَ ما ليسَ لكَ ممّا للمخلوقينَ، أفيُبيحُ لكَ أن تَدَّعيَ وصفَهُ وهو ربُّ العالمينَ؟",
+      "uebersetzung_de": "Er hat dir verboten, etwas zu beanspruchen, was nicht dir, sondern Geschöpfen gehört; sollte Er dir dann erlauben, Seine eigene Eigenschaft zu beanspruchen, wo Er doch der Herr der Welten ist?",
+      "kommentar_de": "Wenn schon fremdes Eigentum nicht beansprucht werden darf, wie viel weniger darf der Mensch Unabhängigkeit, Macht oder Vollkommenheit beanspruchen, die allein Gott zukommen."
+    },
+    {
+      "nummer": 125,
+      "arabisch": "كيفَ تُخرَقُ لكَ العوائدُ وأنتَ لم تَخرِقْ مِن نفسِكَ العوائدَ؟",
+      "uebersetzung_de": "Wie sollen für dich die Gewohnheiten durchbrochen werden, wenn du nicht zuerst deine eigenen Gewohnheiten durchbrochen hast?",
+      "kommentar_de": "Außergewöhnliche Öffnungen passen nicht zu einem Herzen, das an alten Mustern festhält. Der Weg beginnt mit der kleinen, konkreten Durchbrechung eigener Bequemlichkeit."
+    },
+    {
+      "nummer": 126,
+      "arabisch": "ما الشأنُ وجودُ الطَّلَبِ، إنّما الشأنُ أن تُرزَقَ حُسنَ الأدَبِ.",
+      "uebersetzung_de": "Nicht das Vorhandensein der Bitte ist entscheidend; entscheidend ist, dass dir gute innere Haltung geschenkt wird.",
+      "kommentar_de": "Bitten allein ist leicht; richtiges Bitten verlangt Demut, Geduld und Vertrauen. Die Form der Bitte soll vom Herzen getragen werden."
+    },
+    {
+      "nummer": 127,
+      "arabisch": "ما طَلَبَ لكَ شيءٌ مثلُ الاضطرارِ، ولا أسرَعَ بالمواهِبِ إليكَ مثلُ الذِّلَّةِ والافتِقارِ.",
+      "uebersetzung_de": "Nichts bittet so sehr für dich wie deine Not, und nichts bringt die Gaben so schnell zu dir wie Demut und Bedürftigkeit.",
+      "kommentar_de": "Innere Armut ist eine Sprache, die tiefer spricht als Worte. Wo der Mensch seine Bedürftigkeit nicht mehr kaschiert, wird er empfänglich."
+    },
+    {
+      "nummer": 128,
+      "arabisch": "لو أنَّكَ لا تَصِلُ إليهِ إلا بعدَ فَناءِ مَساويكَ ومَحوِ دَعاويكَ لم تَصِلْ إليهِ أبدًا. ولكن إذا أرادَ أن يُوصِلَكَ إليهِ سَتَرَ وصفَكَ بوصفِهِ، وغَطّى نَعتَكَ بنَعتِهِ، فوصَلَكَ إليهِ بما منهُ إليكَ لا بما منكَ إليهِ.",
+      "uebersetzung_de": "Müsstest du erst nach dem Verschwinden deiner Fehler und dem Auslöschen deiner Ansprüche zu Ihm gelangen, würdest du Ihn niemals erreichen. Wenn Er dich aber zu Sich bringen will, bedeckt Er deine Eigenschaft mit Seiner Eigenschaft und deine Beschreibung mit Seiner Beschreibung; so bringt Er dich durch das, was von Ihm zu dir kommt, nicht durch das, was von dir zu Ihm kommt.",
+      "kommentar_de": "Diese Hikma ist ein Schutz vor Verzweiflung. Der Weg zu Gott ruht nicht auf menschlicher Perfektion, sondern auf göttlichem Verdecken, Erbarmen und Zuziehen."
+    },
+    {
+      "nummer": 129,
+      "arabisch": "لولا جميلُ سترِهِ لم يكنْ عملٌ أهلًا للقبولِ.",
+      "uebersetzung_de": "Wäre nicht die Schönheit Seines Verbergens, wäre keine Tat der Annahme würdig.",
+      "kommentar_de": "Auch gute Werke enthalten Mängel: Ablenkung, Selbstblick, Unreinheit der Absicht. Dass sie angenommen werden können, ist selbst ein Akt göttlicher Bedeckung."
+    },
+    {
+      "nummer": 130,
+      "arabisch": "أنتَ إلى حِلْمِهِ إذا أطعتَهُ أحوَجُ منكَ إلى حِلْمِهِ إذا عصيتَهُ.",
+      "uebersetzung_de": "Du brauchst Seine Nachsicht, wenn du Ihm gehorchst, noch mehr als du Seine Nachsicht brauchst, wenn du Ihm ungehorsam bist.",
+      "kommentar_de": "Beim Ungehorsam sieht man die Bedürftigkeit leicht; beim Gehorsam vergisst man sie schnell. Gerade die gute Tat braucht Schutz vor Stolz und Selbstzufriedenheit."
+    },
+    {
+      "nummer": 131,
+      "arabisch": "السَّتْرُ على قسمينِ: سَتْرٌ عنِ المعصيةِ، وسَتْرٌ فيها. فالعامةُ يَطلُبونَ مِن اللهِ السَّترَ فيها خَشيَةَ سقوطِ مَرتَبَتِهِم عندَ الخَلقِ، والخاصّةُ يَطلُبونَ مِن اللهِ السَّترَ عنها خَشيَةَ سقوطِهِم مِن نَظَرِ المَلِكِ الحقِّ.",
+      "uebersetzung_de": "Das Verbergen ist zweifach: ein Verbergen vor der Sünde und ein Verbergen innerhalb der Sünde. Die Allgemeinheit bittet Gott um Verbergen in der Sünde, aus Angst, ihren Rang bei den Menschen zu verlieren; die Besonderen bitten Gott um Verbergen vor der Sünde, aus Angst, aus dem Blick des wahren Königs zu fallen.",
+      "kommentar_de": "Der Maßstab unterscheidet die Herzen: Geht es mir darum, vor Menschen nicht bloßgestellt zu werden, oder darum, Gott nicht zu verlieren? Reife bittet nicht nur um Schutz des Rufes, sondern um Schutz vor der Verfehlung selbst."
+    },
+    {
+      "nummer": 132,
+      "arabisch": "مَن أكرَمَكَ إنّما أكرَمَ فيكَ جميلَ سترِهِ؛ فالحمدُ لِمَن سَتَرَكَ، ليسَ الحمدُ لِمَن أكرَمَكَ وشَكَرَكَ.",
+      "uebersetzung_de": "Wer dich ehrt, ehrt in dir nur die Schönheit von Gottes Verbergen. Darum gehört der Dank Dem, der dich bedeckt hat, nicht dem, der dich geehrt und gelobt hat.",
+      "kommentar_de": "Lob von Menschen ist oft Lob dessen, was Gott verborgen und geschmückt hat. Die Hikma bewahrt vor Selbsttäuschung: Hinter jeder Anerkennung steht zuerst Gottes schützende Barmherzigkeit."
+    },
+    {
+      "nummer": 133,
+      "arabisch": "ما صَحِبَكَ إلا مَنْ صَحِبَكَ وهو بعيبِكَ عليمٌ، وليس ذلك إلا مولاكَ الكريمُ.",
+      "uebersetzung_de": "Dich begleitet wahrhaft nur der, der dich begleitet, obwohl er deine Fehler kennt; und das ist allein dein großzügiger Herr.",
+      "kommentar_de": "Wahre Nähe zerbricht nicht an erkannter Schwäche. Die Hikma führt von der Suche nach menschlicher Bestätigung zur Dankbarkeit für Gottes tragende Nähe."
+    },
+    {
+      "nummer": 134,
+      "arabisch": "خيرُ مَنْ تصحبُ مَنْ يطلبُكَ لكَ، لا لشيءٍ يعودُ منك إليه.",
+      "uebersetzung_de": "Der beste Gefährte ist der, der dich um deinetwillen sucht, nicht wegen eines Nutzens, der von dir zu ihm zurückkehrt.",
+      "kommentar_de": "Sie unterscheidet selbstlose Begleitung von Beziehung als Vorteilsgeschäft. Geistliche Freundschaft will dein Heil, nicht deinen Nutzen für den anderen."
+    },
+    {
+      "nummer": 135,
+      "arabisch": "لو أشرقَ لكَ نورُ اليقينِ لرأيتَ الآخرةَ أقربَ إليكَ من أن ترحلَ إليها، ولرأيتَ محاسنَ الدنيا قد ظهرتْ كِسفةُ الفناءِ عليها.",
+      "uebersetzung_de": "Würde dir das Licht der Gewissheit aufgehen, sähest du das Jenseits näher, als dass man erst dorthin reisen müsste, und sähest die Schönheit der Welt vom Schatten der Vergänglichkeit gezeichnet.",
+      "kommentar_de": "Gewissheit verändert die Entfernung der Dinge: Das Ewige rückt nah, das Vergängliche verliert seinen blendenden Glanz."
+    },
+    {
+      "nummer": 136,
+      "arabisch": "ما حجبَكَ عن اللهِ وجودُ موجودٍ معه، إذ لا شيءَ معه، ولكن حجبَكَ عنه توهُّمُ موجودٍ معه.",
+      "uebersetzung_de": "Nicht das Vorhandensein eines Dinges neben Gott verhüllt Ihn vor dir - denn nichts besteht mit Ihm -, sondern deine Einbildung, dass etwas mit Ihm bestehe.",
+      "kommentar_de": "Der Schleier liegt im falschen Sehen. Dinge werden zum Hindernis, wenn das Herz ihnen eigenständige Macht zuschreibt."
+    },
+    {
+      "nummer": 137,
+      "arabisch": "لولا ظهورُه في المكوَّناتِ ما وقعَ عليها وجودُ إبصارٍ، ولو ظهرتْ صفاتُه اضمحلَّتْ مكوَّناتُه.",
+      "uebersetzung_de": "Wäre Sein Erscheinen in den geschaffenen Dingen nicht, fiele kein Blick auf sie; und würden Seine Eigenschaften unverhüllt erscheinen, zerfielen die geschaffenen Dinge.",
+      "kommentar_de": "Die Welt ist sichtbar durch Sein Licht, aber sie könnte Seine Fülle nicht tragen. Die Hikma hält Nähe und Transzendenz zusammen."
+    },
+    {
+      "nummer": 138,
+      "arabisch": "أظهرَ كلَّ شيءٍ بأنَّه الباطنُ، وطوى وجودَ كلِّ شيءٍ بأنَّه الظاهرُ.",
+      "uebersetzung_de": "Er ließ jedes Ding erscheinen, weil Er der Verborgene ist; und Er faltete die Existenz jedes Dinges ein, weil Er der Offenbare ist.",
+      "kommentar_de": "Gott ist nicht ein sichtbares Ding unter Dingen. Gerade Sein Verborgen-Sein lässt die Welt erscheinen, und Sein Offenbar-Sein relativiert ihre Eigenständigkeit."
+    },
+    {
+      "nummer": 139,
+      "arabisch": "أباحَ لكَ أن تنظرَ ما في المكوَّناتِ، وما أذنَ لكَ أن تقفَ مع ذواتِ المكوَّناتِ.",
+      "uebersetzung_de": "Er erlaubte dir, zu betrachten, was in den Geschöpfen liegt; Er erlaubte dir aber nicht, bei den Wesen der Geschöpfe stehenzubleiben.",
+      "kommentar_de": "Betrachtung ist erlaubt, Anhaften nicht. Die Welt soll zum Verstehen führen, nicht zum Stillstand des Herzens."
+    },
+    {
+      "nummer": 140,
+      "arabisch": "الأكوانُ ثابتةٌ بإثباتِه، وممحوةٌ بأحديَّةِ ذاتِه.",
+      "uebersetzung_de": "Die Welten sind fest durch Sein Feststellen, und ausgelöscht vor der Einzigkeit Seines Wesens.",
+      "kommentar_de": "Geschöpfe besitzen nur geliehene Festigkeit. Vor Gottes Einheit verliert alles den Anspruch auf Selbstständigkeit."
+    },
+    {
+      "nummer": 141,
+      "arabisch": "الناسُ يمدحونكَ لما يظنُّونَه فيكَ، فكنْ أنتَ ذامًّا لنفسكَ لما تعلمُه منها.",
+      "uebersetzung_de": "Die Menschen loben dich für das, was sie in dir vermuten; du aber tadle dich für das, was du von dir selbst weißt.",
+      "kommentar_de": "Lob von außen ist unsicher. Die Hikma schützt vor Selbstbetrug, indem sie auf die ehrlichere Kenntnis des eigenen Inneren verweist."
+    },
+    {
+      "nummer": 142,
+      "arabisch": "المؤمنُ إذا مُدِحَ استحيا من اللهِ أن يُثنى عليه بوصفٍ لا يشهدُه من نفسِه.",
+      "uebersetzung_de": "Der Gläubige schämt sich vor Gott, wenn er gelobt wird für eine Eigenschaft, die er in sich selbst nicht bezeugt.",
+      "kommentar_de": "Echtes Lob wird zur Demut, nicht zum Stolz. Man nimmt Anerkennung an, ohne sie innerlich zu besitzen."
+    },
+    {
+      "nummer": 143,
+      "arabisch": "أجهلُ الناسِ مَنْ تركَ يقينَ ما عندَه لظنِّ ما عندَ الناسِ.",
+      "uebersetzung_de": "Der unwissendste Mensch ist, wer die Gewissheit dessen aufgibt, was er bei sich weiß, wegen der bloßen Vermutung dessen, was bei den Menschen ist.",
+      "kommentar_de": "Menschenmeinungen sind Vermutungen. Die Hikma ruft zur inneren Wahrhaftigkeit statt zur Abhängigkeit vom Fremdbild."
+    },
+    {
+      "nummer": 144,
+      "arabisch": "إذا أطلقَ الثناءَ عليكَ ولستَ بأهلٍ، فأثنِ عليه بما هو أهلُه.",
+      "uebersetzung_de": "Wenn Er Lob über dich freisetzt, obwohl du dessen nicht würdig bist, dann lobe Ihn mit dem, was Ihm gebührt.",
+      "kommentar_de": "Unverdientes Lob wird zum Anlass für Gotteslob. So verwandelt sich Anerkennung in Dank statt in Selbstüberhöhung."
+    },
+    {
+      "nummer": 145,
+      "arabisch": "الزُّهَّادُ إذا مُدِحوا انقبضوا لشهودِهم الثناءَ من الخلقِ، والعارفونَ إذا مُدِحوا انبسطوا لشهودِهم ذلك من الملكِ الحقِّ.",
+      "uebersetzung_de": "Die Asketen ziehen sich zusammen, wenn sie gelobt werden, weil sie das Lob von den Geschöpfen sehen; die Erkennenden weiten sich, weil sie darin den wahren König sehen.",
+      "kommentar_de": "Die Frage ist nicht nur, ob Lob kommt, sondern woher man es sieht. Erkenntnis verwandelt selbst menschliches Lob in Hinweis auf Gott."
+    },
+    {
+      "nummer": 146,
+      "arabisch": "متى كنتَ إذا أُعطيتَ بسطكَ العطاءُ، وإذا مُنعتَ قبضكَ المنعُ، فاستدلَّ بذلك على ثبوتِ طفوليَّتِكَ وعدمِ صدقِكَ في عبوديَّتِكَ.",
+      "uebersetzung_de": "Wenn dich Gabe weit macht und Entzug eng macht, dann erkenne daran deine geistliche Unreife und die Unaufrichtigkeit deiner Dienerschaft.",
+      "kommentar_de": "Reife zeigt sich darin, dass die Beziehung zu Gott nicht von Besitz oder Entzug abhängt."
+    },
+    {
+      "nummer": 147,
+      "arabisch": "إذا وقعَ منك ذنبٌ فلا يكنْ سببًا ليأسِكَ من حصولِ الاستقامةِ مع ربِّكَ، فقد يكونُ ذلك آخرَ ذنبٍ قُدِّرَ عليك.",
+      "uebersetzung_de": "Wenn dir eine Sünde widerfährt, soll sie kein Grund sein, an der Aufrichtung mit deinem Herrn zu verzweifeln; vielleicht ist sie die letzte Sünde, die dir bestimmt war.",
+      "kommentar_de": "Der Fehltritt soll zur Rückkehr führen, nicht zur Hoffnungslosigkeit. Verzweiflung wäre ein zweiter Schleier."
+    },
+    {
+      "nummer": 148,
+      "arabisch": "إذا أردتَ أن يفتحَ لكَ بابَ الرجاءِ فاشهدْ ما منه إليكَ، وإذا أردتَ أن يفتحَ لكَ بابَ الخوفِ فاشهدْ ما منك إليه.",
+      "uebersetzung_de": "Willst du, dass dir das Tor der Hoffnung geöffnet wird, dann schau auf das, was von Ihm zu dir kommt; willst du das Tor der Furcht, dann schau auf das, was von dir zu Ihm kommt.",
+      "kommentar_de": "Hoffnung wächst aus dem Blick auf Gottes Gabe; Ehrfurcht wächst aus dem Blick auf die eigene Unzulänglichkeit."
+    },
+    {
+      "nummer": 149,
+      "arabisch": "ربما أفادكَ في ليلِ القبضِ ما لم تستفدْه في إشراقِ نهارِ البسطِ.",
+      "uebersetzung_de": "Vielleicht schenkt Er dir in der Nacht der Enge, was du im hellen Tag der Weite nicht gewonnen hast.",
+      "kommentar_de": "Dunkle Zustände können tiefer lehren als leichte Zeiten. Enge ist nicht automatisch Verlassenheit."
+    },
+    {
+      "nummer": 150,
+      "arabisch": "مطالعُ الأنوارِ: القلوبُ والأسرارُ.",
+      "uebersetzung_de": "Die Aufgangsorte der Lichter sind die Herzen und die innersten Geheimnisse.",
+      "kommentar_de": "Licht beginnt nicht zuerst im Äußeren. Der Ort der Wandlung ist das Herz und sein verborgenes Inneres."
+    },
+    {
+      "nummer": 151,
+      "arabisch": "نورٌ مستودَعٌ في القلوبِ مددُه من النورِ الواردِ من خزائنِ الغيوبِ.",
+      "uebersetzung_de": "Ein Licht ist in die Herzen gelegt; seine Versorgung kommt von dem Licht, das aus den Schatzkammern des Verborgenen herabkommt.",
+      "kommentar_de": "Inneres Licht ist Gabe, nicht Eigenleistung. Es wird von einer Quelle gespeist, die das Herz nicht besitzt."
+    },
+    {
+      "nummer": 152,
+      "arabisch": "نورٌ يكشفُ لكَ به عن آثارِه، ونورٌ يكشفُ لكَ به عن أوصافِه.",
+      "uebersetzung_de": "Es gibt ein Licht, durch das Er dir Seine Spuren enthüllt, und ein Licht, durch das Er dir Seine Eigenschaften enthüllt.",
+      "kommentar_de": "Nicht alle Erkenntnis ist gleich. Manche sieht die Zeichen, tiefere Erkenntnis sieht die göttlichen Eigenschaften hinter den Zeichen."
+    },
+    {
+      "nummer": 153,
+      "arabisch": "ربما وقفتِ القلوبُ مع الأنوارِ كما حُجِبَتِ النفوسُ بكثائفِ الأغيارِ.",
+      "uebersetzung_de": "Manchmal bleiben Herzen bei den Lichtern stehen, so wie die Seelen durch die dichten Schleier der anderen Dinge verhüllt werden.",
+      "kommentar_de": "Auch spirituelle Erfahrungen können zum Halt werden. Die Hikma warnt: Selbst Licht ist nicht das Ziel."
+    },
+    {
+      "nummer": 154,
+      "arabisch": "سترَ أنوارَ السرائرِ بكثائفِ الظواهرِ إجلالًا لها أن تُبتذَلَ بوجودِ الإظهارِ، وأن يُنادى عليها بلسانِ الاشتهارِ.",
+      "uebersetzung_de": "Er verhüllte die Lichter der innersten Geheimnisse mit der Dichte äußerer Erscheinungen, aus Ehrung dafür, dass sie nicht durch öffentliche Sichtbarkeit gewöhnlich gemacht werden.",
+      "kommentar_de": "Das Verborgene bleibt oft aus Würde verborgen. Nicht jede innere Gabe soll sichtbar oder bekannt werden."
+    },
+    {
+      "nummer": 155,
+      "arabisch": "سبحانَ مَنْ لم يجعلِ الدليلَ على أوليائِه إلا من حيثُ الدليلُ عليه، ولم يوصِلْ إليهم إلا مَنْ أرادَ أن يوصِلَه إليه.",
+      "uebersetzung_de": "Gepriesen sei der, der den Hinweis auf Seine Freunde nur dort setzte, wo auch der Hinweis auf Ihn selbst liegt, und der nur den zu ihnen führt, den Er zu Sich führen will.",
+      "kommentar_de": "Wahre Gottesfreunde führen nicht zu sich selbst. Wer sie erkennt, wird dadurch auf Gott verwiesen."
+    },
+    {
+      "nummer": 156,
+      "arabisch": "ربما أطلعكَ على غيبِ ملكوتِه، وحجبَ عنكَ الاستشرافَ على أسرارِ العبادِ.",
+      "uebersetzung_de": "Vielleicht lässt Er dich das Verborgene Seines Reiches schauen und verwehrt dir zugleich das Ausspähen der Geheimnisse der Diener.",
+      "kommentar_de": "Geistliche Einsicht ist keine Neugier auf andere Menschen. Sie öffnet für Gott, nicht für das Eindringen in fremde Herzen."
+    },
+    {
+      "nummer": 157,
+      "arabisch": "مَنْ اطَّلعَ على أسرارِ العبادِ ولم يتخلَّقْ بالرحمةِ الإلهيَّةِ كان اطِّلاعُه فتنةً عليه وسببًا لجرِّ الوبالِ إليه.",
+      "uebersetzung_de": "Wer Einblick in die Geheimnisse der Diener erhält, ohne von göttlicher Barmherzigkeit geprägt zu sein, für den wird dieser Einblick zur Versuchung und zum Unheil.",
+      "kommentar_de": "Wissen ohne Barmherzigkeit wird gefährlich. Je mehr man sieht, desto mehr braucht man Milde."
+    },
+    {
+      "nummer": 158,
+      "arabisch": "حظُّ النفسِ في المعصيةِ ظاهرٌ جليٌّ، وحظُّها في الطاعةِ باطنٌ خفيٌّ، ومداواةُ ما يخفى صعبٌ علاجُه.",
+      "uebersetzung_de": "Der Anteil der Seele an der Sünde ist sichtbar und deutlich; ihr Anteil an der Frömmigkeit ist verborgen und fein. Das Verborgene zu heilen ist schwerer.",
+      "kommentar_de": "Egoismus in schlechten Taten ist leicht erkennbar. Schwieriger ist die Selbstliebe, die sich in guten Taten versteckt."
+    },
+    {
+      "nummer": 159,
+      "arabisch": "ربما دخلَ الرياءُ عليكَ من حيثُ لا ينظرُ الخلقُ إليكَ.",
+      "uebersetzung_de": "Vielleicht tritt die Geltungssucht bei dir ein, gerade dort, wo die Menschen gar nicht auf dich schauen.",
+      "kommentar_de": "Riya ist nicht nur sichtbares Prahlen. Auch inneres Sich-selbst-Bewundern kann das Herz verunreinigen."
+    },
+    {
+      "nummer": 160,
+      "arabisch": "استشرافُكَ أن يعلمَ الخلقُ بخصوصيَّتِكَ دليلٌ على عدمِ صدقِكَ في عبوديَّتِكَ.",
+      "uebersetzung_de": "Dein Verlangen, dass die Geschöpfe von deiner Besonderheit wissen, ist ein Zeichen mangelnder Wahrhaftigkeit in deiner Dienerschaft.",
+      "kommentar_de": "Wer Diener sein will, sucht nicht Sichtbarkeit für seine Besonderheit. Verborgenheit prüft Aufrichtigkeit."
+    },
+    {
+      "nummer": 161,
+      "arabisch": "غيِّبْ نظرَ الخلقِ إليكَ بنظرِ اللهِ إليكَ، وغِبْ عن إقبالِهم عليكَ بشهودِ إقبالِه عليك.",
+      "uebersetzung_de": "Lass den Blick der Menschen auf dich verschwinden durch den Blick Gottes auf dich; und werde abwesend von ihrer Hinwendung durch das Bezeugen Seiner Hinwendung zu dir.",
+      "kommentar_de": "Die Aufmerksamkeit der Menschen verliert Macht, wenn das Herz sich von Gottes Blick getragen weiß."
+    },
+    {
+      "nummer": 162,
+      "arabisch": "مَنْ عرفَ الحقَّ شهدَه في كلِّ شيءٍ، ومَنْ فنيَ به غابَ عن كلِّ شيءٍ، ومَنْ أحبَّه لم يؤثرْ عليه شيئًا.",
+      "uebersetzung_de": "Wer den Wahren erkennt, bezeugt Ihn in allem; wer in Ihm vergeht, ist von allem abwesend; wer Ihn liebt, zieht nichts Ihm vor.",
+      "kommentar_de": "Erkenntnis, Hingabe und Liebe vertiefen sich: sehen, sich verlieren, nichts vorziehen."
+    },
+    {
+      "nummer": 163,
+      "arabisch": "إنما حجبَ الحقُّ عنكَ شدَّةُ قربِه منك.",
+      "uebersetzung_de": "Der Wahre ist dir nur durch die Heftigkeit Seiner Nähe verhüllt.",
+      "kommentar_de": "Nicht Ferne ist der Schleier, sondern eine Nähe, die das gewöhnliche Sehen übersteigt."
+    },
+    {
+      "nummer": 164,
+      "arabisch": "إنما احتجبَ لشدةِ ظهورِه، وخفيَ عن الأبصارِ لعظمِ نورِه.",
+      "uebersetzung_de": "Er ist nur wegen der Fülle Seines Erscheinens verhüllt, und vor den Blicken verborgen wegen der Größe Seines Lichts.",
+      "kommentar_de": "Wie starkes Licht blenden kann, so übersteigt Gottes Offenbarkeit die gewöhnliche Wahrnehmung."
+    },
+    {
+      "nummer": 165,
+      "arabisch": "لا يكنْ طلبُكَ تسبُّبًا إلى العطاءِ منه، فيقلَّ فهمُكَ عنه، وليكنْ طلبُكَ لإظهارِ العبوديَّةِ وقيامًا بحقوقِ الربوبيَّةِ.",
+      "uebersetzung_de": "Dein Bitten soll nicht der Versuch sein, Seine Gabe zu verursachen - sonst ist dein Verständnis gering -, sondern Ausdruck der Dienerschaft und Erfüllung der Rechte Seiner Herrschaft.",
+      "kommentar_de": "Bittgebet erzwingt nicht Gottes Gabe. Es zeigt die Wahrheit des Dieners: Bedürftigkeit, Anrede und Anbetung."
+    },
+    {
+      "nummer": 166,
+      "arabisch": "كيف يكونُ طلبُكَ اللاحقُ سببًا في عطائِه السابقِ؟",
+      "uebersetzung_de": "Wie könnte deine spätere Bitte Ursache Seiner vorausgehenden Gabe sein?",
+      "kommentar_de": "Gottes Gabe geht dem Bitten voraus. Das Gebet ist Antwort auf schon geschenkte Zuwendung."
+    },
+    {
+      "nummer": 167,
+      "arabisch": "جلَّ حكمُ الأزلِ أن يُضافَ إلى العِلَلِ.",
+      "uebersetzung_de": "Erhaben ist das Urteil der Ewigkeit darüber, bloßen Ursachen zugeschrieben zu werden.",
+      "kommentar_de": "Göttliche Bestimmung ist tiefer als sichtbare Kausalität. Ursachen wirken, aber sie sind nicht der Ursprung."
+    },
+    {
+      "nummer": 168,
+      "arabisch": "عنايتُه فيكَ لا لشيءٍ منكَ، وأينَ كنتَ حين واجهتكَ عنايتُه وقابلتكَ رعايتُه؟",
+      "uebersetzung_de": "Seine Fürsorge für dich geschah nicht wegen etwas von dir. Wo warst du, als Seine Fürsorge dir entgegenkam und Seine Pflege dich erreichte?",
+      "kommentar_de": "Gnade beginnt vor deiner Leistung. Die Hikma bricht den Anspruch auf Verdienst auf."
+    },
+    {
+      "nummer": 169,
+      "arabisch": "علمَ أنَّ العبادَ يتشوَّفونَ إلى ظهورِ سرِّ العنايةِ، فقال: يختصُّ برحمتِهِ مَنْ يشاء.",
+      "uebersetzung_de": "Er wusste, dass die Diener danach verlangen, das Geheimnis der Fürsorge zu sehen; darum sagte Er: Er zeichnet mit Seiner Barmherzigkeit aus, wen Er will.",
+      "kommentar_de": "Gnade bleibt Geschenk. Sie wird nicht berechenbar, sondern verweist auf Gottes freie Barmherzigkeit."
+    },
+    {
+      "nummer": 170,
+      "arabisch": "إلى المشيئةِ يستندُ كلُّ شيءٍ، ولا تستندُ هي إلى شيءٍ.",
+      "uebersetzung_de": "Auf den göttlichen Willen stützt sich alles; er selbst stützt sich auf nichts.",
+      "kommentar_de": "Alles Geschaffene braucht Grund und Halt. Gottes Wollen ist Ursprung, nicht Folge."
+    },
+    {
+      "nummer": 171,
+      "arabisch": "ربما دلَّهُمُ الأدبُ على تركِ الطلبِ اعتمادًا على قسمتِه واشتغالًا بذكرِه عن مسألتِه.",
+      "uebersetzung_de": "Manchmal führt sie die rechte innere Haltung dazu, das Bitten zu lassen: im Vertrauen auf Seine Zuteilung und weil das Gedenken sie von der Bitte beschäftigt.",
+      "kommentar_de": "Nicht jedes Schweigen ist Nachlässigkeit. Es kann aus Vertrauen entstehen, wenn das Herz mehr bei Ihm als bei seinen Wünschen ist."
+    },
+    {
+      "nummer": 172,
+      "arabisch": "إنما يُذكَّرُ مَنْ يجوزُ عليه الإغفالُ.",
+      "uebersetzung_de": "Erinnert wird nur, wer der Vergesslichkeit unterliegt.",
+      "kommentar_de": "Gott braucht keine Erinnerung. Die Bitte verändert zuerst den Diener, nicht Gottes Wissen."
+    },
+    {
+      "nummer": 173,
+      "arabisch": "وإنما يُنبَّهُ مَنْ يمكنُ منه الإهمالُ.",
+      "uebersetzung_de": "Ermahnt wird nur, von wem Nachlässigkeit möglich ist.",
+      "kommentar_de": "Gott ist fern von Nachlässigkeit. Dieses Wort korrigiert ein Bitten, das so tut, als müsse Gott erst aufmerksam gemacht werden."
+    },
+    {
+      "nummer": 174,
+      "arabisch": "ورودُ الفاقاتِ أعيادُ المريدينَ.",
+      "uebersetzung_de": "Das Eintreffen von Bedürftigkeiten sind Festtage der Suchenden.",
+      "kommentar_de": "Bedürftigkeit öffnet die Tür zur Nähe. Was das Ego als Mangel empfindet, kann für das Herz ein Fest der Rückkehr sein."
+    },
+    {
+      "nummer": 175,
+      "arabisch": "ربما وجدتَ من المزيدِ في الفاقاتِ ما لا تجدُه في الصومِ والصلاةِ.",
+      "uebersetzung_de": "Vielleicht findest du in den Bedürftigkeiten an Zuwachs, was du in Fasten und Gebet nicht findest.",
+      "kommentar_de": "Not kann eine Tiefe von Abhängigkeit lehren, die selbst gute Werke nicht immer hervorbringen."
+    },
+    {
+      "nummer": 176,
+      "arabisch": "الفاقاتُ بُسُطُ المواهبِ.",
+      "uebersetzung_de": "Bedürftigkeiten sind Teppiche, auf denen die Gaben ausgebreitet werden.",
+      "kommentar_de": "Mangel ist hier nicht bloß Verlust, sondern Empfangsraum. Wer seine Armut erkennt, wird bereit für Gabe."
+    },
+    {
+      "nummer": 177,
+      "arabisch": "إن أردت ورود المواهب عليك، صحح الفقر والفاقة لديك، إنما الصدقات للفقراء.",
+      "uebersetzung_de": "Wenn du möchtest, dass die Gaben über dich kommen, dann verwirkliche in dir Armut und Bedürftigkeit; denn die Almosen sind für die Armen.",
+      "kommentar_de": "Empfangsfähigkeit entsteht nicht aus Anspruch, sondern aus erkannter Bedürftigkeit. Die Hikma lehrt: Wer innerlich leer wird von Selbstgenügsamkeit, wird offen für göttliche Gabe."
+    },
+    {
+      "nummer": 178,
+      "arabisch": "تحقق بأوصافك يمدك بأوصافه، تحقق بذلّك يمدك بعزه، تحقق بعجزك يمدك بقدرته، تحقق بضعفك يمدك بحوله وقوته.",
+      "uebersetzung_de": "Verwirkliche deine eigenen Eigenschaften, dann unterstützt Er dich mit Seinen Eigenschaften: verwirkliche deine Niedrigkeit, dann stärkt Er dich mit Seiner Ehre; verwirkliche deine Ohnmacht, dann stärkt Er dich mit Seiner Macht; verwirkliche deine Schwäche, dann stärkt Er dich mit Seiner Kraft.",
+      "kommentar_de": "Die eigene Begrenztheit ehrlich anzunehmen ist kein Defizit, sondern der Ort der Hilfe. Je weniger das Ich sich aufbläht, desto klarer wird die Abhängigkeit von Gott."
+    },
+    {
+      "nummer": 179,
+      "arabisch": "ربما رزقت الكرامة من لم تكمل له الاستقامة.",
+      "uebersetzung_de": "Vielleicht wird eine außerordentliche Gabe jemandem zuteil, dessen Standhaftigkeit noch nicht vollendet ist.",
+      "kommentar_de": "Nicht jede besondere Erfahrung beweist Reife. Entscheidend bleibt nicht das Außergewöhnliche, sondern die Beständigkeit im Guten."
+    },
+    {
+      "nummer": 180,
+      "arabisch": "من علامات إقامة الحق لك في الشيء إدامته إياك فيه مع حصول النتائج.",
+      "uebersetzung_de": "Zu den Zeichen, dass der Wahre dich in einer Sache eingesetzt hat, gehört, dass Er dich darin bestehen lässt und zugleich Ergebnisse daraus hervorgehen.",
+      "kommentar_de": "Ein Weg zeigt seine Echtheit durch Dauer und Frucht. Nicht jede Begeisterung ist Berufung; Beständigkeit und Nutzen sind wichtige Prüfsteine."
+    },
+    {
+      "nummer": 181,
+      "arabisch": "من عبّر من بساط إحسانه أصمته الإساءة، ومن عبّر من بساط إحسان الله إليه لم يصمت إذا أساء.",
+      "uebersetzung_de": "Wer von der Ebene seiner eigenen Güte spricht, den bringt eine Verfehlung zum Schweigen; wer aber von der Ebene der Güte Gottes zu ihm spricht, den bringt sein Fehltritt nicht zum Verstummen.",
+      "kommentar_de": "Wer sich auf sein eigenes Gutsein stützt, verliert bei Fehlern den Mut. Wer sich auf Gottes Barmherzigkeit stützt, kehrt trotz Fehlern weiter zu Ihm zurück."
+    },
+    {
+      "nummer": 182,
+      "arabisch": "تسبق أنوار الحكماء أقوالهم، فحيث صار التنوير وصل التعبير.",
+      "uebersetzung_de": "Die Lichter der Weisen gehen ihren Worten voraus; wo Erleuchtung angekommen ist, dort erreicht auch der Ausdruck sein Ziel.",
+      "kommentar_de": "Worte wirken nicht allein durch Formulierung, sondern durch den Zustand, aus dem sie kommen. Wahre Rede ist zuerst Licht im Inneren, dann Sprache nach außen."
+    },
+    {
+      "nummer": 183,
+      "arabisch": "كل كلام يبرز وعليه كسوة القلب الذي منه برز.",
+      "uebersetzung_de": "Jedes Wort tritt hervor in dem Gewand des Herzens, aus dem es hervorgegangen ist.",
+      "kommentar_de": "Sprache trägt die Atmosphäre ihres Ursprungs. Ein ruhiges, aufrichtiges Herz gibt anderen Klang hervor als ein Herz voller Geltungssucht."
+    },
+    {
+      "nummer": 184,
+      "arabisch": "من أذن له في التعبير فهمت في مسامع الخلق عبارته، وجليت إليهم إشارته.",
+      "uebersetzung_de": "Wem Er erlaubt hat zu sprechen, dessen Worte werden in den Ohren der Geschöpfe verstanden, und seine Hinweise werden ihnen deutlich.",
+      "kommentar_de": "Nicht jede Wahrheit muss sofort gesagt werden. Wenn Erlaubnis und Reife vorhanden sind, werden Worte passend, verständlich und hilfreich."
+    },
+    {
+      "nummer": 185,
+      "arabisch": "ربما برزت الحقائق مكسوفة الأنوار إذا لم يؤذن لك فيها بالإظهار.",
+      "uebersetzung_de": "Manchmal treten Wahrheiten hervor, deren Lichter verdunkelt sind, wenn dir nicht erlaubt wurde, sie sichtbar zu machen.",
+      "kommentar_de": "Eine Wahrheit kann durch unpassenden Zeitpunkt oder ungeeignete Darstellung an Leuchtkraft verlieren. Die Hikma mahnt zu geistigem Taktgefühl."
+    },
+    {
+      "nummer": 186,
+      "arabisch": "عباراتهم إما لفيضان وجد، أو لقصد هداية مريد؛ فالأول حال السالكين، والثاني حال أرباب المكنة والمحققين.",
+      "uebersetzung_de": "Ihre Äußerungen entstehen entweder aus dem Überfließen eines inneren Zustands oder mit der Absicht, einen Suchenden zu leiten. Das Erste ist der Zustand der Wandernden, das Zweite der Zustand der Gefestigten und Verwirklichten.",
+      "kommentar_de": "Geistliche Rede kann Ausdruck eines Erlebens sein oder bewusste Führung. Reife zeigt sich darin, dass das Wort dem Nutzen des Hörenden dient."
+    },
+    {
+      "nummer": 187,
+      "arabisch": "العبارات قوت لعائلة المستمعين، وليس لك إلا ما أنت له آكل.",
+      "uebersetzung_de": "Die Worte sind Nahrung für die Bedürftigen unter den Hörenden; dir gehört davon nur das, was du wirklich essen kannst.",
+      "kommentar_de": "Nicht alles, was schön klingt, nährt dich. Nimm aus einer Lehre das auf, was du verdauen, leben und umsetzen kannst."
+    },
+    {
+      "nummer": 188,
+      "arabisch": "ربما عبّر عن المقام من استشرف عليه، وربما عبّر عنه من وصل إليه، وذلك ملتبس إلا على صاحب بصيرة.",
+      "uebersetzung_de": "Manchmal spricht jemand über einen Rang, weil er ihn von weitem erblickt; und manchmal spricht jemand darüber, weil er ihn erreicht hat. Das ist nur für einen Menschen mit Einsicht unterscheidbar.",
+      "kommentar_de": "Ähnliche Worte können aus sehr unterschiedlichen Tiefen kommen. Die Hikma ruft dazu auf, nicht nur auf Begriffe zu achten, sondern auf Wahrheit, Demut und Frucht."
+    },
+    {
+      "nummer": 189,
+      "arabisch": "لا ينبغي للسالك أن يعبر عن وارداته؛ فإن ذلك يقل عملها في قلبه، ويمنع وجود الصدق مع ربه.",
+      "uebersetzung_de": "Der Wandernde soll seine inneren Eingebungen nicht aussprechen; denn das mindert ihre Wirkung in seinem Herzen und verhindert die Gegenwart der Aufrichtigkeit mit seinem Herrn.",
+      "kommentar_de": "Nicht jede innere Erfahrung muss mitgeteilt werden. Manches Licht wächst durch Bewahrung, während frühes Erzählen es zerstreuen kann."
+    },
+    {
+      "nummer": 190,
+      "arabisch": "لا تمدن يدك إلى الأخذ من الخلائق إلا أن ترى أن المعطي فيهم مولاك؛ فإن كنت كذلك فخذ ما وافق العلم.",
+      "uebersetzung_de": "Strecke deine Hand nicht aus, um von den Geschöpfen zu nehmen, außer du siehst, dass der Gebende in ihnen dein Herr ist. Wenn du so stehst, dann nimm, was dem Wissen entspricht.",
+      "kommentar_de": "Die Hikma schützt vor Abhängigkeit von Menschen. Man darf Mittel annehmen, aber das Herz soll den eigentlichen Geber nicht verwechseln."
+    },
+    {
+      "nummer": 191,
+      "arabisch": "ربما استحيا العارف أن يرفع حاجته إلى مولاه اكتفاء بمشيئته؛ فكيف لا يستحي أن يرفعها إلى خليقته؟",
+      "uebersetzung_de": "Vielleicht schämt sich der Erkennende, seine Bedürftigkeit zu seinem Herrn zu erheben, weil er sich mit dessen Willen begnügt. Wie sollte er sich dann nicht schämen, sie zu einem Geschöpf zu erheben?",
+      "kommentar_de": "Tiefe Gottesnähe bringt Vertrauen hervor. Die Aussage meint nicht, berechtigte Hilfe nie zu suchen, sondern das Herz vor klagender Abhängigkeit zu bewahren."
+    },
+    {
+      "nummer": 192,
+      "arabisch": "إذا التبس عليك أمران فانظر أثقلهما على النفس فاتبعه، فإنه لا يثقل عليها إلا ما كان حقاً.",
+      "uebersetzung_de": "Wenn dir zwei Angelegenheiten unklar werden, dann schau, welche von beiden schwerer für die Seele ist, und folge ihr; denn schwer wird ihr nur, was wahrhaftig ist.",
+      "kommentar_de": "Das Ego bevorzugt oft Bequemlichkeit und Selbstbestätigung. Was es läutert, fühlt sich zunächst schwerer an, kann aber gerade deshalb heilsamer sein."
+    },
+    {
+      "nummer": 193,
+      "arabisch": "من علامات اتباع الهوى المسارعة إلى نوافل الخيرات والتكاسل عن القيام بالواجبات.",
+      "uebersetzung_de": "Zu den Zeichen der Befolgung der Begierde gehört, sich zu freiwilligen guten Werken zu beeilen, aber bei den Pflichten träge zu sein.",
+      "kommentar_de": "Spirituelle Schönheit darf die Verantwortung nicht verdrängen. Reife beginnt damit, das Notwendige verlässlich zu erfüllen."
+    },
+    {
+      "nummer": 194,
+      "arabisch": "قيد الطاعات بأعيان الأوقات كي لا يمنعك عنها وجود التسويف، ووسع عليك الوقت كي تبقى لك حصة الاختيار.",
+      "uebersetzung_de": "Er band die Gehorsamshandlungen an bestimmte Zeiten, damit das Aufschieben dich nicht von ihnen abhält; und Er weitete dir die Zeit, damit dir ein Anteil an freier Wahl bleibt.",
+      "kommentar_de": "Feste Zeiten schützen vor Selbsttäuschung. Zugleich bleibt Raum für bewusstes Wählen, damit die Handlung nicht bloßer Automatismus wird."
+    },
+    {
+      "nummer": 195,
+      "arabisch": "علم قلة نهوض العباد إلى معاملته، فأوجب عليهم وجود طاعته، فساقهم إليه بسلاسل الإيجاب؛ عجب ربك من قوم يساقون إلى الجنة بالسلاسل.",
+      "uebersetzung_de": "Er wusste, wie gering das Aufstehen der Diener zu Seiner Behandlung ist; darum verpflichtete Er sie zur Gehorsamkeit und führte sie zu sich mit den Ketten der Verpflichtung: Dein Herr wundert sich über Menschen, die an Ketten ins Paradies geführt werden.",
+      "kommentar_de": "Pflichten sind hier nicht als Last, sondern als Barmherzigkeit gesehen. Was uns bindet, kann uns vor Zerstreuung retten und zum Heil führen."
+    },
+    {
+      "nummer": 196,
+      "arabisch": "أوجب عليك وجود خدمته، وما أوجب عليك إلا دخول جنته.",
+      "uebersetzung_de": "Er verpflichtete dich zu Seinem Dienst; und Er verpflichtete dich damit zu nichts anderem als zum Eintritt in Sein Paradies.",
+      "kommentar_de": "Der Dienst an Gott ist kein Verlustgeschäft. Was wie Forderung erscheint, ist in der Tiefe eine Einladung zu Nähe, Ordnung und Rettung."
+    },
+    {
+      "nummer": 197,
+      "arabisch": "من استغرب أن ينقذه الله من شهوته، وأن يخرجه من وجود غفلته، فقد استعجز القدرة الإلهية، وكان الله على كل شيء مقتدراً.",
+      "uebersetzung_de": "Wer es für erstaunlich hält, dass Gott ihn aus seiner Begierde rettet und aus seiner Unachtsamkeit herausführt, der hat die göttliche Macht für unfähig gehalten; und Gott ist zu allem mächtig.",
+      "kommentar_de": "Keine Gewohnheit ist stärker als Gottes Fähigkeit zu wenden. Die Hikma nährt Hoffnung, ohne die eigene Anstrengung zu verneinen."
+    },
+    {
+      "nummer": 198,
+      "arabisch": "ربما وردت الظلم عليك ليعرفك قدر ما من به عليك.",
+      "uebersetzung_de": "Vielleicht kommen Dunkelheiten über dich, damit Er dich den Wert dessen erkennen lässt, womit Er dich beschenkt hat.",
+      "kommentar_de": "Manchmal zeigt erst der Verlust von Klarheit, wie kostbar Licht war. Prüfungen können Dankbarkeit und Erkenntnis vertiefen."
+    },
+    {
+      "nummer": 199,
+      "arabisch": "من لم يعرف قدر النعم بوجدانها عرفها بوجود فقدانها.",
+      "uebersetzung_de": "Wer den Wert der Gnaden nicht durch ihr Vorhandensein erkennt, erkennt ihn durch ihren Verlust.",
+      "kommentar_de": "Dankbarkeit soll nicht erst nach dem Entzug erwachen. Diese Hikma ruft dazu auf, das Vorhandene bewusst wahrzunehmen."
+    },
+    {
+      "nummer": 200,
+      "arabisch": "لا تدهشك واردات النعم عن القيام بحقوق شكرك، فإن ذلك مما يحط من وجود قدرك.",
+      "uebersetzung_de": "Lass dich von den ankommenden Gnaden nicht so erstaunen, dass du die Rechte des Dankes vernachlässigst; denn das mindert deinen Rang.",
+      "kommentar_de": "Gaben sollen nicht nur genossen, sondern beantwortet werden. Dank besteht in innerer Anerkennung und verantwortlichem Gebrauch."
+    },
+    {
+      "nummer": 201,
+      "arabisch": "تمكن حلاوة الهوى من القلب هو الداء العضال.",
+      "uebersetzung_de": "Dass die Süße der Begierde im Herzen festen Sitz gewinnt, ist die schwer heilbare Krankheit.",
+      "kommentar_de": "Das Problem ist nicht jeder Impuls, sondern die Liebe zur falschen Süße. Heilung beginnt, wenn man erkennt, welche Neigung das Herz beherrscht."
+    },
+    {
+      "nummer": 202,
+      "arabisch": "لا يخرج الشهوة من القلب إلا خوف مزعج أو شوق مقلق.",
+      "uebersetzung_de": "Die Begierde verlässt das Herz nur durch eine aufrüttelnde Furcht oder eine beunruhigende Sehnsucht.",
+      "kommentar_de": "Starke Bindungen lösen sich selten durch bloße Information. Es braucht eine tiefere Bewegung: Ehrfurcht vor dem Verlust oder Sehnsucht nach Gott."
+    },
+    {
+      "nummer": 203,
+      "arabisch": "كما لا يحب العمل المشترك، لا يحب القلب المشترك؛ العمل المشترك لا يقبله، والقلب المشترك لا يقبل عليه.",
+      "uebersetzung_de": "Wie Er keine geteilte Handlung liebt, so liebt Er kein geteiltes Herz: die geteilte Handlung nimmt Er nicht an, und dem geteilten Herzen wendet Er sich nicht zu.",
+      "kommentar_de": "Die Hikma zielt auf Aufrichtigkeit. Handlung und Herz sollen nicht zwischen Gott und Geltung, Wahrheit und Eigeninteresse zerrissen sein."
+    },
+    {
+      "nummer": 204,
+      "arabisch": "أنوار أذن لها في الوصول، وأنوار أذن لها في الدخول.",
+      "uebersetzung_de": "Es gibt Lichter, denen der Zugang bis zum Ankommen erlaubt ist, und Lichter, denen der Eintritt erlaubt ist.",
+      "kommentar_de": "Nicht jede Einsicht dringt gleich tief. Manche berührt die Schwelle, andere geht ins Innere und verwandelt das Herz."
+    },
+    {
+      "nummer": 205,
+      "arabisch": "ربما وردت عليك الأنوار، فوجدت القلب محشواً بصور الآثار، فارتحلت من حيث نزلت.",
+      "uebersetzung_de": "Vielleicht kommen Lichter zu dir; finden sie aber das Herz vollgestopft mit Bildern der Spuren, reisen sie wieder ab, von wo sie herabkamen.",
+      "kommentar_de": "Ein überfülltes Herz kann Licht nicht halten. Weniger Zerstreuung schafft Raum für tiefere Aufnahme."
+    },
+    {
+      "nummer": 206,
+      "arabisch": "فرغ قلبك من الأغيار يملأه بالمعارف والأسرار.",
+      "uebersetzung_de": "Leere dein Herz von allem Anderen, dann füllt Er es mit Erkenntnissen und Geheimnissen.",
+      "kommentar_de": "Innere Leere ist hier keine Sinnlosigkeit, sondern Freiraum. Was das Herz besetzt, bestimmt, was in ihm wachsen kann."
+    },
+    {
+      "nummer": 207,
+      "arabisch": "لا تستبطئ منه النوال، ولكن استبطئ من نفسك وجود الإقبال.",
+      "uebersetzung_de": "Halte Seine Gabe nicht für verspätet; halte vielmehr dein eigenes Zuwenden für verspätet.",
+      "kommentar_de": "Statt Gottes Antwort anzuklagen, prüft die Hikma die eigene Ausrichtung. Oft fehlt nicht die Gabe, sondern die Empfangsbereitschaft."
+    },
+    {
+      "nummer": 208,
+      "arabisch": "حقوق في الأوقات يمكن قضاؤها، وحقوق الأوقات لا يمكن قضاؤها؛ إذ ما من وقت يرد إلا ولله عليك فيه حق جديد وأمر أكيد، فكيف تقضي فيه حق غيره وأنت لم تقض حق الله فيه؟",
+      "uebersetzung_de": "Es gibt Rechte innerhalb der Zeiten, die nachgeholt werden können; und es gibt Rechte der Zeiten, die nicht nachgeholt werden können. Denn keine Zeit kommt, ohne dass Gott darin ein neues Recht und einen festen Auftrag an dich hat. Wie willst du darin das Recht eines anderen nachholen, wenn du Gottes Recht in ihr noch nicht erfüllt hast?",
+      "kommentar_de": "Jede Zeit hat ihre eigene Verantwortung. Man kann vieles nachholen, aber nicht die Gegenwart selbst wiederholen."
+    },
+    {
+      "nummer": 209,
+      "arabisch": "ما فاتك من عمرك لا عوض له، وما حصل لك منه لا قيمة له.",
+      "uebersetzung_de": "Was dir von deinem Leben entgangen ist, hat keinen Ersatz; und was dir davon geblieben ist, hat keinen Preis.",
+      "kommentar_de": "Lebenszeit ist unwiederbringlich und zugleich unermesslich wertvoll. Die Hikma ruft zu Wachheit im Jetzt."
+    },
+    {
+      "nummer": 210,
+      "arabisch": "ما أحببت شيئاً إلا كنت له عبداً، وهو لا يحب أن تكون لغيره عبداً.",
+      "uebersetzung_de": "Nichts liebst du, ohne sein Diener zu werden; und Er liebt nicht, dass du Diener von etwas anderem bist als Ihm.",
+      "kommentar_de": "Liebe bindet. Darum ist die Frage, was das Herz liebt, zugleich die Frage, wem es dient."
+    },
+    {
+      "nummer": 211,
+      "arabisch": "لا تنفعه طاعتك ولا تضره معصيتك، وإنما أمرك بهذه ونهاك عن هذه لما يعود عليك.",
+      "uebersetzung_de": "Dein Gehorsam nützt Ihm nicht, und deine Sünde schadet Ihm nicht; Er befahl dir nur dieses und verbot dir jenes wegen dessen, was zu dir zurückkehrt.",
+      "kommentar_de": "Gottes Gebote sind nicht aus Bedürftigkeit Gottes entstanden, sondern zu unserem Nutzen. Verantwortung ist Barmherzigkeit in Form von Orientierung."
+    },
+    {
+      "nummer": 212,
+      "arabisch": "لا يزيد في عزه إقبال من أقبل عليه، ولا ينقص من عزه إدبار من أدبر عنه.",
+      "uebersetzung_de": "Die Zuwendung dessen, der sich Ihm zuwendet, vermehrt Seine Ehre nicht; und die Abwendung dessen, der sich abwendet, vermindert Seine Ehre nicht.",
+      "kommentar_de": "Gott ist nicht abhängig von menschlicher Anerkennung. Unsere Hinwendung verändert uns, nicht Seine Vollkommenheit."
+    },
+    {
+      "nummer": 213,
+      "arabisch": "وصولك إلى الله وصولك إلى العلم به، وإلا فجل ربنا أن يتصل به شيء أو يتصل هو بشيء.",
+      "uebersetzung_de": "Dein Ankommen bei Gott ist dein Ankommen zur Erkenntnis Seiner; andernfalls ist unser Herr erhaben darüber, dass sich etwas mit Ihm verbindet oder Er sich mit etwas verbindet.",
+      "kommentar_de": "Nähe zu Gott ist keine räumliche Verbindung. Sie bedeutet Erkenntnis, Gegenwart des Herzens und Befreiung von falschen Vorstellungen."
+    },
+    {
+      "nummer": 214,
+      "arabisch": "قربك منه أن تكون مشاهداً لقربه، وإلا فمن أين أنت ووجود قربه؟",
+      "uebersetzung_de": "Deine Nähe zu Ihm besteht darin, dass du Seine Nähe schaust; andernfalls: Wo bist du, und wo ist das Bestehen Seiner Nähe?",
+      "kommentar_de": "Der Mensch erzeugt Gottes Nähe nicht. Er wird wach für eine Nähe, die ihn schon umfasst."
+    },
+    {
+      "nummer": 215,
+      "arabisch": "الحقائق ترد في حال التجلي مجملة، وبعد الوعي يكون البيان: فَإِذَا قَرَأْنَاهُ فَاتَّبِعْ قُرْآنَهُ، ثُمَّ إِنَّ عَلَيْنَا بَيَانَهُ.",
+      "uebersetzung_de": "Die Wirklichkeiten kommen im Zustand der Offenbarung zusammengefasst; nach dem Aufnehmen kommt die Erläuterung: „Wenn Wir ihn vorgetragen haben, dann folge seinem Vortrag; dann obliegt Uns seine Erklärung.“",
+      "kommentar_de": "Spirituelle Einsicht kommt oft zuerst als Ganzheit, nicht als Analyse. Verstehen reift nach der Begegnung."
+    },
+    {
+      "nummer": 216,
+      "arabisch": "متى وردت الواردات الإلهية عليك هدمت العوائد عليك: إِنَّ الْمُلُوكَ إِذَا دَخَلُوا قَرْيَةً أَفْسَدُوهَا.",
+      "uebersetzung_de": "Wenn die göttlichen Eingebungen über dich kommen, zerstören sie deine Gewohnheiten: „Wenn Könige eine Stadt betreten, verderben sie sie.“",
+      "kommentar_de": "Ein echter göttlicher Impuls lässt nicht alles beim Alten. Er bricht eingespielte Muster auf, damit eine neue Ordnung entstehen kann."
+    },
+    {
+      "nummer": 217,
+      "arabisch": "الوارد يأتي من حضرة قهار، لأجل ذلك لا يصادمه شيء إلا دمغه: بَلْ نَقْذِفُ بِالْحَقِّ عَلَى الْبَاطِلِ فَيَدْمَغُهُ فَإِذَا هُوَ زَاهِقٌ.",
+      "uebersetzung_de": "Der innere Anstoß kommt aus der Gegenwart des Überwältigenden; deshalb stößt nichts mit ihm zusammen, ohne dass er es zerschmettert: „Vielmehr schleudern Wir die Wahrheit gegen das Falsche, und sie zerschmettert es, da vergeht es.“",
+      "kommentar_de": "Wahrheit hat eine aufdeckende Kraft. Wenn sie ins Herz tritt, kann sie Illusionen nicht nur erklären, sondern brechen."
+    },
+    {
+      "nummer": 218,
+      "arabisch": "كيف يحتجب الحق بشيء، والذي يحتجب به هو فيه ظاهر وموجود حاضر؟",
+      "uebersetzung_de": "Wie könnte der Wahre durch etwas verhüllt werden, wo Er doch in dem, wodurch Er verhüllt sein soll, offenbar und gegenwärtig vorhanden ist?",
+      "kommentar_de": "Die Dinge verdecken Gott nur für den unaufmerksamen Blick. Für den wachen Blick werden sie Hinweise auf Ihn."
+    },
+    {
+      "nummer": 219,
+      "arabisch": "لا تيأس من قبول عمل لم تجد فيه وجود الحضور؛ فربما قبل من العمل ما لم تدرك ثمرته عاجلاً.",
+      "uebersetzung_de": "Verzweifle nicht an der Annahme einer Handlung, in der du keine Gegenwart des Herzens gefunden hast; vielleicht wird eine Handlung angenommen, deren Frucht du nicht sofort erkennst.",
+      "kommentar_de": "Nicht jede angenommene Tat fühlt sich erhaben an. Die Hikma schützt vor Mutlosigkeit und lehrt, weiter treu zu handeln."
+    },
+    {
+      "nummer": 220,
+      "arabisch": "لا تزكين وارداً لا تعلم ثمرته، فليس المراد من السحابة الإمطار، وإنما المراد منها وجود الإثمار.",
+      "uebersetzung_de": "Erkläre einen inneren Anstoß nicht vorschnell für rein, solange du seine Frucht nicht kennst; denn das Ziel der Wolke ist nicht der Regen selbst, sondern das Hervorbringen von Frucht.",
+      "kommentar_de": "Entscheidend ist die Frucht. Spirituelle Eindrücke werden an ihrer Wirkung geprüft: mehr Wahrhaftigkeit, Demut, Dank und Nähe zu Gott."
+    },
+    {
+      "nummer": 221,
+      "arabisch": "لا تطلبن بقاء الواردات بعد أن بسطت أنوارها وأودعت أسرارها؛ فلك في الله غنى عن كل شيء، وليس يغنيك عنه شيء.",
+      "uebersetzung_de": "Verlange nicht das Bleiben der Eingebungen, nachdem sie ihre Lichter ausgebreitet und ihre Geheimnisse in dir niedergelegt haben. In Gott hast du Genüge gegenüber allem, und nichts kann dich an Seiner Stelle genügen lassen.",
+      "kommentar_de": "Geistige Zustände kommen und gehen. Entscheidend ist nicht, die Erfahrung festzuhalten, sondern auf Den zu schauen, von dem sie kam."
+    },
+    {
+      "nummer": 222,
+      "arabisch": "تطلّعك إلى بقاء غيره دليل على عدم وجدانك له، واستيحاشك لفقدان ما سواه دليل على عدم وصلتك به.",
+      "uebersetzung_de": "Dein Verlangen nach dem Fortbestehen von etwas anderem als Ihm zeigt, dass du Ihn noch nicht wirklich gefunden hast; und dein Erschrecken über den Verlust dessen, was außer Ihm ist, zeigt, dass deine Verbindung zu Ihm noch nicht gefestigt ist.",
+      "kommentar_de": "Wer sich an Vergängliches klammert, spürt noch nicht die Ruhe des Bleibenden. Die Hikma lädt ein, Bindung und Verlust innerlich zu prüfen."
+    },
+    {
+      "nummer": 223,
+      "arabisch": "النعيم وإن تنوعت مظاهره إنما هو بشهوده واقترابه، والعذاب وإن تنوعت مظاهره إنما هو لوجود حجابه؛ فسبب العذاب وجود الحجاب، وتمام النعيم النظر إلى وجه الله الكريم.",
+      "uebersetzung_de": "Die Seligkeit, so verschieden ihre Erscheinungen auch sind, besteht im Schauen Seiner und in Seiner Nähe. Die Qual, so verschieden ihre Erscheinungen auch sind, besteht im Vorhandensein des Schleiers. Ursache der Qual ist der Schleier, und die Vollendung der Seligkeit ist der Blick auf das edle Angesicht Gottes.",
+      "kommentar_de": "Glück wird hier nicht als Besitz verstanden, sondern als Nähe. Leid entsteht letztlich dort, wo das Herz von seinem Ursprung getrennt bleibt."
+    },
+    {
+      "nummer": 224,
+      "arabisch": "ما وجدت القلوب من الهموم والأحزان فلأجل ما مُنعت من وجود العيان.",
+      "uebersetzung_de": "Was die Herzen an Sorgen und Traurigkeiten erfahren, geschieht, weil ihnen die unmittelbare Schau verwehrt ist.",
+      "kommentar_de": "Viele innere Lasten sind Zeichen eines verhüllten Blicks. Die Weisheit lenkt von äußeren Ursachen zur inneren Ausrichtung."
+    },
+    {
+      "nummer": 225,
+      "arabisch": "من تمام النعمة عليك أن يرزقك ما يكفيك ويمنعك ما يطغيك.",
+      "uebersetzung_de": "Zur Vollkommenheit der Gnade an dir gehört, dass Er dir gibt, was dir genügt, und dir vorenthält, was dich übermütig machen würde.",
+      "kommentar_de": "Nicht jede Vermehrung ist Segen. Manchmal ist Begrenzung Schutz, weil sie das Herz vor Selbstvergessenheit bewahrt."
+    },
+    {
+      "nummer": 226,
+      "arabisch": "ليقلّ ما تفرح به، يقلّ ما تحزن عليه.",
+      "uebersetzung_de": "Je weniger das ist, worüber du dich freust, desto weniger ist das, worüber du traurig wirst.",
+      "kommentar_de": "Wer seine Freude an Vergänglichem bindet, bindet sich zugleich an dessen Verlust. Innere Freiheit wächst durch einfache, nüchterne Freude."
+    },
+    {
+      "nummer": 227,
+      "arabisch": "إن أردت أن لا تُعزل، فلا تتولَّ ولايةً لا تدوم لك.",
+      "uebersetzung_de": "Wenn du nicht abgesetzt werden willst, dann übernimm keine Herrschaft, die dir nicht dauerhaft gehört.",
+      "kommentar_de": "Alles Irdische ist nur anvertraut. Die Hikma mahnt, Rolle, Amt und Status nicht mit dem eigenen Wesen zu verwechseln."
+    },
+    {
+      "nummer": 228,
+      "arabisch": "إن رغّبتك البدايات، زهّدتك النهايات؛ إن دعاك إليها ظاهرٌ، نهاك عنها باطنٌ.",
+      "uebersetzung_de": "Wenn dich die Anfänge locken, machen dich die Enden ernüchtert; wenn dich ihr Äußeres ruft, warnt dich ihr Inneres.",
+      "kommentar_de": "Die Welt glänzt am Anfang und zeigt ihre Brüchigkeit am Ende. Der reife Blick fragt nicht nur nach Reiz, sondern nach Ausgang."
+    },
+    {
+      "nummer": 229,
+      "arabisch": "إنما جعلها محلاً للأغيار ومعدناً لوجود الأكدار تزهيداً لك فيها.",
+      "uebersetzung_de": "Er machte sie zum Ort der Veränderungen und zur Mine der Trübungen, damit du dich von ihr löst.",
+      "kommentar_de": "Unbeständigkeit ist hier kein Zufall, sondern Erziehung. Die Welt soll genutzt, aber nicht zum letzten Halt gemacht werden."
+    },
+    {
+      "nummer": 230,
+      "arabisch": "علم أنك لا تقبل النصح المجرد، فذوّقك من ذواقها ما يسهّل عليك وجود فراقها.",
+      "uebersetzung_de": "Er wusste, dass du bloßen Rat nicht annimmst; darum ließ Er dich von ihrem Geschmack kosten, damit dir die Trennung von ihr leichter werde.",
+      "kommentar_de": "Erfahrung kann lehren, was Worte nicht bewirken. Enttäuschung wird dann zur Barmherzigkeit, weil sie falsche Bindungen lockert."
+    },
+    {
+      "nummer": 231,
+      "arabisch": "العلم النافع هو الذي ينبسط في الصدر شعاعه، وينكشف به عن القلب قناعه.",
+      "uebersetzung_de": "Nützliches Wissen ist das, dessen Strahl sich in der Brust ausbreitet und durch das der Schleier vom Herzen weggenommen wird.",
+      "kommentar_de": "Wahres Wissen bleibt nicht bloße Information. Es erhellt das Innere, reinigt den Blick und verändert die Haltung."
+    },
+    {
+      "nummer": 232,
+      "arabisch": "خير علم ما كانت الخشية معه.",
+      "uebersetzung_de": "Das beste Wissen ist jenes, mit dem Ehrfurcht verbunden ist.",
+      "kommentar_de": "Wissen ohne Ehrfurcht kann das Ich vergrößern. Wissen mit Ehrfurcht macht demütig, wach und verantwortungsvoll."
+    },
+    {
+      "nummer": 233,
+      "arabisch": "العلم إن قارنته الخشية فلك، وإلا فعليك.",
+      "uebersetzung_de": "Wissen, wenn es von Ehrfurcht begleitet ist, ist für dich; andernfalls ist es gegen dich.",
+      "kommentar_de": "Erkenntnis wird zur Gabe, wenn sie das Herz beugt. Ohne innere Läuterung kann sie zur Anklage und zum Mittel des Stolzes werden."
+    },
+    {
+      "nummer": 234,
+      "arabisch": "متى آلمك عدم إقبال الناس عليك أو توجههم بالذم إليك، فارجع إلى علم الله فيك؛ فإن كان لا يقنعك علمه، فمصيبتك بعدم قناعتك بعلمه أشد من مصيبتك بوجود الأذى منهم.",
+      "uebersetzung_de": "Wenn es dich schmerzt, dass die Menschen sich dir nicht zuwenden, oder dass sie dich tadeln, dann kehre zurück zu Gottes Wissen über dich. Wenn Sein Wissen dir nicht genügt, dann ist dein Unglück darüber größer als das Unglück, das im Schaden der Menschen liegt.",
+      "kommentar_de": "Die Hikma verschiebt die Frage: Nicht die Meinung der Menschen ist der eigentliche Schmerz, sondern das Bedürfnis, durch sie bestätigt zu werden."
+    },
+    {
+      "nummer": 235,
+      "arabisch": "إنما أجرى الأذى على أيديهم كي لا تكون ساكناً إليهم؛ أراد أن يزعجك عن كل شيء حتى لا يشغلك عنه شيء.",
+      "uebersetzung_de": "Er ließ den Schaden durch ihre Hände geschehen, damit du nicht bei ihnen Ruhe suchst. Er wollte dich von allem aufschrecken, damit dich nichts von Ihm ablenkt.",
+      "kommentar_de": "Auch verletzende Erfahrungen können die falsche Zuflucht entlarven. Gemeint ist nicht Bitterkeit gegen Menschen, sondern Rückkehr zum eigentlichen Halt."
+    },
+    {
+      "nummer": 236,
+      "arabisch": "إذا علمت أن الشيطان لا يغفل عنك، فلا تغفل أنت عمّن ناصيتك بيده.",
+      "uebersetzung_de": "Wenn du weißt, dass der Satan nicht unachtsam dir gegenüber ist, dann sei du nicht unachtsam gegenüber Dem, in dessen Hand deine Stirnlocke liegt.",
+      "kommentar_de": "Wachsamkeit soll nicht Angst erzeugen, sondern Gottesbewusstsein. Der Mensch schützt sich, indem er sich an Den hält, dem alles gehört."
+    },
+    {
+      "nummer": 237,
+      "arabisch": "جعله لك عدواً ليحوشك به إليه، وحرّك عليك النفس ليدوم إقبالك عليه.",
+      "uebersetzung_de": "Er machte ihn dir zum Feind, damit Er dich durch ihn zu Sich treibt; und Er ließ die Seele gegen dich in Bewegung sein, damit deine Hinwendung zu Ihm andauert.",
+      "kommentar_de": "Äußere und innere Widerstände können zu Wegweisern werden. Sie erinnern daran, dass geistiger Weg ständige Rückkehr ist."
+    },
+    {
+      "nummer": 238,
+      "arabisch": "من أثبت لنفسه تواضعاً فهو المتكبر حقاً؛ إذ ليس التواضع إلا عن رفعة، فمتى أثبت لنفسك تواضعاً فأنت المتكبر حقاً.",
+      "uebersetzung_de": "Wer sich selbst Demut zuschreibt, der ist in Wahrheit hochmütig; denn Demut setzt voraus, dass man sich eigentlich erhöht sieht. Sobald du dir Demut zuschreibst, bist du in Wahrheit hochmütig.",
+      "kommentar_de": "Demut ist nicht ein Besitz, den man vorzeigen kann. Sie beginnt dort, wo man aufhört, sich selbst als demütig zu betrachten."
+    },
+    {
+      "nummer": 239,
+      "arabisch": "ليس المتواضع الذي إذا تواضع رأى أنه فوق ما صنع، ولكن المتواضع الذي إذا تواضع رأى أنه دون ما صنع.",
+      "uebersetzung_de": "Demütig ist nicht, wer sich erniedrigt und dabei meint, er stehe über dem, was er getan hat. Demütig ist, wer sich erniedrigt und sieht, dass er noch unter dem steht, was er getan hat.",
+      "kommentar_de": "Die Hikma unterscheidet äußere Bescheidenheit von innerer Wahrheit. Echte Demut misst sich nicht an Gesten, sondern am Blick auf sich selbst."
+    },
+    {
+      "nummer": 240,
+      "arabisch": "التواضع الحقيقي هو ما كان ناشئاً عن شهود عظمته وتجلي صفته.",
+      "uebersetzung_de": "Wahre Demut ist die, die aus der Schau Seiner Größe und dem Aufleuchten Seiner Eigenschaft entsteht.",
+      "kommentar_de": "Demut wird stabil, wenn sie nicht aus sozialer Rolle, sondern aus Gotteserkenntnis kommt. Wer Größe sieht, muss sich nicht künstlich klein machen."
+    },
+    {
+      "nummer": 241,
+      "arabisch": "لا يخرجك عن الوصف إلا شهود الوصف.",
+      "uebersetzung_de": "Nichts bringt dich aus deiner Eigenschaft heraus außer die Schau der Eigenschaft.",
+      "kommentar_de": "Man wird von Selbstbildern nicht durch Behauptung frei, sondern durch Einsicht. Wer wirklich erkennt, was er ist, hängt weniger daran."
+    },
+    {
+      "nummer": 242,
+      "arabisch": "المؤمن يشغله الثناء على الله عن أن يكون لنفسه شاكراً، وتشغله حقوق الله عن أن يكون لحظوظه ذاكراً.",
+      "uebersetzung_de": "Den Gläubigen beschäftigt das Lob Gottes so sehr, dass er nicht damit beschäftigt ist, sich selbst zu danken; und die Rechte Gottes beschäftigen ihn so sehr, dass er nicht mit seinen eigenen Anteilen beschäftigt ist.",
+      "kommentar_de": "Der Blick wird von Selbstzufriedenheit auf Dank und Pflicht gelenkt. Nicht das Ich steht im Mittelpunkt, sondern die Antwort auf die Gabe."
+    },
+    {
+      "nummer": 243,
+      "arabisch": "ليس المحب الذي يرجو من محبوبه عوضاً أو يطلب منه غرضاً؛ فإن المحب من يبذل لك، ليس المحب من تبذل له.",
+      "uebersetzung_de": "Nicht der ist Liebender, der von seinem Geliebten einen Ersatz erhofft oder von ihm einen Zweck verlangt. Der Liebende ist der, der für dich gibt, nicht der, dem du gibst.",
+      "kommentar_de": "Liebe wird hier vom Handel gereinigt. Wahre Liebe fragt weniger: Was bekomme ich?, sondern: Wie diene ich dem Geliebten?"
+    },
+    {
+      "nummer": 244,
+      "arabisch": "جلّ ربنا أن تكون له ميادين النفوس ما تتحقق فيه سير السائرين؛ إذ لا مسافة بينك وبينه حتى تطويها رحلتك، ولا قطيعة بينك وبينه حتى تمحوها وصلتك.",
+      "uebersetzung_de": "Erhaben ist unser Herr darüber, dass die Felder der Seelen ein Ort wären, auf dem der Weg der Wandernden zu Ihm wirklich gemessen würde. Denn zwischen dir und Ihm gibt es keine Entfernung, die deine Reise zurücklegen müsste, und keine Trennung, die deine Verbindung aufheben müsste.",
+      "kommentar_de": "Der Weg zu Gott ist kein räumliches Näherkommen. Er ist ein Erwachen zu einer Nähe, die nicht durch Strecke entsteht."
+    },
+    {
+      "nummer": 245,
+      "arabisch": "جعلك في العالم المتوسط بين ملكه وملكوته ليعلّمك جلالة قدرك بين مخلوقاته، وأنك جوهرة تنطوي عليك أصداف مكوناته.",
+      "uebersetzung_de": "Er setzte dich in die mittlere Welt zwischen Seinem Reich und Seinem unsichtbaren Königreich, damit Er dich die Erhabenheit deines Ranges unter Seinen Geschöpfen lehrt: Du bist eine Perle, die von den Muscheln Seiner Schöpfungen umschlossen wird.",
+      "kommentar_de": "Der Mensch steht zwischen Leib und Geist, Sichtbarem und Unsichtbarem. Seine Würde liegt nicht in Besitz, sondern in seiner geistigen Berufung."
+    },
+    {
+      "nummer": 246,
+      "arabisch": "إنما وسعك الكون من حيث جثمانيتك، ولم يسعك من حيث ثبوت روحانيتك.",
+      "uebersetzung_de": "Der Kosmos umfasst dich nur hinsichtlich deiner Körperlichkeit; hinsichtlich der Festigkeit deiner Geistigkeit kann er dich nicht umfassen.",
+      "kommentar_de": "Äußerlich ist der Mensch klein im Universum. Innerlich aber ist er auf das Unendliche hin geöffnet."
+    },
+    {
+      "nummer": 247,
+      "arabisch": "الكائن في الكون ولم تُفتح له ميادين الغيوب مسجون بمحيطاته، ومحصور في هيكل ذاته.",
+      "uebersetzung_de": "Wer im Kosmos lebt, dem aber die Felder des Verborgenen nicht geöffnet wurden, ist in seinen Umgebungen gefangen und im Gehäuse seines Selbst eingeschlossen.",
+      "kommentar_de": "Ohne inneren Horizont wird die Welt zum Käfig. Die Öffnung zum Unsichtbaren befreit von der Enge bloßer Oberfläche."
+    },
+    {
+      "nummer": 248,
+      "arabisch": "أنت مع الأكوان ما لم تشهد المكوّن؛ فإذا شهدته كانت الأكوان معك.",
+      "uebersetzung_de": "Du bist mit den Welten, solange du den Bildner der Welten nicht schaust. Wenn du Ihn aber schaust, sind die Welten mit dir.",
+      "kommentar_de": "Solange der Blick an Dingen haftet, wird man von ihnen geführt. Wenn der Ursprung gesehen wird, ordnen sich die Dinge dem Herzen anders zu."
+    },
+    {
+      "nummer": 249,
+      "arabisch": "لا يلزم من ثبوت الخصوصية عدم وصف البشرية؛ إنما مثل الخصوصية كإشراق شمس النهار ظهرت في الأفق وليست منه: تارة تشرق شموس أوصافه على ليل وجودك، وتارة يقبض ذلك عنك فيردك إلى حدودك؛ فالنهار ليس منك وإليك، ولكنه وارد عليك.",
+      "uebersetzung_de": "Aus dem Vorhandensein besonderer Erwählung folgt nicht, dass die Eigenschaften der Menschlichkeit verschwinden. Die Besonderheit gleicht dem Aufgang der Tagessonne: sie erscheint am Horizont, ist aber nicht aus ihm. Mal scheinen die Sonnen Seiner Eigenschaften über die Nacht deines Daseins, mal nimmt Er dies zurück und bringt dich zu deinen Grenzen zurück. Der Tag ist weder von dir noch zu dir gehörig; er kommt nur zu dir.",
+      "kommentar_de": "Spirituelle Gaben heben die menschliche Begrenztheit nicht auf. Sie sind Besuch, nicht Besitz; darum bewahren Rückkehr und Grenze vor Selbsttäuschung."
+    },
+    {
+      "nummer": 250,
+      "arabisch": "دلّ بوجود آثاره على وجود أسمائه، وبوجود أسمائه على ثبوت أوصافه، وبثبوت أوصافه على وجود ذاته؛ إذ محال أن يقوم الوصف بنفسه. فأرباب الجذب يكشف لهم عن كمال ذاته، ثم يردّهم إلى شهود صفاته، ثم يرجعهم إلى التعلّق بأسمائه، ثم يردّهم إلى شهود آثاره. والسالكون على عكس هذا؛ فنهاية السالكين بداية المجذوبين، وبداية السالكين نهاية المجذوبين، لكن لا بمعنى واحد، فربما التقيا في الطريق: هذا في ترقيه، وهذا في تدلّيه.",
+      "uebersetzung_de": "Durch das Vorhandensein Seiner Wirkungen weist Er auf das Vorhandensein Seiner Namen; durch Seine Namen auf die Festigkeit Seiner Eigenschaften; durch Seine Eigenschaften auf das Dasein Seines Wesens, denn es ist unmöglich, dass eine Eigenschaft für sich selbst besteht. Den Menschen der Anziehung wird die Vollkommenheit Seines Wesens enthüllt; dann werden sie zur Schau Seiner Eigenschaften zurückgeführt, dann zur Bindung an Seine Namen, dann zur Schau Seiner Wirkungen. Die Wandernden gehen den umgekehrten Weg: Das Ende der Wandernden ist der Anfang der Angezogenen, und der Anfang der Wandernden ist das Ende der Angezogenen, doch nicht in einem einzigen Sinn. So können sie sich auf dem Weg treffen: der eine im Aufstieg, der andere im Herabkommen.",
+      "kommentar_de": "Die Hikma beschreibt zwei geistige Bewegungen: vom Sichtbaren zum Ursprung oder vom Ursprung zurück ins Sichtbare. Beide Wege sind Gabe und Führung."
+    },
+    {
+      "nummer": 251,
+      "arabisch": "لا يعرف قدر أنوار القلوب والأسرار إلا في غيب الملكوت، كما لا تظهر أنوار السماء إلا في شهادة الملك.",
+      "uebersetzung_de": "Der Wert der Lichter der Herzen und Geheimnisse wird nur im Verborgenen des Königreichs erkannt, so wie die Lichter des Himmels nur im sichtbaren Reich erscheinen.",
+      "kommentar_de": "Manche inneren Lichter bleiben äußerlich unscheinbar. Ihr Wert zeigt sich im geistigen Maßstab, nicht im Urteil der Oberfläche."
+    },
+    {
+      "nummer": 252,
+      "arabisch": "وجدان ثمرات الطاعات عاجلاً بشائر العاملين بوجود الجزاء عليها آجلاً.",
+      "uebersetzung_de": "Das unmittelbare Finden der Früchte der Gehorsamshandlungen ist für die Handelnden eine frohe Botschaft, dass ihr Lohn später vorhanden sein wird.",
+      "kommentar_de": "Frieden, Klarheit oder Weichheit nach einer guten Tat sind Vorboten. Sie sind nicht der ganze Lohn, sondern ein Zeichen der Annahme."
+    },
+    {
+      "nummer": 253,
+      "arabisch": "كيف تطلب العوض على عمل هو متصدّق به عليك؟ أم كيف تطلب الجزاء على صدق هو مهديه إليك؟",
+      "uebersetzung_de": "Wie kannst du Ersatz für eine Tat verlangen, die Er dir als Gabe geschenkt hat? Oder wie kannst du Lohn für eine Aufrichtigkeit verlangen, die Er dir selbst gewidmet hat?",
+      "kommentar_de": "Gutes Tun ist bereits Geschenk. Diese Weisheit löst Anspruchsdenken auf und macht Dankbarkeit zur Grundhaltung."
+    },
+    {
+      "nummer": 254,
+      "arabisch": "قوم سبقت أنوارهم أذكارهم، وقوم سبقت أذكارهم أنوارهم، وقوم تساوت أذكارهم وأنوارهم، وقوم لا أذكار ولا أنوار، نعوذ بالله من ذلك.",
+      "uebersetzung_de": "Bei manchen gehen ihre Lichter ihren Gedenken voraus; bei manchen geht ihr Gedenken ihren Lichtern voraus; bei manchen sind Gedenken und Lichter gleich; und bei manchen gibt es weder Gedenken noch Lichter — davor suchen wir Zuflucht bei Gott.",
+      "kommentar_de": "Menschen werden verschieden geführt. Wichtig ist nicht, den eigenen Zustand zu vergleichen, sondern dem gewährten Zugang treu zu bleiben."
+    },
+    {
+      "nummer": 255,
+      "arabisch": "ذاكرٌ ذكر ليستنير قلبه فكان ذاكرًا، وذاكرٌ استنار قلبه فكان ذاكرًا، والذي استوت أذكاره وأنواره فبذكره يُهتدى وبنوره يُقتدى.",
+      "uebersetzung_de": "Ein Gedenkender gedenkt, damit sein Herz erleuchtet werde — so ist er Gedenkender. Ein anderer gedenkt, weil sein Herz erleuchtet wurde — so ist er Gedenkender. Und der, dessen Gedenken und Lichter gleich geworden sind: durch sein Gedenken wird man geleitet und durch sein Licht nimmt man sich ein Vorbild.",
+      "kommentar_de": "Gedenken kann Weg zur Erleuchtung oder Frucht der Erleuchtung sein. In der Reife werden Wort, Herz und Wirkung eins."
+    },
+    {
+      "nummer": 256,
+      "arabisch": "ما كان ظاهر ذكر إلا عن باطن شهود وفكر.",
+      "uebersetzung_de": "Kein äußeres Gedenken entsteht, außer aus innerer Schau und innerem Denken.",
+      "kommentar_de": "Äußere Praxis soll von innerer Aufmerksamkeit getragen sein. Dann wird das Wort des Gedenkens nicht bloß Laut, sondern Ausdruck des Herzens."
+    },
+    {
+      "nummer": 257,
+      "arabisch": "أشهدك من قبل أن يستشهدك، فنطقت بإلهيته الظواهر، وتحققت بأحديته القلوب والسرائر.",
+      "uebersetzung_de": "Er ließ dich schauen, bevor Er dich zum Zeugnis rief; so sprachen die sichtbaren Dinge von Seiner Göttlichkeit, und Herzen und Geheimnisse erkannten Seine Einheit.",
+      "kommentar_de": "Das Zeugnis beginnt mit geschenkter Wahrnehmung. Erst wer etwas von der Wahrheit geschaut hat, kann glaubwürdig von ihr sprechen."
+    },
+    {
+      "nummer": 258,
+      "arabisch": "أكرمك الله بكرامات ثلاث: جعلك ذاكراً له، ولولا فضله لم تكن أهلاً لجريان ذكره عليك؛ وجعلك مذكوراً به، إذ حقق نسبته لديك؛ وجعلك مذكوراً عنده، فتمّم نعمته عليك.",
+      "uebersetzung_de": "Gott ehrte dich mit drei Ehren: Er machte dich zu einem, der Seiner gedenkt — ohne Seine Gunst wärst du nicht würdig, dass Sein Gedenken über dich läuft. Er machte dich zu einem, der durch Ihn erwähnt wird, da Er deine Zugehörigkeit zu Ihm verwirklichte. Und Er machte dich zu einem, der bei Ihm erwähnt wird; so vollendete Er Seine Gnade an dir.",
+      "kommentar_de": "Dhikr erscheint hier vollständig als Gnade: dass du gedenkst, dass du durch Gott Bedeutung hast, und dass du bei Gott erwähnt bist."
+    },
+    {
+      "nummer": 259,
+      "arabisch": "ربّ عمرٍ اتسعت آماده وقلّت أمداده، وربّ عمرٍ قليلة آماده كثيرة أمداده.",
+      "uebersetzung_de": "Manches Leben hat eine weite Zeitspanne und geringe Unterstützungen; und manches Leben hat eine kurze Zeitspanne und viele Unterstützungen.",
+      "kommentar_de": "Der Wert eines Lebens wird nicht an Länge gemessen, sondern an Segen, Tiefe und göttlicher Unterstützung."
+    },
+    {
+      "nummer": 260,
+      "arabisch": "من بورك له في عمره أدرك في يسير من الزمن من منن الله تعالى ما لا يدخل تحت دوائر العبارة ولا تلحقه الإشارة.",
+      "uebersetzung_de": "Wem in seinem Leben Segen gegeben wurde, der erreicht in wenig Zeit von den Gnadengaben Gottes, was nicht in die Kreise der Worte eingeht und was keine Andeutung einholen kann.",
+      "kommentar_de": "Baraka verdichtet Zeit. Manche Einsichten und Wandlungen sind größer als das, was man mit Dauer oder Leistung erklären könnte."
+    },
+    {
+      "nummer": 261,
+      "arabisch": "الخذلان كل الخذلان أن تتفرغ من الشواغل ثم لا تتوجه إليه، وتقل عوائقك ثم لا ترحل إليه.",
+      "uebersetzung_de": "Wahre Verlassenheit ist, dass du von Beschäftigungen frei wirst und dich dennoch nicht Ihm zuwendest; dass deine Hindernisse weniger werden und du dennoch nicht zu Ihm aufbrichst.",
+      "kommentar_de": "Freie Zeit ist nicht automatisch Nähe. Sie wird erst fruchtbar, wenn sie in Hinwendung, Gebet und Sammlung verwandelt wird."
+    },
+    {
+      "nummer": 262,
+      "arabisch": "الفكرة سير القلب في ميادين الأغيار.",
+      "uebersetzung_de": "Das Nachdenken ist das Wandern des Herzens in den Feldern der Andersheiten.",
+      "kommentar_de": "Denken bewegt das Herz durch die Zeichen der Schöpfung. Es kann zerstreuen oder, richtig geführt, auf den Einen hin sammeln."
+    },
+    {
+      "nummer": 263,
+      "arabisch": "الفكرة سراج القلب؛ فإذا ذهبت فلا إضاءة له.",
+      "uebersetzung_de": "Das Nachdenken ist die Lampe des Herzens; wenn sie erlischt, hat es kein Licht mehr.",
+      "kommentar_de": "Geistige Wachheit braucht Besinnung. Ohne nachdenkliche Aufmerksamkeit verliert das Herz Orientierung und Tiefe."
+    },
+    {
+      "nummer": 264,
+      "arabisch": "الفكرة فكرتان: فكرة تصديق وإيمان، وفكرة شهود وعيان؛ فالأولى لأرباب الاعتبار، والثانية لأرباب الشهود والاستبصار.",
+      "uebersetzung_de": "Das Nachdenken ist zweierlei: ein Denken der Bestätigung und des Glaubens, und ein Denken der Schau und der unmittelbaren Wahrnehmung. Das erste gehört den Menschen der Betrachtung, das zweite den Menschen der Schau und Einsicht.",
+      "kommentar_de": "Die Sammlung beginnt mit Nachdenken, das den Glauben stärkt, und kann zur Schau reifen. Beide Formen sind Wege des Herzens zu Gott."
+    }
+  ]
+}
