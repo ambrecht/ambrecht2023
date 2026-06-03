@@ -1,9 +1,5 @@
-'use client';
-
 import { redirect } from 'next/navigation';
 
-const Root = () => {
+export default function Root() {
   redirect('/start');
-};
-
-export default Root;
+}
