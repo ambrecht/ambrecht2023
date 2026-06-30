@@ -9,5 +9,6 @@ export type GptAgent = {
     | `https://chat.openai.com/g/${string}`;
   tags: readonly string[];
   visibility: GptVisibility;
+  iconUrl?: string;
   favorite?: boolean;
 };
