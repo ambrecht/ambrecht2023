@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Check,
   Copy,
+  List,
   Maximize2,
   Pause,
   Play,
@@ -53,6 +54,7 @@ export default function WisdomPage() {
   const [copied, setCopied] = useState(false);
   const [entered, setEntered] = useState(false);
   const [numberInput, setNumberInput] = useState('');
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   const current = hikam[index];
@@ -80,6 +82,7 @@ export default function WisdomPage() {
   const selectWisdomIndex = useCallback((nextIndex: number) => {
     setIndex(nextIndex);
     setIsRunning(false);
+    setIsPickerOpen(false);
   }, []);
 
   const selectWisdomByNumber = useCallback(
@@ -252,58 +255,64 @@ export default function WisdomPage() {
         </article>
 
         <footer className="relative shrink-0">
-          <nav
-            aria-label="Hikma auswählen"
-            className="hikam-picker mb-4 space-y-3"
-          >
-            <form
-              className="hikam-number-form mx-auto flex max-w-sm items-center gap-2"
-              onSubmit={(event) => {
-                event.preventDefault();
-                submitNumberInput();
-              }}
+          {isPickerOpen && (
+            <nav
+              aria-label="Hikma auswählen"
+              className="hikam-picker mb-4 space-y-3"
             >
-              <label className="sr-only" htmlFor="hikam-number">
-                Hikma Nummer
-              </label>
-              <input
-                id="hikam-number"
-                className="hikam-number-input"
-                inputMode="numeric"
-                max={count}
-                min={1}
-                onBlur={submitNumberInput}
-                onChange={(event) => setNumberInput(event.target.value)}
-                placeholder="Nr."
-                type="number"
-                value={numberInput}
-              />
-              <button className="hikam-icon-control" title="Hikma öffnen" type="submit">
-                <Search size={18} aria-hidden="true" />
-                <span className="sr-only">Hikma öffnen</span>
-              </button>
-            </form>
+              <form
+                className="hikam-number-form mx-auto flex max-w-sm items-center gap-2"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  submitNumberInput();
+                }}
+              >
+                <label className="sr-only" htmlFor="hikam-number">
+                  Hikma Nummer
+                </label>
+                <input
+                  id="hikam-number"
+                  className="hikam-number-input"
+                  inputMode="numeric"
+                  max={count}
+                  min={1}
+                  onBlur={submitNumberInput}
+                  onChange={(event) => setNumberInput(event.target.value)}
+                  placeholder="Nr."
+                  type="number"
+                  value={numberInput}
+                />
+                <button
+                  className="hikam-icon-control"
+                  title="Hikma öffnen"
+                  type="submit"
+                >
+                  <Search size={18} aria-hidden="true" />
+                  <span className="sr-only">Hikma öffnen</span>
+                </button>
+              </form>
 
-            <div className="hikam-number-strip" role="listbox">
-              {hikam.map((hikma, hikmaIndex) => {
-                const isSelected = hikmaIndex === index;
+              <div className="hikam-number-strip" role="listbox">
+                {hikam.map((hikma, hikmaIndex) => {
+                  const isSelected = hikmaIndex === index;
 
-                return (
-                  <button
-                    aria-label={`Hikma ${hikma.nummer} auswählen`}
-                    aria-selected={isSelected}
-                    className="hikam-number-button"
-                    key={hikma.nummer}
-                    onClick={() => selectWisdomIndex(hikmaIndex)}
-                    role="option"
-                    type="button"
-                  >
-                    {String(hikma.nummer).padStart(3, '0')}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
+                  return (
+                    <button
+                      aria-label={`Hikma ${hikma.nummer} auswählen`}
+                      aria-selected={isSelected}
+                      className="hikam-number-button"
+                      key={hikma.nummer}
+                      onClick={() => selectWisdomIndex(hikmaIndex)}
+                      role="option"
+                      type="button"
+                    >
+                      {String(hikma.nummer).padStart(3, '0')}
+                    </button>
+                  );
+                })}
+              </div>
+            </nav>
+          )}
 
           <div className="mb-4 h-px w-full overflow-hidden bg-white/10">
             {isRunning && (
@@ -318,6 +327,15 @@ export default function WisdomPage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <button
+              aria-expanded={isPickerOpen}
+              className="hikam-control"
+              onClick={() => setIsPickerOpen((value) => !value)}
+              type="button"
+            >
+              <List size={18} aria-hidden="true" />
+              <span>{isPickerOpen ? 'Auswahl zu' : 'Auswahl'}</span>
+            </button>
             <button className="hikam-control" onClick={nextWisdom} type="button">
               <RotateCcw size={18} aria-hidden="true" />
               <span>Nächste</span>
