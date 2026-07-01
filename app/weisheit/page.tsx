@@ -8,6 +8,7 @@ import {
   Pause,
   Play,
   RotateCcw,
+  Search,
 } from 'lucide-react';
 import hikamData from '@/src/json/hikma3.json';
 import sufiCommentData from '@/src/json/sufi-kommentar.json';
@@ -51,6 +52,7 @@ export default function WisdomPage() {
   const [isRunning, setIsRunning] = useState(true);
   const [copied, setCopied] = useState(false);
   const [entered, setEntered] = useState(false);
+  const [numberInput, setNumberInput] = useState('');
   const timerRef = useRef<number | null>(null);
 
   const current = hikam[index];
@@ -74,6 +76,25 @@ export default function WisdomPage() {
       return nextIndex;
     });
   }, [count]);
+
+  const selectWisdomIndex = useCallback((nextIndex: number) => {
+    setIndex(nextIndex);
+    setIsRunning(false);
+  }, []);
+
+  const selectWisdomByNumber = useCallback(
+    (number: number) => {
+      const nextIndex = hikam.findIndex((hikma) => hikma.nummer === number);
+
+      if (nextIndex >= 0) {
+        selectWisdomIndex(nextIndex);
+        return true;
+      }
+
+      return false;
+    },
+    [selectWisdomIndex]
+  );
 
   const showAdjacentWisdom = useCallback(
     (direction: 1 | -1) => {
@@ -141,6 +162,25 @@ export default function WisdomPage() {
   useEffect(() => {
     setEntered(false);
   }, [index]);
+
+  useEffect(() => {
+    setNumberInput(String(current.nummer));
+  }, [current.nummer]);
+
+  const submitNumberInput = () => {
+    const selectedNumber = Number.parseInt(numberInput, 10);
+
+    if (Number.isNaN(selectedNumber)) {
+      setNumberInput(String(current.nummer));
+      return;
+    }
+
+    const wasSelected = selectWisdomByNumber(selectedNumber);
+
+    if (!wasSelected) {
+      setNumberInput(String(current.nummer));
+    }
+  };
 
   const copyText = useMemo(
     () =>
@@ -212,6 +252,59 @@ export default function WisdomPage() {
         </article>
 
         <footer className="relative shrink-0">
+          <nav
+            aria-label="Hikma auswählen"
+            className="hikam-picker mb-4 space-y-3"
+          >
+            <form
+              className="hikam-number-form mx-auto flex max-w-sm items-center gap-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                submitNumberInput();
+              }}
+            >
+              <label className="sr-only" htmlFor="hikam-number">
+                Hikma Nummer
+              </label>
+              <input
+                id="hikam-number"
+                className="hikam-number-input"
+                inputMode="numeric"
+                max={count}
+                min={1}
+                onBlur={submitNumberInput}
+                onChange={(event) => setNumberInput(event.target.value)}
+                placeholder="Nr."
+                type="number"
+                value={numberInput}
+              />
+              <button className="hikam-icon-control" title="Hikma öffnen" type="submit">
+                <Search size={18} aria-hidden="true" />
+                <span className="sr-only">Hikma öffnen</span>
+              </button>
+            </form>
+
+            <div className="hikam-number-strip" role="listbox">
+              {hikam.map((hikma, hikmaIndex) => {
+                const isSelected = hikmaIndex === index;
+
+                return (
+                  <button
+                    aria-label={`Hikma ${hikma.nummer} auswählen`}
+                    aria-selected={isSelected}
+                    className="hikam-number-button"
+                    key={hikma.nummer}
+                    onClick={() => selectWisdomIndex(hikmaIndex)}
+                    role="option"
+                    type="button"
+                  >
+                    {String(hikma.nummer).padStart(3, '0')}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+
           <div className="mb-4 h-px w-full overflow-hidden bg-white/10">
             {isRunning && (
               <div
@@ -316,7 +409,9 @@ export default function WisdomPage() {
         }
 
         .hikam-control,
-        .hikam-icon-control {
+        .hikam-icon-control,
+        .hikam-number-input,
+        .hikam-number-button {
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -344,15 +439,63 @@ export default function WisdomPage() {
           border-radius: 999px;
         }
 
+        .hikam-number-form {
+          min-height: 2.75rem;
+        }
+
+        .hikam-number-input {
+          width: 100%;
+          min-width: 0;
+          border-radius: 999px;
+          padding: 0.65rem 1rem;
+          text-align: center;
+          font-size: 0.9rem;
+        }
+
+        .hikam-number-input::-webkit-outer-spin-button,
+        .hikam-number-input::-webkit-inner-spin-button {
+          margin: 0;
+        }
+
+        .hikam-number-strip {
+          display: flex;
+          gap: 0.45rem;
+          overflow-x: auto;
+          overscroll-behavior-x: contain;
+          padding: 0.15rem 0 0.55rem;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(216, 182, 101, 0.58) rgba(255, 255, 255, 0.08);
+        }
+
+        .hikam-number-button {
+          flex: 0 0 auto;
+          min-width: 3.25rem;
+          min-height: 2.25rem;
+          border-radius: 999px;
+          padding: 0.45rem 0.7rem;
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
+          color: rgba(245, 234, 210, 0.72);
+        }
+
+        .hikam-number-button[aria-selected='true'] {
+          border-color: rgba(216, 182, 101, 0.92);
+          background: rgba(216, 182, 101, 0.22);
+          color: #fff8e8;
+        }
+
         .hikam-control:hover,
-        .hikam-icon-control:hover {
+        .hikam-icon-control:hover,
+        .hikam-number-button:hover {
           transform: translateY(-1px);
           border-color: rgba(216, 182, 101, 0.72);
           background: rgba(216, 182, 101, 0.13);
         }
 
         .hikam-control:focus-visible,
-        .hikam-icon-control:focus-visible {
+        .hikam-icon-control:focus-visible,
+        .hikam-number-input:focus-visible,
+        .hikam-number-button:focus-visible {
           outline: 2px solid #d8b665;
           outline-offset: 3px;
         }
@@ -371,6 +514,10 @@ export default function WisdomPage() {
             display: grid;
             grid-template-columns: 1fr 1fr;
             width: 100%;
+          }
+
+          .hikam-number-form {
+            max-width: none;
           }
 
           .hikam-control {
