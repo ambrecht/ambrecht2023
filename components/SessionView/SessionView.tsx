@@ -11,6 +11,7 @@ import React, {
 import { FilePlus2, Filter, MoreHorizontal, Search, X } from 'lucide-react';
 import { useSessionData } from './useSessionData';
 import { SessionItem } from './SessionItem';
+import { SessionActivityOverview } from './SessionActivityOverview';
 import type { Session } from './types';
 
 export function SessionView() {
@@ -209,6 +210,11 @@ export function SessionView() {
             </div>
           </div>
         </header>
+
+        <SessionActivityOverview
+          sessions={sessions}
+          totalSessions={deferredSearch.trim() ? undefined : pagination.total}
+        />
 
         <form
           onSubmit={handleCreateSession}
