@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     query: request.nextUrl.searchParams,
     cache: 'no-store',
     requireApiKey: true,
+    timeoutMs: 8000,
     context: { route: 'sessions.writing-overview' },
   });
 }

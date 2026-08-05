@@ -13,6 +13,7 @@ type ProxyRequestOptions = {
   requireApiKey?: boolean;
   target?: UpstreamTarget;
   context?: ProxyContext;
+  timeoutMs?: number;
 };
 
 const TYPEWRITER_BASE_URL =
@@ -116,6 +117,18 @@ const internalErrorResponse = (error: unknown, context: ProxyContext) => {
   );
 };
 
+const timeoutResponse = (context: ProxyContext) => {
+  console.error('proxy timeout', context);
+  return NextResponse.json(
+    {
+      success: false,
+      error: 'upstream_timeout',
+      message: 'Backend-Anfrage hat zu lange gedauert.',
+    },
+    { status: 504 },
+  );
+};
+
 export async function proxyRequest({
   method,
   path,
@@ -126,6 +139,7 @@ export async function proxyRequest({
   requireApiKey = true,
   target = 'typewriter',
   context = {},
+  timeoutMs,
 }: ProxyRequestOptions): Promise<Response> {
   const { apiKey } = UPSTREAMS[target];
 
@@ -143,12 +157,18 @@ export async function proxyRequest({
     requestHeaders.set('content-type', 'application/json');
   }
 
+  const controller = timeoutMs ? new AbortController() : null;
+  const timeout = controller
+    ? setTimeout(() => controller.abort(), timeoutMs)
+    : null;
+
   try {
     const upstream = await fetch(upstreamUrl, {
       method,
       headers: requestHeaders,
       body,
       cache,
+      signal: controller?.signal,
     });
 
     const responseHeaders = sanitizeHeaders(new Headers(upstream.headers));
@@ -160,10 +180,22 @@ export async function proxyRequest({
     const buffer = await upstream.arrayBuffer();
     return new Response(buffer, { status: upstream.status, headers: responseHeaders });
   } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      return timeoutResponse({
+        ...context,
+        target,
+        upstream_url: upstreamUrl,
+        timeout_ms: timeoutMs,
+      });
+    }
     return internalErrorResponse(error, {
       ...context,
       target,
       upstream_url: upstreamUrl,
     });
+  } finally {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   }
 }

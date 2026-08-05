@@ -165,6 +165,11 @@ export function SessionActivityOverview({
 
   useEffect(() => {
     const controller = new AbortController();
+    let timedOut = false;
+    const timeout = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 10000);
     setIsLoading(true);
     setError(null);
 
@@ -179,26 +184,31 @@ export function SessionActivityOverview({
         if (!response.ok || !json.success) {
           throw new Error(
             (!json.success && (json.message || json.error)) ||
-              'Schreibaktivitaet konnte nicht geladen werden.',
+              `HTTP ${response.status}: Schreibaktivitaet konnte nicht geladen werden.`,
           );
         }
         setOverview(json.data);
       })
       .catch((err) => {
-        if ((err as { name?: string }).name === 'AbortError') return;
+        if ((err as { name?: string }).name === 'AbortError' && !timedOut) return;
         setError(
-          err instanceof Error
+          timedOut
+            ? 'Schreibaktivitaet braucht zu lange. Bitte gleich erneut versuchen.'
+            : err instanceof Error
             ? err.message
             : 'Schreibaktivitaet konnte nicht geladen werden.',
         );
       })
       .finally(() => {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted || timedOut) {
           setIsLoading(false);
         }
       });
 
-    return () => controller.abort();
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
   }, [days, refreshKey]);
 
   const { gridDays, monthLabels, weekCount } = useMemo(() => {
