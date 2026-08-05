@@ -416,6 +416,138 @@ async function fetchSessionPage(pageToken?: string) {
 }
 ```
 
+## 5. Vollstaendiger Browser-Bootstrap per NDJSON
+
+Falls das Frontend alle Sessions vollstaendig lokal im Browser benoetigt, soll es nicht die Summary-Liste mit vielen Detailrequests kombinieren. Dafuer gibt es einen eigenen Streaming-Endpoint.
+
+### Endpoint
+
+```http
+GET /api/v1/sessions/bootstrap
+Accept: application/x-ndjson
+```
+
+Response-Header:
+
+```http
+Content-Type: application/x-ndjson; charset=utf-8
+Cache-Control: private, no-store
+X-Accel-Buffering: no
+```
+
+Der Endpoint sendet einen einzigen HTTP-Stream. Jede Zeile ist ein eigenes JSON-Objekt.
+
+### Record-Format
+
+```ts
+type BootstrapRecord =
+  | {
+      type: 'meta';
+      total: number;
+      snapshotMaxId: string | null;
+    }
+  | {
+      type: 'session';
+      data: {
+        id: string;
+        documentId: string | null;
+        document_id: string | null;
+        title: string | null;
+        preview: string;
+        text: string;
+        createdAt: string;
+        created_at: string;
+        updatedAt: string;
+        updated_at: string;
+        wordCount: number;
+        word_count: number;
+        charCount: number;
+        char_count: number;
+        letterCount: number;
+        letter_count: number;
+        status: string;
+        tags: string[];
+        contentHash: string;
+        content_hash: string;
+      };
+    }
+  | {
+      type: 'checkpoint';
+      loaded: number;
+      lastSessionId: string;
+    }
+  | {
+      type: 'complete';
+      loaded: number;
+    };
+```
+
+Beispiel:
+
+```text
+{"type":"meta","total":504,"snapshotMaxId":"818"}
+{"type":"session","data":{"id":"1","text":"...","updatedAt":"2026-08-05T16:31:12.000Z"}}
+{"type":"checkpoint","loaded":25,"lastSessionId":"25"}
+{"type":"complete","loaded":504}
+```
+
+### Frontend-Empfehlung
+
+- Stream im Web Worker lesen.
+- Volltexte batchweise in IndexedDB speichern.
+- React-State nur mit kleinen Summaries fuettern.
+- Batches von etwa 20 bis 50 Sessions verwenden.
+- Fortschritt ueber `meta.total`, `checkpoint.loaded` und `complete.loaded` anzeigen.
+- Wenn der Stream ohne `complete` endet, Bootstrap als fehlgeschlagen betrachten und spaeter neu starten.
+
+Wichtig: Dieser Endpoint ersetzt nicht die schnelle Summary-Liste. Empfohlener Startablauf:
+
+```text
+1. Summary-Liste sofort laden und UI anzeigen.
+2. Bootstrap-Stream im Hintergrund starten.
+3. Volltexte in IndexedDB persistieren.
+4. Detailansicht bevorzugt aus IndexedDB lesen, falls bereits vorhanden.
+```
+
+### Minimaler Parser
+
+```ts
+async function bootstrapSessions(signal?: AbortSignal) {
+  const response = await fetch('/api/v1/sessions/bootstrap', {
+    signal,
+    headers: { Accept: 'application/x-ndjson' },
+  });
+
+  if (!response.ok || !response.body) {
+    throw new Error(`Bootstrap fehlgeschlagen: ${response.status}`);
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  while (true) {
+    const chunk = await reader.read();
+    if (chunk.done) break;
+
+    buffer += decoder.decode(chunk.value, { stream: true });
+    let newline = buffer.indexOf('\n');
+
+    while (newline >= 0) {
+      const line = buffer.slice(0, newline);
+      buffer = buffer.slice(newline + 1);
+
+      if (line.trim()) {
+        const record = JSON.parse(line);
+        // meta/session/checkpoint/complete verarbeiten
+      }
+
+      newline = buffer.indexOf('\n');
+    }
+  }
+}
+```
+
 ### Dokumentbezogener Endpoint
 
 ### Endpoint
