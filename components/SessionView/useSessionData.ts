@@ -59,6 +59,37 @@ const normalizeSession = (entry: SessionPayload): Session => {
   };
 };
 
+const getNextListToken = (pagination?: SessionPagination | null) =>
+  pagination?.next_page_token ??
+  pagination?.nextPageToken ??
+  pagination?.next_cursor ??
+  pagination?.cursor ??
+  null;
+
+const normalizeListPagination = (
+  pagination: SessionPagination | undefined,
+  pageSize: number,
+  fallbackOffset: number,
+  loadedCount: number,
+): SessionPagination => {
+  const nextToken = getNextListToken(pagination);
+  const hasMore =
+    pagination?.has_more ??
+    pagination?.hasMore ??
+    Boolean(nextToken) ??
+    false;
+
+  return {
+    ...pagination,
+    limit: pagination?.limit ?? pagination?.page_size ?? pagination?.pageSize ?? pageSize,
+    page_size: pagination?.page_size ?? pagination?.pageSize ?? pagination?.limit ?? pageSize,
+    offset: pagination?.offset ?? fallbackOffset,
+    has_more: hasMore,
+    next_page_token: nextToken,
+    total: pagination?.total ?? (hasMore ? undefined : loadedCount),
+  };
+};
+
 const buildApiUrl = (
   path: string,
   query?: Record<string, string | number | undefined>,
@@ -129,7 +160,12 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   );
 
   const fetchListPage = useCallback(
-    async (pageToken: string | null, append: boolean, silent = false) => {
+    async (
+      pageToken: string | null,
+      append: boolean,
+      silent = false,
+      fallbackOffset?: number,
+    ) => {
       if (!silent) {
         setError(null);
         if (append) {
@@ -150,6 +186,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           buildApiUrl('/sessions', {
             page_size: pageSize,
             page_token: pageToken ?? undefined,
+            offset: pageToken ? undefined : fallbackOffset,
           }),
           {
             method: 'GET',
@@ -170,15 +207,14 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           throw new Error(message);
         }
         const normalized = json.data.map(normalizeSession);
-        const nextPagination: SessionPagination = {
-          ...json.pagination,
-          page_size: json.pagination?.page_size ?? json.pagination?.limit ?? pageSize,
-          has_more: json.pagination?.has_more ?? Boolean(json.pagination?.next_page_token),
-          next_page_token: json.pagination?.next_page_token ?? null,
-          total: json.pagination?.total,
-        };
+        const loadedCount = mergeSessions(normalized, append);
+        const nextPagination = normalizeListPagination(
+          json.pagination,
+          pageSize,
+          fallbackOffset ?? 0,
+          loadedCount,
+        );
         startTransition(() => setPagination(nextPagination));
-        mergeSessions(normalized, append);
         return { ok: true as const, total: nextPagination.total };
       } catch (err) {
         if ((err as { name?: string }).name === 'AbortError') {
@@ -297,12 +333,29 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         schedulePrefetchTick();
         return;
       }
-      if (!pagination.has_more || !pagination.next_page_token) return;
+      const canLoadMoreByTotal =
+        pagination.total !== undefined && byIdRef.current.size < pagination.total;
+      if (!pagination.has_more && !pagination.next_page_token && !canLoadMoreByTotal) {
+        return;
+      }
 
-      await fetchListPage(pagination.next_page_token, true, true);
+      await fetchListPage(
+        pagination.next_page_token ?? null,
+        true,
+        true,
+        byIdRef.current.size,
+      );
       schedulePrefetchTick();
     }, prefetchDelayMs);
-  }, [autoPrefetch, fetchListPage, pagination.has_more, pagination.next_page_token, prefetchDelayMs, stopPrefetch]);
+  }, [
+    autoPrefetch,
+    fetchListPage,
+    pagination.has_more,
+    pagination.next_page_token,
+    pagination.total,
+    prefetchDelayMs,
+    stopPrefetch,
+  ]);
 
   const refreshSessions = useCallback(async () => {
     stopPrefetch();
@@ -329,8 +382,17 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
       return fetchSearchPage(searchPage.next_cursor, true);
     }
 
-    if (!pagination.has_more || !pagination.next_page_token) return;
-    return fetchListPage(pagination.next_page_token, true);
+    const canLoadMoreByTotal =
+      pagination.total !== undefined && sessions.length < pagination.total;
+    if (!pagination.has_more && !pagination.next_page_token && !canLoadMoreByTotal) {
+      return;
+    }
+    return fetchListPage(
+      pagination.next_page_token ?? null,
+      true,
+      false,
+      sessions.length,
+    );
   }, [
     fetchListPage,
     fetchSearchPage,
@@ -338,7 +400,9 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     isLoadingMore,
     pagination.has_more,
     pagination.next_page_token,
+    pagination.total,
     searchPage.next_cursor,
+    sessions.length,
     stopPrefetch,
   ]);
 
@@ -525,7 +589,13 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     }
     if (!autoPrefetch) return;
     if (isLoading || isLoadingMore) return;
-    if (!pagination.has_more || !pagination.next_page_token) return;
+    if (
+      !pagination.has_more &&
+      !pagination.next_page_token &&
+      !(pagination.total !== undefined && sessions.length < pagination.total)
+    ) {
+      return;
+    }
 
     schedulePrefetchTick();
     return stopPrefetch;
@@ -535,14 +605,20 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     isLoadingMore,
     pagination.has_more,
     pagination.next_page_token,
+    pagination.total,
     schedulePrefetchTick,
+    sessions.length,
     stopPrefetch,
   ]);
 
   const hasMore =
     modeRef.current === 'search'
       ? Boolean(searchPage.next_cursor)
-      : Boolean(pagination.has_more && pagination.next_page_token);
+      : Boolean(
+          pagination.has_more ||
+            pagination.next_page_token ||
+            (pagination.total !== undefined && sessions.length < pagination.total),
+        );
 
   return {
     sessions,

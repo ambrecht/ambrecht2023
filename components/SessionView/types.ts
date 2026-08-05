@@ -20,10 +20,15 @@ export interface Session {
 export interface SessionPagination {
   limit?: number;
   page_size?: number;
+  pageSize?: number;
   offset?: number;
   total?: number;
   has_more?: boolean;
+  hasMore?: boolean;
   next_page_token?: string | null;
+  nextPageToken?: string | null;
+  next_cursor?: string | null;
+  cursor?: string | null;
 }
 
 export interface SearchPagination {
