@@ -112,10 +112,11 @@ Erlaubte Werte:
 
 - `edit`: normale manuelle Bearbeitung, Default
 - `save`: explizites Speichern
-- `action`: automatisch erzeugte Version durch Backend-/NLP-Action
 - `live_input`: Live-Input-Event
 
-Das Frontend sollte bei normalen Speichervorgaengen `edit` oder `save` senden. Fuer NLP-Actions sollte das Frontend den Action-Endpoint verwenden, nicht selbst `event_type=action` setzen.
+Das Frontend sollte bei normalen Speichervorgaengen `edit` oder `save` senden. `event_type=action` ist fuer normale Editor-Saves gesperrt und gibt `400 validation_error` zurueck. Fuer NLP-Actions muss das Frontend den jeweiligen Action-Endpoint verwenden.
+
+Wichtig: `stats.words` und `stats.chars` in `blocks` duerfen weiterhin als Client-Hinweis mitgesendet werden, werden aber nicht als kanonische Wahrheit uebernommen. Das Backend berechnet Wort- und Zeichenzahlen pro Block selbst aus `block.text`.
 
 ### Response
 
@@ -218,10 +219,16 @@ Empfehlung:
 Fuer die globale Ansicht "Wann du geschrieben hast" gibt es einen frontendfertigen Endpoint:
 
 ```http
+GET /api/v1/writing-activity?days=365
+```
+
+Dieser Endpoint ist nicht dokumentbezogen, sondern liefert die globale Schreibaktivitaet fuer die Dashboard-Kachel. Er ist der kanonische neue Pfad. Der alte Pfad bleibt als Kompatibilitaetsalias erhalten:
+
+```http
 GET /api/v1/sessions/writing-overview?days=365
 ```
 
-Dieser Endpoint ist nicht dokumentbezogen, sondern aggregiert alle aktiven Root-Sessions im Zeitraum. Er ist fuer die Dashboard-Kachel gedacht und liefert nur Daten, die das Frontend direkt rendern muss.
+Die Berechnung nutzt jetzt zuerst `writing_events`. Nur Tage ohne Events werden aus Altbestand in `sessions` geschaetzt. Dadurch koennen neue Saves fachlich korrekt aus echten Schreibereignissen kommen, waehrend alte Sessions trotzdem sofort in der Heatmap sichtbar bleiben.
 
 Response:
 
@@ -248,18 +255,39 @@ Response:
         "date": "2025-08-06",
         "words": 0,
         "sessions": 0,
+        "manual_inserted_words": 0,
+        "manual_deleted_words": 0,
+        "manual_net_words": 0,
+        "action_inserted_words": 0,
+        "save_count": 0,
+        "source": "none",
+        "confidence": "none",
         "level": 0
       },
       {
         "date": "2026-08-05",
         "words": 683,
         "sessions": 3,
+        "manual_inserted_words": 683,
+        "manual_deleted_words": 0,
+        "manual_net_words": 683,
+        "action_inserted_words": 0,
+        "save_count": 3,
+        "source": "observed",
+        "confidence": "exact",
         "level": 1
       }
     ],
     "legend": {
       "min_level": 0,
       "max_level": 4
+    },
+    "semantics": {
+      "canonical_source": "writing_events",
+      "fallback_source": "sessions",
+      "fallback_confidence": "estimated",
+      "words_field": "manual inserted words for observed days; estimated root-session words for legacy days without events",
+      "action_words_counted_as_manual": false
     }
   }
 }
@@ -275,8 +303,20 @@ Mapping fuer die UI:
 - `days[].level` -> Farbintensitaet von 0 bis 4
 - `days[].sessions` -> Tooltip/Detail: wie viele Sessions an diesem Tag geschrieben wurden
 - `days[].words` -> Tooltip/Detail: wie viele Woerter an diesem Tag geschrieben wurden
+- `days[].source` -> `observed`, `estimated` oder `none`
+- `days[].confidence` -> `exact`, `estimated` oder `none`
+- `days[].manual_inserted_words` -> echte manuelle Insertions aus `writing_events`, falls `source=observed`
+- `days[].manual_deleted_words` -> echte manuelle Deletions aus `writing_events`, falls `source=observed`
+- `days[].action_inserted_words` -> durch Actions erzeugte Woerter, nicht als manuelle Schreibleistung zaehlen
 
 Hinweis: Der Endpoint fuellt alle Tage im Zeitraum auf. Tage ohne Aktivitaet kommen mit `words=0`, `sessions=0`, `level=0`.
+
+Frontend-Empfehlung:
+
+- Fuer die UI bitte `/api/v1/writing-activity?days=365` verwenden.
+- `source=estimated` im Tooltip optional als "aus alten Sessions geschaetzt" markieren.
+- Farbintensitaet weiter direkt ueber `level` rendern.
+- Fuer die Hauptzahl "Woerter" weiter `stats.words` nutzen. Dieser Wert mischt echte Event-Woerter und Altbestand-Schaetzungen, ist aber in `semantics` transparent beschrieben.
 
 ### Dokumentbezogener Endpoint
 
