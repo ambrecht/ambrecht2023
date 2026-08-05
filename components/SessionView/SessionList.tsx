@@ -18,8 +18,8 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
       {sessions.map((session) => {
         const isActive = session.id === selectedId;
         const title = session.title?.trim() || `Session #${session.id}`;
-        const teaser =
-          session.text.length > 120 ? `${session.text.slice(0, 120)}…` : session.text;
+        const preview = session.preview ?? session.text_preview ?? session.text ?? '';
+        const teaser = preview.length > 120 ? `${preview.slice(0, 120)}...` : preview;
 
         return (
           <li key={session.id}>
@@ -38,11 +38,12 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
                     {new Date(session.created_at).toLocaleDateString()}
                   </time>
                 </div>
-                <p className="mt-1 text-[14px] leading-[1.55] text-amber-50 line-clamp-2">
+                <p className="mt-1 line-clamp-2 text-[14px] leading-[1.55] text-amber-50">
                   {teaser}
                 </p>
                 <div className="mt-1 text-[11px] text-amber-200/70">
-                  {session.word_count} Wörter · {session.char_count} Zeichen
+                  {session.word_count ?? 0} Woerter - {session.char_count ?? 0}{' '}
+                  Zeichen
                 </div>
               </div>
             </button>

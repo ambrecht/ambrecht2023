@@ -63,7 +63,7 @@ export function SessionView() {
     updateSession,
     deleteSession,
   } = useSessionData({
-    pageSize: 50,
+    pageSize: 40,
     prefetchDelayMs: 1200,
     autoPrefetch: !isSearching,
     searchQuery: deferredSearch,
@@ -346,8 +346,10 @@ export function SessionView() {
               ? searchPage.next_cursor
                 ? `${sessions.length}+ Treffer`
                 : `${sessions.length} Treffer`
-              : pagination.total
+              : pagination.total !== undefined
                 ? `${sessions.length} von ${pagination.total} Eintraegen`
+                : hasMore
+                ? `${sessions.length}+ Eintraege`
                 : `${sessions.length} Eintraege`}
           </span>
           <div className="flex items-center gap-3">

@@ -53,6 +53,8 @@ export function SessionItem({
   const {
     id,
     text,
+    preview,
+    text_preview,
     title,
     status = 'draft',
     tags = [],
@@ -74,22 +76,26 @@ export function SessionItem({
   const safeWordCount = word_count ?? 0;
   const safeCharCount = char_count ?? 0;
   const safeLetterCount = letter_count ?? 0;
+  const displayText = text ?? preview ?? text_preview ?? '';
+  const hasFullText = typeof text === 'string' && text.length > 0;
 
   const paragraphs = useMemo(() => {
-    const t = text.trim();
+    const t = displayText.trim();
     if (!t) return [];
     return t.split(/\n{2,}/);
-  }, [text]);
+  }, [displayText]);
 
   useEffect(() => {
     setDraftTitle(title ?? '');
   }, [title]);
 
   useEffect(() => {
-    if (showAnalysis) {
-      setAnalysis(computeAnalysis(text));
+    if (showAnalysis && hasFullText) {
+      setAnalysis(computeAnalysis(displayText));
+    } else {
+      setAnalysis(null);
     }
-  }, [showAnalysis, text]);
+  }, [displayText, hasFullText, showAnalysis]);
 
   const counts = analysis?.counts ?? {
     verbs: 0,
@@ -117,7 +123,7 @@ export function SessionItem({
 
   const handleCopy = async () => {
     try {
-      await copy(text);
+      await copy(displayText);
     } catch (err) {
       console.error('Konnte nicht kopieren', err);
     }
@@ -393,14 +399,20 @@ export function SessionItem({
         <span className="inline-flex items-center gap-1 rounded-full bg-[#18130f] px-2.5 py-1 border border-[#2f2822]">
           <Sparkles size={14} /> Analyse: Verben {counts.verbs} · Nomen {counts.nouns} · Adjektive {counts.adjectives} · Adverbien {counts.adverbs}
         </span>
-        <button
-          type="button"
-          onClick={() => setShowAnalysis((v) => !v)}
-          aria-pressed={showAnalysis}
-          className="text-[11px] uppercase tracking-wide rounded-full border border-[#2f2822] px-3 py-1 hover:bg-[#18130f]"
-        >
-          {showAnalysis ? 'Markierungen aus' : 'Markierungen an'}
-        </button>
+        {hasFullText ? (
+          <button
+            type="button"
+            onClick={() => setShowAnalysis((v) => !v)}
+            aria-pressed={showAnalysis}
+            className="text-[11px] uppercase tracking-wide rounded-full border border-[#2f2822] px-3 py-1 hover:bg-[#18130f]"
+          >
+            {showAnalysis ? 'Markierungen aus' : 'Markierungen an'}
+          </button>
+        ) : (
+          <span className="text-[11px] uppercase tracking-wide rounded-full border border-[#2f2822] px-3 py-1 text-[#9c8f82]">
+            Vorschau
+          </span>
+        )}
       </div>
 
       <div
@@ -409,7 +421,7 @@ export function SessionItem({
       >
         {paragraphs.length > 0
           ? paragraphs.map((para, idx) => renderParagraph(para, idx))
-          : renderParagraph(text, 0)}
+          : renderParagraph(displayText, 0)}
       </div>
     </article>
   );

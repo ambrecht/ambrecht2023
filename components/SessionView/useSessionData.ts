@@ -30,7 +30,7 @@ type UpdateSessionPayload = Partial<
   Pick<Session, 'title' | 'status' | 'tags'>
 >;
 
-type CreateSessionPayload = Pick<Session, 'text'> &
+type CreateSessionPayload = { text: string } &
   Partial<Pick<Session, 'title' | 'status' | 'tags'>>;
 
 type UseSessionDataOptions = {
@@ -40,12 +40,20 @@ type UseSessionDataOptions = {
   searchQuery?: string;
 };
 
-type SessionPayload = Session & { text_preview?: string; tags?: string[] };
+type SessionPayload = Omit<Session, 'id'> & {
+  id: number | string;
+  text_preview?: string;
+  tags?: string[];
+};
 
 const normalizeSession = (entry: SessionPayload): Session => {
+  const preview = entry.preview ?? entry.text_preview ?? entry.text ?? '';
   return {
     ...entry,
-    text: entry.text ?? entry.text_preview ?? '',
+    id: Number(entry.id),
+    preview,
+    text_preview: entry.text_preview ?? preview,
+    text: entry.text,
     tags: entry.tags ?? [],
     status: entry.status ?? 'draft',
   };
@@ -76,9 +84,9 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [pagination, setPagination] = useState<SessionPagination>(() => ({
-    limit: pageSize,
-    offset: 0,
-    total: 0,
+    page_size: pageSize,
+    has_more: false,
+    next_page_token: null,
   }));
   const [searchPage, setSearchPage] = useState<SearchPagination>(() => ({
     limit: pageSize,
@@ -121,7 +129,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   );
 
   const fetchListPage = useCallback(
-    async (offsetToLoad: number, append: boolean, silent = false) => {
+    async (pageToken: string | null, append: boolean, silent = false) => {
       if (!silent) {
         setError(null);
         if (append) {
@@ -140,16 +148,19 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
       try {
         const response = await fetch(
           buildApiUrl('/sessions', {
-            limit: pageSize,
-            offset: offsetToLoad,
+            page_size: pageSize,
+            page_token: pageToken ?? undefined,
           }),
           {
             method: 'GET',
-            headers: API_HEADERS,
+            headers: { Accept: 'application/json' },
             cache: 'no-store',
             signal: controller.signal,
           },
         );
+        if (response.status === 304) {
+          return { ok: true as const, unchanged: true as const };
+        }
         const json = (await response.json()) as SessionsResponse;
         if (!response.ok || !json.success || !json.data) {
           const message =
@@ -160,9 +171,11 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         }
         const normalized = json.data.map(normalizeSession);
         const nextPagination: SessionPagination = {
-          limit: json.pagination?.limit ?? pageSize,
-          offset: json.pagination?.offset ?? offsetToLoad,
-          total: json.pagination?.total ?? offsetToLoad + normalized.length,
+          ...json.pagination,
+          page_size: json.pagination?.page_size ?? json.pagination?.limit ?? pageSize,
+          has_more: json.pagination?.has_more ?? Boolean(json.pagination?.next_page_token),
+          next_page_token: json.pagination?.next_page_token ?? null,
+          total: json.pagination?.total,
         };
         startTransition(() => setPagination(nextPagination));
         mergeSessions(normalized, append);
@@ -284,13 +297,12 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
         schedulePrefetchTick();
         return;
       }
-      if (sessions.length >= pagination.total) return;
+      if (!pagination.has_more || !pagination.next_page_token) return;
 
-      const nextOffset = pagination.offset + pagination.limit;
-      await fetchListPage(nextOffset, true, true);
+      await fetchListPage(pagination.next_page_token, true, true);
       schedulePrefetchTick();
     }, prefetchDelayMs);
-  }, [autoPrefetch, fetchListPage, pagination.limit, pagination.offset, pagination.total, prefetchDelayMs, sessions.length, stopPrefetch]);
+  }, [autoPrefetch, fetchListPage, pagination.has_more, pagination.next_page_token, prefetchDelayMs, stopPrefetch]);
 
   const refreshSessions = useCallback(async () => {
     stopPrefetch();
@@ -304,8 +316,8 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     }
 
     modeRef.current = 'list';
-    setPagination({ limit: pageSize, offset: 0, total: 0 });
-    return fetchListPage(0, false);
+    setPagination({ page_size: pageSize, has_more: false, next_page_token: null });
+    return fetchListPage(null, false);
   }, [fetchListPage, fetchSearchPage, pageSize, searchQuery, stopPrefetch, startTransition]);
 
   const loadMore = useCallback(() => {
@@ -317,19 +329,16 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
       return fetchSearchPage(searchPage.next_cursor, true);
     }
 
-    if (sessions.length >= pagination.total) return;
-    const nextOffset = pagination.offset + pagination.limit;
-    return fetchListPage(nextOffset, true);
+    if (!pagination.has_more || !pagination.next_page_token) return;
+    return fetchListPage(pagination.next_page_token, true);
   }, [
     fetchListPage,
     fetchSearchPage,
     isLoading,
     isLoadingMore,
-    pagination.limit,
-    pagination.offset,
-    pagination.total,
+    pagination.has_more,
+    pagination.next_page_token,
     searchPage.next_cursor,
-    sessions.length,
     stopPrefetch,
   ]);
 
@@ -414,7 +423,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           setSessions(Array.from(byIdRef.current.values()));
           setPagination((current) => ({
             ...current,
-            total: current.total + 1,
+            total: current.total === undefined ? current.total : current.total + 1,
           }));
         });
         return { success: true as const, session: created };
@@ -466,7 +475,10 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           setSessions(Array.from(byIdRef.current.values()));
           setPagination((current) => ({
             ...current,
-            total: Math.max(0, current.total - 1),
+            total:
+              current.total === undefined
+                ? current.total
+                : Math.max(0, current.total - 1),
           }));
           setSearchPage((current) => ({
             ...current,
@@ -513,8 +525,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     }
     if (!autoPrefetch) return;
     if (isLoading || isLoadingMore) return;
-    if (!pagination.total) return;
-    if (sessions.length >= pagination.total) return;
+    if (!pagination.has_more || !pagination.next_page_token) return;
 
     schedulePrefetchTick();
     return stopPrefetch;
@@ -522,8 +533,8 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     autoPrefetch,
     isLoading,
     isLoadingMore,
-    pagination.total,
-    sessions.length,
+    pagination.has_more,
+    pagination.next_page_token,
     schedulePrefetchTick,
     stopPrefetch,
   ]);
@@ -531,7 +542,7 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   const hasMore =
     modeRef.current === 'search'
       ? Boolean(searchPage.next_cursor)
-      : sessions.length < pagination.total;
+      : Boolean(pagination.has_more && pagination.next_page_token);
 
   return {
     sessions,
