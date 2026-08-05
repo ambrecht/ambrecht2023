@@ -54,12 +54,14 @@ export function SessionView() {
     isCreating,
     isPending,
     isUpdating,
+    deletingSessionIds,
     hasMore,
     error,
     refreshSessions,
     loadMore,
     createSession,
     updateSession,
+    deleteSession,
   } = useSessionData({
     pageSize: 50,
     prefetchDelayMs: 1200,
@@ -141,6 +143,14 @@ export function SessionView() {
   const handleRefresh = () => {
     setActivityRefreshKey((value) => value + 1);
     void refreshSessions();
+  };
+
+  const handleDeleteSession = async (id: number) => {
+    const result = await deleteSession(id);
+    if (result.success) {
+      setActivityRefreshKey((value) => value + 1);
+    }
+    return result;
   };
 
   return (
@@ -322,7 +332,9 @@ export function SessionView() {
                 key={session.id}
                 session={session}
                 onUpdate={updateSession}
+                onDelete={handleDeleteSession}
                 disableActions={isUpdating}
+                isDeleting={deletingSessionIds.has(session.id)}
               />
             ))
           )}
