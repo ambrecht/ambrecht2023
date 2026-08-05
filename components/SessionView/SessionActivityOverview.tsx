@@ -11,7 +11,22 @@ type ApiActivityDay = {
   date: string;
   words: number;
   sessions: number;
+  manual_inserted_words?: number;
+  manual_deleted_words?: number;
+  manual_net_words?: number;
+  action_inserted_words?: number;
+  save_count?: number;
+  source?: 'observed' | 'estimated' | 'none' | string;
+  confidence?: 'exact' | 'estimated' | 'none' | string;
   level: number;
+};
+
+type ApiWritingSemantics = {
+  canonical_source?: string;
+  fallback_source?: string;
+  fallback_confidence?: string;
+  words_field?: string;
+  action_words_counted_as_manual?: boolean;
 };
 
 type ApiWritingOverview = {
@@ -34,6 +49,7 @@ type ApiWritingOverview = {
     min_level: number;
     max_level: number;
   };
+  semantics?: ApiWritingSemantics;
 };
 
 type ApiResponse<T> =
@@ -121,6 +137,53 @@ const getCellClass = (level: number) => {
   return classes[safeLevel];
 };
 
+const formatSignedWords = (value: number) =>
+  `${value > 0 ? '+' : ''}${value.toLocaleString('de-DE')}`;
+
+const buildDayTitle = (day: GridDay) => {
+  const formattedDate = formatDate(day.dateValue);
+  if (day.words <= 0) {
+    return `${formattedDate}: nicht geschrieben`;
+  }
+
+  const details = [
+    `${formattedDate}: ${day.words.toLocaleString('de-DE')} Woerter in ${
+      day.sessions
+    } ${pluralize(day.sessions, 'Session', 'Sessions')}`,
+  ];
+
+  if (day.source === 'estimated' || day.confidence === 'estimated') {
+    details.push('aus alten Sessions geschaetzt');
+  }
+
+  const hasManualStats =
+    day.manual_inserted_words !== undefined ||
+    day.manual_deleted_words !== undefined;
+  if (hasManualStats) {
+    details.push(
+      `manuell ${formatSignedWords(day.manual_inserted_words ?? 0)}/${formatSignedWords(
+        -(day.manual_deleted_words ?? 0),
+      )}`,
+    );
+  }
+
+  if (day.action_inserted_words && day.action_inserted_words > 0) {
+    details.push(`Actions +${day.action_inserted_words.toLocaleString('de-DE')}`);
+  }
+
+  if (day.save_count && day.save_count > 0) {
+    details.push(
+      `${day.save_count.toLocaleString('de-DE')} ${pluralize(
+        day.save_count,
+        'Save',
+        'Saves',
+      )}`,
+    );
+  }
+
+  return details.join(' · ');
+};
+
 const buildGridDays = (overview: ApiWritingOverview | null) => {
   if (!overview || overview.days.length === 0) return [] as GridDay[];
 
@@ -173,7 +236,7 @@ export function SessionActivityOverview({
     setIsLoading(true);
     setError(null);
 
-    fetch(buildApiUrl('/api/sessions/writing-overview', { days }), {
+    fetch(buildApiUrl('/api/v1/writing-activity', { days }), {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
@@ -343,16 +406,7 @@ export function SessionActivityOverview({
                   />
                 ))
               : gridDays.map((day) => {
-                  const title =
-                    day.words > 0
-                      ? `${formatDate(day.dateValue)}: ${day.words.toLocaleString(
-                          'de-DE',
-                        )} Woerter in ${day.sessions} ${pluralize(
-                          day.sessions,
-                          'Session',
-                          'Sessions',
-                        )}`
-                      : `${formatDate(day.dateValue)}: nicht geschrieben`;
+                  const title = buildDayTitle(day);
 
                   return (
                     <span
@@ -371,7 +425,12 @@ export function SessionActivityOverview({
 
       <div className="mt-3 flex items-center justify-between gap-3 text-[12px] text-[#8f8174]">
         <span>
-          Letzte {overview?.range.days ?? days} Tage, direkt aus der Schreibaktivitaets-API
+          Letzte {overview?.range.days ?? days} Tage, Quelle:{' '}
+          {overview?.semantics
+            ? `${overview.semantics.canonical_source ?? 'writing_events'}, Altbestand: ${
+                overview.semantics.fallback_source ?? 'sessions'
+              }`
+            : 'Schreibaktivitaets-API'}
         </span>
         <div className="flex items-center gap-1">
           <span>Weniger</span>

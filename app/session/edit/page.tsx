@@ -1752,13 +1752,10 @@ export default function SessionEditorPage() {
         save_as_session_version: true,
       });
       const createdSessionId = action.created_session?.id;
-      const created = createdSessionId
-        ? await getSession(createdSessionId)
-        : await createEdit(session.id, action.after_text || previewAction.afterText, {
-            eventType: 'action',
-            blocks: parseTextToBlocks(action.after_text || previewAction.afterText, blocks),
-            parkedBlockIds: [],
-          });
+      if (!createdSessionId) {
+        throw new Error('Backend-Action hat keine neue Session-Version geliefert.');
+      }
+      const created = await getSession(createdSessionId);
       const savedText = created.text ?? '';
       const alignedBlocks = apiBlocksToEditorBlocks(created) ?? parseTextToBlocks(savedText, blocks);
       const versionPayload = buildSessionVersion(created, alignedBlocks);
