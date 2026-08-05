@@ -318,6 +318,104 @@ Frontend-Empfehlung:
 - Farbintensitaet weiter direkt ueber `level` rendern.
 - Fuer die Hauptzahl "Woerter" weiter `stats.words` nutzen. Dieser Wert mischt echte Event-Woerter und Altbestand-Schaetzungen, ist aber in `semantics` transparent beschrieben.
 
+## 4. Performance-Update: Sessionliste als Summary laden
+
+Die Sessionliste ist jetzt bewusst eine kleine Summary-Ressource. Das Frontend soll beim App-Start nicht mehr alle Volltexte laden.
+
+### Endpoint
+
+```http
+GET /api/v1/sessions?page_size=40&page_token=...
+```
+
+Kompatibilitaet:
+
+- `limit` wird weiterhin als Alias fuer `page_size` akzeptiert.
+- `offset` wird noch akzeptiert, sollte fuer neue UI-Flows aber nicht mehr verwendet werden.
+- Neue Implementierungen sollen `page_size` und `page_token` verwenden.
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 504,
+      "document_id": 81,
+      "title": "Roman - Kapitel 4",
+      "preview": "Als sie die Tuer oeffnete ...",
+      "text_preview": "Als sie die Tuer oeffnete ...",
+      "word_count": 2841,
+      "status": "draft",
+      "created_at": "2026-08-05T14:20:00.000Z",
+      "updated_at": "2026-08-05T16:31:12.000Z",
+      "current_version_id": 1942,
+      "version_count": 7,
+      "parent_id": null
+    }
+  ],
+  "pagination": {
+    "page_size": 40,
+    "offset": 0,
+    "has_more": true,
+    "next_page_token": "eyJ1cGRhdGVkX2F0Ijoi..."
+  }
+}
+```
+
+Nicht mehr in der Liste enthalten:
+
+- `text`
+- `blocks`
+- komplette Versionen
+- Diffs
+- Findings
+- Writing Events
+- grosse Metadata-Payloads
+
+### Detail separat laden
+
+Wenn eine Session geoeffnet wird, den Volltext separat laden:
+
+```http
+GET /api/v1/sessions/:id
+```
+
+Dieser Detailendpoint bleibt der Ort fuer `text`, Statistiken und aktuelle Blockstruktur.
+
+### Frontend-Anpassung
+
+- Startscreen nur mit `GET /api/v1/sessions?page_size=40` laden.
+- Weitere Seiten ueber `pagination.next_page_token` nachladen.
+- Sessiondetail erst bei Auswahl einer Session laden.
+- UI nicht mehr auf `data[].text` in der Liste stuetzen.
+- Fuer Listenvorschau `preview` oder `text_preview` verwenden.
+- `ETag`/`If-None-Match` kann genutzt werden; bei unveraenderter Liste antwortet die API mit `304 Not Modified`.
+
+Beispiel:
+
+```ts
+async function fetchSessionPage(pageToken?: string) {
+  const params = new URLSearchParams({ page_size: '40' });
+  if (pageToken) params.set('page_token', pageToken);
+
+  const response = await fetch(`/api/v1/sessions?${params}`, {
+    headers: { Accept: 'application/json' },
+  });
+
+  if (response.status === 304) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`Sessions konnten nicht geladen werden: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
 ### Dokumentbezogener Endpoint
 
 ### Endpoint
