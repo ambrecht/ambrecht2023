@@ -27,3 +27,16 @@ export async function GET(
     context: { route: 'sessions.get', session_id: params.id },
   });
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
+  return proxyRequest({
+    method: 'DELETE',
+    path: `/sessions/${params.id}`,
+    cache: 'no-store',
+    requireApiKey: true,
+    context: { route: 'sessions.delete', session_id: params.id },
+  });
+}

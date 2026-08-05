@@ -90,6 +90,9 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [deletingSessionIds, setDeletingSessionIds] = useState<Set<number>>(
+    () => new Set(),
+  );
   const [error, setError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
@@ -429,6 +432,69 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     [startTransition],
   );
 
+  const deleteSession = useCallback(
+    async (id: number) => {
+      setDeletingSessionIds((current) => new Set(current).add(id));
+      setError(null);
+      try {
+        const res = await fetch(buildApiUrl(`/sessions/${id}`), {
+          method: 'DELETE',
+          headers: API_HEADERS,
+          cache: 'no-store',
+        });
+        const json = res.status === 204 ? null : await res.json().catch(() => null);
+        const success =
+          res.ok &&
+          (!json ||
+            (typeof json === 'object' &&
+              'success' in json &&
+              (json as { success?: boolean }).success));
+
+        if (!success) {
+          const payload = json as
+            | { error?: string; message?: string; success?: boolean }
+            | null;
+          throw new Error(
+            payload?.error ||
+              payload?.message ||
+              'Session konnte nicht in den Papierkorb verschoben werden.',
+          );
+        }
+
+        byIdRef.current.delete(id);
+        startTransition(() => {
+          setSessions(Array.from(byIdRef.current.values()));
+          setPagination((current) => ({
+            ...current,
+            total: Math.max(0, current.total - 1),
+          }));
+          setSearchPage((current) => ({
+            ...current,
+            total:
+              current.total === undefined
+                ? current.total
+                : Math.max(0, current.total - 1),
+          }));
+        });
+        return { success: true as const };
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : 'Unbekannter Fehler beim Verschieben in den Papierkorb.';
+        setError(message);
+        return { success: false as const, error: message };
+      } finally {
+        setDeletingSessionIds((current) => {
+          const next = new Set(current);
+          next.delete(id);
+          return next;
+        });
+      }
+    },
+    [startTransition],
+  );
+
   useEffect(() => {
     if (searchQuery === lastQueryRef.current) return;
     lastQueryRef.current = searchQuery;
@@ -476,11 +542,13 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
     isLoadingMore,
     isCreating,
     isUpdating,
+    deletingSessionIds,
     isPending,
     error,
     refreshSessions,
     loadMore,
     createSession,
     updateSession,
+    deleteSession,
   };
 }

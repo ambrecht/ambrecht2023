@@ -26,6 +26,7 @@ export function SessionView() {
   const [newText, setNewText] = useState('');
   const [newTags, setNewTags] = useState('');
   const [createError, setCreateError] = useState<string | null>(null);
+  const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   const randomKeyRef = useRef(new Map<number, number>());
 
   useEffect(() => {
@@ -53,12 +54,14 @@ export function SessionView() {
     isCreating,
     isPending,
     isUpdating,
+    deletingSessionIds,
     hasMore,
     error,
     refreshSessions,
     loadMore,
     createSession,
     updateSession,
+    deleteSession,
   } = useSessionData({
     pageSize: 50,
     prefetchDelayMs: 1200,
@@ -131,9 +134,23 @@ export function SessionView() {
     }
 
     resetCreateForm();
+    setActivityRefreshKey((value) => value + 1);
     if (search.trim()) {
       setSearch('');
     }
+  };
+
+  const handleRefresh = () => {
+    setActivityRefreshKey((value) => value + 1);
+    void refreshSessions();
+  };
+
+  const handleDeleteSession = async (id: number) => {
+    const result = await deleteSession(id);
+    if (result.success) {
+      setActivityRefreshKey((value) => value + 1);
+    }
+    return result;
   };
 
   return (
@@ -211,10 +228,7 @@ export function SessionView() {
           </div>
         </header>
 
-        <SessionActivityOverview
-          sessions={sessions}
-          totalSessions={deferredSearch.trim() ? undefined : pagination.total}
-        />
+        <SessionActivityOverview refreshKey={activityRefreshKey} />
 
         <form
           onSubmit={handleCreateSession}
@@ -288,7 +302,7 @@ export function SessionView() {
 
         <div className="flex items-center gap-3 mb-6">
           <button
-            onClick={refreshSessions}
+            onClick={handleRefresh}
             disabled={isLoading}
             className="inline-flex items-center gap-2 rounded-lg border border-[#3a3129] px-3 py-2 text-sm text-[#f7f4ed] hover:bg-[#191511] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c9b18a] disabled:opacity-50"
           >
@@ -318,7 +332,9 @@ export function SessionView() {
                 key={session.id}
                 session={session}
                 onUpdate={updateSession}
+                onDelete={handleDeleteSession}
                 disableActions={isUpdating}
+                isDeleting={deletingSessionIds.has(session.id)}
               />
             ))
           )}

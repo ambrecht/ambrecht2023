@@ -1,22 +1,74 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import type { Session } from './types';
+import React, { useEffect, useMemo, useState } from 'react';
 
 interface SessionActivityOverviewProps {
-  sessions: Session[];
-  totalSessions?: number;
+  days?: number;
+  refreshKey?: number;
 }
 
-type DayActivity = {
-  date: Date;
-  key: string;
+type ApiActivityDay = {
+  date: string;
   words: number;
-  letters: number;
   sessions: number;
+  manual_inserted_words?: number;
+  manual_deleted_words?: number;
+  manual_net_words?: number;
+  action_inserted_words?: number;
+  save_count?: number;
+  source?: 'observed' | 'estimated' | 'none' | string;
+  confidence?: 'exact' | 'estimated' | 'none' | string;
+  level: number;
 };
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+type ApiWritingSemantics = {
+  canonical_source?: string;
+  fallback_source?: string;
+  fallback_confidence?: string;
+  words_field?: string;
+  action_words_counted_as_manual?: boolean;
+};
+
+type ApiWritingOverview = {
+  range: {
+    from: string;
+    to: string;
+    days: number;
+  };
+  stats: {
+    words: number;
+    active_days: number;
+    streak_days: number;
+    sessions: {
+      written: number;
+      total: number;
+    };
+  };
+  days: ApiActivityDay[];
+  legend: {
+    min_level: number;
+    max_level: number;
+  };
+  semantics?: ApiWritingSemantics;
+};
+
+type ApiResponse<T> =
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      error?: string;
+      message?: string;
+    };
+
+type GridDay = ApiActivityDay & {
+  dateValue: Date;
+  key: string;
+  inRange: boolean;
+};
+
 const WEEKDAYS = ['Mo', '', 'Mi', '', 'Fr', '', ''];
 const MONTHS = [
   'Jan',
@@ -33,8 +85,27 @@ const MONTHS = [
   'Dez',
 ];
 
-const startOfDay = (date: Date) =>
-  new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const buildApiUrl = (
+  path: string,
+  query?: Record<string, string | number | undefined>,
+) => {
+  const params = new URLSearchParams();
+  if (query) {
+    for (const [key, value] of Object.entries(query)) {
+      if (value !== undefined) {
+        params.set(key, String(value));
+      }
+    }
+  }
+  const queryString = params.toString();
+  return `${path}${queryString ? `?${queryString}` : ''}`;
+};
+
+const parseDateKey = (value: string) => {
+  const [year, month, day] = value.split('-').map(Number);
+  if (!year || !month || !day) return new Date(value);
+  return new Date(year, month - 1, day);
+};
 
 const toDateKey = (date: Date) => {
   const year = date.getFullYear();
@@ -54,15 +125,6 @@ const formatDate = (date: Date) =>
 const pluralize = (count: number, singular: string, plural: string) =>
   count === 1 ? singular : plural;
 
-const getLevel = (words: number, maxWords: number) => {
-  if (words <= 0 || maxWords <= 0) return 0;
-  const ratio = words / maxWords;
-  if (ratio >= 0.75) return 4;
-  if (ratio >= 0.45) return 3;
-  if (ratio >= 0.2) return 2;
-  return 1;
-};
-
 const getCellClass = (level: number) => {
   const classes = [
     'bg-[#1a1511]',
@@ -71,96 +133,179 @@ const getCellClass = (level: number) => {
     'bg-[#c9a968]',
     'bg-[#f0d28b]',
   ];
-  return classes[level] ?? classes[0];
+  const safeLevel = Math.max(0, Math.min(level, classes.length - 1));
+  return classes[safeLevel];
 };
 
-const buildActivityDays = (sessions: Session[]) => {
-  const today = startOfDay(new Date());
-  const start = new Date(today);
-  start.setDate(start.getDate() - 364);
+const formatSignedWords = (value: number) =>
+  `${value > 0 ? '+' : ''}${value.toLocaleString('de-DE')}`;
 
-  const byDay = new Map<string, Omit<DayActivity, 'date' | 'key'>>();
-  for (const session of sessions) {
-    const createdAt = new Date(session.created_at);
-    if (Number.isNaN(createdAt.getTime())) continue;
-
-    const day = startOfDay(createdAt);
-    if (day < start || day > today) continue;
-
-    const key = toDateKey(day);
-    const current = byDay.get(key) ?? { words: 0, letters: 0, sessions: 0 };
-    byDay.set(key, {
-      words: current.words + (session.word_count ?? 0),
-      letters: current.letters + (session.letter_count ?? 0),
-      sessions: current.sessions + 1,
-    });
+const buildDayTitle = (day: GridDay) => {
+  const formattedDate = formatDate(day.dateValue);
+  if (day.words <= 0) {
+    return `${formattedDate}: nicht geschrieben`;
   }
 
-  const firstGridDay = new Date(start);
-  firstGridDay.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+  const details = [
+    `${formattedDate}: ${day.words.toLocaleString('de-DE')} Woerter in ${
+      day.sessions
+    } ${pluralize(day.sessions, 'Session', 'Sessions')}`,
+  ];
 
-  const days: DayActivity[] = [];
-  for (let date = new Date(firstGridDay); date <= today; date.setDate(date.getDate() + 1)) {
-    const day = new Date(date);
-    const key = toDateKey(day);
-    const activity = byDay.get(key) ?? { words: 0, letters: 0, sessions: 0 };
-    days.push({ date: day, key, ...activity });
+  if (day.source === 'estimated' || day.confidence === 'estimated') {
+    details.push('aus alten Sessions geschaetzt');
+  }
+
+  const hasManualStats =
+    day.manual_inserted_words !== undefined ||
+    day.manual_deleted_words !== undefined;
+  if (hasManualStats) {
+    details.push(
+      `manuell ${formatSignedWords(day.manual_inserted_words ?? 0)}/${formatSignedWords(
+        -(day.manual_deleted_words ?? 0),
+      )}`,
+    );
+  }
+
+  if (day.action_inserted_words && day.action_inserted_words > 0) {
+    details.push(`Actions +${day.action_inserted_words.toLocaleString('de-DE')}`);
+  }
+
+  if (day.save_count && day.save_count > 0) {
+    details.push(
+      `${day.save_count.toLocaleString('de-DE')} ${pluralize(
+        day.save_count,
+        'Save',
+        'Saves',
+      )}`,
+    );
+  }
+
+  return details.join(' · ');
+};
+
+const buildGridDays = (overview: ApiWritingOverview | null) => {
+  if (!overview || overview.days.length === 0) return [] as GridDay[];
+
+  const byDay = new Map(overview.days.map((day) => [day.date, day]));
+  const rangeStart = parseDateKey(overview.range.from);
+  const rangeEnd = parseDateKey(overview.range.to);
+  const firstGridDay = new Date(rangeStart);
+  firstGridDay.setDate(rangeStart.getDate() - ((rangeStart.getDay() + 6) % 7));
+
+  const days: GridDay[] = [];
+  for (
+    let date = new Date(firstGridDay);
+    date <= rangeEnd;
+    date.setDate(date.getDate() + 1)
+  ) {
+    const dateValue = new Date(date);
+    const key = toDateKey(dateValue);
+    const activity = byDay.get(key) ?? {
+      date: key,
+      words: 0,
+      sessions: 0,
+      level: 0,
+    };
+    days.push({
+      ...activity,
+      dateValue,
+      key,
+      inRange: dateValue >= rangeStart && dateValue <= rangeEnd,
+    });
   }
 
   return days;
 };
 
-const computeCurrentStreak = (days: DayActivity[]) => {
-  let streak = 0;
-  for (let index = days.length - 1; index >= 0; index -= 1) {
-    if (days[index].words <= 0) break;
-    streak += 1;
-  }
-  return streak;
-};
-
 export function SessionActivityOverview({
-  sessions,
-  totalSessions,
+  days = 365,
+  refreshKey = 0,
 }: SessionActivityOverviewProps) {
-  const { days, maxWords, totals, monthLabels, currentStreak } = useMemo(() => {
-    const activityDays = buildActivityDays(sessions);
-    const activeDays = activityDays.filter((day) => day.words > 0);
-    const max = activeDays.reduce((highest, day) => Math.max(highest, day.words), 0);
-    const words = activeDays.reduce((sum, day) => sum + day.words, 0);
-    const letters = activeDays.reduce((sum, day) => sum + day.letters, 0);
+  const [overview, setOverview] = useState<ApiWritingOverview | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    let timedOut = false;
+    const timeout = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 10000);
+    setIsLoading(true);
+    setError(null);
+
+    fetch(buildApiUrl('/api/v1/writing-activity', { days }), {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        const json = (await response.json()) as ApiResponse<ApiWritingOverview>;
+        if (!response.ok || !json.success) {
+          throw new Error(
+            (!json.success && (json.message || json.error)) ||
+              `HTTP ${response.status}: Schreibaktivitaet konnte nicht geladen werden.`,
+          );
+        }
+        setOverview(json.data);
+      })
+      .catch((err) => {
+        if ((err as { name?: string }).name === 'AbortError' && !timedOut) return;
+        setError(
+          timedOut
+            ? 'Schreibaktivitaet braucht zu lange. Bitte gleich erneut versuchen.'
+            : err instanceof Error
+            ? err.message
+            : 'Schreibaktivitaet konnte nicht geladen werden.',
+        );
+      })
+      .finally(() => {
+        if (!controller.signal.aborted || timedOut) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [days, refreshKey]);
+
+  const { gridDays, monthLabels, weekCount } = useMemo(() => {
+    const activityDays = buildGridDays(overview);
     const labels: Array<{ label: string; column: number }> = [];
     let lastMonth = -1;
+
     activityDays.forEach((day, index) => {
-      if (day.date.getDate() <= 7 && day.date.getMonth() !== lastMonth) {
+      if (
+        day.inRange &&
+        day.dateValue.getDate() <= 7 &&
+        day.dateValue.getMonth() !== lastMonth
+      ) {
         labels.push({
-          label: MONTHS[day.date.getMonth()],
+          label: MONTHS[day.dateValue.getMonth()],
           column: Math.floor(index / 7) + 1,
         });
-        lastMonth = day.date.getMonth();
+        lastMonth = day.dateValue.getMonth();
       }
     });
 
     return {
-      days: activityDays,
-      maxWords: max,
+      gridDays: activityDays,
       monthLabels: labels,
-      currentStreak: computeCurrentStreak(activityDays),
-      totals: {
-        words,
-        letters,
-        activeDays: activeDays.length,
-        loadedSessions: sessions.length,
-      },
+      weekCount: Math.max(Math.ceil(days / 7), Math.ceil(activityDays.length / 7), 1),
     };
-  }, [sessions]);
+  }, [days, overview]);
 
-  const weekCount = Math.ceil(days.length / 7);
-  const loadedLabel =
-    totalSessions && totalSessions > totals.loadedSessions
-      ? `${totals.loadedSessions} von ${totalSessions}`
-      : String(totals.loadedSessions);
+  const stats = overview?.stats;
+  const sessionLabel = stats
+    ? `${stats.sessions.written.toLocaleString('de-DE')} von ${stats.sessions.total.toLocaleString(
+        'de-DE',
+      )}`
+    : '...';
 
   return (
     <section
@@ -178,27 +323,40 @@ export function SessionActivityOverview({
           >
             Wann du geschrieben hast
           </h2>
+          {error && (
+            <p className="mt-2 text-xs text-red-300">
+              {error}
+            </p>
+          )}
         </div>
         <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
           <div>
             <dt className="text-[#8f8174]">Woerter</dt>
             <dd className="font-semibold text-[#f7f4ed]">
-              {totals.words.toLocaleString('de-DE')}
+              {stats ? stats.words.toLocaleString('de-DE') : '...'}
             </dd>
           </div>
           <div>
             <dt className="text-[#8f8174]">Aktive Tage</dt>
-            <dd className="font-semibold text-[#f7f4ed]">{totals.activeDays}</dd>
+            <dd className="font-semibold text-[#f7f4ed]">
+              {stats ? stats.active_days : '...'}
+            </dd>
           </div>
           <div>
             <dt className="text-[#8f8174]">Serie</dt>
             <dd className="font-semibold text-[#f7f4ed]">
-              {currentStreak} {pluralize(currentStreak, 'Tag', 'Tage')}
+              {stats
+                ? `${stats.streak_days} ${pluralize(
+                    stats.streak_days,
+                    'Tag',
+                    'Tage',
+                  )}`
+                : '...'}
             </dd>
           </div>
           <div>
             <dt className="text-[#8f8174]">Sessions</dt>
-            <dd className="font-semibold text-[#f7f4ed]">{loadedLabel}</dd>
+            <dd className="font-semibold text-[#f7f4ed]">{sessionLabel}</dd>
           </div>
         </dl>
       </div>
@@ -240,36 +398,40 @@ export function SessionActivityOverview({
             className="grid grid-flow-col grid-rows-7 gap-1"
             style={{ gridColumn: `2 / span ${weekCount}` }}
           >
-            {days.map((day) => {
-              const level = getLevel(day.words, maxWords);
-              const title =
-                day.words > 0
-                  ? `${formatDate(day.date)}: ${day.words.toLocaleString(
-                      'de-DE',
-                    )} Woerter in ${day.sessions} ${pluralize(
-                      day.sessions,
-                      'Session',
-                      'Sessions',
-                    )}`
-                  : `${formatDate(day.date)}: nicht geschrieben`;
+            {isLoading && gridDays.length === 0
+              ? Array.from({ length: weekCount * 7 }).map((_, index) => (
+                  <span
+                    key={`loading-${index}`}
+                    className="h-3 rounded-[3px] border border-[#2f2822] bg-[#1a1511]"
+                  />
+                ))
+              : gridDays.map((day) => {
+                  const title = buildDayTitle(day);
 
-              return (
-                <span
-                  key={day.key}
-                  title={title}
-                  aria-label={title}
-                  className={`h-3 rounded-[3px] border border-[#2f2822] ${getCellClass(
-                    level,
-                  )}`}
-                />
-              );
-            })}
+                  return (
+                    <span
+                      key={day.key}
+                      title={title}
+                      aria-label={title}
+                      className={`h-3 rounded-[3px] border border-[#2f2822] ${getCellClass(
+                        day.inRange ? day.level : 0,
+                      )} ${day.inRange ? '' : 'opacity-30'}`}
+                    />
+                  );
+                })}
           </div>
         </div>
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-3 text-[12px] text-[#8f8174]">
-        <span>Letzte 365 Tage, basierend auf geladenen Sessions</span>
+        <span>
+          Letzte {overview?.range.days ?? days} Tage, Quelle:{' '}
+          {overview?.semantics
+            ? `${overview.semantics.canonical_source ?? 'writing_events'}, Altbestand: ${
+                overview.semantics.fallback_source ?? 'sessions'
+              }`
+            : 'Schreibaktivitaets-API'}
+        </span>
         <div className="flex items-center gap-1">
           <span>Weniger</span>
           {[0, 1, 2, 3, 4].map((level) => (

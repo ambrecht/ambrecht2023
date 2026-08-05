@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Copy, Edit3, MoreHorizontal, Sparkles } from 'lucide-react';
+import { Copy, Edit3, Sparkles, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Session } from './types';
 import {
@@ -19,7 +19,11 @@ interface SessionItemProps {
     id: number,
     payload: Partial<Pick<Session, 'title' | 'status' | 'tags'>>,
   ) => Promise<{ success: boolean; error?: string } | { success: boolean }>;
+  onDelete?: (
+    id: number,
+  ) => Promise<{ success: boolean; error?: string } | { success: boolean }>;
   disableActions?: boolean;
+  isDeleting?: boolean;
   highlight?: boolean;
 }
 
@@ -37,7 +41,14 @@ const statusLabels: Record<NonNullable<Session['status']>, string> = {
   final: 'Final',
 };
 
-export function SessionItem({ session, onUpdate, disableActions, highlight }: SessionItemProps) {
+export function SessionItem({
+  session,
+  onUpdate,
+  onDelete,
+  disableActions,
+  isDeleting,
+  highlight,
+}: SessionItemProps) {
   const router = useRouter();
   const {
     id,
@@ -57,6 +68,7 @@ export function SessionItem({ session, onUpdate, disableActions, highlight }: Se
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title ?? '');
   const [newTag, setNewTag] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const { copied, copy } = useCopyToClipboard(1500);
 
   const safeWordCount = word_count ?? 0;
@@ -108,6 +120,19 @@ export function SessionItem({ session, onUpdate, disableActions, highlight }: Se
       await copy(text);
     } catch (err) {
       console.error('Konnte nicht kopieren', err);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!onDelete) return;
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
+    }
+
+    const result = await onDelete(id);
+    if (!result.success) {
+      setConfirmDelete(false);
     }
   };
 
@@ -320,6 +345,7 @@ export function SessionItem({ session, onUpdate, disableActions, highlight }: Se
           <button
             type="button"
             onClick={handleEdit}
+            disabled={disableActions || isDeleting}
             className="inline-flex items-center gap-1 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#211a13]"
           >
             <Edit3 size={14} /> Bearbeiten
@@ -327,6 +353,7 @@ export function SessionItem({ session, onUpdate, disableActions, highlight }: Se
           <button
             type="button"
             onClick={handleCopy}
+            disabled={disableActions || isDeleting}
             className="inline-flex items-center gap-1 rounded-lg border border-[#2f2822] bg-[#18130f] px-3 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#211a13]"
           >
             <Copy size={14} /> {copied ? 'Kopiert' : 'Kopieren'}
@@ -336,10 +363,28 @@ export function SessionItem({ session, onUpdate, disableActions, highlight }: Se
           </span>
           <button
             type="button"
-            className="inline-flex items-center rounded-lg border border-[#2f2822] bg-[#18130f] px-2 py-2 text-xs font-semibold text-[#f7f4ed] hover:bg-[#211a13]"
-            aria-label="Mehr Aktionen"
+            onClick={handleDelete}
+            disabled={disableActions || isDeleting || !onDelete}
+            className={`inline-flex min-w-[44px] items-center justify-center gap-1 rounded-lg border px-2 py-2 text-xs font-semibold disabled:opacity-50 ${
+              confirmDelete
+                ? 'border-red-800/70 bg-red-950/50 text-red-100 hover:bg-red-900/50'
+                : 'border-[#2f2822] bg-[#18130f] text-[#f7f4ed] hover:bg-[#211a13]'
+            }`}
+            aria-label={
+              confirmDelete
+                ? 'Session in Papierkorb bestaetigen'
+                : 'Session in Papierkorb verschieben'
+            }
+            title={
+              confirmDelete
+                ? 'Nochmal klicken zum Verschieben'
+                : 'In Papierkorb verschieben'
+            }
           >
-            <MoreHorizontal size={16} />
+            <Trash2 size={16} />
+            {confirmDelete && (
+              <span>{isDeleting ? '...' : 'Bestaetigen'}</span>
+            )}
           </button>
         </div>
       </header>
