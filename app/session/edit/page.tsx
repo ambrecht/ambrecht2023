@@ -15,27 +15,31 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import type { Finding, Note, Session } from '@/lib/api/types';
+import type {
+  BlameResponse,
+  BlockDiffResponse,
+  Finding,
+  LineDiffResponse,
+  Note,
+  Session,
+  WritingOverview,
+} from '@/lib/api/types';
 import {
   createEdit,
   createNote,
+  createWorkshopRun,
   deleteNote,
+  getBlame,
+  getDocumentBlockDiff,
+  getDocumentLineDiff,
   getDocumentVersions,
   getNotes,
   getSession,
+  getWritingOverview,
+  runSessionRemoveAdverbsAction,
+  updateFindingStatus,
   updateNote,
 } from '@/lib/api/typewriterClient';
-import {
-  analyzeNlpVersion,
-  createNlpDocument,
-  createNlpDocumentVersion,
-  getNlpAdverbTool,
-  getNlpDescriptionTool,
-  getNlpKwic,
-  getNlpTensePovTool,
-  getNlpVersion,
-  runRemoveAdverbsAction,
-} from '@/lib/api/nlpClient';
 
 import type { Block, BlockType, SessionVersion } from '@/lib/session-editor/types';
 import {
@@ -288,6 +292,52 @@ const getParkedStoreKey = (session: Session | null) => {
   return `session-editor-parked:${session.document_id ?? session.id}:${session.id}`;
 };
 
+const apiBlocksToEditorBlocks = (session: Session): Block[] | null => {
+  if (!Array.isArray(session.blocks) || session.blocks.length === 0) return null;
+  return updateBlockOrder(
+    session.blocks
+      .filter((block) => typeof block.text === 'string' && block.text.trim().length > 0)
+      .map((block, index) => ({
+        id: block.id,
+        order: block.order ?? index,
+        type: (block.type || 'paragraph') as BlockType,
+        text: block.text,
+        labels: Array.isArray(block.labels) ? block.labels : [],
+        paragraphId: block.paragraph_id ?? undefined,
+        stats: {
+          words: block.stats?.words ?? computeBlockStats(block.text).words,
+          chars: block.stats?.chars ?? computeBlockStats(block.text).chars,
+        },
+      })),
+  );
+};
+
+const buildSessionVersion = (session: Session, fallbackBlocks?: Block[]) => {
+  const rawText = session.text ?? '';
+  const blocks = apiBlocksToEditorBlocks(session) ?? fallbackBlocks ?? parseTextToBlocks(rawText);
+  return {
+    id: String(session.id),
+    sessionId: String(session.id),
+    createdAt: session.created_at,
+    rawText,
+    blocks,
+    hints: [],
+  } satisfies SessionVersion;
+};
+
+const formatServerDiff = (diff: LineDiffResponse | string) => {
+  if (typeof diff === 'string') return diff;
+  return diff.lines
+    .map((line) =>
+      line.type === 'insert'
+        ? `+ ${line.text}`
+        : line.type === 'delete'
+          ? `- ${line.text}`
+          : `  ${line.text}`,
+    )
+    .join('\n');
+};
+
 const loadParkedIds = (storeKey: string | null) => {
   if (!storeKey || typeof window === 'undefined') return new Set<string>();
   try {
@@ -382,11 +432,14 @@ export default function SessionEditorPage() {
 
   const [workshopPreset, setWorkshopPreset] = useState<WorkshopPresetId | ''>('');
   const [kwicTerm, setKwicTerm] = useState('');
-  const [nlpDocumentId, setNlpDocumentId] = useState<number | null>(null);
   const [scanMeta, setScanMeta] = useState<{
     documentId: number;
     versionId: number;
     analysisId: number;
+    runId?: number;
+    engineVersion?: string;
+    configHash?: string;
+    textHash?: string;
     scannedText: string;
     scannedAt: string;
     preset: WorkshopPresetId;
@@ -412,6 +465,7 @@ export default function SessionEditorPage() {
     diff: string;
     afterText: string;
     nlpVersionId: number | null;
+    sourceVersionId: number | null;
   }>({
     open: false,
     loading: false,
@@ -420,6 +474,7 @@ export default function SessionEditorPage() {
     diff: '',
     afterText: '',
     nlpVersionId: null,
+    sourceVersionId: null,
   });
 
   const [activeTab, setActiveTab] = useState<
@@ -427,6 +482,11 @@ export default function SessionEditorPage() {
   >('analysis');
   const [diffA, setDiffA] = useState<number | null>(null);
   const [diffB, setDiffB] = useState<number | null>(null);
+  const [serverLineDiff, setServerLineDiff] = useState<LineDiffResponse | null>(null);
+  const [serverBlockDiff, setServerBlockDiff] = useState<BlockDiffResponse | null>(null);
+  const [diffLoading, setDiffLoading] = useState(false);
+  const [writingOverview, setWritingOverview] = useState<WritingOverview | null>(null);
+  const [blame, setBlame] = useState<BlameResponse | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reviewStarted, setReviewStarted] = useState(false);
   const [findingListOpen, setFindingListOpen] = useState(false);
@@ -458,12 +518,20 @@ export default function SessionEditorPage() {
     setVersionsLoading(true);
     try {
       if (baseSession.document_id) {
-        const response = await getDocumentVersions(baseSession.document_id, 200, 0);
+        const response = await getDocumentVersions(baseSession.document_id, 200, 0, true);
         const ordered = [...response.data].sort(
           (a, b) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         );
         setVersions(ordered);
+        setLocalVersions((prev) => {
+          const next = { ...prev };
+          ordered.forEach((version) => {
+            const serverVersion = buildSessionVersion(version);
+            next[serverVersion.id] = serverVersion;
+          });
+          return next;
+        });
         if (ordered.length > 1) {
           setDiffA(ordered[0].id);
           setDiffB(ordered[1].id);
@@ -524,15 +592,20 @@ export default function SessionEditorPage() {
         const localMap = loadLocalVersionMap(storeKey);
         setLocalVersions(localMap);
         const localVersion = localMap[String(data.id)];
+        const serverBlocks = apiBlocksToEditorBlocks(data);
         const nextBlocks =
-          localVersion && localVersion.rawText === rawText
+          serverBlocks ??
+          (localVersion && localVersion.rawText === rawText
             ? localVersion.blocks
-            : parseTextToBlocks(rawText);
+            : parseTextToBlocks(rawText));
         const parkedStoreKey = getParkedStoreKey(data);
         const restoredParked = loadParkedIds(parkedStoreKey);
+        const serverParked = Array.isArray(data.parked_block_ids)
+          ? new Set(data.parked_block_ids)
+          : null;
         const validIds = new Set(nextBlocks.map((block) => block.id));
         const nextParked = new Set<string>();
-        restoredParked.forEach((id) => {
+        (serverParked ?? restoredParked).forEach((id) => {
           if (validIds.has(id)) {
             nextParked.add(id);
           }
@@ -552,10 +625,11 @@ export default function SessionEditorPage() {
         });
         setFindings([]);
         setScanMeta(null);
-        setNlpDocumentId(null);
         setAnalysisStale(false);
         setFindingToggles({});
         setIgnoredFindingIds(new Set());
+        setWritingOverview(null);
+        setBlame(null);
         setActiveFindingIndex(0);
         setReviewStarted(false);
         setFindingListOpen(false);
@@ -568,8 +642,26 @@ export default function SessionEditorPage() {
           diff: '',
           afterText: '',
           nlpVersionId: null,
+          sourceVersionId: null,
         });
-        await Promise.all([loadVersions(data), loadNotes(data, rawText)]);
+        await Promise.all([
+          loadVersions(data),
+          loadNotes(data, rawText),
+          data.document_id
+            ? getWritingOverview(data.document_id)
+                .then(setWritingOverview)
+                .catch((err) => {
+                  console.error('Schreibübersicht konnte nicht geladen werden', err);
+                })
+            : Promise.resolve(),
+          data.document_id
+            ? getBlame(data.document_id, { versionId: data.id, mode: 'block' })
+                .then(setBlame)
+                .catch((err) => {
+                  console.error('Blame-Daten konnten nicht geladen werden', err);
+                })
+            : Promise.resolve(),
+        ]);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : 'Session konnte nicht geladen werden.',
@@ -746,6 +838,19 @@ export default function SessionEditorPage() {
     return map;
   }, [blockMatchGroups]);
 
+  const blameByBlock = useMemo(() => {
+    const map: Record<string, BlameResponse['spans'][number]> = {};
+    blame?.spans.forEach((span) => {
+      map[span.block_id] = span;
+    });
+    return map;
+  }, [blame]);
+
+  const activeBlameSpan = useMemo(() => {
+    const blockId = expandedBlockId ?? Array.from(selectedBlockIds)[0] ?? null;
+    return blockId ? blameByBlock[blockId] ?? null : null;
+  }, [blameByBlock, expandedBlockId, selectedBlockIds]);
+
   const selectedPreset = useMemo(
     () => WORKSHOP_PRESETS.find((preset) => preset.id === workshopPreset) ?? null,
     [workshopPreset],
@@ -765,7 +870,7 @@ export default function SessionEditorPage() {
 
   const visibleFindings = useMemo(() => {
     const filteredByIgnore = findings.filter(
-      (finding) => !ignoredFindingIds.has(finding.id),
+      (finding) => finding.status !== 'ignored' && !ignoredFindingIds.has(finding.id),
     );
     const relevantCategories = new Set(selectedPreset?.categories ?? []);
     const presetFiltered =
@@ -784,14 +889,17 @@ export default function SessionEditorPage() {
   }, [findingToggles, findings, ignoredFindingIds, selectedPreset]);
 
   const ignoredFindings = useMemo(
-    () => findings.filter((finding) => ignoredFindingIds.has(finding.id)),
+    () =>
+      findings.filter(
+        (finding) => finding.status === 'ignored' || ignoredFindingIds.has(finding.id),
+      ),
     [findings, ignoredFindingIds],
   );
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     findings.forEach((finding) => {
-      if (ignoredFindingIds.has(finding.id)) return;
+      if (finding.status === 'ignored' || ignoredFindingIds.has(finding.id)) return;
       counts[finding.finding_type] = (counts[finding.finding_type] ?? 0) + 1;
     });
     return counts;
@@ -857,6 +965,47 @@ export default function SessionEditorPage() {
     return counts;
   }, [findingSpansByBlock]);
 
+  useEffect(() => {
+    if (activeTab !== 'diff' || !session?.document_id || !diffA || !diffB) {
+      setServerLineDiff(null);
+      setServerBlockDiff(null);
+      setDiffLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setDiffLoading(true);
+    Promise.allSettled([
+      getDocumentLineDiff(session.document_id, diffA, diffB),
+      getDocumentBlockDiff(session.document_id, diffA, diffB),
+    ])
+      .then(([lineResult, blockResult]) => {
+        if (cancelled) return;
+        setServerLineDiff(
+          lineResult.status === 'fulfilled' ? lineResult.value : null,
+        );
+        setServerBlockDiff(
+          blockResult.status === 'fulfilled' ? blockResult.value : null,
+        );
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          console.error('Server-Diff konnte nicht geladen werden', err);
+          setServerLineDiff(null);
+          setServerBlockDiff(null);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setDiffLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, diffA, diffB, session?.document_id]);
+
   const diffData = useMemo(() => {
     if (activeTab !== 'diff') return null;
     const left = versions.find((v) => v.id === diffA);
@@ -865,18 +1014,24 @@ export default function SessionEditorPage() {
     return {
       left,
       right,
-      diff: computeLineDiff(left.text ?? '', right.text ?? ''),
+      diff: serverLineDiff
+        ? {
+            tooLarge: serverLineDiff.too_large,
+            lines: serverLineDiff.lines,
+          }
+        : computeLineDiff(left.text ?? '', right.text ?? ''),
     };
-  }, [activeTab, diffA, diffB, versions]);
+  }, [activeTab, diffA, diffB, serverLineDiff, versions]);
 
   const blockDiff = useMemo(() => {
     if (activeTab !== 'diff') return null;
+    if (serverBlockDiff) return serverBlockDiff.moved_blocks;
     if (!diffA || !diffB) return null;
     const leftVersion = localVersions[String(diffA)];
     const rightVersion = localVersions[String(diffB)];
     if (!leftVersion || !rightVersion) return null;
     return computeMovedBlocks(leftVersion.blocks, rightVersion.blocks);
-  }, [activeTab, diffA, diffB, localVersions]);
+  }, [activeTab, diffA, diffB, localVersions, serverBlockDiff]);
 
   const commitTextChange = useCallback(
     (nextText: string) => {
@@ -1000,17 +1155,19 @@ export default function SessionEditorPage() {
     setSaving(true);
     setError(null);
     try {
-      const created = await createEdit(session.id, text);
+      const created = await createEdit(session.id, text, {
+        eventType: 'save',
+        blocks,
+        parkedBlockIds: Array.from(parkedBlockIds),
+      });
       const savedText = created.text ?? '';
-      const alignedBlocks = parseTextToBlocks(savedText, blocks);
-      const versionPayload: SessionVersion = {
-        id: String(created.id),
-        sessionId: String(created.id),
-        createdAt: created.created_at,
-        rawText: savedText,
-        blocks: alignedBlocks,
-        hints: [],
-      };
+      const alignedBlocks = apiBlocksToEditorBlocks(created) ?? parseTextToBlocks(savedText, blocks);
+      const nextParked = new Set(
+        (created.parked_block_ids ?? []).filter((id) =>
+          alignedBlocks.some((block) => block.id === id),
+        ),
+      );
+      const versionPayload = buildSessionVersion(created, alignedBlocks);
       const storeKey = getVersionStoreKey(created);
       saveLocalVersion(storeKey, versionPayload);
       setLocalVersions((prev) => ({ ...prev, [versionPayload.id]: versionPayload }));
@@ -1019,7 +1176,7 @@ export default function SessionEditorPage() {
       suppressHistoryRef.current = true;
       setText(savedText);
       setBlocks(alignedBlocks);
-      setParkedBlockIds(new Set());
+      setParkedBlockIds(nextParked);
       setBlocksSynced(true);
       setSelectedBlockIds(new Set());
       setExpandedBlockId(null);
@@ -1027,7 +1184,7 @@ export default function SessionEditorPage() {
         text: savedText,
         blocks: alignedBlocks,
         blocksSynced: true,
-        parkedIds: [],
+        parkedIds: Array.from(nextParked),
       });
       setFindings([]);
       setScanMeta(null);
@@ -1041,7 +1198,24 @@ export default function SessionEditorPage() {
       if (!Number.isNaN(created.id)) {
         router.replace(`/session/edit?active=${created.id}`);
       }
-      await Promise.all([loadVersions(created), loadNotes(created, savedText)]);
+      await Promise.all([
+        loadVersions(created),
+        loadNotes(created, savedText),
+        created.document_id
+          ? getWritingOverview(created.document_id)
+              .then(setWritingOverview)
+              .catch((err) => {
+                console.error('Schreibübersicht konnte nicht geladen werden', err);
+              })
+          : Promise.resolve(),
+        created.document_id
+          ? getBlame(created.document_id, { versionId: created.id, mode: 'block' })
+              .then(setBlame)
+              .catch((err) => {
+                console.error('Blame-Daten konnten nicht geladen werden', err);
+              })
+          : Promise.resolve(),
+      ]);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Speichern der Version fehlgeschlagen.',
@@ -1052,6 +1226,7 @@ export default function SessionEditorPage() {
     }
   }, [
     blocks,
+    parkedBlockIds,
     loadNotes,
     loadVersions,
     resetHistory,
@@ -1343,139 +1518,30 @@ export default function SessionEditorPage() {
         throw new Error('Leerer Text kann nicht gescannt werden.');
       }
 
-      let documentId = nlpDocumentId;
-      let versionId: number;
-
-      if (!documentId) {
-        const created = await createNlpDocument(sourceText);
-        documentId = created.document_id;
-        versionId = created.version_id;
-        setNlpDocumentId(created.document_id);
-      } else {
-        try {
-          const createdVersion = await createNlpDocumentVersion(documentId, sourceText);
-          versionId = createdVersion.version_id;
-        } catch (versionError) {
-          const message =
-            versionError instanceof Error ? versionError.message : String(versionError);
-          if (!message.includes('404')) {
-            throw versionError;
-          }
-          const recreated = await createNlpDocument(sourceText);
-          documentId = recreated.document_id;
-          versionId = recreated.version_id;
-          setNlpDocumentId(recreated.document_id);
-        }
-      }
-
-      const analysis = await analyzeNlpVersion(versionId);
-      const mappedFindings: Finding[] = [];
-      let syntheticId = 1;
-
-      if (preset.id === 'style_tighten') {
-        const [adverbResponse, descriptionResponse] = await Promise.all([
-          getNlpAdverbTool(analysis.analysis_id),
-          getNlpDescriptionTool(analysis.analysis_id),
-        ]);
-        adverbResponse.items.forEach((item) => {
-          mappedFindings.push({
-            id: syntheticId,
-            analysis_run_id: analysis.analysis_id,
-            session_id: session.id,
-            finding_type: 'adverb',
-            severity: 'warn',
-            start_offset: item.start,
-            end_offset: item.end,
-            explanation: FINDING_HINTS.adverb,
-            metrics: {
-              token: item.text,
-              kind: item.kind,
-              finding_id: item.finding_id,
-            },
-          });
-          syntheticId += 1;
-        });
-        descriptionResponse.items.forEach((item) => {
-          mappedFindings.push({
-            id: syntheticId,
-            analysis_run_id: analysis.analysis_id,
-            session_id: session.id,
-            finding_type: 'description',
-            severity: 'info',
-            start_offset: item.start,
-            end_offset: item.end,
-            explanation: FINDING_HINTS.description,
-            metrics: {
-              token: item.text,
-              kind: item.kind,
-              sentence_i: item.sentence_i,
-              finding_id: item.finding_id,
-            },
-          });
-          syntheticId += 1;
-        });
-      }
-
-      if (preset.id === 'consistency_pov_tense') {
-        const tenseResponse = await getNlpTensePovTool(analysis.analysis_id);
-        tenseResponse.markers.forEach((marker) => {
-          mappedFindings.push({
-            id: syntheticId,
-            analysis_run_id: analysis.analysis_id,
-            session_id: session.id,
-            finding_type: 'tense_pov',
-            severity: 'warn',
-            start_offset: marker.start,
-            end_offset: marker.end,
-            explanation: FINDING_HINTS.tense_pov,
-            metrics: {
-              sentence_i: marker.sentence_i,
-              sentence_tense: marker.sentence_tense,
-              sentence_pov: marker.sentence_pov,
-              reasons: marker.reasons,
-              finding_id: marker.finding_id,
-            },
-          });
-          syntheticId += 1;
-        });
-      }
-
-      if (preset.id === 'repetitions_kwic') {
-        const term = kwicTerm.trim();
-        const kwicResponse = await getNlpKwic(analysis.analysis_id, term);
-        kwicResponse.matches.forEach((match) => {
-          mappedFindings.push({
-            id: syntheticId,
-            analysis_run_id: analysis.analysis_id,
-            session_id: session.id,
-            finding_type: 'kwic',
-            severity: 'info',
-            start_offset: match.start,
-            end_offset: match.end,
-            explanation: FINDING_HINTS.kwic,
-            metrics: {
-              sentence_i: match.sentence_i,
-              left: match.left,
-              match: match.match,
-              right: match.right,
-              term,
-            },
-          });
-          syntheticId += 1;
-        });
-      }
+      const run = await createWorkshopRun(session.id, {
+        preset: preset.id,
+        text: sourceText,
+        lang: 'de',
+        options: {
+          kwic_term: preset.needsTerm ? kwicTerm.trim() : null,
+        },
+      });
 
       setScanMeta({
-        documentId,
-        versionId,
-        analysisId: analysis.analysis_id,
+        documentId: session.document_id ?? session.id,
+        versionId: run.version_id ?? session.id,
+        analysisId: run.analysis_id,
+        runId: run.run_id ?? run.id,
+        engineVersion: run.engine_version,
+        configHash: run.config_hash,
+        textHash: run.text_hash,
         scannedText: text,
-        scannedAt: new Date().toISOString(),
+        scannedAt: run.scanned_at ?? run.completed_at ?? new Date().toISOString(),
         preset: preset.id,
         kwicTerm: preset.needsTerm ? kwicTerm.trim() : undefined,
       });
       setAnalysisStale(false);
-      setFindings(mappedFindings);
+      setFindings(run.findings ?? []);
       setIgnoredFindingIds(new Set());
       setActiveFindingIndex(0);
       setReviewStarted(false);
@@ -1493,7 +1559,7 @@ export default function SessionEditorPage() {
     } finally {
       setAnalysisLoading(false);
     }
-  }, [kwicTerm, nlpDocumentId, session, text, workshopPreset]);
+  }, [kwicTerm, session, text, workshopPreset]);
 
   useEffect(() => {
     if (visibleFindings.length === 0) {
@@ -1564,24 +1630,50 @@ export default function SessionEditorPage() {
     });
   }, [jumpToFinding, visibleFindings]);
 
-  const handleIgnoreFinding = useCallback((findingId: number) => {
+  const handleIgnoreFinding = useCallback(async (findingId: number) => {
     setIgnoredFindingIds((prev) => {
       const next = new Set(prev);
       next.add(findingId);
       return next;
     });
+    setFindings((prev) =>
+      prev.map((finding) =>
+        finding.id === findingId ? { ...finding, status: 'ignored' } : finding,
+      ),
+    );
+    try {
+      const updated = await updateFindingStatus(findingId, 'ignored');
+      setFindings((prev) =>
+        prev.map((finding) => (finding.id === findingId ? updated : finding)),
+      );
+    } catch (err) {
+      console.error('Finding konnte nicht ignoriert werden', err);
+    }
   }, []);
 
-  const handleRestoreIgnoredFinding = useCallback((findingId: number) => {
+  const handleRestoreIgnoredFinding = useCallback(async (findingId: number) => {
     setIgnoredFindingIds((prev) => {
       const next = new Set(prev);
       next.delete(findingId);
       return next;
     });
+    setFindings((prev) =>
+      prev.map((finding) =>
+        finding.id === findingId ? { ...finding, status: 'open' } : finding,
+      ),
+    );
+    try {
+      const updated = await updateFindingStatus(findingId, 'open');
+      setFindings((prev) =>
+        prev.map((finding) => (finding.id === findingId ? updated : finding)),
+      );
+    } catch (err) {
+      console.error('Finding konnte nicht wieder geöffnet werden', err);
+    }
   }, []);
 
   const handleOpenAdverbPreview = useCallback(async () => {
-    if (!scanMeta) return;
+    if (!scanMeta || !session) return;
     if (analysisStale) {
       setAnalysisError('Bitte zuerst erneut scannen, damit die Vorschau aktuell ist.');
       return;
@@ -1594,21 +1686,26 @@ export default function SessionEditorPage() {
       diff: '',
       afterText: '',
       nlpVersionId: null,
+      sourceVersionId: scanMeta.versionId,
     });
     try {
-      const action = await runRemoveAdverbsAction(scanMeta.versionId, {
-        voice_lock: false,
-        no_new_facts: false,
+      const action = await runSessionRemoveAdverbsAction(session.id, {
+        source_version_id: scanMeta.versionId,
+        constraints: {
+          voice_lock: false,
+          no_new_facts: false,
+        },
+        save_as_session_version: false,
       });
-      const resultVersion = await getNlpVersion(action.new_version_id);
       setPreviewAction({
         open: true,
         loading: false,
         saving: false,
         error: null,
-        diff: action.diff,
-        afterText: resultVersion.text,
-        nlpVersionId: action.new_version_id,
+        diff: formatServerDiff(action.diff),
+        afterText: action.after_text,
+        nlpVersionId: action.nlp_new_version_id,
+        sourceVersionId: scanMeta.versionId,
       });
     } catch (err) {
       setPreviewAction((prev) => ({
@@ -1620,7 +1717,7 @@ export default function SessionEditorPage() {
             : 'Vorschau konnte nicht geladen werden.',
       }));
     }
-  }, [analysisStale, scanMeta]);
+  }, [analysisStale, scanMeta, session]);
 
   const handleInlinePreviewRequest = useCallback(
     (_findingId: number) => {
@@ -1638,24 +1735,33 @@ export default function SessionEditorPage() {
       diff: '',
       afterText: '',
       nlpVersionId: null,
+      sourceVersionId: null,
     });
   }, []);
 
   const handleSavePreviewAsVersion = useCallback(async () => {
-    if (!previewAction.afterText || !session) return;
+    if (!previewAction.afterText || !previewAction.sourceVersionId || !session) return;
     setPreviewAction((prev) => ({ ...prev, saving: true, error: null }));
     try {
-      const created = await createEdit(session.id, previewAction.afterText);
+      const action = await runSessionRemoveAdverbsAction(session.id, {
+        source_version_id: previewAction.sourceVersionId,
+        constraints: {
+          voice_lock: false,
+          no_new_facts: false,
+        },
+        save_as_session_version: true,
+      });
+      const createdSessionId = action.created_session?.id;
+      const created = createdSessionId
+        ? await getSession(createdSessionId)
+        : await createEdit(session.id, action.after_text || previewAction.afterText, {
+            eventType: 'action',
+            blocks: parseTextToBlocks(action.after_text || previewAction.afterText, blocks),
+            parkedBlockIds: [],
+          });
       const savedText = created.text ?? '';
-      const alignedBlocks = parseTextToBlocks(savedText, blocks);
-      const versionPayload: SessionVersion = {
-        id: String(created.id),
-        sessionId: String(created.id),
-        createdAt: created.created_at,
-        rawText: savedText,
-        blocks: alignedBlocks,
-        hints: [],
-      };
+      const alignedBlocks = apiBlocksToEditorBlocks(created) ?? parseTextToBlocks(savedText, blocks);
+      const versionPayload = buildSessionVersion(created, alignedBlocks);
       const storeKey = getVersionStoreKey(created);
       saveLocalVersion(storeKey, versionPayload);
       setLocalVersions((prev) => ({ ...prev, [versionPayload.id]: versionPayload }));
@@ -1686,7 +1792,24 @@ export default function SessionEditorPage() {
       if (!Number.isNaN(created.id)) {
         router.replace(`/session/edit?active=${created.id}`);
       }
-      await Promise.all([loadVersions(created), loadNotes(created, savedText)]);
+      await Promise.all([
+        loadVersions(created),
+        loadNotes(created, savedText),
+        created.document_id
+          ? getWritingOverview(created.document_id)
+              .then(setWritingOverview)
+              .catch((err) => {
+                console.error('Schreibübersicht konnte nicht geladen werden', err);
+              })
+          : Promise.resolve(),
+        created.document_id
+          ? getBlame(created.document_id, { versionId: created.id, mode: 'block' })
+              .then(setBlame)
+              .catch((err) => {
+                console.error('Blame-Daten konnten nicht geladen werden', err);
+              })
+          : Promise.resolve(),
+      ]);
     } catch (err) {
       setPreviewAction((prev) => ({
         ...prev,
@@ -1705,6 +1828,7 @@ export default function SessionEditorPage() {
     loadNotes,
     loadVersions,
     previewAction.afterText,
+    previewAction.sourceVersionId,
     resetHistory,
     router,
     session,
@@ -2177,6 +2301,57 @@ export default function SessionEditorPage() {
                     <RefreshCcw size={12} /> Neu laden
                   </button>
                 </div>
+                {writingOverview && (
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-2 text-[11px] text-[#d6c9ba]">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-[#f7f4ed]">
+                        Schreibübersicht
+                      </span>
+                      <span>{writingOverview.totals.writing_days} Tage</span>
+                    </div>
+                    <div className="mt-1 grid grid-cols-3 gap-2 text-[#cbbfb0]">
+                      <span>+{writingOverview.totals.inserted_words} W</span>
+                      <span>-{writingOverview.totals.deleted_words} W</span>
+                      <span>{writingOverview.totals.active_words} aktiv</span>
+                    </div>
+                    {writingOverview.days.length > 0 && (
+                      <div className="mt-2 grid grid-cols-7 gap-1">
+                        {writingOverview.days.slice(-35).map((day) => {
+                          const intensity = Math.min(
+                            1,
+                            Math.max(0.12, day.inserted_words / 1000),
+                          );
+                          return (
+                            <span
+                              key={day.date}
+                              title={`${day.date}: +${day.inserted_words} / -${day.deleted_words} Wörter`}
+                              className="h-3 rounded-[2px] border border-[#2f2822] bg-[#8fbf7a]"
+                              style={{ opacity: intensity }}
+                            />
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {activeBlameSpan && (
+                  <div className="rounded-lg border border-[#2f2822] bg-[#0f0c0a] px-3 py-2 text-[11px] text-[#d6c9ba]">
+                    <div className="font-semibold text-[#f7f4ed]">
+                      Aktiver Block
+                    </div>
+                    <div className="mt-1">
+                      Geschrieben: {formatDateTime(activeBlameSpan.authored_at)}
+                    </div>
+                    <div>
+                      Geändert: {formatDateTime(activeBlameSpan.last_touched_at)}
+                    </div>
+                    {activeBlameSpan.preview && (
+                      <div className="mt-1 line-clamp-2 text-[#cbbfb0]">
+                        {activeBlameSpan.preview}
+                      </div>
+                    )}
+                  </div>
+                )}
                 {versionsLoading ? (
                   <p className="text-xs text-[#cbbfb0]">Lade Versionen...</p>
                 ) : versions.length === 0 ? (
@@ -2611,6 +2786,10 @@ export default function SessionEditorPage() {
                   <p className="text-xs text-[#cbbfb0]">
                     Wähle zwei Versionen für den Vergleich.
                   </p>
+                ) : diffLoading ? (
+                  <p className="text-xs text-[#cbbfb0]">
+                    Lade Server-Diff...
+                  </p>
                 ) : diffData.diff.tooLarge ? (
                   <p className="text-xs text-[#cbbfb0]">
                     Diff zu groß – bitte kürzere Versionen auswählen.
@@ -2645,7 +2824,13 @@ export default function SessionEditorPage() {
                     <ul className="space-y-2 text-[11px] text-[#d6c9ba]">
                       {blockDiff.slice(0, 8).map((item, idx) => (
                         <li
-                          key={`${item.hash}-${idx}`}
+                          key={`${
+                            'block_id' in item
+                              ? item.block_id
+                              : 'hash' in item
+                                ? item.hash
+                                : 'move'
+                          }-${idx}`}
                           className="rounded-md border border-[#2f2822] bg-[#120f0c] px-2 py-2"
                         >
                           <div className="flex items-center justify-between">

@@ -9,7 +9,7 @@ export async function POST(
 ) {
   const sessionId = params.id;
 
-  let payload: { text?: unknown } | null = null;
+  let payload: { text?: unknown } & Record<string, unknown> | null = null;
   try {
     payload = (await request.json()) as { text?: unknown };
   } catch {
@@ -38,7 +38,10 @@ export async function POST(
   return proxyRequest({
     method: 'POST',
     path: `/sessions/${sessionId}/edits`,
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({
+      ...payload,
+      text,
+    }),
     requireApiKey: true,
     context: { route: 'sessions.edits', session_id: sessionId },
   });

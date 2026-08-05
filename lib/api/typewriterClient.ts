@@ -2,11 +2,20 @@ import type {
   AnalysisRun,
   ApiResponse,
   ApiSuccess,
+  BlameResponse,
+  BlockDiffResponse,
+  EditorBlockSnapshot,
   Finding,
+  FindingStatus,
+  LineDiffResponse,
   Note,
   Pagination,
+  RemoveAdverbsSessionAction,
   Session,
+  WorkshopRun,
+  WritingOverview,
 } from './types';
+import type { Block } from '@/lib/session-editor/types';
 
 const DEFAULT_API_BASE_URL = '/api';
 const API_BASE_URL = (
@@ -112,10 +121,46 @@ export async function getSession(id: number) {
   return json.data;
 }
 
-export async function createEdit(sessionId: number, text: string) {
+const toEditorBlockSnapshot = (block: Block): EditorBlockSnapshot => ({
+  id: block.id,
+  order: block.order,
+  type: block.type,
+  text: block.text,
+  labels: block.labels ?? [],
+  paragraph_id: block.paragraphId ?? null,
+  stats: block.stats
+    ? {
+        words: block.stats.words,
+        chars: block.stats.chars,
+      }
+    : undefined,
+});
+
+export type CreateEditOptions = {
+  eventType?: 'edit' | 'save' | 'action' | 'live_input';
+  blocks?: Block[];
+  parkedBlockIds?: string[];
+};
+
+export async function createEdit(
+  sessionId: number,
+  text: string,
+  options: CreateEditOptions = {},
+) {
+  const body: Record<string, unknown> = { text };
+  if (options.eventType) {
+    body.event_type = options.eventType;
+  }
+  if (options.blocks) {
+    body.blocks = options.blocks.map(toEditorBlockSnapshot);
+  }
+  if (options.parkedBlockIds) {
+    body.parked_block_ids = options.parkedBlockIds;
+  }
+
   const json = await request<Session>(`/sessions/${sessionId}/edits`, {
     method: 'POST',
-    body: JSON.stringify({ text }),
+    body: JSON.stringify(body),
   });
   return json.data;
 }
@@ -124,10 +169,11 @@ export async function getDocumentVersions(
   documentId: number,
   limit = 50,
   offset = 0,
+  includeBlocks = false,
 ) {
   const json = await request<Session[]>(`/documents/${documentId}/versions`, {
     method: 'GET',
-    query: { limit, offset },
+    query: { limit, offset, include: includeBlocks ? 'blocks' : undefined },
   });
   return {
     data: json.data,
@@ -202,5 +248,126 @@ export async function getFindings(
       types: types && types.length > 0 ? types.join(',') : undefined,
     },
   });
+  return json.data;
+}
+
+export async function createWorkshopRun(
+  sessionId: number,
+  payload: {
+    preset: string;
+    text: string;
+    lang?: string;
+    options?: Record<string, unknown>;
+  },
+) {
+  const json = await request<WorkshopRun>(`/sessions/${sessionId}/workshop-runs`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return json.data;
+}
+
+export async function getWorkshopRun(runId: number) {
+  const json = await request<WorkshopRun>(`/workshop-runs/${runId}`, {
+    method: 'GET',
+  });
+  return json.data;
+}
+
+export async function getWorkshopRunFindings(
+  runId: number,
+  start: number,
+  end: number,
+  types?: string[],
+) {
+  const json = await request<Finding[]>(`/workshop-runs/${runId}/findings`, {
+    method: 'GET',
+    query: {
+      start,
+      end,
+      types: types && types.length > 0 ? types.join(',') : undefined,
+    },
+  });
+  return json.data;
+}
+
+export async function updateFindingStatus(
+  findingId: number,
+  status: FindingStatus,
+) {
+  const json = await request<Finding>(`/findings/${findingId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+  return json.data;
+}
+
+export async function getWritingOverview(
+  documentId: number,
+  range: { from?: string; to?: string } = {},
+) {
+  const json = await request<WritingOverview>(
+    `/documents/${documentId}/writing-overview`,
+    {
+      method: 'GET',
+      query: range,
+    },
+  );
+  return json.data;
+}
+
+export async function getBlame(
+  documentId: number,
+  options: { versionId?: number; mode?: 'block' | 'paragraph' | 'line' } = {},
+) {
+  const json = await request<BlameResponse>(`/documents/${documentId}/blame`, {
+    method: 'GET',
+    query: {
+      version_id: options.versionId,
+      mode: options.mode ?? 'block',
+    },
+  });
+  return json.data;
+}
+
+export async function getDocumentLineDiff(
+  documentId: number,
+  left: number,
+  right: number,
+) {
+  const json = await request<LineDiffResponse>(`/documents/${documentId}/diff`, {
+    method: 'GET',
+    query: { left, right, mode: 'line' },
+  });
+  return json.data;
+}
+
+export async function getDocumentBlockDiff(
+  documentId: number,
+  left: number,
+  right: number,
+) {
+  const json = await request<BlockDiffResponse>(`/documents/${documentId}/diff`, {
+    method: 'GET',
+    query: { left, right, mode: 'block' },
+  });
+  return json.data;
+}
+
+export async function runSessionRemoveAdverbsAction(
+  sessionId: number,
+  payload: {
+    source_version_id: number;
+    constraints?: Record<string, unknown>;
+    save_as_session_version?: boolean;
+  },
+) {
+  const json = await request<RemoveAdverbsSessionAction>(
+    `/sessions/${sessionId}/actions/remove-adverbs`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    },
+  );
   return json.data;
 }
