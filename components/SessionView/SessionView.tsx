@@ -64,7 +64,7 @@ export function SessionView() {
     deleteSession,
   } = useSessionData({
     pageSize: 40,
-    prefetchDelayMs: 1200,
+    prefetchDelayMs: 0,
     autoPrefetch: !isSearching,
     searchQuery: deferredSearch,
   });
@@ -182,7 +182,7 @@ export function SessionView() {
             {deferredSearch.trim() && (
               <p className="text-xs text-[#cbbfb0]">
                 Suche laedt...
-                {searchPage.next_cursor
+                {hasMore
                   ? ` (${sessions.length}+ Treffer...)`
                   : ` (${sessions.length} Treffer)`}
                 {isPending ? ' - aktualisiere' : ''}
@@ -343,7 +343,7 @@ export function SessionView() {
         <div className="mt-10 flex items-center justify-between text-sm text-[#d6c9ba]">
           <span>
             {deferredSearch.trim()
-              ? searchPage.next_cursor
+              ? hasMore
                 ? `${sessions.length}+ Treffer`
                 : `${sessions.length} Treffer`
               : pagination.total !== undefined

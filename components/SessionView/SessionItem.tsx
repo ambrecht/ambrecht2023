@@ -53,8 +53,6 @@ export function SessionItem({
   const {
     id,
     text,
-    preview,
-    text_preview,
     title,
     status = 'draft',
     tags = [],
@@ -76,14 +74,13 @@ export function SessionItem({
   const safeWordCount = word_count ?? 0;
   const safeCharCount = char_count ?? 0;
   const safeLetterCount = letter_count ?? 0;
-  const displayText = text ?? preview ?? text_preview ?? '';
-  const hasFullText = typeof text === 'string' && text.length > 0;
+  const displayText = text ?? '';
+  const hasFullText = displayText.length > 0;
 
-  const paragraphs = useMemo(() => {
-    const t = displayText.trim();
-    if (!t) return [];
-    return t.split(/\n{2,}/);
-  }, [displayText]);
+  const tokens = useMemo(
+    () => (showAnalysis ? splitPreservingWhitespace(displayText) : []),
+    [displayText, showAnalysis],
+  );
 
   useEffect(() => {
     setDraftTitle(title ?? '');
@@ -193,29 +190,23 @@ export function SessionItem({
     }
   };
 
-  const renderParagraph = (para: string, idx: number) => {
+  const renderText = () => {
     if (!showAnalysis) {
       return (
-        <p key={`${id}-p-${idx}`} className="whitespace-pre-wrap">
-          {para}
+        <p className="whitespace-pre-wrap">
+          {displayText}
         </p>
       );
     }
 
-    const tokens = splitPreservingWhitespace(para);
-    const baseIndex = paragraphs
-      .slice(0, idx)
-      .reduce((acc, cur) => acc + splitPreservingWhitespace(cur).length, 0);
-
     return (
-      <p key={`${id}-p-${idx}`} className="whitespace-pre-wrap">
+      <p className="whitespace-pre-wrap">
         {tokens.map((token, tokenIdx) => {
           if (!token || !token.trim()) {
             return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
           }
 
-          const globalIndex = baseIndex + tokenIdx;
-          const hit: Highlight | undefined = highlights.find((h) => h.index === globalIndex);
+          const hit: Highlight | undefined = highlights.find((h) => h.index === tokenIdx);
           const cls = classifier(token);
           if (cls === 'none') {
             return <React.Fragment key={tokenIdx}>{token}</React.Fragment>;
@@ -419,9 +410,7 @@ export function SessionItem({
         className="mt-6 space-y-4 text-[18px] md:text-[19px] leading-[1.75] text-[#f7f4ed] font-serif"
         style={{ fontFeatureSettings: '"liga","kern"' }}
       >
-        {paragraphs.length > 0
-          ? paragraphs.map((para, idx) => renderParagraph(para, idx))
-          : renderParagraph(displayText, 0)}
+        {renderText()}
       </div>
     </article>
   );
