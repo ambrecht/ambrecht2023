@@ -214,6 +214,139 @@ Empfehlung:
 
 ## 3. Schreibuebersicht / Contribution Graph
 
+## 3A. Sessionliste: Vollstaendige progressive Batches
+
+Wichtig: Die Preview-Optimierung darf fuer die Sessionkarten nicht verwendet werden. Die Ursache fuer die fehlenden `s`-Buchstaben war die serverseitige Preview-Befuellung per PostgreSQL-Regex in Migration `018`: `regexp_replace(..., E'\\s+', ...)` wurde in diesem Kontext nicht als Whitespace-Komprimierung verwendet, sondern hat effektiv `s`-Sequenzen ersetzt. Dadurch wurde `preview` destruktiv veraendert. Der kanonische `sessions.text` war nicht beschaedigt.
+
+Fuer Sessionkarten gilt jetzt:
+
+- Vollstaendigen Originaltext aus `session.text` rendern.
+- Kein `preview` statt `text` verwenden.
+- Kein `trim()`, keine Whitespace-Komprimierung, keine Unicode-Normalisierung auf dem Read-Pfad.
+- Hervorhebungen fuer Suche nur in der Darstellung erzeugen, nie in den gespeicherten Text zurueckschreiben.
+
+### Endpoint
+
+```http
+GET /api/v1/sessions/full?page_size=40&page_token=...
+```
+
+Der Endpoint liefert aktive Root-Sessions mit vollstaendigem Text in stabilen Batches.
+
+Response:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 818,
+      "document_id": 535,
+      "title": null,
+      "text": "Vollstaendiger unveraenderter Sessiontext ...",
+      "tags": [],
+      "status": "draft",
+      "word_count": 224,
+      "char_count": 1234,
+      "letter_count": 1010,
+      "created_at": "2026-08-05T14:49:17.377Z",
+      "updated_at": "2026-08-05T17:02:15.234Z"
+    }
+  ],
+  "pagination": {
+    "next_page_token": "eyJpZCI6Nzc4fQ",
+    "has_more": true,
+    "total": 504
+  }
+}
+```
+
+Parameter:
+
+- `page_size`: Standard `40`, Maximum `100`
+- `page_token`: Opaque Cursor aus `pagination.next_page_token`
+
+Frontend-Ablauf:
+
+```ts
+async function loadAllSessionsSequentially(signal: AbortSignal) {
+  let pageToken: string | null = null;
+  let loaded = 0;
+
+  do {
+    const params = new URLSearchParams({ page_size: '40' });
+    if (pageToken) params.set('page_token', pageToken);
+
+    const response = await fetch(`/api/v1/sessions/full?${params}`, { signal });
+    if (!response.ok) {
+      throw new Error(`Session load failed: ${response.status}`);
+    }
+
+    const page = await response.json();
+    appendSessionBatch(page.data);
+
+    loaded += page.data.length;
+    updateProgress({ loaded, total: page.pagination.total });
+
+    pageToken = page.pagination.next_page_token;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  } while (pageToken);
+}
+```
+
+Wichtig fuer die native Browsersuche:
+
+- Alle geladenen Volltexte muessen nach Abschluss im DOM stehen.
+- Keine Virtualisierung einsetzen, die nicht sichtbare Sessions aus dem DOM entfernt.
+- `content-visibility: auto` nur nutzen, wenn es in den Zielbrowsern die native Suche nicht beeintraechtigt.
+
+### Exakte Suche
+
+```http
+GET /api/v1/sessions/search?q=Geheimnis&case_sensitive=false&whole_word=false&fields=text,title,tags&page_size=100&page_token=...
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "session_id": 123,
+      "title": null,
+      "match_count": 2,
+      "matches": [
+        {
+          "field": "text",
+          "start_offset": 120,
+          "end_offset": 129,
+          "context": "... das Geheimnis lag ..."
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "next_page_token": null,
+    "has_more": false
+  }
+}
+```
+
+Semantik:
+
+- Standard ist literal substring, case-insensitive, kein Regex.
+- `case_sensitive=true` unterscheidet `Geheimnis` und `geheimnis`.
+- `whole_word=true` findet `Geheimnis`, aber nicht `Geheimnisse`.
+- `fields` ist eine kommagetrennte Liste aus `text`, `title`, `tags`.
+- Trefferpositionen beziehen sich auf den unveraenderten Originalstring.
+
+Highlighting im Frontend:
+
+- Originaltext nicht mit `replace()` veraendern.
+- Treffer mit `start_offset`/`end_offset` via `slice()` in Segmente teilen.
+- Nur die Darstellung mit `<mark>` versehen.
+
 ### Globaler Endpoint fuer die Dashboard-Heatmap
 
 Fuer die globale Ansicht "Wann du geschrieben hast" gibt es einen frontendfertigen Endpoint:
