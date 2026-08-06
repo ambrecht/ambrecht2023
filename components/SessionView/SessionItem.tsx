@@ -401,7 +401,7 @@ export function SessionItem({
           </button>
         ) : (
           <span className="text-[11px] uppercase tracking-wide rounded-full border border-[#2f2822] px-3 py-1 text-[#9c8f82]">
-            Vorschau
+            Volltext wird geladen
           </span>
         )}
       </div>
@@ -410,7 +410,13 @@ export function SessionItem({
         className="mt-6 space-y-4 text-[18px] md:text-[19px] leading-[1.75] text-[#f7f4ed] font-serif"
         style={{ fontFeatureSettings: '"liga","kern"' }}
       >
-        {renderText()}
+        {hasFullText ? (
+          renderText()
+        ) : (
+          <p className="text-sm font-sans text-[#9c8f82]">
+            Volltext wird geladen...
+          </p>
+        )}
       </div>
     </article>
   );

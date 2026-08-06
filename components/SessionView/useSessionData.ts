@@ -126,6 +126,30 @@ const buildApiUrl = (
   return `${API_BASE_URL}${normalizedPath}${queryString ? `?${queryString}` : ''}`;
 };
 
+const hasFullSessionText = (session: Session) =>
+  typeof session.text === 'string' && session.text.length > 0;
+
+const fetchSessionPayloadById = async (id: number, signal: AbortSignal) => {
+  const response = await fetch(buildApiUrl(`/sessions/${id}`), {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    cache: 'no-store',
+    signal,
+  });
+  const json = (await response.json()) as {
+    success: boolean;
+    data?: SessionPayload;
+    error?: string;
+    message?: string;
+  };
+  if (!response.ok || !json.success || !json.data) {
+    throw new Error(
+      json.error || json.message || `Session #${id} konnte nicht geladen werden.`,
+    );
+  }
+  return normalizeSession(json.data);
+};
+
 export function useSessionData(options: UseSessionDataOptions = {}) {
   const pageSize = options.pageSize ?? 50;
   const prefetchDelayMs = options.prefetchDelayMs ?? 1200;
@@ -235,7 +259,18 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
           throw new Error(message);
         }
         const normalized = json.data.map(normalizeSession);
-        const loadedCount = mergeSessions(normalized, append, true);
+        const hydrated = await Promise.all(
+          normalized.map(async (session) => {
+            if (hasFullSessionText(session)) return session;
+            try {
+              const detail = await fetchSessionPayloadById(session.id, controller.signal);
+              return { ...session, ...detail };
+            } catch {
+              return session;
+            }
+          }),
+        );
+        const loadedCount = mergeSessions(hydrated, append, true);
         const nextPagination = normalizeListPagination(
           json.pagination,
           pageSize,
@@ -270,27 +305,9 @@ export function useSessionData(options: UseSessionDataOptions = {}) {
   const fetchSessionById = useCallback(
     async (id: number, signal: AbortSignal) => {
       const cached = fullSessionsRef.current.get(id) ?? byIdRef.current.get(id);
-      if (cached?.text !== undefined) return cached;
+      if (cached && hasFullSessionText(cached)) return cached;
 
-      const response = await fetch(buildApiUrl(`/sessions/${id}`), {
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-        cache: 'no-store',
-        signal,
-      });
-      const json = (await response.json()) as {
-        success: boolean;
-        data?: SessionPayload;
-        error?: string;
-        message?: string;
-      };
-      if (!response.ok || !json.success || !json.data) {
-        throw new Error(
-          json.error || json.message || `Session #${id} konnte nicht geladen werden.`,
-        );
-      }
-
-      const session = normalizeSession(json.data);
+      const session = await fetchSessionPayloadById(id, signal);
       fullSessionsRef.current.set(session.id, session);
       return session;
     },
