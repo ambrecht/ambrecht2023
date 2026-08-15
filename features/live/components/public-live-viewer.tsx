@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDown, Circle, Moon, Radio, Sun } from 'lucide-react';
+import { ArrowDown, Circle, Moon, Sun } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 
@@ -33,6 +33,7 @@ type ThemeTokens = {
   glow: string;
   control: string;
   controlActive: string;
+  scrollbar: string;
   accent: string;
   focus: string;
   draft: string;
@@ -42,10 +43,9 @@ type ThemeTokens = {
 
 type ReaderScaleTokens = {
   label: string;
-  buttonClass: string;
+  shortLabel: string;
   articleText: string;
   emptyText: string;
-  gap: string;
 };
 
 const connectionLabel: Record<ConnectionStatus, string> = {
@@ -64,32 +64,34 @@ const heartedStoragePrefix = 'ambrecht-live-hearts:';
 
 const themeTokens: Record<LiveTheme, ThemeTokens> = {
   dark: {
-    page: 'bg-[#080807]',
-    text: 'text-[#f4efe4]',
-    muted: 'text-[#aaa191]',
-    quiet: 'text-[#756f66]',
-    hairline: 'bg-[#f4efe4]/12',
-    glow: 'shadow-[0_0_42px_rgba(228,210,174,0.09)]',
-    control: 'border-[#3d382f] bg-[#12110f]/88 text-[#d6cbbb]',
-    controlActive: 'bg-[#f1e6d0] text-[#11100f]',
-    accent: 'text-[#e2b463]',
-    focus: 'focus-visible:ring-[#e2b463]',
-    draft: 'text-[#fff8e6]',
+    page: 'bg-[#050403]',
+    text: 'text-[#f6e6c8]',
+    muted: 'text-[#9f9078]',
+    quiet: 'text-[#706655]',
+    hairline: 'bg-[#f1e6d0]/16',
+    glow: 'shadow-[0_0_34px_rgba(216,180,108,0.08)]',
+    control: 'border-[#302b22] bg-[#0d0c09]/76 text-[#d8ccb8]',
+    controlActive: 'bg-[#d8b46c] text-[#14110c]',
+    scrollbar: '[scrollbar-color:#5c5040_transparent]',
+    accent: 'text-[#d8b46c]',
+    focus: 'focus-visible:ring-[#d8b46c]',
+    draft: 'text-[#fff3d9]',
     error: 'bg-[#271412] text-[#ffd7cf]',
     errorBorder: 'border-[#6f3028]',
   },
   light: {
-    page: 'bg-[#f4efe4]',
-    text: 'text-[#201b15]',
-    muted: 'text-[#776e61]',
-    quiet: 'text-[#9c9284]',
-    hairline: 'bg-[#2a2118]/14',
-    glow: 'shadow-[0_0_38px_rgba(96,73,44,0.08)]',
-    control: 'border-[#d6c5a8] bg-[#fffaf0]/90 text-[#3a3126]',
-    controlActive: 'bg-[#211c16] text-[#fff8ed]',
-    accent: 'text-[#9b1c1c]',
-    focus: 'focus-visible:ring-[#9b1c1c]',
-    draft: 'text-[#322a20]',
+    page: 'bg-[#fbf1df]',
+    text: 'text-[#211810]',
+    muted: 'text-[#736551]',
+    quiet: 'text-[#998a70]',
+    hairline: 'bg-[#30271e]/14',
+    glow: 'shadow-[0_0_34px_rgba(92,70,39,0.07)]',
+    control: 'border-[#d8c9ae] bg-[#fbf4e6]/78 text-[#382e22]',
+    controlActive: 'bg-[#3b3022] text-[#fff7e9]',
+    scrollbar: '[scrollbar-color:#b9aa90_transparent]',
+    accent: 'text-[#7c5a24]',
+    focus: 'focus-visible:ring-[#7c5a24]',
+    draft: 'text-[#2f261b]',
     error: 'bg-[#fff4e4] text-[#8b1e1e]',
     errorBorder: 'border-[#d7b897]',
   },
@@ -98,27 +100,24 @@ const themeTokens: Record<LiveTheme, ThemeTokens> = {
 const readerScaleTokens: Record<ReaderScale, ReaderScaleTokens> = {
   small: {
     label: 'Kleine Schrift',
-    buttonClass: 'text-[13px]',
+    shortLabel: 'S',
     articleText:
-      'text-[clamp(1.45rem,4.7vw,1.72rem)] sm:text-[clamp(1.7rem,3.4vw,2.55rem)] lg:text-[clamp(1.9rem,2.9vw,3.25rem)]',
+      'text-[clamp(1.58rem,5vw,1.88rem)] sm:text-[clamp(1.85rem,3.35vw,2.72rem)] lg:text-[clamp(2.05rem,2.8vw,3.35rem)]',
     emptyText: 'text-[clamp(1.6rem,3.4vw,2.7rem)]',
-    gap: 'gap-[0.34em]',
   },
   medium: {
     label: 'Mittlere Schrift',
-    buttonClass: 'text-[16px]',
+    shortLabel: 'M',
     articleText:
-      'text-[clamp(1.65rem,5.2vw,1.95rem)] sm:text-[clamp(1.95rem,4vw,3.05rem)] lg:text-[clamp(2.2rem,3.45vw,4.1rem)]',
+      'text-[clamp(1.82rem,5.7vw,2.18rem)] sm:text-[clamp(2.15rem,3.9vw,3.22rem)] lg:text-[clamp(2.42rem,3.35vw,4.25rem)]',
     emptyText: 'text-[clamp(1.8rem,3.8vw,3.2rem)]',
-    gap: 'gap-[0.38em]',
   },
   large: {
     label: 'Große Schrift',
-    buttonClass: 'text-[19px]',
+    shortLabel: 'L',
     articleText:
-      'text-[clamp(1.85rem,5.8vw,2.25rem)] sm:text-[clamp(2.25rem,4.5vw,3.65rem)] lg:text-[clamp(2.6rem,4vw,5rem)]',
+      'text-[clamp(2.05rem,6.4vw,2.5rem)] sm:text-[clamp(2.5rem,4.45vw,3.85rem)] lg:text-[clamp(2.85rem,3.85vw,5.1rem)]',
     emptyText: 'text-[clamp(2rem,4vw,3.6rem)]',
-    gap: 'gap-[0.42em]',
   },
 };
 
@@ -128,7 +127,10 @@ const lineTimeFormatter = new Intl.DateTimeFormat('de-DE', {
 });
 
 const formatViewerCount = (count: number) =>
-  count === 1 ? '1 liest gerade mit' : `${count} lesen gerade mit`;
+  count === 1 ? '1 liest mit' : `${count} lesen mit`;
+
+const formatNewLineCount = (count: number) =>
+  count === 1 ? '1 neue Zeile' : `${count} neue Zeilen`;
 
 const getHeartedStorageKey = (broadcastId: string) =>
   `${heartedStoragePrefix}${broadcastId}`;
@@ -301,41 +303,57 @@ function LiveStatus({
   unseenCommittedCount: number;
   tokens: ThemeTokens;
 }) {
-  const isLive = state.status === 'live';
-  const presenceCopy = isLive ? formatViewerCount(state.viewerCount) : null;
-  const statusCopy =
-    followMode === 'history'
-      ? unseenCommittedCount > 0
-        ? `${unseenCommittedCount} neue Zeilen laufen ein`
-        : 'Du liest frühere Zeilen'
-      : isLive
-        ? presenceCopy
-        : connectionLabel[connectionStatus];
+  if (state.status !== 'live') {
+    const offlineCopy =
+      connectionStatus === 'connecting' || connectionStatus === 'reconnecting'
+        ? connectionLabel[connectionStatus]
+        : 'Nicht live';
+
+    return (
+      <div
+        className={`min-w-0 overflow-hidden whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.13em] ${tokens.muted}`}
+      >
+        <span className="truncate">{offlineCopy}</span>
+      </div>
+    );
+  }
+
+  const livePresenceCopy = formatViewerCount(state.viewerCount);
+  const positionCopy =
+    followMode === 'history' ? 'Frühere Zeilen' : 'Hier entsteht ein Text';
+  const unseenCopy =
+    unseenCommittedCount === 1
+      ? '1 neu'
+      : `${unseenCommittedCount} neu`;
 
   return (
     <div
-      className={`flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.14em] ${tokens.muted}`}
+      className={`flex min-w-0 items-center gap-2 overflow-hidden whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.12em] ${tokens.muted}`}
     >
-      <span aria-hidden="true" className={isLive ? tokens.accent : tokens.quiet}>
+      <span aria-hidden="true" className={tokens.accent}>
         <Circle size={9} fill="currentColor" strokeWidth={0} />
       </span>
-      <span className={isLive ? tokens.text : tokens.muted}>
-        {isLive ? 'LIVE' : 'Aktuell nicht live'}
-      </span>
+      <span className={tokens.text}>LIVE</span>
       <span aria-hidden="true" className={tokens.quiet}>
-        /
+        ·
       </span>
-      <span className="truncate">{statusCopy}</span>
-      {followMode === 'history' && presenceCopy ? (
+      <span className="truncate normal-case tracking-normal">{positionCopy}</span>
+      {followMode === 'history' && unseenCommittedCount > 0 ? (
         <>
           <span aria-hidden="true" className={tokens.quiet}>
-            /
+            ·
           </span>
           <span className="truncate normal-case tracking-normal">
-            {presenceCopy}
+            {unseenCopy}
           </span>
         </>
       ) : null}
+      <span aria-hidden="true" className={tokens.quiet}>
+        ·
+      </span>
+      <span className="truncate normal-case tracking-normal">
+        {livePresenceCopy}
+      </span>
     </div>
   );
 }
@@ -351,39 +369,27 @@ function FontSizeToggle({
   isHydrated: boolean;
   tokens: ThemeTokens;
 }) {
-  const scales: ReaderScale[] = ['small', 'medium', 'large'];
+  const scaleOrder: ReaderScale[] = ['small', 'medium', 'large'];
+  const currentIndex = scaleOrder.indexOf(readerScale);
+  const nextScale = scaleOrder[(currentIndex + 1) % scaleOrder.length];
+  const currentScale = readerScaleTokens[readerScale];
 
   return (
-    <div
-      aria-label="Schriftgröße"
-      className={`pointer-events-auto inline-grid grid-cols-3 gap-1 border p-1 ${tokens.control}`}
-      role="group"
+    <button
+      type="button"
+      aria-label={`Schriftgröße ändern, aktuell: ${currentScale.label}`}
+      title={`Schriftgröße: ${currentScale.label}`}
+      onClick={() => setReaderScale(nextScale)}
+      className={`pointer-events-auto inline-flex h-9 min-w-[3.35rem] items-center justify-center gap-1 border px-3 text-[12px] font-medium transition-colors hover:bg-current/10 focus:outline-none focus-visible:ring-2 ${tokens.control} ${tokens.focus}`}
     >
-      {scales.map((scale) => {
-        const scaleTokens = readerScaleTokens[scale];
-
-        return (
-          <button
-            key={scale}
-            type="button"
-            aria-pressed={readerScale === scale}
-            title={scaleTokens.label}
-            onClick={() => setReaderScale(scale)}
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-sm font-serif leading-none transition-colors focus:outline-none focus-visible:ring-2 ${tokens.focus} ${scaleTokens.buttonClass} ${
-              readerScale === scale
-                ? tokens.controlActive
-                : 'hover:bg-current/10'
-            }`}
-          >
-            A
-            <span className="sr-only">{scaleTokens.label}</span>
-          </button>
-        );
-      })}
+      <span className="font-serif text-[18px] leading-none">Aa</span>
+      <span aria-hidden="true" className={`text-[9px] ${tokens.quiet}`}>
+        {currentScale.shortLabel}
+      </span>
       {!isHydrated ? (
         <span className="sr-only">Schriftgröße wird geladen</span>
       ) : null}
-    </div>
+    </button>
   );
 }
 
@@ -398,37 +404,112 @@ function ThemeToggle({
   isHydrated: boolean;
   tokens: ThemeTokens;
 }) {
+  const nextTheme = theme === 'dark' ? 'light' : 'dark';
+  const label =
+    theme === 'dark' ? 'Light Mode einschalten' : 'Dark Mode einschalten';
+
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-pressed={theme === 'dark'}
+      title={label}
+      onClick={() => setTheme(nextTheme)}
+      className={`pointer-events-auto inline-flex h-9 w-9 items-center justify-center border transition-colors hover:bg-current/10 focus:outline-none focus-visible:ring-2 ${tokens.control} ${tokens.focus}`}
+    >
+      {theme === 'dark' ? (
+        <Moon size={15} aria-hidden="true" />
+      ) : (
+        <Sun size={15} aria-hidden="true" />
+      )}
+      {!isHydrated ? <span className="sr-only">Theme wird geladen</span> : null}
+    </button>
+  );
+}
+
+function LiveInfoOverlay({
+  open,
+  onClose,
+  tokens,
+}: {
+  open: boolean;
+  onClose: () => void;
+  tokens: ThemeTokens;
+}) {
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, open]);
+
+  if (!open) return null;
+
   return (
     <div
-      aria-label="Darstellung"
-      className={`pointer-events-auto inline-grid grid-cols-2 gap-1 border p-1 ${tokens.control}`}
-      role="group"
+      className="fixed inset-0 z-40 flex items-start justify-end px-4 py-[max(4.25rem,env(safe-area-inset-top))] sm:px-[clamp(1rem,4vw,3.5rem)]"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
     >
-      <button
-        type="button"
-        aria-pressed={theme === 'dark'}
-        title="Dark Mode"
-        onClick={() => setTheme('dark')}
-        className={`inline-flex h-9 w-9 items-center justify-center rounded-sm transition-colors focus:outline-none focus-visible:ring-2 ${tokens.focus} ${
-          theme === 'dark' ? tokens.controlActive : 'hover:bg-current/10'
-        }`}
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="live-info-title"
+        className={`w-full max-w-[22rem] border px-5 py-5 text-[14px] leading-6 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-md ${tokens.control}`}
       >
-        <Moon size={16} aria-hidden="true" />
-        <span className="sr-only">Dark Mode</span>
-      </button>
-      <button
-        type="button"
-        aria-pressed={theme === 'light'}
-        title="Light Mode"
-        onClick={() => setTheme('light')}
-        className={`inline-flex h-9 w-9 items-center justify-center rounded-sm transition-colors focus:outline-none focus-visible:ring-2 ${tokens.focus} ${
-          theme === 'light' ? tokens.controlActive : 'hover:bg-current/10'
-        }`}
-      >
-        <Sun size={16} aria-hidden="true" />
-        <span className="sr-only">Light Mode</span>
-      </button>
-      {!isHydrated ? <span className="sr-only">Theme wird geladen</span> : null}
+        <div className="flex items-start justify-between gap-4">
+          <h2
+            id="live-info-title"
+            className={`${readerFontClass} text-[1.35rem] font-normal leading-tight ${tokens.text}`}
+          >
+            Was passiert hier?
+          </h2>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            aria-label="Info schließen"
+            onClick={onClose}
+            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-lg leading-none hover:bg-current/10 focus:outline-none focus-visible:ring-2 ${tokens.focus}`}
+          >
+            ×
+          </button>
+        </div>
+        <div className={`mt-4 space-y-3 ${tokens.muted}`}>
+          <p>Hier entsteht ein Text live.</p>
+          <p>Buchstabe für Buchstabe. Zeile für Zeile.</p>
+          <p>
+            Sobald eine Zeile abgeschickt wurde, ist sie endgültig. Du siehst
+            den Text in dem Moment, in dem er entsteht.
+          </p>
+          <p>
+            ♡ Du kannst auf einzelne Zeilen reagieren. Die Reaktionen existieren
+            nur während dieser Live-Session.
+          </p>
+        </div>
+        <div className={`mt-5 h-px w-full ${tokens.hairline}`} />
+        <address className={`mt-4 not-italic leading-6 ${tokens.muted}`}>
+          <div>Tino Ambrecht</div>
+          <a
+            href="mailto:tino@ambrecht.de"
+            className={`underline decoration-current/30 underline-offset-4 hover:decoration-current focus:outline-none focus-visible:ring-2 ${tokens.focus}`}
+          >
+            tino@ambrecht.de
+          </a>
+        </address>
+      </section>
     </div>
   );
 }
@@ -453,15 +534,15 @@ function ReaderLine({
   return (
     <div
       data-live-line
-      className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1 whitespace-pre-wrap break-words sm:grid-cols-[3.4rem_minmax(0,1fr)_4.8rem] sm:gap-x-[clamp(0.8rem,2vw,1.6rem)]"
+      className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-3 whitespace-pre-wrap break-words sm:grid-cols-[3rem_minmax(0,36rem)_2.8rem] sm:gap-x-[clamp(0.45rem,1vw,0.8rem)]"
     >
       <time
         dateTime={line.publishedAt}
-        className={`col-start-1 row-start-1 mt-[0.38em] select-none text-[0.28em] font-medium leading-none tabular-nums sm:text-right sm:text-[0.18em] ${tokens.quiet}`}
+        className={`col-start-1 row-start-2 mt-0 select-none text-[0.26em] font-medium leading-none tabular-nums sm:col-start-1 sm:row-start-1 sm:mt-[0.38em] sm:text-right sm:text-[0.155em] ${tokens.quiet}`}
       >
         {lineTime}
       </time>
-      <span className="col-span-3 row-start-2 block min-w-0 max-w-full [overflow-wrap:anywhere] sm:col-span-1 sm:col-start-2 sm:row-start-1">
+      <span className="col-span-2 row-start-1 block min-w-0 max-w-full [overflow-wrap:anywhere] sm:col-span-1 sm:col-start-2 sm:row-start-1">
         {line.text}
       </span>
       <button
@@ -472,7 +553,7 @@ function ReaderLine({
         }
         disabled={isPending}
         onClick={() => onToggleHeart(line)}
-        className={`col-start-3 row-start-1 mt-[0.24em] inline-flex min-h-8 min-w-[3.4rem] items-center justify-end gap-1 justify-self-end rounded-sm px-1 text-[0.28em] font-medium leading-none transition-[color,opacity,transform] hover:opacity-80 focus:outline-none focus-visible:ring-2 disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none sm:min-w-[4.4rem] sm:text-[0.2em] ${tokens.focus} ${
+        className={`col-start-2 row-start-2 mt-[-0.08em] inline-flex min-h-8 min-w-[3rem] items-center justify-end gap-1 justify-self-end rounded-sm px-1 text-[0.26em] font-medium leading-none transition-[color,opacity,transform] hover:opacity-80 focus:outline-none focus-visible:ring-2 disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none sm:col-start-3 sm:row-start-1 sm:mt-[0.32em] sm:min-w-[2.8rem] sm:justify-start sm:text-[0.17em] ${tokens.focus} ${
           hearted ? tokens.accent : tokens.quiet
         }`}
       >
@@ -492,16 +573,10 @@ function LiveDraft({ text, tokens }: { text: string; tokens: ThemeTokens }) {
   return (
     <p
       data-live-draft
-      className={`grid grid-cols-[1.4rem_minmax(0,1fr)] items-start gap-[clamp(0.55rem,2vw,1.35rem)] whitespace-pre-wrap break-words sm:grid-cols-[2.8rem_minmax(0,1fr)] ${tokens.draft}`}
+      className={`grid grid-cols-[minmax(0,1fr)] items-start whitespace-pre-wrap break-words sm:grid-cols-[3rem_minmax(0,36rem)_2.8rem] sm:gap-x-[clamp(0.45rem,1vw,0.8rem)] ${tokens.draft}`}
     >
       <span
-        aria-hidden="true"
-        className={`mt-[0.34em] flex justify-end ${tokens.accent}`}
-      >
-        <Radio size="0.22em" />
-      </span>
-      <span
-        className={`block min-w-0 max-w-full [overflow-wrap:anywhere] ${tokens.glow}`}
+        className={`block min-w-0 max-w-full [overflow-wrap:anywhere] sm:col-start-2 ${tokens.glow}`}
       >
         {text}
         <span
@@ -536,16 +611,15 @@ function LiveDocument({
     return (
       <div
         data-live-document
-        className="mx-auto flex min-h-full w-full max-w-[54rem] flex-col justify-center pb-[12vh]"
+        className="mx-auto flex min-h-full w-full max-w-[54rem] flex-col justify-center pb-[12vh] pl-[clamp(0rem,7vw,8rem)]"
       >
         <p
           className={`${readerFontClass} max-w-[13ch] text-[clamp(2.6rem,7vw,5.6rem)] font-normal leading-[1.08] tracking-normal ${tokens.text}`}
         >
-          Aktuell nicht live
+          Gerade findet keine Live-Session statt.
         </p>
         <p className={`mt-5 max-w-[34rem] text-[17px] leading-7 ${tokens.muted}`}>
-          Wenn der Live-Kanal startet, erscheint der Text hier automatisch.
-          Diese Seite kann einfach offen bleiben.
+          Bitte warte, bis es wieder losgeht.
         </p>
         <div ref={bottomRef} aria-hidden="true" />
       </div>
@@ -557,7 +631,7 @@ function LiveDocument({
   return (
     <article
       data-live-document
-      className={`${readerFontClass} mx-auto flex min-h-full w-full max-w-[58rem] flex-col justify-end pb-[14vh] pt-[10vh] font-normal leading-[1.14] tracking-normal ${scaleTokens.gap} ${scaleTokens.articleText} ${tokens.text} sm:leading-[1.18] lg:leading-[1.12]`}
+      className={`${readerFontClass} mx-auto flex min-h-full w-full max-w-[70rem] flex-col justify-end gap-[1.05em] pb-[15vh] pl-[clamp(0.8rem,3vw,2.4rem)] pt-[11vh] font-normal leading-[1.08] tracking-normal ${scaleTokens.articleText} ${tokens.text} sm:mx-auto sm:translate-x-[clamp(0rem,1.8vw,2.2rem)] sm:gap-[1.15em] sm:pl-[clamp(1.2rem,3vw,2.8rem)] sm:leading-[1.13] lg:leading-[1.09]`}
     >
       {isEmpty ? (
         <p className={`leading-[1.18] ${scaleTokens.emptyText} ${tokens.muted}`}>
@@ -617,12 +691,15 @@ function ReturnToLiveButton({
     <button
       type="button"
       onClick={returnToLive}
-      className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-30 inline-flex min-h-12 -translate-x-1/2 items-center gap-2 border px-4 py-3 text-sm font-medium shadow-[0_12px_34px_rgba(0,0,0,0.22)] transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 motion-reduce:transition-none motion-reduce:hover:-translate-y-0 ${tokens.control} ${tokens.focus}`}
+      className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-30 inline-flex min-h-11 -translate-x-1/2 items-center gap-2 border px-4 py-2.5 text-[13px] font-medium shadow-[0_10px_28px_rgba(0,0,0,0.18)] transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 motion-reduce:transition-none motion-reduce:hover:-translate-y-0 ${tokens.control} ${tokens.focus}`}
     >
-      <ArrowDown size={17} aria-hidden="true" />
+      <ArrowDown size={16} aria-hidden="true" />
+      <span>{`↓ ${formatNewLineCount(unseenCommittedCount)} · Zum Live-Moment`}</span>
+      <span className="sr-only">
       {unseenCommittedCount > 0
         ? `${unseenCommittedCount} neue Zeilen · Zurück zu Live`
         : 'Zurück zu Live'}
+      </span>
     </button>
   );
 }
@@ -650,7 +727,7 @@ export function PublicLiveViewer({
   const { readerScale, setReaderScale, isReaderScaleHydrated } =
     useReaderScale();
   const { ensureViewerId } = useAnonymousViewerId();
-  const [hasInteractedWithScroll, setHasInteractedWithScroll] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [heartedLineIds, setHeartedLineIds] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
@@ -687,10 +764,7 @@ export function PublicLiveViewer({
     committedLineCount,
     lastAppliedEvent,
   });
-  const hasEnoughHistory =
-    broadcastState.status === 'live' && broadcastState.lines.length >= 3;
-  const showScrollHint =
-    followMode === 'live' && hasEnoughHistory && !hasInteractedWithScroll;
+  const showScrollHint = false;
 
   useEffect(() => {
     const previousBroadcastId = previousBroadcastIdRef.current;
@@ -715,7 +789,6 @@ export function PublicLiveViewer({
   }, [activeBroadcastId]);
 
   const handleReaderScroll = useCallback(() => {
-    setHasInteractedWithScroll(true);
     handleScroll();
   }, [handleScroll]);
 
@@ -827,7 +900,7 @@ export function PublicLiveViewer({
       className={`fixed inset-0 z-50 flex h-[100dvh] w-screen flex-col overflow-hidden transition-colors duration-300 motion-reduce:transition-none [color-scheme:dark_light] ${tokens.page} ${tokens.text}`}
       suppressHydrationWarning
     >
-      <header className="z-20 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-[clamp(1rem,4vw,3.5rem)] py-[max(1rem,env(safe-area-inset-top))]">
+      <header className="z-20 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-[clamp(1rem,4vw,3.5rem)] py-[max(0.85rem,env(safe-area-inset-top))] opacity-85">
         <LiveStatus
           state={broadcastState}
           connectionStatus={connectionStatus}
@@ -835,7 +908,16 @@ export function PublicLiveViewer({
           unseenCommittedCount={unseenCommittedCount}
           tokens={tokens}
         />
-        <div className="flex flex-wrap justify-end gap-2">
+        <div className="flex flex-wrap justify-end gap-1.5 opacity-75 transition-opacity hover:opacity-100 focus-within:opacity-100">
+          <button
+            type="button"
+            aria-label="Info öffnen"
+            title="Was passiert hier?"
+            onClick={() => setIsInfoOpen(true)}
+            className={`pointer-events-auto inline-flex h-9 w-9 items-center justify-center border text-[14px] font-medium leading-none transition-colors hover:bg-current/10 focus:outline-none focus-visible:ring-2 ${tokens.control} ${tokens.focus}`}
+          >
+            ?
+          </button>
           <FontSizeToggle
             readerScale={readerScale}
             setReaderScale={setReaderScale}
@@ -851,6 +933,12 @@ export function PublicLiveViewer({
         </div>
       </header>
 
+      <LiveInfoOverlay
+        open={isInfoOpen}
+        onClose={() => setIsInfoOpen(false)}
+        tokens={tokens}
+      />
+
       {error ? (
         <p
           className={`mx-[clamp(1.1rem,4vw,3.5rem)] border px-4 py-3 text-sm ${tokens.errorBorder} ${tokens.error}`}
@@ -863,7 +951,7 @@ export function PublicLiveViewer({
         ref={scrollerRef}
         data-live-scroller
         onScroll={handleReaderScroll}
-        className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-[clamp(0.75rem,4vw,3.5rem)] pb-[max(2rem,env(safe-area-inset-bottom))]"
+        className={`min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-[clamp(0.9rem,4vw,3.5rem)] pb-[max(2rem,env(safe-area-inset-bottom))] [scrollbar-width:thin] ${tokens.scrollbar}`}
       >
         <LiveDocument
           state={broadcastState}
@@ -879,7 +967,7 @@ export function PublicLiveViewer({
 
       <ScrollHint visible={showScrollHint} tokens={tokens} />
 
-      {followMode === 'history' ? (
+      {followMode === 'history' && unseenCommittedCount > 0 ? (
         <ReturnToLiveButton
           unseenCommittedCount={unseenCommittedCount}
           returnToLive={returnToLive}
