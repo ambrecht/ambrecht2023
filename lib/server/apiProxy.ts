@@ -31,7 +31,6 @@ const WRITER_BASE_URL =
 const TYPEWRITER_API_KEY =
   process.env.TYPEWRITER_API_KEY ||
   process.env.API_KEY ||
-  process.env.NEXT_PUBLIC_API_KEY ||
   '';
 
 const WRITER_API_KEY =

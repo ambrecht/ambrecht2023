@@ -47,3 +47,4 @@ next-env.d.ts
 
 # generated tv snapshots
 /public/TV/*-*.png
+.env*

@@ -123,10 +123,13 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/session/:path*',
+    '/session-v2/:path*',
     '/api/sessions/:path*',
     '/api/documents/:path*',
     '/api/notes/:path*',
     '/api/analysis-runs/:path*',
+    '/api/live/:path*',
+    '/api/live-sessions/:path*',
     '/api/v1/:path*',
   ],
 };
