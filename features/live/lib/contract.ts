@@ -40,7 +40,7 @@ export const LiveLineSchema = z.object({
 
 export const OfflineSnapshotSchema = z.object({
   status: z.literal('offline'),
-  nextLiveAt: z.string().min(1).nullable(),
+  nextLiveAt: z.string().min(1).nullable().default(null),
 });
 
 export const LiveSnapshotSchema = z.object({
@@ -51,7 +51,7 @@ export const LiveSnapshotSchema = z.object({
   viewerCount: z.number().int().nonnegative(),
   lines: z.array(LiveLineSchema),
   activeDraft: z.string(),
-  nextLiveAt: z.string().min(1).nullable(),
+  nextLiveAt: z.string().min(1).nullable().default(null),
 });
 
 export const PublicLiveSnapshotSchema = z.discriminatedUnion('status', [
