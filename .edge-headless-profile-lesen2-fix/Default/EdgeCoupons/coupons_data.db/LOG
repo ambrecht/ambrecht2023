@@ -1,0 +1,5 @@
+2026/08/16-16:03:28.162 2dd0 Creating DB E:\ambrecht2023\.edge-headless-profile-lesen2-fix\Default\EdgeCoupons/coupons_data.db since it was missing.
+2026/08/16-16:03:28.237 2dd0 Reusing MANIFEST E:\ambrecht2023\.edge-headless-profile-lesen2-fix\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/08/16-16:03:39.796 1d74 Level-0 table #5: started
+2026/08/16-16:03:39.807 1d74 Level-0 table #5: 683273 bytes OK
+2026/08/16-16:03:39.816 1d74 Delete type=0 #3

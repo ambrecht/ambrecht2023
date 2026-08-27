@@ -9,4 +9,13 @@ yarn-debug.log*
 yarn-error.log*
 .env.local
 .chrome-headless-profile*
+.edge-headless-profile*
 .next-live*.log
+.next-lesen-start*.log
+.next-lesen-typewriter*.log
+.next-lesen2*.log
+lesen-prose-8-lines-proof.png
+lesen-typewriter-1840x900.png
+lesen2-affordance-1840x900.png
+lesen2-before-fix.png
+scripts/lesen-scroll-metrics.cjs

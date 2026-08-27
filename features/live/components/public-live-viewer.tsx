@@ -1,10 +1,11 @@
 'use client';
 
-import { ArrowDown, Circle, Moon, Sun } from 'lucide-react';
+import { ArrowDown, Bell, BellOff, Circle, Moon, Sun } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 
 import { setHeartReaction } from '../api/set-heart-reaction';
+import { useBrowserLiveNotifications } from '../hooks/use-browser-live-notifications';
 import { useLiveFollow } from '../hooks/use-live-follow';
 import { usePublicLiveStream } from '../hooks/use-public-live-stream';
 import type {
@@ -61,6 +62,8 @@ const themeStorageKey = 'ambrecht-live-theme';
 const readerScaleStorageKey = 'ambrecht-live-reader-scale';
 const viewerIdStorageKey = 'ambrecht-live-viewer-id';
 const heartedStoragePrefix = 'ambrecht-live-hearts:';
+const contactEmail = 'tino@ambrecht.de';
+const contactMailto = `mailto:${contactEmail}`;
 
 const themeTokens: Record<LiveTheme, ThemeTokens> = {
   dark: {
@@ -737,6 +740,11 @@ export function PublicLiveViewer({
   const [optimisticHeartCounts, setOptimisticHeartCounts] = useState<
     ReadonlyMap<string, number>
   >(() => new Map());
+  const {
+    browserNotificationStatus,
+    enableBrowserNotifications,
+    notifyLiveStart,
+  } = useBrowserLiveNotifications();
   const previousBroadcastIdRef = useRef<string | null>(null);
   const activeBroadcastIdRef = useRef<string | null>(null);
   const tokens = themeTokens[theme];
@@ -787,6 +795,16 @@ export function PublicLiveViewer({
 
     previousBroadcastIdRef.current = activeBroadcastId;
   }, [activeBroadcastId]);
+
+  useEffect(() => {
+    if (broadcastState.status !== 'live') return;
+    if (lastAppliedEvent?.type !== 'live.started') return;
+
+    notifyLiveStart({
+      broadcastId: broadcastState.broadcastId,
+      startedAt: broadcastState.startedAt,
+    });
+  }, [broadcastState, lastAppliedEvent, notifyLiveStart]);
 
   const handleReaderScroll = useCallback(() => {
     handleScroll();
@@ -901,14 +919,53 @@ export function PublicLiveViewer({
       suppressHydrationWarning
     >
       <header className="z-20 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 px-[clamp(1rem,4vw,3.5rem)] py-[max(0.85rem,env(safe-area-inset-top))] opacity-85">
-        <LiveStatus
-          state={broadcastState}
-          connectionStatus={connectionStatus}
-          followMode={followMode}
-          unseenCommittedCount={unseenCommittedCount}
-          tokens={tokens}
-        />
+        <div className="min-w-0">
+          <LiveStatus
+            state={broadcastState}
+            connectionStatus={connectionStatus}
+            followMode={followMode}
+            unseenCommittedCount={unseenCommittedCount}
+            tokens={tokens}
+          />
+          <a
+            href={contactMailto}
+            className={`mt-1 block w-fit truncate text-[9px] normal-case tracking-normal underline decoration-current/20 underline-offset-4 hover:decoration-current focus:outline-none focus-visible:ring-2 ${tokens.quiet} ${tokens.focus}`}
+          >
+            {contactEmail}
+          </a>
+        </div>
         <div className="flex flex-wrap justify-end gap-1.5 opacity-75 transition-opacity hover:opacity-100 focus-within:opacity-100">
+          <button
+            type="button"
+            aria-label={
+              browserNotificationStatus === 'enabled'
+                ? 'Browser-Benachrichtigung aktiv'
+                : browserNotificationStatus === 'blocked'
+                  ? 'Browser-Benachrichtigung blockiert'
+                  : browserNotificationStatus === 'unsupported'
+                    ? 'Browser-Benachrichtigung nicht verfuegbar'
+                    : 'Browser-Benachrichtigung aktivieren'
+            }
+            aria-pressed={browserNotificationStatus === 'enabled'}
+            title={
+              browserNotificationStatus === 'enabled'
+                ? 'Browser-Benachrichtigung aktiv'
+                : browserNotificationStatus === 'blocked'
+                  ? 'Browser-Benachrichtigung blockiert'
+                  : browserNotificationStatus === 'unsupported'
+                    ? 'Browser-Benachrichtigung nicht verfuegbar'
+                    : 'Browser-Benachrichtigung aktivieren'
+            }
+            disabled={browserNotificationStatus !== 'idle'}
+            onClick={enableBrowserNotifications}
+            className={`pointer-events-auto inline-flex h-9 w-9 items-center justify-center border transition-colors hover:bg-current/10 focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-45 ${tokens.control} ${tokens.focus}`}
+          >
+            {browserNotificationStatus === 'enabled' ? (
+              <Bell size={15} aria-hidden="true" />
+            ) : (
+              <BellOff size={15} aria-hidden="true" />
+            )}
+          </button>
           <button
             type="button"
             aria-label="Info öffnen"

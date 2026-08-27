@@ -15,7 +15,10 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-const fallbackInitialState: PublicLiveState = { status: 'offline' };
+const fallbackInitialState: PublicLiveState = {
+  status: 'offline',
+  nextLiveAt: null,
+};
 
 async function loadInitialLiveState(): Promise<{
   state: PublicLiveState;

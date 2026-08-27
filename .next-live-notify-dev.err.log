@@ -1,0 +1,45 @@
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ⨯ TypeError: Response body object should not be disturbed or locked
+    at extractBody (node:internal/deps/undici/undici:6274:17)
+    at new Request (node:internal/deps/undici/undici:10626:48)
+    at new NextRequest (E:\ambrecht2023\node_modules\next\dist\server\web\spec-extension\request.js:33:14)
+    at NextRequestAdapter.fromNodeNextRequest (E:\ambrecht2023\node_modules\next\dist\server\web\spec-extension\adapters\next-request.js:94:16)
+    at NextRequestAdapter.fromBaseNextRequest (E:\ambrecht2023\node_modules\next\dist\server\web\spec-extension\adapters\next-request.js:70:35)
+    at doRender (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:1329:73)
+    at cacheEntry.responseCache.get.routeKind (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:1552:34)
+    at ResponseCache.get (E:\ambrecht2023\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:1460:53)
+    at E:\ambrecht2023\node_modules\next\dist\server\base-server.js:990:121
+    at NextTracerImpl.trace (E:\ambrecht2023\node_modules\next\dist\server\lib\trace\tracer.js:104:20)
+    at DevServer.renderToResponseWithComponents (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:990:41)
+    at DevServer.renderPageComponent (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:1843:35)
+    at async DevServer.renderToResponseImpl (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:1881:32)
+    at async DevServer.pipeImpl (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:909:25)
+    at async NextNodeServer.handleCatchallRenderRequest (E:\ambrecht2023\node_modules\next\dist\server\next-server.js:266:17)
+    at async DevServer.handleRequestImpl (E:\ambrecht2023\node_modules\next\dist\server\base-server.js:805:17)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'E:\ambrecht2023\.next\cache\webpack\client-development\4.pack.gz_' -> 'E:\ambrecht2023\.next\cache\webpack\client-development\4.pack.gz'
+deps/undici/undici:6414:27)
+    at readAllBytes (node:internal/deps/undici/undici:5380:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+live notification subscribe failed SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parseJSONFromBytes (node:internal/deps/undici/undici:6433:19)
+    at successSteps (node:internal/deps/undici/undici:6414:27)
+    at readAllBytes (node:internal/deps/undici/undici:5380:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+live notification subscribe failed SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parseJSONFromBytes (node:internal/deps/undici/undici:6433:19)
+    at successSteps (node:internal/deps/undici/undici:6414:27)
+    at readAllBytes (node:internal/deps/undici/undici:5380:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+live notification subscribe failed Error: live notification subscribe timed out
+    at Timeout.eval (webpack-internal:///(rsc)/./lib/live/notifications.ts:29:20)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+live notification subscriber stored in memory only Error: live notification subscribe timed out
+    at Timeout.eval (webpack-internal:///(rsc)/./lib/live/notifications.ts:38:20)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)

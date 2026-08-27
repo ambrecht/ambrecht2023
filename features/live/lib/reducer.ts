@@ -12,6 +12,17 @@ export function reduceLiveState(
     return event.snapshot;
   }
 
+  if (event.type === 'live.schedule.updated') {
+    if (event.scheduledAt === state.nextLiveAt) {
+      return state;
+    }
+
+    return {
+      ...state,
+      nextLiveAt: event.scheduledAt,
+    };
+  }
+
   if (state.status !== 'live') {
     return state;
   }
@@ -76,5 +87,5 @@ export function reduceLiveState(
     };
   }
 
-  return { status: 'offline' };
+  return { status: 'offline', nextLiveAt: state.nextLiveAt };
 }

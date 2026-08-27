@@ -1,0 +1,13 @@
+
+> ambrecht@0.1.0 dev
+> next dev -p 3012
+
+   ▲ Next.js 14.0.4
+   - Local:        http://localhost:3012
+   - Environments: .env.local
+
+ ✓ Ready in 10.1s
+ ○ Compiling /lesen ...
+ ✓ Compiled /live in 53.1s (603 modules)
+'__Poppins_cc8537', '__Poppins_Fallback_cc8537'
+[?25h

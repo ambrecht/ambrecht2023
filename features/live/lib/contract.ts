@@ -10,6 +10,7 @@ export interface LiveLine {
 export type PublicLiveState =
   | {
       status: 'offline';
+      nextLiveAt: string | null;
     }
   | {
       status: 'live';
@@ -19,6 +20,7 @@ export type PublicLiveState =
       viewerCount: number;
       lines: readonly LiveLine[];
       activeDraft: string;
+      nextLiveAt: string | null;
     };
 
 export type ConnectionStatus =
@@ -38,6 +40,7 @@ export const LiveLineSchema = z.object({
 
 export const OfflineSnapshotSchema = z.object({
   status: z.literal('offline'),
+  nextLiveAt: z.string().min(1).nullable(),
 });
 
 export const LiveSnapshotSchema = z.object({
@@ -48,6 +51,7 @@ export const LiveSnapshotSchema = z.object({
   viewerCount: z.number().int().nonnegative(),
   lines: z.array(LiveLineSchema),
   activeDraft: z.string(),
+  nextLiveAt: z.string().min(1).nullable(),
 });
 
 export const PublicLiveSnapshotSchema = z.discriminatedUnion('status', [
@@ -90,6 +94,10 @@ export const ReactionUpdatedEventSchema = z.object({
   count: z.number().int().nonnegative(),
 });
 
+export const LiveScheduleUpdatedEventSchema = z.object({
+  scheduledAt: z.string().min(1).nullable(),
+});
+
 export type ValidatedLiveEvent =
   | {
       type: 'live.snapshot';
@@ -126,6 +134,10 @@ export type ValidatedLiveEvent =
       lineId: string;
       reaction: 'heart';
       count: number;
+    }
+  | {
+      type: 'live.schedule.updated';
+      scheduledAt: string | null;
     };
 
 export const parseNamedLiveEvent = (
@@ -173,6 +185,13 @@ export const parseNamedLiveEvent = (
     return {
       type,
       ...ViewerCountEventSchema.parse(payload),
+    };
+  }
+
+  if (type === 'live.schedule.updated') {
+    return {
+      type,
+      ...LiveScheduleUpdatedEventSchema.parse(payload),
     };
   }
 

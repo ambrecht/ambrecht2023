@@ -1,0 +1,12 @@
+
+> ambrecht@0.1.0 dev
+> next dev -p 3000
+
+   ▲ Next.js 14.0.4
+   - Local:        http://localhost:3000
+   - Environments: .env.local
+
+ ✓ Ready in 16.7s
+ ○ Compiling /live/[sessionId] ...
+ ✓ Compiled /live/[sessionId] in 26.5s (581 modules)
+'__Poppins_cc8537', '__Poppins_Fallback_cc8537'

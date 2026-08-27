@@ -1,0 +1,159 @@
+{
+   "checksum": "7b47e8adb98c915f40d81a68a9bef208",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13219141984372000",
+            "date_last_used": "0",
+            "guid": "fd600c70-9916-486a-a9f9-00d1357d4093",
+            "id": "7",
+            "name": "Amazon.de – online einkaufen",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "http://js.redirect.hp.com/jumpstation?bd=all&c=none&locale=de_de&pf=all&s=amazon&tp=iefavs",
+            "visit_count": 0
+         }, {
+            "date_added": "13219141984335000",
+            "date_last_used": "0",
+            "guid": "82c290af-50c1-4e5c-a120-8b34cdff455a",
+            "id": "8",
+            "name": "Booking.com",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "http://secure.rezserver.com/sdk/v1/LinkFwd?refid=7684&destination=booking&refclickid=webslice1819",
+            "visit_count": 0
+         } ],
+         "date_added": "13431540141221098",
+         "date_last_used": "0",
+         "date_modified": "13219141984372000",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Favoritenleiste",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "other": {
+         "children": [ {
+            "children": [ {
+               "date_added": "13238209519982435",
+               "date_last_used": "0",
+               "guid": "24e70eee-268e-474f-97e5-d6d03b666f36",
+               "id": "10",
+               "name": "ASUS Homepage",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "http://www.asus.com/",
+               "visit_count": 0
+            }, {
+               "date_added": "13238209519998061",
+               "date_last_used": "0",
+               "guid": "e5777b90-0071-4c6b-aa33-02464d60be29",
+               "id": "11",
+               "name": "ASUS Member",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "https://account.asus.com/",
+               "visit_count": 0
+            } ],
+            "date_added": "13390849512430628",
+            "date_last_used": "0",
+            "date_modified": "13390849512430628",
+            "guid": "2036a785-1737-4f69-afce-a8fb2cf6e520",
+            "id": "9",
+            "name": "ASUS E-Service",
+            "source": "unknown",
+            "type": "folder"
+         }, {
+            "children": [ {
+               "date_added": "13219141984372808",
+               "date_last_used": "0",
+               "guid": "0d081c23-fa61-45ac-9b9d-a1ecdf08ab0a",
+               "id": "13",
+               "name": "Amazon.de – online einkaufen",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "http://js.redirect.hp.com/jumpstation?bd=all&c=none&locale=de_de&pf=all&s=amazon&tp=iefavs",
+               "visit_count": 0
+            }, {
+               "date_added": "13219141984335061",
+               "date_last_used": "0",
+               "guid": "f897d97c-6d50-48d8-8dfd-8f7618a8a4b6",
+               "id": "14",
+               "name": "Booking.com",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "http://secure.rezserver.com/sdk/v1/LinkFwd?refid=7684&destination=booking&refclickid=iefav1819",
+               "visit_count": 0
+            }, {
+               "date_added": "13219141984372808",
+               "date_last_used": "0",
+               "guid": "2b90269f-fe21-47d5-8a7e-d8127f460613",
+               "id": "15",
+               "name": "HP Store",
+               "show_icon": false,
+               "source": "sync",
+               "type": "url",
+               "url": "http://js.redirect.hp.com/jumpstation?bd=*&c=*&locale=de_de&pf=*&s=Hpstore&tp=*&TYPE=3",
+               "visit_count": 0
+            } ],
+            "date_added": "13390849512431229",
+            "date_last_used": "0",
+            "date_modified": "13390849512431229",
+            "guid": "ed45e9b7-95f6-4bb3-89e3-255d1b350428",
+            "id": "12",
+            "name": "HP",
+            "source": "unknown",
+            "type": "folder"
+         }, {
+            "date_added": "13238209519998061",
+            "date_last_used": "0",
+            "guid": "240bcfad-e755-4347-a049-2e2b210dd342",
+            "id": "16",
+            "name": "Tripadvisor",
+            "show_icon": false,
+            "source": "sync",
+            "type": "url",
+            "url": "http://www.tripadvisor.com/Home-m25036",
+            "visit_count": 0
+         } ],
+         "date_added": "13431540141221098",
+         "date_last_used": "0",
+         "date_modified": "13238209519998061",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Weitere Favoriten",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13431540141221098",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile Favoriten",
+         "source": "unknown",
+         "type": "folder"
+      },
+      "workspaces_v2": {
+         "children": [  ],
+         "date_added": "13431540141221098",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "75aa6670-344f-549d-b742-660f029506ab",
+         "id": "5",
+         "name": "Arbeitsbereiche",
+         "source": "unknown",
+         "type": "folder"
+      }
+   },
+   "sync_metadata": "CjEKDgiIgQISCM47CBCgAQAAEgAqGFkxWGFXeGNIZklQUHJES1dsNnl5MkE9PUgDoAYHEq0BCBASqAEKHFpObzc3UURiMGZGcDROZk1KVXhDWHhvRkdGOD0SJDI0MGJjZmFkLWU3NTUtNDM0Ny1hMDQ5LTJlMmIyMTBkZDM0MhgAIAAoADCqqry/3zM4ibC8v98zQImwvL/fM0ocbEhCVm9mS2doZWFpSDhoejk2aTNMcFdtNWlFPVofIh20TEt0WUFxUWl3aDF6dW51ZFAwOW5KQkRxaFJJPWUAAAAAwj4CYAUSrQEIDhKoAQocU1lrY2FZeHg4SDdSMkNNdFZrMzBiY2EvQU5nPRIkZjg5N2Q5N2MtNmQ1MC00OGQ4LThkZmQtOGY3NjE4YThhNGI2GAAgACgAMKiqvL/fMzjMr7y/3zNAzK+8v98zShxLMHR2bThWVlMvK0xveDJBaEx6S0dCZGJxK289Wh8iHbNPR1lRdUxNNmdPYnA1NWVuaDZtZ1JwRWtVQ2c9ZQAAAADCPgJgBRKsAQgMEqcBChwvTEhJbVlMODZiL2cwbytnTnFaY1cyN21aNUk9EiRlZDQ1ZTliNy05NWY2LTRiYjMtODllMy0yNTVkMWIzNTA0MjgYACAAKAAwpqq8v98zOKavvL/fM0Cmr7y/3zNKHEFZR3dONkVjQnJQOFUxQUQ3NnNVdmJrL3FGaz1aHiIcaGRybmdqanA3UzB5VEpJYmM0UzUzeC9tcm8wPWUAAAAAwj4CYAASjgEIAhKJAQocWWNTVG9udkVTUHdxQ3M0TDJjclZodjY4TDk4PRIkZmFlMjFlZmMtMmM2Ny01ODgxLWIxNzYtZTk1NWJmZmFkNDVkGAAgACgAMOfI/9+tLjj+ypKL7C9A/sqSi+wvShxvUFZraHdCUmJWNjVLQ1dSMitJT05IV29PdTg9WgBlAAAAAMI+AmAAEqwBCAoSpwEKHDZKK1JvdVYwUjRDNm5jQW10ZnIrY084cjdjRT0SJDI0ZTcwZWVlLTI2OGUtNDc0Zi05N2U1LWQ2ZDAzYjY2NmYzNhgAIAAoADCkqry/3zM4ha+8v98zQIWvvL/fM0ocaVN0V2JvbnVFam05U3dTaWpEL1VhYjZNVVE4PVoeIhxKeXBhMmZDUUVHNXFQL3FXMlRhUUlEb0doM289ZQAAAADCPgJgBRKOAQgFEokBChx3UkJyWkwrNlBBOWF2S2dqTlA3SlhETGNmdnM9EiQ5NzYwNTE4OS0wODI0LTUzYzEtYjBhYS1mNmRmNDQyMDNmMjYYACAAKAAwiZy8v98zOL6cvL/fM0C+nLy/3zNKHG5teDY1c1FEdnhJOFRnRWV2K0ErbnR0b1NuND1aAGUAAAAAwj4CYAASrAEICRKnAQocZ1d2akJPUTFXN3YwdzhIWDYyamZNM2V6TENvPRIkMjAzNmE3ODUtMTczNy00ZjY5LWFmY2UtYThmYjJjZjZlNTIwGAAgACgAMKOqvL/fMzj0rry/3zNA9K68v98zShxvMWxZVFd5NXRtK1ZxeVNBMy9qVFNicWpPLzg9Wh4iHE9saDl0R3kwRTkwbGxXWmw2NWI2RWJMUzJpaz1lAAAAAMI+AmAAEqwBCAgSpwEKHFFuL2RGWTRSNkJ0Zis4OGtMTkhyUGh0aGo5dz0SJDgyYzI5MGFmLTUwYzEtNGU1Yy1hMTIwLThiMzRjZGZmNDU1YRgAIAAoADCiqry/3zM44q68v98zQOKuvL/fM0occWttWnQ1Z05rV3lYVHJML0k4bUd2T0wrQm1vPVoeIhxmNk5NeGdJSVZEQ1JjZkhtVlFMelJmMEo2cE09ZQAAAADCPgJgBRKsAQgNEqcBChw2VXdCOWRTblZMVmIwalNVb29Jb2xFUTc4cVk9EiQwZDA4MWMyMy1mYTYxLTQ1YWMtOWI5ZC1hMWVjZGYwOGFiMGEYACAAKAAwp6q8v98zOLyvvL/fM0C8r7y/3zNKHEFwK21EZCtaVmI1UTdXQzEvZ2IzZjFHdFNzaz1aHiIcZlgxMFhIQTZKRjV4MTZGelphV1prWFgvaHQ4PWUAAAAAwj4CYAUSjgEIAxKJAQocbmpnRHU4OGVDcnZYcDg2cEQ3ZkhHY3FGcDg4PRIkYjNkYjY2MjEtZjRiMy01YTRlLThlZjctOGQwNjQ3ZWFjZDI5GAAgACgAMOvI/9+tLjj7y5KL7C9A+8uSi+wvShx5ek5CMDFjbjU0QTdjUlUwdVQrL1BnbVR0VW89WgBlAAAAAMI+AmAAEq0BCA8SqAEKHFl4RysxaHBHU01ZbHpVWHhmcGVUbE5KRXN4VT0SJDJiOTAyNjlmLWZlMjEtNDdkNS04YTdlLWQ4MTI3ZjQ2MDYxMxgAIAAoADCpqry/3zM43a+8v98zQN2vvL/fM0ocMm1KZ3pvMll5SzZyYUQ0SGd2bjR4WWRoTWJzPVofIh3ZTExWWU9SRnhQalBMSUdqVWtYbnZNamNYQzZFPWUAAAAAwj4CYAUSrAEIBxKnAQocTUcxVmNBcDEyT2xtanpBcERRUkVBNnpVYzRrPRIkZmQ2MDBjNzAtOTkxNi00ODZhLWE5ZjktMDBkMTM1N2Q0MDkzGAAgACgAMKGqvL/fMzjPrry/3zNAz668v98zShxQSkxqdHVobnVmL0gvcWpIYUliOTRsOFVaZUU9Wh4iHDdaV3ptWWo1RkY5dDBiSGR5UDYvbTVuZXpZST1lAAAAAMI+AmAFEqwBCAsSpwEKHHFtd3NhNHYzTUdnTk1BamFnOGZLMUZWYkZTRT0SJGU1Nzc3YjkwLTAwNzEtNGM2Yi1hYTMzLTAyNDY0ZDYwYmUyORgAIAAoADClqry/3zM4la+8v98zQJWvvL/fM0occCtzN1lyVXNjVnUyZU5UT2xWSzdyWnU0c2ZFPVoeIhxrZ1lNSFV4MzBpVnJjNnNoYXBnUWJ5aGZtOFk9ZQAAAADCPgJgBRKOAQgBEokBChx5eEovNmZ2a2VjcjdrcDVFUXpCNHRXTHBkYkU9EiQwZjM4MmQxZi01NWI1LTU0ZGMtYWJmMy0xNmE0MjAwYTYzNWEYACAAKAAw5sj/360uOO/KkovsL0DvypKL7C9KHGFSQ1dMZ2hGOWI1SW5xS0lEdnVKL2p2UWtGYz1aAGUAAAAAwj4CYAAwADgA",
+   "version": 1
+}

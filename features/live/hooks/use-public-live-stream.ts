@@ -38,7 +38,7 @@ const eventKey = (event: ValidatedLiveEvent) => {
     const snapshot = event.snapshot;
     return snapshot.status === 'live'
       ? `${event.type}:${snapshot.broadcastId}:${snapshot.sequence}`
-      : `${event.type}:offline`;
+      : `${event.type}:offline:${snapshot.nextLiveAt ?? 'none'}`;
   }
 
   if (event.type === 'live.started') {
@@ -51,6 +51,10 @@ const eventKey = (event: ValidatedLiveEvent) => {
 
   if (event.type === 'reaction.updated') {
     return `${event.type}:${event.broadcastId}:${event.lineId}:${event.count}`;
+  }
+
+  if (event.type === 'live.schedule.updated') {
+    return `${event.type}:${event.scheduledAt ?? 'none'}`;
   }
 
   return `${event.type}:${event.broadcastId}:${event.sequence}`;
@@ -150,6 +154,7 @@ export function usePublicLiveStream({
     registerNamedEvent('draft.updated');
     registerNamedEvent('line.committed');
     registerNamedEvent('live.ended');
+    registerNamedEvent('live.schedule.updated');
     registerNamedEvent('viewer.count');
     registerNamedEvent('reaction.updated');
 
