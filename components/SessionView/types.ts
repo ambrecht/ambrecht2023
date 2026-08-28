@@ -34,9 +34,24 @@ export interface SessionPagination {
 export interface SearchPagination {
   limit?: number;
   page_size?: number;
+  pageSize?: number;
   cursor?: string | null;
   next_cursor?: string | null;
   next_page_token?: string | null;
+  nextPageToken?: string | null;
   has_more?: boolean;
+  hasMore?: boolean;
   total?: number;
+}
+
+export interface SessionSearchMatch {
+  session_id: number | string;
+  title?: string | null;
+  match_count?: number;
+  matches?: Array<{
+    field: 'text' | 'title' | 'tags' | string;
+    start_offset: number;
+    end_offset: number;
+    context?: string;
+  }>;
 }

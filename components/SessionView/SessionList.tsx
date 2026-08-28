@@ -18,8 +18,8 @@ export function SessionList({ sessions, selectedId, onSelect }: SessionListProps
       {sessions.map((session) => {
         const isActive = session.id === selectedId;
         const title = session.title?.trim() || `Session #${session.id}`;
-        const preview = session.preview ?? session.text_preview ?? session.text ?? '';
-        const teaser = preview.length > 120 ? `${preview.slice(0, 120)}...` : preview;
+        const text = session.text ?? '';
+        const teaser = text.length > 120 ? `${text.slice(0, 120)}...` : text;
 
         return (
           <li key={session.id}>

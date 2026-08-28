@@ -1,0 +1,16 @@
+
+> ambrecht@0.1.0 dev
+> next dev
+
+   ▲ Next.js 14.0.4
+   - Local:        http://localhost:3000
+   - Environments: .env.local
+
+ ✓ Ready in 41.9s
+ ○ Compiling /lesen ...
+ ✓ Compiled /lesen in 27.1s (584 modules)
+'__Poppins_cc8537', '__Poppins_Fallback_cc8537'
+ ✓ Compiled in 2.5s (285 modules)
+ ✓ Compiled in 896ms (271 modules)
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 893ms (327 modules)

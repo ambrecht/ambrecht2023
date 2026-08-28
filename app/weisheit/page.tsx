@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArrowLeft,
+  ArrowRight,
   Check,
   Copy,
   List,
@@ -10,6 +12,7 @@ import {
   Play,
   RotateCcw,
   Search,
+  Shuffle,
 } from 'lucide-react';
 import hikamData from '@/src/json/hikma3.json';
 import sufiCommentData from '@/src/json/sufi-kommentar.json';
@@ -29,6 +32,8 @@ type SufiComment = {
   nummer: number;
   kommentar_sufi_de: string;
 };
+
+type WisdomMode = 'random' | 'linear';
 
 const INTERVAL_MS = 120000;
 
@@ -50,6 +55,7 @@ const commentText = (hikma: Hikma) =>
 
 export default function WisdomPage() {
   const [index, setIndex] = useState(getRandomIndex);
+  const [wisdomMode, setWisdomMode] = useState<WisdomMode>('random');
   const [isRunning, setIsRunning] = useState(true);
   const [copied, setCopied] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -62,10 +68,10 @@ export default function WisdomPage() {
   const currentTranslation = displayText(current);
   const currentComment = commentText(current);
 
-  const progressKey = `${index}-${isRunning}`;
+  const progressKey = `${index}-${isRunning}-${wisdomMode}`;
 
-  const nextWisdom = useCallback(() => {
-    setIndex((currentIndex) => {
+  const getRandomNextIndex = useCallback(
+    (currentIndex: number) => {
       if (count <= 1) {
         return currentIndex;
       }
@@ -76,8 +82,19 @@ export default function WisdomPage() {
       }
 
       return nextIndex;
+    },
+    [count]
+  );
+
+  const nextWisdom = useCallback(() => {
+    setIndex((currentIndex) => {
+      if (wisdomMode === 'linear') {
+        return (currentIndex + 1) % count;
+      }
+
+      return getRandomNextIndex(currentIndex);
     });
-  }, [count]);
+  }, [count, getRandomNextIndex, wisdomMode]);
 
   const selectWisdomIndex = useCallback((nextIndex: number) => {
     setIndex(nextIndex);
@@ -102,6 +119,7 @@ export default function WisdomPage() {
   const showAdjacentWisdom = useCallback(
     (direction: 1 | -1) => {
       setIndex((currentIndex) => (currentIndex + direction + count) % count);
+      setWisdomMode('linear');
     },
     [count]
   );
@@ -327,6 +345,32 @@ export default function WisdomPage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <div
+              aria-label="Abspielmodus"
+              className="hikam-mode-toggle"
+              role="group"
+            >
+              <button
+                aria-pressed={wisdomMode === 'random'}
+                className="hikam-mode-button"
+                onClick={() => setWisdomMode('random')}
+                title="Zufallsmodus"
+                type="button"
+              >
+                <Shuffle size={18} aria-hidden="true" />
+                <span>Zufall</span>
+              </button>
+              <button
+                aria-pressed={wisdomMode === 'linear'}
+                className="hikam-mode-button"
+                onClick={() => setWisdomMode('linear')}
+                title="Linearer Modus"
+                type="button"
+              >
+                <ArrowRight size={18} aria-hidden="true" />
+                <span>Linear</span>
+              </button>
+            </div>
             <button
               aria-expanded={isPickerOpen}
               className="hikam-control"
@@ -340,6 +384,17 @@ export default function WisdomPage() {
               <RotateCcw size={18} aria-hidden="true" />
               <span>Nächste</span>
             </button>
+            {wisdomMode === 'linear' && (
+              <button
+                className="hikam-icon-control"
+                onClick={() => showAdjacentWisdom(-1)}
+                title="Vorherige Hikma"
+                type="button"
+              >
+                <ArrowLeft size={18} aria-hidden="true" />
+                <span className="sr-only">Vorherige Hikma</span>
+              </button>
+            )}
             <button
               className="hikam-control"
               onClick={() => setIsRunning((value) => !value)}
@@ -428,6 +483,7 @@ export default function WisdomPage() {
 
         .hikam-control,
         .hikam-icon-control,
+        .hikam-mode-button,
         .hikam-number-input,
         .hikam-number-button {
           display: inline-flex;
@@ -450,6 +506,33 @@ export default function WisdomPage() {
           border-radius: 999px;
           padding: 0.65rem 1rem;
           font-size: 0.9rem;
+        }
+
+        .hikam-mode-toggle {
+          display: inline-flex;
+          overflow: hidden;
+          min-height: 2.75rem;
+          border: 1px solid rgba(245, 234, 210, 0.2);
+          border-radius: 999px;
+          background: rgba(18, 15, 11, 0.38);
+          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+          backdrop-filter: blur(14px);
+        }
+
+        .hikam-mode-button {
+          min-height: 2.75rem;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          padding: 0.65rem 0.9rem;
+          font-size: 0.86rem;
+          color: rgba(245, 234, 210, 0.72);
+        }
+
+        .hikam-mode-button[aria-pressed='true'] {
+          background: rgba(216, 182, 101, 0.22);
+          color: #fff8e8;
         }
 
         .hikam-icon-control {
@@ -504,6 +587,7 @@ export default function WisdomPage() {
 
         .hikam-control:hover,
         .hikam-icon-control:hover,
+        .hikam-mode-button:hover,
         .hikam-number-button:hover {
           transform: translateY(-1px);
           border-color: rgba(216, 182, 101, 0.72);
@@ -512,6 +596,7 @@ export default function WisdomPage() {
 
         .hikam-control:focus-visible,
         .hikam-icon-control:focus-visible,
+        .hikam-mode-button:focus-visible,
         .hikam-number-input:focus-visible,
         .hikam-number-button:focus-visible {
           outline: 2px solid #d8b665;
@@ -532,6 +617,19 @@ export default function WisdomPage() {
             display: grid;
             grid-template-columns: 1fr 1fr;
             width: 100%;
+          }
+
+          .hikam-mode-toggle {
+            grid-column: 1 / -1;
+            width: 100%;
+          }
+
+          .hikam-mode-button {
+            flex: 1 1 0;
+            min-width: 0;
+            padding-left: 0.55rem;
+            padding-right: 0.55rem;
+            font-size: 0.8rem;
           }
 
           .hikam-number-form {

@@ -1,0 +1,28 @@
+2026-08-16 14:02:49.435: [INFO] CurrentProfilePath: E:\ambrecht2023\.edge-headless-profile-lesen2-fix\Default
+2026-08-16 14:02:49.435: [INFO] Profiles total count: 1
+2026-08-16 14:02:49.448: [INFO] Profile: name=Profil 1 path=E:\ambrecht2023\.edge-headless-profile-lesen2-fix\Default lastActive=2026-08-16T14:02:49.340Z
+2026-08-16 14:02:49.448: [INFO] LastUsedProfileDir: E:\ambrecht2023\.edge-headless-profile-lesen2-fix\Default
+2026-08-16 14:02:49.448: [INFO] MostRecentlyActiveProfile: name=Profil 1 path=E:\ambrecht2023\.edge-headless-profile-lesen2-fix\Default lastActive=2026-08-16T14:02:49.340Z
+2026-08-16 14:02:49.448: [INFO] OnDoneLoading sync enabled: 0
+2026-08-16 14:02:49.448: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-08-16 14:02:49.448: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-08-16 14:02:49.448: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-08-16 14:02:51.188: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-08-16 14:02:52.555: [INFO] VisibilityChanged: 0
+2026-08-16 14:03:09.693: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-08-16 14:03:09.775: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-08-16 14:03:09.807: [INFO] Primary account changed.
+2026-08-16 14:03:09.807: [INFO] OnPrimaryAccountChanged PrimaryAccountChangeEvent::Type::kSet
+2026-08-16 14:03:09.822: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-08-16 14:03:20.704: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.714: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.716: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.716: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.718: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.718: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.718: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.719: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.719: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.719: [INFO] BookmarkNodeAdded, ABU: 0
+2026-08-16 14:03:20.738: [INFO] BookmarkBarPrefChanged showBar=0 showBarNTP=1
+2026-08-16 14:03:23.325: [INFO] Sync initialization duration: 12846ms

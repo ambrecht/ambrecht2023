@@ -1,0 +1,442 @@
+.root {
+  --ink: #f5efe3;
+  --muted: #bcb2a1;
+  --quiet: #766f63;
+  --black: #080807;
+  --panel: #11100e;
+  --red: var(--status-accent);
+  --line: rgba(245, 239, 227, 0.24);
+  --ticker-bg: #f5efe3;
+  --ticker-ink: #090807;
+
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(178, 13, 24, 0.18), transparent 34%, rgba(245, 239, 227, 0.06) 68%, transparent),
+    radial-gradient(circle at 50% 30%, rgba(245, 239, 227, 0.08), transparent 36%),
+    linear-gradient(180deg, #11100e 0%, #060605 58%, #11100e 100%);
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  isolation: isolate;
+}
+
+.root::before,
+.root::after {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+}
+
+.root::before {
+  inset: clamp(0.7rem, 2vw, 1.6rem);
+  border: 1px solid var(--line);
+  box-shadow:
+    inset 0 0 0 0.48rem rgba(245, 239, 227, 0.025),
+    inset 0 0 4rem rgba(178, 13, 24, 0.1);
+}
+
+.root::after {
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 18%, rgba(245, 239, 227, 0.055) 18.2% 18.4%, transparent 18.6%),
+    linear-gradient(90deg, transparent 0 82%, rgba(178, 13, 24, 0.12) 82.2% 82.4%, transparent 82.6%);
+  opacity: 0.7;
+}
+
+.root[data-last-event="live-started"] .stage {
+  animation: signalFlash 720ms ease-out both;
+}
+
+.root[data-last-event="live-ended"] .stage {
+  animation: signalDrop 520ms ease-out both;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  mix-blend-mode: soft-light;
+}
+
+.noise {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image:
+    linear-gradient(115deg, transparent, rgba(245, 239, 227, 0.035), transparent),
+    repeating-radial-gradient(circle at 30% 50%, rgba(245, 239, 227, 0.045) 0 1px, transparent 1px 5px);
+  opacity: 0.2;
+}
+
+.header,
+.footer {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  border-color: var(--line);
+  border-style: solid;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.82rem;
+  line-height: 1.1;
+}
+
+.header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: clamp(4.5rem, 12vh, 6.7rem);
+  padding: clamp(1rem, 2.7vw, 2rem) clamp(1rem, 3.6vw, 3rem);
+  border-width: 0 0 1px;
+}
+
+.brandBlock {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: clamp(0.65rem, 1.5vw, 1.15rem);
+}
+
+.brandKicker {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.brand {
+  color: var(--ink);
+  font-family: Arial Black, Impact, Arial, Helvetica, sans-serif;
+  font-size: 3.2rem;
+  line-height: 0.9;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.7rem, 1.8vw, 1.3rem);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.signal {
+  color: var(--quiet);
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink);
+}
+
+.liveDot {
+  width: 0.68rem;
+  height: 0.68rem;
+  background: var(--red);
+  border-radius: 999px;
+  box-shadow: 0 0 1rem rgba(178, 13, 24, 0.72);
+}
+
+.root[data-status="live"] .liveDot {
+  animation: livePulse 1200ms ease-in-out infinite;
+}
+
+.stage {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  min-height: 0;
+  place-content: center;
+  padding: clamp(1.2rem, 5vh, 4.5rem) clamp(1rem, 5vw, 5rem);
+  text-align: center;
+}
+
+.stage::before,
+.stage::after {
+  position: absolute;
+  right: clamp(1rem, 3.6vw, 3rem);
+  left: clamp(1rem, 3.6vw, 3rem);
+  height: 1px;
+  background: var(--line);
+  content: "";
+}
+
+.stage::before {
+  top: clamp(1rem, 3vh, 2rem);
+}
+
+.stage::after {
+  bottom: clamp(1rem, 3vh, 2rem);
+}
+
+.transmissionLabel {
+  margin-bottom: clamp(0.75rem, 2vh, 1.1rem);
+  color: var(--red);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.programLabel {
+  max-width: min(88vw, 72rem);
+  margin: 0;
+  font-family: Arial Black, Impact, Arial, Helvetica, sans-serif;
+  font-size: 7.5rem;
+  line-height: 0.88;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.scheduleLabel {
+  font-size: 6.2rem;
+}
+
+.programSubline {
+  max-width: min(86vw, 44rem);
+  margin: clamp(0.9rem, 2.5vh, 1.6rem) auto 0;
+  color: var(--muted);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.tickerShell {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-rows: auto auto auto;
+}
+
+.tickerRule {
+  height: clamp(0.75rem, 2.4vh, 1.35rem);
+  background:
+    repeating-linear-gradient(90deg, var(--ink) 0 0.62rem, transparent 0.62rem 1rem),
+    linear-gradient(90deg, var(--red), var(--ink) 28%, var(--ink) 72%, var(--red));
+}
+
+.tickerViewport {
+  overflow: hidden;
+  background: var(--ticker-bg);
+  color: var(--ticker-ink);
+  border-color: var(--black);
+  border-style: solid;
+  border-width: clamp(0.28rem, 0.75vw, 0.55rem) 0;
+  white-space: nowrap;
+}
+
+.tickerViewport[data-mode="system"] {
+  --ticker-bg: #171512;
+  --ticker-ink: #f5efe3;
+}
+
+.tickerTrack {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.tickerItem {
+  flex: 0 0 auto;
+  padding: clamp(0.85rem, 2vw, 1.35rem) clamp(1.2rem, 3vw, 2.6rem);
+  font-family: Arial Black, Impact, Arial, Helvetica, sans-serif;
+  font-size: 6.8rem;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.footer {
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  min-height: clamp(3.4rem, 8vh, 4.6rem);
+  padding: clamp(0.9rem, 2vw, 1.35rem) clamp(1rem, 3.6vw, 3rem);
+  border-width: 1px 0 0;
+  color: var(--muted);
+}
+
+.footer span,
+.footer time {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer span:first-child {
+  color: var(--ink);
+}
+
+.errorStrip {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(4rem, 9vh, 5.5rem);
+  z-index: 7;
+  max-width: min(32rem, calc(100vw - 2rem));
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(245, 239, 227, 0.28);
+  background: #2d0d0f;
+  color: var(--ink);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.82);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes signalFlash {
+  0% {
+    opacity: 0.42;
+    filter: contrast(1.7);
+    transform: translate3d(0, -0.25rem, 0);
+  }
+
+  100% {
+    opacity: 1;
+    filter: contrast(1);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes signalDrop {
+  0% {
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
+
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .header {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 0.7rem;
+  }
+
+  .brandBlock {
+    flex-wrap: wrap;
+  }
+
+  .headerMeta {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .stage {
+    padding-top: clamp(1rem, 3vh, 2rem);
+    padding-bottom: clamp(1rem, 3vh, 2rem);
+  }
+
+  .programLabel {
+    font-size: 3.6rem;
+  }
+
+  .scheduleLabel {
+    font-size: 3rem;
+  }
+
+  .tickerItem {
+    font-size: 3.8rem;
+  }
+
+  .footer {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem 1rem;
+  }
+}
+
+@media (max-height: 560px) {
+  .header {
+    min-height: 3.5rem;
+    padding-top: 0.72rem;
+    padding-bottom: 0.72rem;
+  }
+
+  .stage::before,
+  .stage::after {
+    display: none;
+  }
+
+  .programLabel {
+    font-size: 3.4rem;
+  }
+
+  .scheduleLabel {
+    font-size: 2.65rem;
+  }
+
+  .tickerRule {
+    height: 0.55rem;
+  }
+
+  .tickerItem {
+    padding-top: 0.68rem;
+    padding-bottom: 0.68rem;
+  }
+
+  .footer {
+    min-height: 2.9rem;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tickerTrack,
+  .root[data-status="live"] .liveDot,
+  .root[data-last-event="live-started"] .stage,
+  .root[data-last-event="live-ended"] .stage {
+    animation: none;
+  }
+
+  .tickerTrack {
+    transform: none;
+  }
+
+  .tickerViewport {
+    overflow-x: auto;
+    scrollbar-color: var(--ticker-ink) transparent;
+  }
+}
