@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { ReadingLiveReader } from '@/features/live/components/reading-live-reader';
+import { LiveBookReader } from '@/features/live/components/live-book-reader';
 import {
   PublicLiveSnapshotResponseSchema,
   type ConnectionStatus,
@@ -10,7 +10,8 @@ import { buildTypewriterApiUrl } from '@/lib/live/api';
 
 export const metadata: Metadata = {
   title: 'Lesen - Ambrecht',
-  description: 'Oeffentlicher Live-Reader von ambrecht.de mit klarer Stack-Navigation.',
+  description:
+    'Oeffentlicher Live-Reader von ambrecht.de mit literarischer Live-Leseansicht.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -70,7 +71,7 @@ export default async function LesenPage() {
   const initialLive = await loadInitialLiveState();
 
   return (
-    <ReadingLiveReader
+    <LiveBookReader
       initialState={initialLive.state}
       initialConnectionStatus={initialLive.connectionStatus}
       initialError={initialLive.initialError}
