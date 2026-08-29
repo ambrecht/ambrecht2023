@@ -6,7 +6,10 @@ import {
   type ConnectionStatus,
   type PublicLiveState,
 } from '@/features/live/lib/contract';
+import { loadOfflineHistory } from '@/features/live/lib/offline-history';
 import { buildTypewriterApiUrl } from '@/lib/live/api';
+import footerContent from '@/content/de/footer.json';
+import navContent from '@/content/de/nav.json';
 
 export const metadata: Metadata = {
   title: 'Lesen - Ambrecht',
@@ -69,6 +72,20 @@ async function loadInitialLiveState(): Promise<{
 
 export default async function LesenPage() {
   const initialLive = await loadInitialLiveState();
+  const offlineHistory =
+    initialLive.state.status === 'offline'
+      ? await loadOfflineHistory().catch(() => [])
+      : [];
+
+  const contactLinks = [
+    navContent.contact?.mailto
+      ? { href: navContent.contact.mailto, label: 'mail' }
+      : null,
+    footerContent.githubUrl
+      ? { href: footerContent.githubUrl, label: 'github' }
+      : null,
+    { href: '/vision', label: 'ueber mich' },
+  ].filter((link): link is { href: string; label: string } => Boolean(link));
 
   return (
     <LiveBookReader
@@ -76,6 +93,8 @@ export default async function LesenPage() {
       initialConnectionStatus={initialLive.connectionStatus}
       initialError={initialLive.initialError}
       streamUrl={buildTypewriterApiUrl('/live/stream')}
+      offlineHistory={offlineHistory}
+      contactLinks={contactLinks}
     />
   );
 }

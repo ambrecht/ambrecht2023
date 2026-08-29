@@ -1,8 +1,8 @@
 .reader {
   --reader-paper: #faf9f6;
   --reader-ink: #171716;
-  --reader-muted: #706d66;
-  --reader-soft: #8f8a80;
+  --reader-muted: #5f5b54;
+  --reader-soft: #706d66;
   --reader-rule: rgba(23, 23, 22, 0.22);
   --reader-inline: clamp(22px, 5.8vw, 28px);
   --reader-header-height: calc(66px + env(safe-area-inset-top));
@@ -198,6 +198,247 @@
   margin: 0;
 }
 
+.offlineLanding {
+  margin-inline: auto;
+  max-width: 44rem;
+  padding-block-start: clamp(12px, 4vh, 42px);
+  text-align: center;
+}
+
+.offlineIntro {
+  color: var(--reader-ink);
+  font-size: clamp(25px, 6.8vw, 34px);
+  font-weight: 400;
+  line-height: 1.28;
+  margin-block-end: clamp(34px, 7vh, 62px);
+}
+
+.offlineIntro h1,
+.offlineIntro p {
+  font: inherit;
+  margin: 0;
+}
+
+.offlineIntro p + p {
+  color: var(--reader-muted);
+  font-size: clamp(21px, 5.9vw, 28px);
+  margin-block-start: 8px;
+}
+
+.nextSession {
+  margin-inline: auto;
+}
+
+.offlineKicker,
+.historyTitle {
+  color: var(--reader-muted);
+  font-size: var(--reader-font-ui);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.35;
+  margin: 0;
+  text-transform: lowercase;
+}
+
+.scheduleDate {
+  color: var(--reader-ink);
+  display: block;
+  font-size: clamp(23px, 6vw, 30px);
+  line-height: 1.25;
+  margin-block-start: 22px;
+}
+
+.countdown {
+  color: var(--reader-ink);
+  font-feature-settings: "tnum";
+  font-size: clamp(38px, 12vw, 56px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  line-height: 1.1;
+  margin-block-start: 18px;
+  white-space: nowrap;
+}
+
+.countdownLabel,
+.notificationHint,
+.noSchedule span {
+  color: var(--reader-muted);
+  font-size: var(--reader-font-ui);
+  line-height: 1.45;
+}
+
+.countdownLabel {
+  margin: 4px 0 0;
+}
+
+.noSchedule {
+  margin-block-start: 22px;
+}
+
+.noSchedule p {
+  color: var(--reader-ink);
+  font-size: clamp(20px, 5vw, 24px);
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.notificationControl {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-block-start: 22px;
+}
+
+.notificationButton,
+.notificationTextButton {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--reader-ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--reader-font-ui);
+  min-height: 44px;
+  padding: 0 4px;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+.notificationButton:disabled {
+  color: var(--reader-muted);
+  cursor: default;
+  text-decoration: none;
+}
+
+.notificationTextButton {
+  color: var(--reader-muted);
+  font-size: 14px;
+  min-height: 32px;
+}
+
+.notificationHint {
+  margin: 0;
+}
+
+.notificationButton:focus-visible,
+.notificationTextButton:focus-visible,
+.historyButton:focus-visible,
+.contactFooter a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.offlineHistory {
+  margin-block-start: clamp(54px, 10vh, 92px);
+  text-align: left;
+}
+
+.historyTitle {
+  margin-block-end: 32px;
+  text-align: center;
+}
+
+.historyItem {
+  border-block-start: 1px solid rgba(23, 23, 22, 0.12);
+  padding-block: 24px 26px;
+}
+
+.historyDate {
+  color: var(--reader-muted);
+  display: block;
+  font-size: var(--reader-font-ui);
+  line-height: 1.35;
+  margin-block-end: 13px;
+  text-transform: lowercase;
+}
+
+.historyItemTitle {
+  color: var(--reader-ink);
+  font-size: clamp(22px, 6vw, 25px);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.22;
+  margin: 0 0 13px;
+}
+
+.historyPreview {
+  color: var(--reader-ink);
+  font-size: clamp(20px, 5.8vw, 22px);
+  line-height: 1.48;
+  margin: 0 0 14px;
+}
+
+.historyFullText {
+  color: var(--reader-ink);
+  font-size: clamp(20px, 5.8vw, 22px);
+  line-height: 1.52;
+  margin: 0 0 14px;
+  max-width: 34em;
+  white-space: pre-wrap;
+}
+
+.historyError {
+  color: var(--reader-muted);
+  font-size: var(--reader-font-ui);
+  line-height: 1.45;
+  margin: 0 0 8px;
+}
+
+.historyButton,
+.contactFooter a {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--reader-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--reader-font-ui);
+  line-height: 1.4;
+  min-height: 40px;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+.historyButton:hover,
+.contactFooter a:hover {
+  color: var(--reader-ink);
+}
+
+.historyButton:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.historyLiveReminder {
+  color: var(--reader-muted);
+  font-size: var(--reader-font-ui);
+  line-height: 1.45;
+  margin: 12px 0 0;
+}
+
+.historyLiveReminder a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+.historyLiveReminder a:hover {
+  color: var(--reader-ink);
+}
+
+.contactFooter {
+  color: var(--reader-muted);
+  font-size: var(--reader-font-ui);
+  margin-block-start: 22px;
+  text-align: center;
+}
+
 .error {
   border-left: 1px solid var(--reader-rule);
   color: var(--reader-muted);
@@ -243,5 +484,26 @@
 
   .story {
     max-width: 46rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .offlineLanding {
+    text-align: left;
+  }
+
+  .nextSession,
+  .offlineIntro,
+  .historyTitle,
+  .contactFooter {
+    text-align: left;
+  }
+
+  .countdown {
+    font-size: clamp(34px, 11vw, 44px);
+  }
+
+  .notificationControl {
+    align-items: flex-start;
   }
 }
