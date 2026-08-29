@@ -43,6 +43,7 @@ type SessionTextState = {
 
 const userScrollThreshold = 8;
 const notifiedBroadcastStorageKey = 'ambrecht-live-reader-notified-broadcast';
+const traceMarkerCounts = [3, 5, 7, 3];
 
 const scheduleDayFormatter = new Intl.DateTimeFormat('de-DE', {
   weekday: 'long',
@@ -76,11 +77,7 @@ function formatViewerCount(count: number) {
 }
 
 function formatUnseenWords(count: number) {
-  if (count <= 0) return '↓ zurück zu live';
-
-  return count === 1
-    ? '↓ zurück zu live · 1 neues Wort'
-    : `↓ zurück zu live · ${count} neue Wörter`;
+  return '↓ zurück zu live';
 }
 
 function getScheduledDate(scheduledAt: string | null) {
@@ -180,6 +177,9 @@ export function LiveBookReader({
   const [expandedHistoryId, setExpandedHistoryId] = useState<number | null>(
     null,
   );
+  const [traceCount, setTraceCount] = useState(18);
+  const [tracePopoverOpen, setTracePopoverOpen] = useState(false);
+  const [traceAnnouncement, setTraceAnnouncement] = useState('');
 
   const viewModel = useMemo(
     () => buildLiveBookViewModel(broadcastState),
@@ -273,9 +273,9 @@ export function LiveBookReader({
     setReaderMode('FOLLOWING_LIVE');
     setUnseenWordCount(0);
 
-    liveEndRef.current?.scrollIntoView({
+    liveBoundaryRef.current?.scrollIntoView({
       behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-      block: 'end',
+      block: 'center',
     });
   }, [markProgrammaticScroll, setReaderMode]);
 
@@ -305,6 +305,16 @@ export function LiveBookReader({
 
   const toggleExpandedHistory = useCallback((id: number) => {
     setExpandedHistoryId((currentId) => (currentId === id ? null : id));
+  }, []);
+
+  const closeTracePopover = useCallback(() => {
+    setTracePopoverOpen(false);
+  }, []);
+
+  const leaveTrace = useCallback((trace: string) => {
+    setTraceCount((current) => current + 1);
+    setTracePopoverOpen(false);
+    setTraceAnnouncement(`Deine Spur (${trace}) wurde hinzugefuegt.`);
   }, []);
 
   useEffect(() => {
@@ -465,6 +475,20 @@ export function LiveBookReader({
     return () => observer.disconnect();
   }, [isLive, setReaderMode, viewModel.revisionKey]);
 
+  useEffect(() => {
+    if (!tracePopoverOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTracePopoverOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [tracePopoverOpen]);
+
   const showConnectionError =
     !isLive && connectionStatus === 'error' && Boolean(error);
 
@@ -492,15 +516,35 @@ export function LiveBookReader({
         </div>
 
         {isLive ? (
-          <button
-            className={styles.readerButton}
-            type="button"
-            onClick={scrollToStart}
-          >
-            Anfang
-          </button>
+          <nav className={styles.liveNav} aria-label="Live-Navigation">
+            <button
+              className={styles.readerButton}
+              type="button"
+              aria-expanded={tracePopoverOpen}
+              aria-controls="trace-popover"
+              onClick={() => setTracePopoverOpen((open) => !open)}
+            >
+              Spuren · {traceCount}
+            </button>
+            <button
+              className={styles.readerButton}
+              type="button"
+              onClick={scrollToStart}
+            >
+              Anfang
+            </button>
+          </nav>
         ) : null}
       </header>
+
+      {isLive ? (
+        <TracePopover
+          open={tracePopoverOpen}
+          traceCount={traceCount}
+          onClose={closeTracePopover}
+          onLeaveTrace={leaveTrace}
+        />
+      ) : null}
 
       <article className={styles.story} aria-label="Live-Manuskript">
         <div
@@ -526,15 +570,41 @@ export function LiveBookReader({
           <>
             {error ? <p className={styles.error}>{error}</p> : null}
 
-            {viewModel.title ? (
-              <h1 className={styles.title}>{viewModel.title}</h1>
-            ) : null}
+            <header className={styles.liveIntro} id="anfang">
+              <p className={styles.liveIntroKicker}>Live-Manuskript · heute</p>
+              <h1 className={styles.title}>
+                {viewModel.title ?? (
+                  <>
+                    Während du liest,
+                    <br />
+                    entsteht der Text weiter.
+                  </>
+                )}
+              </h1>
+              <span className={styles.liveIntroOrnament} aria-hidden="true">
+                · · ·
+              </span>
+            </header>
 
             {viewModel.historicalParagraphs.length > 0 ? (
-              <div className={styles.historicalManuscript}>
-                {viewModel.historicalParagraphs.map((paragraph) => (
-                  <p key={paragraph.id} className={styles.historicalParagraph}>
+              <div
+                className={`${styles.historicalManuscript} ${
+                  tracePopoverOpen ? styles.tracesEmphasized : ''
+                }`}
+                lang="de"
+              >
+                {viewModel.historicalParagraphs.map((paragraph, index) => (
+                  <p
+                    key={paragraph.id}
+                    className={`${styles.historicalParagraph} ${
+                      index === 0 ? styles.openingParagraph : ''
+                    }`}
+                  >
                     {renderParagraph(paragraph)}
+                    <TraceMarker
+                      count={traceMarkerCounts[index % traceMarkerCounts.length]}
+                      onOpen={() => setTracePopoverOpen(true)}
+                    />
                   </p>
                 ))}
               </div>
@@ -571,12 +641,76 @@ export function LiveBookReader({
         </button>
       ) : null}
 
-      {isLive && unseenWordCount > 0 ? (
+      {isLive && traceAnnouncement ? (
         <div className={styles.srOnly} role="status" aria-live="polite">
-          {unseenWordCount} neue Wörter verfügbar
+          {traceAnnouncement}
         </div>
       ) : null}
     </main>
+  );
+}
+
+function TraceMarker({
+  count,
+  onOpen,
+}: {
+  count: number;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      className={styles.traceMark}
+      type="button"
+      aria-label={`${count} Spuren an diesem Absatz`}
+      onClick={onOpen}
+    >
+      {count}
+    </button>
+  );
+}
+
+function TracePopover({
+  open,
+  traceCount,
+  onClose,
+  onLeaveTrace,
+}: {
+  open: boolean;
+  traceCount: number;
+  onClose: () => void;
+  onLeaveTrace: (trace: string) => void;
+}) {
+  return (
+    <aside
+      id="trace-popover"
+      className={`${styles.tracePopover} ${open ? styles.tracePopoverOpen : ''}`}
+      aria-labelledby="trace-title"
+      hidden={!open}
+    >
+      <h2 id="trace-title">Spuren im Text</h2>
+      <p>
+        Leise Resonanzen anderer Leser:innen. Keine Profile, keine Punkte. Die
+        kleinen Zeichen stehen direkt an den Stellen, an denen etwas haengen
+        blieb.
+      </p>
+      <div className={styles.traceActions} aria-label="Eine Spur hinterlassen">
+        <button type="button" onClick={() => onLeaveTrace('still')}>
+          ○ still
+        </button>
+        <button type="button" onClick={() => onLeaveTrace('nah')}>
+          ◇ nah
+        </button>
+        <button type="button" onClick={() => onLeaveTrace('stark')}>
+          ✦ stark
+        </button>
+      </div>
+      <div className={styles.traceFoot}>
+        <span>{traceCount} Spuren heute</span>
+        <button type="button" onClick={onClose}>
+          schliessen
+        </button>
+      </div>
+    </aside>
   );
 }
 
