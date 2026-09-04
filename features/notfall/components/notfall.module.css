@@ -1,0 +1,388 @@
+.root {
+  --notfall-bg: #0d0d0c;
+  --notfall-bg-soft: #11100e;
+  --notfall-text: #f4f1ea;
+  --notfall-secondary: #d7d0c3;
+  --notfall-muted: #938b7f;
+  --notfall-border: rgba(244, 241, 234, 0.14);
+  --notfall-accent: #d7c48f;
+  --notfall-focus: #f2d982;
+  --notfall-motion: 520ms ease;
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(255, 255, 255, 0.035), transparent 55%),
+    var(--notfall-bg);
+  color: var(--notfall-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+  isolation: isolate;
+}
+
+.root,
+.root * {
+  box-sizing: border-box;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 46rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding:
+    max(1rem, env(safe-area-inset-top))
+    max(1.15rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom))
+    max(1.15rem, env(safe-area-inset-left));
+  transition:
+    max-width 1400ms ease,
+    opacity var(--notfall-motion);
+}
+
+.interruptScreen {
+  max-width: 42rem;
+}
+
+.bodyScreen {
+  max-width: 58rem;
+}
+
+.topBar,
+.bottomBar {
+  display: flex;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: var(--notfall-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.topBar {
+  min-height: 2.5rem;
+  text-transform: uppercase;
+}
+
+.bottomBar {
+  min-height: 3.75rem;
+  padding-top: 0.75rem;
+}
+
+.bodyScreen .bottomBar {
+  border-top: 0;
+}
+
+.centerStage {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  padding-block: clamp(1.5rem, 6vh, 4rem);
+}
+
+.bodyScreen .centerStage {
+  justify-content: center;
+  padding-block: clamp(2.25rem, 10vh, 7rem);
+}
+
+.title {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  letter-spacing: 0;
+}
+
+.interruptTitle {
+  max-width: 12em;
+  font-size: clamp(2rem, 7.4vw, 4.1rem);
+  font-weight: 900;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.bodyTitle {
+  max-width: 18em;
+  color: rgba(244, 241, 234, 0.92);
+  font-size: clamp(1.35rem, 4.6vw, 2.45rem);
+  font-weight: 620;
+  line-height: 1.18;
+  text-transform: none;
+}
+
+.actionHeading {
+  max-width: 15em;
+  font-size: clamp(1.65rem, 5.5vw, 3.1rem);
+  font-weight: 760;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.cueList,
+.actionIntro {
+  display: grid;
+  gap: clamp(0.55rem, 1.8vh, 1rem);
+  width: 100%;
+  max-width: 35rem;
+  min-height: clamp(9rem, 23vh, 15rem);
+  margin-top: clamp(1.35rem, 4.8vh, 3.2rem);
+  color: var(--notfall-secondary);
+  font-size: clamp(1rem, 2.4vw, 1.18rem);
+  line-height: 1.62;
+}
+
+.bodyScreen .cueList {
+  max-width: 39rem;
+  margin-top: clamp(2rem, 7vh, 5.25rem);
+  gap: clamp(0.65rem, 2.6vh, 1.4rem);
+  color: rgba(244, 241, 234, 0.78);
+}
+
+.cueList p,
+.actionIntro p {
+  margin: 0;
+  animation: cueFadeIn 900ms ease both;
+}
+
+.cuePrimary {
+  color: var(--notfall-text);
+  font-size: clamp(1.12rem, 2.9vw, 1.5rem);
+}
+
+.cueQuiet {
+  color: rgba(244, 241, 234, 0.76);
+}
+
+.cueOptional,
+.optionalText {
+  color: rgba(244, 241, 234, 0.55);
+  font-size: clamp(0.92rem, 2.2vw, 1.02rem);
+}
+
+.stillness {
+  display: block;
+  min-width: 4rem;
+  min-height: 2.75rem;
+}
+
+.primaryButton,
+.secondaryButton,
+.actionNowButton,
+.actionButton,
+.quietLink {
+  border: 1px solid var(--notfall-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--notfall-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 680;
+  letter-spacing: 0;
+  transition:
+    border-color var(--notfall-motion),
+    background-color var(--notfall-motion),
+    color var(--notfall-motion);
+}
+
+.primaryButton,
+.secondaryButton,
+.actionNowButton,
+.actionButton {
+  min-height: 3rem;
+  padding: 0.78rem 1rem;
+}
+
+.primaryButton,
+.actionNowButton {
+  background: rgba(244, 241, 234, 0.92);
+  color: var(--notfall-bg);
+}
+
+.secondaryButton {
+  color: rgba(244, 241, 234, 0.7);
+}
+
+.quietLink {
+  min-height: 2.4rem;
+  padding: 0.45rem 0.65rem;
+  border-color: transparent;
+  color: var(--notfall-muted);
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  padding-bottom: 0.15rem;
+}
+
+.actionButton {
+  width: 100%;
+  min-height: 3.35rem;
+  background: rgba(244, 241, 234, 0.045);
+  color: rgba(244, 241, 234, 0.88);
+  font-size: clamp(0.96rem, 2.3vw, 1.05rem);
+  text-align: center;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover,
+.actionNowButton:hover,
+.actionButton:hover,
+.quietLink:hover {
+  border-color: rgba(215, 196, 143, 0.5);
+  background: rgba(244, 241, 234, 0.08);
+  color: var(--notfall-text);
+}
+
+.primaryButton:hover,
+.actionNowButton:hover {
+  background: var(--notfall-text);
+  color: var(--notfall-bg);
+}
+
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible,
+.actionNowButton:focus-visible,
+.actionButton:focus-visible,
+.quietLink:focus-visible,
+.title:focus-visible {
+  outline: 3px solid var(--notfall-focus);
+  outline-offset: 4px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes cueFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 479px) {
+  .screen {
+    padding-inline:
+      max(1rem, env(safe-area-inset-left))
+      max(1rem, env(safe-area-inset-right));
+  }
+
+  .topBar,
+  .bottomBar {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .topBar {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .actionNowButton {
+    width: 100%;
+  }
+
+  .quietLink {
+    justify-self: end;
+  }
+
+  .cueList,
+  .actionIntro {
+    min-height: 12rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .screen {
+    padding-inline:
+      max(2rem, env(safe-area-inset-left))
+      max(2rem, env(safe-area-inset-right));
+  }
+
+  .actionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1120px) {
+  .actionGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-height: 620px) {
+  .centerStage,
+  .bodyScreen .centerStage {
+    padding-block: 1rem;
+  }
+
+  .interruptTitle {
+    font-size: clamp(1.65rem, 6.8vw, 2.9rem);
+  }
+
+  .bodyTitle,
+  .actionHeading {
+    font-size: clamp(1.25rem, 4.8vw, 2rem);
+  }
+
+  .cueList,
+  .actionIntro {
+    min-height: 7rem;
+    margin-top: 1rem;
+    gap: 0.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .primaryButton,
+  .secondaryButton,
+  .actionNowButton,
+  .actionButton,
+  .quietLink {
+    transition: none;
+  }
+
+  .cueList p,
+  .actionIntro p {
+    animation: none;
+  }
+}

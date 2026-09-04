@@ -278,7 +278,7 @@ const renderHighlightedText = (value: string, ranges: TextRange[]) => {
 export default function SessionEditorPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const activeParam = searchParams.get('active');
+  const activeParam = searchParams?.get('active');
   const activeId = activeParam ? Number(activeParam) : NaN;
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);

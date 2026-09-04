@@ -157,6 +157,8 @@ export function usePublicLiveStream({
     registerNamedEvent('live.schedule.updated');
     registerNamedEvent('viewer.count');
     registerNamedEvent('reaction.updated');
+    registerNamedEvent('interaction.opened');
+    registerNamedEvent('interaction.closed');
 
     source.onerror = () => {
       if (disposed) return;

@@ -227,6 +227,103 @@
   scroll-margin-top: 20vh;
 }
 
+.readerInteraction {
+  border-block: 1px solid rgba(23, 23, 22, 0.14);
+  color: var(--reader-ink);
+  margin: 28px auto;
+  max-width: var(--reader-measure-live);
+  padding-block: 18px 17px;
+}
+
+.readerInteractionFieldset {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+}
+
+.readerInteractionLegend {
+  color: var(--reader-muted);
+  font-family: var(--pop-Font), ui-sans-serif, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+  margin-block-end: 8px;
+  text-transform: uppercase;
+}
+
+.readerInteractionQuestion {
+  font-size: clamp(20px, 0.75vw + 16px, 24px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.36;
+  margin: 0;
+}
+
+.readerInteractionOptions {
+  display: grid;
+  gap: 8px;
+  margin-block-start: 14px;
+}
+
+.readerInteractionOption {
+  align-items: baseline;
+  color: var(--reader-muted);
+  cursor: pointer;
+  display: grid;
+  font-size: clamp(17px, 0.55vw + 15px, 20px);
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr);
+  line-height: 1.35;
+}
+
+.readerInteractionOption input {
+  accent-color: var(--reader-ink);
+  block-size: 1em;
+  inline-size: 1em;
+  margin: 0;
+  transform: translateY(0.11em);
+}
+
+.readerInteractionOption input:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.readerInteractionOption span {
+  overflow-wrap: anywhere;
+}
+
+.readerInteractionOption:has(input:checked) {
+  color: var(--reader-ink);
+}
+
+.readerInteractionFieldset:disabled .readerInteractionOption {
+  cursor: default;
+}
+
+.readerInteractionFeedback,
+.readerInteractionResults {
+  color: var(--reader-muted);
+  font-family: var(--pop-Font), ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  margin-block-start: 12px;
+  min-height: 18px;
+}
+
+.readerInteractionResults {
+  display: grid;
+  gap: 5px;
+}
+
+.readerInteractionResults p,
+.readerInteractionFeedback {
+  margin-block-end: 0;
+}
+
 .liveRule {
   background: var(--reader-rule);
   block-size: 1px;

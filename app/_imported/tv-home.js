@@ -281,6 +281,23 @@ const Home = () => {
           prefersReducedMotion={prefersReducedMotion}
         />
       </SiteGrid>
+      <InterfaceOverlay>
+        <TopBar>
+          <Brand href="/start">AMBRECHT</Brand>
+          <MainNavigation aria-label="Hauptnavigation">
+            <NavLink href="/live">Live</NavLink>
+            <NavLink href="/lesen">Lesen</NavLink>
+            <NavLink href="/work">Werkstatt</NavLink>
+            <NavLink href="/vision">Vision</NavLink>
+            <NavLink href="/blog">Blog</NavLink>
+          </MainNavigation>
+        </TopBar>
+        <Hero>
+          <Eyebrow><SignalDot aria-hidden="true" />Jetzt auf Sendung</Eyebrow>
+          <HeroTitle>Ein fortlaufendes Programm aus Bildern.</HeroTitle>
+          <HeroLink href="/lesen">Live lesen <span aria-hidden="true">&rarr;</span></HeroLink>
+        </Hero>
+      </InterfaceOverlay>
       <FullscreenButton onClick={handleFullscreenToggle} type="button">
         {isFullscreen ? 'Vollbild verlassen' : 'Vollbild'}
       </FullscreenButton>
@@ -333,10 +350,130 @@ const StoryTrigger = styled.button`
   }
 `;
 
+const InterfaceOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  color: white;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(5,6,7,.72) 0%, rgba(5,6,7,.42) 34%, rgba(5,6,7,.12) 64%, rgba(5,6,7,0) 82%);
+  }
+`;
+
+const TopBar = styled.header`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.25rem, 2.6vw, 2.75rem) clamp(1.25rem, 4vw, 5rem);
+  pointer-events: auto;
+
+  @media (max-width: 700px) {
+    align-items: flex-start;
+  }
+`;
+
+const Brand = styled.a`
+  color: white;
+  text-decoration: none;
+  font-family: var(--pop-Font), Arial, sans-serif;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .23em;
+`;
+
+const MainNavigation = styled.nav`
+  display: flex;
+  gap: clamp(.9rem, 2vw, 2.5rem);
+  pointer-events: auto;
+
+  @media (max-width: 700px) {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: .8rem 1.2rem;
+  }
+`;
+
+const NavLink = styled.a`
+  color: rgba(255,255,255,.8);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: var(--pop-Font), Arial, sans-serif;
+  font-size: clamp(.62rem, .65vw, .78rem);
+  letter-spacing: .14em;
+  transition: color .18s ease;
+
+  &:hover, &:focus-visible { color: white; }
+`;
+
+const Hero = styled.section`
+  position: absolute;
+  left: clamp(1.25rem, 5vw, 6rem);
+  bottom: clamp(2rem, 8vh, 7rem);
+  width: min(42rem, calc(100vw - 2.5rem));
+  pointer-events: auto;
+`;
+
+const Eyebrow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-bottom: 1rem;
+  color: rgba(255,255,255,.72);
+  font-family: var(--pop-Font), Arial, sans-serif;
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+`;
+
+const SignalDot = styled.span`
+  width: .42rem;
+  height: .42rem;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 .8rem rgba(255,255,255,.5);
+`;
+
+const HeroTitle = styled.h1`
+  max-width: 12ch;
+  margin: 0;
+  color: white;
+  font-family: var(--pop-Font), Arial, sans-serif;
+  font-size: clamp(2.4rem, 5.3vw, 6.2rem);
+  font-weight: 400;
+  line-height: .96;
+  letter-spacing: -.045em;
+`;
+
+const HeroLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  margin-top: 1.8rem;
+  padding-bottom: .65rem;
+  border-bottom: 1px solid rgba(255,255,255,.65);
+  color: white;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: var(--pop-Font), Arial, sans-serif;
+  font-size: .75rem;
+  letter-spacing: .15em;
+`;
+
 const FullscreenButton = styled.button`
   position: fixed;
-  right: 1rem;
-  top: 3.75rem;
+  right: clamp(1.25rem, 4vw, 5rem);
+  bottom: clamp(1.25rem, 3vw, 3rem);
   z-index: 20;
   background: rgba(0, 0, 0, 0.7);
   color: white;

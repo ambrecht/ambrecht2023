@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 export default function SessionLoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nextPath = searchParams.get('next') || '/session';
+  const nextPath = searchParams?.get('next') || '/session';
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);

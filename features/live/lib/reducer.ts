@@ -5,10 +5,27 @@ export function reduceLiveState(
   event: ValidatedLiveEvent,
 ): PublicLiveState {
   if (event.type === 'live.snapshot') {
+    if (
+      state.status === 'live' &&
+      event.snapshot.status === 'live' &&
+      event.snapshot.broadcastId === state.broadcastId &&
+      event.snapshot.sequence < state.sequence
+    ) {
+      return state;
+    }
+
     return event.snapshot;
   }
 
   if (event.type === 'live.started') {
+    if (
+      state.status === 'live' &&
+      event.snapshot.broadcastId === state.broadcastId &&
+      event.snapshot.sequence <= state.sequence
+    ) {
+      return state;
+    }
+
     return event.snapshot;
   }
 
@@ -79,11 +96,70 @@ export function reduceLiveState(
   }
 
   if (event.type === 'line.committed') {
+    const hasLine = state.lines.some((line) => line.id === event.line.id);
+
     return {
       ...state,
       sequence: event.sequence,
-      lines: [...state.lines, event.line],
+      lines: hasLine ? state.lines : [...state.lines, event.line],
       activeDraft: '',
+    };
+  }
+
+  if (event.type === 'interaction.opened') {
+    const hasInteraction = state.interactions.some(
+      (interaction) => interaction.id === event.interaction.id,
+    );
+
+    if (hasInteraction) {
+      return {
+        ...state,
+        sequence: event.sequence,
+      };
+    }
+
+    return {
+      ...state,
+      sequence: event.sequence,
+      interactions: [
+        ...state.interactions,
+        {
+          id: event.interaction.id,
+          broadcastId: event.broadcastId,
+          kind: event.interaction.kind,
+          question: event.interaction.question,
+          options: event.interaction.options,
+          status: 'open',
+          openedSequence: event.sequence,
+          closedSequence: null,
+          finalResults: null,
+          openedAt: null,
+          closedAt: null,
+        },
+      ],
+    };
+  }
+
+  if (event.type === 'interaction.closed') {
+    let didUpdate = false;
+    const interactions = state.interactions.map((interaction) => {
+      if (interaction.id !== event.interactionId) {
+        return interaction;
+      }
+
+      didUpdate = true;
+      return {
+        ...interaction,
+        status: 'closed' as const,
+        closedSequence: event.sequence,
+        finalResults: event.results,
+      };
+    });
+
+    return {
+      ...state,
+      sequence: event.sequence,
+      interactions: didUpdate ? interactions : state.interactions,
     };
   }
 

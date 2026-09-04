@@ -27,7 +27,7 @@ type LiveTheme = 'dark' | 'light';
 type ReaderScale = 'small' | 'medium' | 'large';
 type ReadingMode = 'live' | 'history';
 type ReadingLineFocusState = 'focused' | 'nearby' | 'distant';
-type ReaderInteraction = 'reading' | 'navigating';
+type ReaderActivity = 'reading' | 'navigating';
 
 type ReadingNavigation = {
   mode: ReadingMode;
@@ -88,7 +88,7 @@ type ThemeTokens = {
   errorBorder: string;
 };
 
-type ReaderInteractionTokens = {
+type ReaderActivityTokens = {
   rowText: Record<ReadingLineFocusState, string>;
   meta: Record<ReadingLineFocusState, string>;
   hoverMeta: string;
@@ -224,7 +224,7 @@ const themeTokens: Record<LiveTheme, ThemeTokens> = {
   },
 };
 
-const readerInteractionTokens: Record<ReaderInteraction, ReaderInteractionTokens> = {
+const readerInteractionTokens: Record<ReaderActivity, ReaderActivityTokens> = {
   reading: {
     rowText: {
       focused: 'opacity-[0.88]',
@@ -1196,7 +1196,7 @@ function ReadingCommittedLine({
   focusState: ReadingLineFocusState;
   isFocusedLine: boolean;
   showTime: boolean;
-  interaction: ReaderInteraction;
+  interaction: ReaderActivity;
   onToggleHeart: (line: LiveLine) => void;
   tokens: ThemeTokens;
 }) {
@@ -1288,7 +1288,7 @@ function ReadingDraftStackLine({
 }: {
   row: VisualDraftRow;
   focusState: ReadingLineFocusState;
-  interaction: ReaderInteraction;
+  interaction: ReaderActivity;
   tokens: ThemeTokens;
 }) {
   const interactionTone = readerInteractionTokens[interaction];
@@ -1331,7 +1331,7 @@ function ReadingNavigationRail({
 }: {
   canNavigateOlder: boolean;
   canNavigateNewer: boolean;
-  interaction: ReaderInteraction;
+  interaction: ReaderActivity;
   showNavigationHint: boolean;
   tokens: ThemeTokens;
 }) {
@@ -1633,7 +1633,7 @@ function ReadingHistoryPane({
   focusedIndex: number;
   focusedLineId: string | null;
   navigation: ReadingNavigation;
-  interaction: ReaderInteraction;
+  interaction: ReaderActivity;
   showNavigationHint: boolean;
   canNavigateOlder: boolean;
   canNavigateNewer: boolean;
@@ -1912,7 +1912,7 @@ export function ReadingLiveReader({
   >(() => new Map());
   const [navigationOffset, setNavigationOffset] = useState(0);
   const [interaction, setInteraction] =
-    useState<ReaderInteraction>('reading');
+    useState<ReaderActivity>('reading');
   const [hasUsedReaderNavigation, setHasUsedReaderNavigation] = useState(false);
   const [unseenCommittedCount, setUnseenCommittedCount] = useState(0);
   const rootRef = useRef<HTMLElement | null>(null);

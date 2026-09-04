@@ -2,10 +2,41 @@ import { z } from 'zod';
 
 export interface LiveLine {
   id: string;
+  sequence: number;
   text: string;
   publishedAt: string;
   heartCount: number;
 }
+
+export type LiveInteractionKind =
+  | 'pressure'
+  | 'prediction'
+  | 'belief'
+  | 'decision';
+
+export type LiveInteractionOption = {
+  id: string;
+  label: string;
+};
+
+export type LiveInteractionResult = {
+  optionId: string;
+  count: number;
+};
+
+export type LiveInteraction = {
+  id: string;
+  broadcastId: string;
+  kind: LiveInteractionKind;
+  question: string;
+  options: LiveInteractionOption[];
+  status: 'open' | 'closed';
+  openedSequence: number;
+  closedSequence: number | null;
+  finalResults: LiveInteractionResult[] | null;
+  openedAt: string | null;
+  closedAt: string | null;
+};
 
 export type PublicLiveState =
   | {
@@ -20,6 +51,7 @@ export type PublicLiveState =
       viewerCount: number;
       lines: readonly LiveLine[];
       activeDraft: string;
+      interactions: readonly LiveInteraction[];
       nextLiveAt: string | null;
     };
 
@@ -33,9 +65,41 @@ export type FollowMode = 'live' | 'history';
 
 export const LiveLineSchema = z.object({
   id: z.string().min(1),
+  sequence: z.number().int().nonnegative().default(0),
   text: z.string(),
   publishedAt: z.string().min(1),
   heartCount: z.number().int().nonnegative(),
+});
+
+export const LiveInteractionKindSchema = z.enum([
+  'pressure',
+  'prediction',
+  'belief',
+  'decision',
+]);
+
+export const LiveInteractionOptionSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+});
+
+export const LiveInteractionResultSchema = z.object({
+  optionId: z.string().min(1),
+  count: z.number().int().nonnegative(),
+});
+
+export const LiveInteractionSchema = z.object({
+  id: z.string().min(1),
+  broadcastId: z.string().min(1),
+  kind: LiveInteractionKindSchema,
+  question: z.string().min(1),
+  options: z.array(LiveInteractionOptionSchema).min(1),
+  status: z.enum(['open', 'closed']),
+  openedSequence: z.number().int().nonnegative(),
+  closedSequence: z.number().int().nonnegative().nullable(),
+  finalResults: z.array(LiveInteractionResultSchema).nullable(),
+  openedAt: z.string().min(1).nullable(),
+  closedAt: z.string().min(1).nullable(),
 });
 
 export const OfflineSnapshotSchema = z.object({
@@ -51,6 +115,7 @@ export const LiveSnapshotSchema = z.object({
   viewerCount: z.number().int().nonnegative(),
   lines: z.array(LiveLineSchema),
   activeDraft: z.string(),
+  interactions: z.array(LiveInteractionSchema).default([]),
   nextLiveAt: z.string().min(1).nullable().default(null),
 });
 
@@ -94,6 +159,25 @@ export const ReactionUpdatedEventSchema = z.object({
   count: z.number().int().nonnegative(),
 });
 
+export const InteractionOpenedEventSchema = z.object({
+  broadcastId: z.string().min(1),
+  sequence: z.number().int().nonnegative(),
+  interaction: z.object({
+    id: z.string().min(1),
+    kind: LiveInteractionKindSchema,
+    question: z.string().min(1),
+    options: z.array(LiveInteractionOptionSchema).min(1),
+  }),
+});
+
+export const InteractionClosedEventSchema = z.object({
+  broadcastId: z.string().min(1),
+  sequence: z.number().int().nonnegative(),
+  interactionId: z.string().min(1),
+  results: z.array(LiveInteractionResultSchema),
+  total: z.number().int().nonnegative(),
+});
+
 export const LiveScheduleUpdatedEventSchema = z.object({
   scheduledAt: z.string().min(1).nullable(),
 });
@@ -134,6 +218,25 @@ export type ValidatedLiveEvent =
       lineId: string;
       reaction: 'heart';
       count: number;
+    }
+  | {
+      type: 'interaction.opened';
+      broadcastId: string;
+      sequence: number;
+      interaction: {
+        id: string;
+        kind: LiveInteractionKind;
+        question: string;
+        options: LiveInteractionOption[];
+      };
+    }
+  | {
+      type: 'interaction.closed';
+      broadcastId: string;
+      sequence: number;
+      interactionId: string;
+      results: LiveInteractionResult[];
+      total: number;
     }
   | {
       type: 'live.schedule.updated';
@@ -192,6 +295,20 @@ export const parseNamedLiveEvent = (
     return {
       type,
       ...LiveScheduleUpdatedEventSchema.parse(payload),
+    };
+  }
+
+  if (type === 'interaction.opened') {
+    return {
+      type,
+      ...InteractionOpenedEventSchema.parse(payload),
+    };
+  }
+
+  if (type === 'interaction.closed') {
+    return {
+      type,
+      ...InteractionClosedEventSchema.parse(payload),
     };
   }
 

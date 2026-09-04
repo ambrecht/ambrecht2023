@@ -11,8 +11,17 @@ import {
   type LiveBookViewModel,
   type ReaderParagraph,
 } from '../lib/build-live-book-view-model';
-import type { ConnectionStatus, PublicLiveState } from '../lib/contract';
+import type {
+  ConnectionStatus,
+  LiveInteraction,
+  LiveLine,
+  PublicLiveState,
+} from '../lib/contract';
 import type { OfflineHistoryItem } from '../lib/offline-history';
+import {
+  ReadingLiveInteraction,
+  removeStoredInteractionVotes,
+} from './reading-live-interaction';
 
 import styles from './live-book-reader.module.css';
 
@@ -41,7 +50,24 @@ type SessionTextState = {
   error: string | null;
 };
 
+type ManuscriptBlock =
+  | {
+      type: 'paragraph';
+      id: string;
+      fragments: Array<{
+        id: string;
+        text: string;
+        committedAt: string | null;
+      }>;
+      opening: boolean;
+    }
+  | {
+      type: 'interaction';
+      interaction: LiveInteraction;
+    };
+
 const userScrollThreshold = 8;
+const viewerIdStorageKey = 'ambrecht-live-viewer-id';
 const notifiedBroadcastStorageKey = 'ambrecht-live-reader-notified-broadcast';
 const traceMarkerCounts = [3, 5, 7, 3];
 
@@ -71,6 +97,38 @@ const historyDateFormatter = new Intl.DateTimeFormat('de-DE', {
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function getOrCreateAnonymousViewerId() {
+  try {
+    const storedViewerId = window.localStorage.getItem(viewerIdStorageKey);
+    if (storedViewerId) return storedViewerId;
+
+    const viewerId = window.crypto.randomUUID();
+    window.localStorage.setItem(viewerIdStorageKey, viewerId);
+    return viewerId;
+  } catch {
+    return null;
+  }
+}
+
+function useAnonymousViewerId() {
+  const [viewerId, setViewerId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setViewerId(getOrCreateAnonymousViewerId());
+  }, []);
+
+  const ensureViewerId = useCallback(() => {
+    const nextViewerId = viewerId ?? getOrCreateAnonymousViewerId();
+    if (nextViewerId && nextViewerId !== viewerId) {
+      setViewerId(nextViewerId);
+    }
+
+    return nextViewerId;
+  }, [viewerId]);
+
+  return { ensureViewerId };
+}
 
 function formatViewerCount(count: number) {
   return count === 1 ? '1 liest mit' : `${count} lesen mit`;
@@ -126,7 +184,7 @@ function formatHistoryDate(value: string) {
   return historyDateFormatter.format(date);
 }
 
-function renderParagraph(paragraph: ReaderParagraph) {
+function renderParagraph(paragraph: Pick<ReaderParagraph, 'fragments'>) {
   let previousText: string | null = null;
 
   return paragraph.fragments.map((fragment) => {
@@ -157,6 +215,7 @@ export function LiveBookReader({
     initialError,
     streamUrl,
   });
+  const { ensureViewerId } = useAnonymousViewerId();
 
   const storyStartRef = useRef<HTMLDivElement | null>(null);
   const liveEndRef = useRef<HTMLDivElement | null>(null);
@@ -168,6 +227,7 @@ export function LiveBookReader({
   const followFrameRef = useRef<number | null>(null);
   const programmaticTimerRef = useRef<number | null>(null);
   const historyBaselineWordCountRef = useRef(0);
+  const previousBroadcastIdRef = useRef<string | null>(null);
 
   const [mode, setMode] = useState<ReaderMode>('FOLLOWING_LIVE');
   const [unseenWordCount, setUnseenWordCount] = useState(0);
@@ -183,6 +243,22 @@ export function LiveBookReader({
 
   const viewModel = useMemo(
     () => buildLiveBookViewModel(broadcastState),
+    [broadcastState],
+  );
+  const activeBroadcastId =
+    broadcastState.status === 'live' ? broadcastState.broadcastId : null;
+  const manuscriptBlocks = useMemo(
+    () =>
+      broadcastState.status === 'live'
+        ? buildManuscriptBlocks({
+            lines: broadcastState.lines,
+            interactions: broadcastState.interactions,
+          })
+        : [],
+    [broadcastState],
+  );
+  const visibleReaderInteraction = useMemo(
+    () => getVisibleReaderInteraction(broadcastState),
     [broadcastState],
   );
 
@@ -413,6 +489,19 @@ export function LiveBookReader({
   }, [isLive, scrollToInitialLivePosition]);
 
   useEffect(() => {
+    const previousBroadcastId = previousBroadcastIdRef.current;
+
+    if (
+      previousBroadcastId &&
+      (!activeBroadcastId || activeBroadcastId !== previousBroadcastId)
+    ) {
+      removeStoredInteractionVotes(previousBroadcastId);
+    }
+
+    previousBroadcastIdRef.current = activeBroadcastId;
+  }, [activeBroadcastId]);
+
+  useEffect(() => {
     if (!isLive) return;
 
     if (modeRef.current === 'FOLLOWING_LIVE') {
@@ -586,27 +675,47 @@ export function LiveBookReader({
               </span>
             </header>
 
-            {viewModel.historicalParagraphs.length > 0 ? (
+            {manuscriptBlocks.length > 0 ? (
               <div
                 className={`${styles.historicalManuscript} ${
                   tracePopoverOpen ? styles.tracesEmphasized : ''
                 }`}
                 lang="de"
               >
-                {viewModel.historicalParagraphs.map((paragraph, index) => (
-                  <p
-                    key={paragraph.id}
-                    className={`${styles.historicalParagraph} ${
-                      index === 0 ? styles.openingParagraph : ''
-                    }`}
-                  >
-                    {renderParagraph(paragraph)}
-                    <TraceMarker
-                      count={traceMarkerCounts[index % traceMarkerCounts.length]}
-                      onOpen={() => setTracePopoverOpen(true)}
-                    />
-                  </p>
-                ))}
+                {manuscriptBlocks.map((block, index) => {
+                  if (block.type === 'interaction') {
+                    if (
+                      mode === 'FOLLOWING_LIVE' &&
+                      visibleReaderInteraction?.id === block.interaction.id
+                    ) {
+                      return null;
+                    }
+
+                    return (
+                      <ReadingLiveInteraction
+                        key={block.interaction.id}
+                        interaction={block.interaction}
+                        broadcastId={broadcastState.broadcastId}
+                        ensureParticipantId={ensureViewerId}
+                      />
+                    );
+                  }
+
+                  return (
+                    <p
+                      key={block.id}
+                      className={`${styles.historicalParagraph} ${
+                        block.opening ? styles.openingParagraph : ''
+                      }`}
+                    >
+                      {renderParagraph(block)}
+                      <TraceMarker
+                        count={traceMarkerCounts[index % traceMarkerCounts.length]}
+                        onOpen={() => setTracePopoverOpen(true)}
+                      />
+                    </p>
+                  );
+                })}
               </div>
             ) : null}
 
@@ -617,6 +726,14 @@ export function LiveBookReader({
             >
               <div className={styles.liveRule} aria-hidden="true" />
               <div className={styles.liveLabel}>live · jetzt</div>
+
+              {visibleReaderInteraction && mode === 'FOLLOWING_LIVE' ? (
+                <ReadingLiveInteraction
+                  interaction={visibleReaderInteraction}
+                  broadcastId={broadcastState.broadcastId}
+                  ensureParticipantId={ensureViewerId}
+                />
+              ) : null}
 
               {viewModel.liveText.length > 0 ? (
                 <p className={styles.livePassage}>
@@ -648,6 +765,95 @@ export function LiveBookReader({
       ) : null}
     </main>
   );
+}
+
+function buildManuscriptBlocks({
+  lines,
+  interactions,
+}: {
+  lines: readonly LiveLine[];
+  interactions: readonly LiveInteraction[];
+}): ManuscriptBlock[] {
+  const blocks: ManuscriptBlock[] = [];
+  const orderedInteractions = [...interactions].sort(
+    (left, right) => left.openedSequence - right.openedSequence,
+  );
+  let interactionIndex = 0;
+  let previousSequence = -1;
+  let currentFragments: Extract<ManuscriptBlock, { type: 'paragraph' }>['fragments'] =
+    [];
+  let currentParagraphId: string | null = null;
+  let paragraphCount = 0;
+
+  const flushParagraph = () => {
+    if (currentFragments.length === 0 || currentParagraphId === null) return;
+
+    blocks.push({
+      type: 'paragraph',
+      id: currentParagraphId,
+      fragments: currentFragments,
+      opening: paragraphCount === 0,
+    });
+    paragraphCount += 1;
+    currentFragments = [];
+    currentParagraphId = null;
+  };
+
+  const flushInteractionsBefore = (lineSequence: number) => {
+    while (
+      interactionIndex < orderedInteractions.length &&
+      orderedInteractions[interactionIndex].openedSequence > previousSequence &&
+      lineSequence > orderedInteractions[interactionIndex].openedSequence
+    ) {
+      flushParagraph();
+      blocks.push({
+        type: 'interaction',
+        interaction: orderedInteractions[interactionIndex],
+      });
+      interactionIndex += 1;
+    }
+  };
+
+  for (const line of lines) {
+    flushInteractionsBefore(line.sequence);
+
+    if (line.text.trim().length === 0) {
+      flushParagraph();
+      previousSequence = line.sequence;
+      continue;
+    }
+
+    if (currentParagraphId === null) {
+      currentParagraphId = `paragraph-${line.id}`;
+    }
+
+    currentFragments.push({
+      id: line.id,
+      text: line.text,
+      committedAt: line.publishedAt,
+    });
+    previousSequence = line.sequence;
+  }
+
+  flushParagraph();
+
+  while (interactionIndex < orderedInteractions.length) {
+    blocks.push({
+      type: 'interaction',
+      interaction: orderedInteractions[interactionIndex],
+    });
+    interactionIndex += 1;
+  }
+
+  return blocks;
+}
+
+function getVisibleReaderInteraction(state: PublicLiveState) {
+  if (state.status !== 'live') return null;
+
+  return [...state.interactions]
+    .reverse()
+    .find((interaction) => interaction.status === 'open') ?? null;
 }
 
 function TraceMarker({
